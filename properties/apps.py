@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class InvestmentsConfig(AppConfig):
+class PropertiesConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'investments'
+    name = 'properties'
