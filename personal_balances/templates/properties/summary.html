@@ -1,0 +1,308 @@
+{% extends "base.html" %}
+{% load static  %}
+
+{% block title %}
+Summary Dashboard
+{% endblock title %}
+
+{% block content %}
+
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+google.charts.load('current', {packages: ['corechart', 'bar']});
+google.charts.setOnLoadCallback(drawMultSeries);
+function drawMultSeries() {
+      var xnum = {{ total_assets|safe }};
+      var ynum = {{ total_liabilities|safe }};
+      var data = new google.visualization.DataTable();
+      data.addColumn('timeofday', 'Time of Day');
+      data.addColumn('number', 'Assets');
+      data.addColumn('number', 'Liabilities');
+      console.log(xnum);
+      data.addRows([
+        [{v: [8, 0, 0], f: 'Jan 2022'}, xnum , ynum],
+        [{v: [9, 0, 0], f: '9 am'}, 2, .5],
+      ]);
+
+      var options = {
+        title: 'Networth',
+        legend: {position: 'none'},
+        hAxis: {
+          title: '',
+          format: '',
+          
+          viewWindow: {
+     
+
+          }
+        },
+        vAxis: {
+          title: 'Net Worth'
+        }
+      };
+
+      var chart = new google.visualization.ColumnChart(
+        document.getElementById('chart_div'));
+
+      chart.draw(data, options);
+    }
+</script>
+<div class="container">
+<div class="row">
+  <div id="chart_div"></div>  
+</div>
+  <div class="row">
+    <div class="col-sm" style="font-size:small">
+    <h6>Property Summary</h6>
+      <table class="table table-hover">
+      <thead>
+       <tr>
+          <th scope="col">Number of Properties</th>
+          <th style="text-align:right" scope="col">{{ total_properties }}</th>
+        </tr>
+      </thead>
+    <tbody>
+
+    <tr>
+      <td>Assets</td>
+      <div class="progress">
+        <div class="progress-bar" role="progressbar" style="width: {{ property_progress|floatformat }}%;" aria-valuenow="{{ property_progress|floatformat }}" aria-valuemin="0" aria-valuemax="100">{{ property_progress|floatformat }}%</div>
+      </div>
+      <td style="text-align:right">${{ total_assets|floatformat:0 }} </td>
+    </tr>
+    <tr>
+      <td>Liabilities</td>
+      <td style="text-align:right">${{ total_liabilities|floatformat:0 }} </td>
+    </tr>
+    <tr>
+      <td>Net Worth</td>
+      <td style="text-align:right">${{ total_networth|floatformat:0 }} </td>
+    </tr>
+    <tr>
+    <td>
+    </td>
+    <td>
+    </td>
+    </tr>
+      <thead>
+        <tr>
+          <th scope="col">Income</th>
+          <th style="text-align:right" scope="col">${{ total_income|floatformat:0 }}</th>
+        </tr>
+      </thead>
+      <tr>
+      <td>Rental Income</td>
+      <td style="text-align:right">${{ total_rent|floatformat:0 }}</td>
+      </tr>
+      <tr>
+      <td>Other Income:</td>
+      <td style="text-align:right">${{ total_other_income|floatformat:0 }}</td>
+      </tr>
+      <tr>
+      <td>
+      </td>
+      <td>
+     <td>
+      </tr>
+      <thead>
+        <tr>
+          <th scope="col">Expense</th>
+          <th style="text-align:right" scope="col">${{ total_expenses|floatformat:0 }}</th>
+        </tr>
+      </thead>
+      <tr>
+      <td>Operating Expenses</td>
+      <td style="text-align:right">${{ total_operating_expenses|floatformat:0 }}</td>
+      </tr>
+      <tr>
+      <td>Repayments</td>
+      <td style="text-align:right">${{ total_repayments|floatformat:0 }}</td>
+      </tr>
+      <tr>
+      <td></td>
+      <td></td>
+      </tr>
+      <thead>
+        <tr>
+          <th scope="col">Net Rental Income</th>
+          <th style="text-align:right" scope="col">${{ total_net_rental_income|floatformat:0 }}</th>
+        </tr>
+      </thead>
+      <tr>
+      <td></td>
+      <td></td>
+      </tr>
+      <thead>
+        <tr>
+          <th scope="col">Risk Assessment</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tr>
+        <td>Debt to Income Ratio</td>
+        <td style="text-align:right">1:{{ loan_to_debt_ratio|floatformat:2 }} | {{ loan_to_debt_percent|floatformat:2 }}%</td>
+      </tr>
+      <tr>
+          <td>Debt Service Coverage Ratio</td>
+          <td style="text-align:right">1:{{ debt_service_coverage_ratio|floatformat:2 }} | {{ debt_service_coverage_percent|floatformat:2 }}%</td>
+      </tr>
+        <tr>
+          <td>Break Even Point</td>
+          <td style="text-align:right">{{ break_even_point|floatformat:2 }}%</td>
+        </tr>
+      </tbody>
+      </table>
+    </div>
+    <div class="col-sm" style="font-size:small">
+
+ <h6>Personal Summary</h6>
+      <table class="table table-hover">
+      <thead>
+       <tr>
+          <th scope="col">Balance Sheet</th>
+          <th style="text-align:right" scope="col"></th>
+        </tr>
+      </thead>
+    <tbody>
+
+    <tr>
+      <td>Assets</td>
+      <td style="text-align:right">${{ total_pb_assets|floatformat:2 }} </td>
+    </tr>
+        <tr>
+      <td>Savings</td>
+      <td style="text-align:right">${{ savings_total|floatformat:2 }} </td>
+    </tr>
+        <tr>
+      <td>Retirement Accounts</td>
+      <td style="text-align:right">${{ total_retirement|floatformat:2 }} </td>
+    </tr>
+    <tr>
+      <td>Liabilities</td>
+      <td style="text-align:right">${{ total_pb_liabilities|floatformat:2 }} </td>
+    </tr>
+    <tr>
+      <td>Net Worth</td>
+      <td style="text-align:right">${{ pb_networth|floatformat:2 }} </td>
+    </tr>
+    </tbody>
+    <thead>
+       <tr>
+          <th scope="col">Cash Flow</th>
+          <th style="text-align:right" scope="col"></th>
+        </tr>
+      </thead>
+          <tbody>
+
+    <tr>
+      <td>Income</td>
+      <td style="text-align:right">${{ cf_total_income|floatformat:2 }} </td>
+    </tr>
+    <tr>
+      <td>Expense</td>
+      <td style="text-align:right">${{ cf_total_expense|floatformat:2 }} </td>
+    </tr>
+    <tr>
+      <td>Cash Flow</td>
+      <td style="text-align:right">${{ cf_cashflow|floatformat:2 }} </td>
+    </tr>
+    </tbody>
+      </table>
+
+ <h6>The Market</h6>
+       <div class="progress">
+        <div class="progress-bar" role="progressbar" style="width: {{ stocks_total_progress|floatformat }}%;" aria-valuenow="{{ stocks_total_progress|floatformat }}" aria-valuemin="0" aria-valuemax="100">{{ stocks_total_progress|floatformat }}%</div>
+      </div>
+      <table class="table table-hover">
+      <thead>
+       <tr>
+          <th scope="col">Index Funds / ETF</th>
+          <th style="text-align:right" scope="col">${{ stocks_total_value|floatformat:2 }}</th>
+        </tr>
+      </thead>
+    <tbody>
+    {% if stocks_total_equities > 0 %}
+    <tr> 
+      <td>Equities</td>
+      <td style="text-align:right">${{ stocks_total_equities|floatformat:2 }} </td>
+    </tr>
+    {% endif %}
+    <tr>
+    {% if stocks_total_bonds > 0 %}
+    <tr>
+      <td>Bonds</td>
+      <td style="text-align:right">${{ stocks_total_bonds|floatformat:2 }} </td>
+    </tr>
+    {% endif %}
+    {% if stocks_total_cce > 0 %}
+    <tr>
+      <td>Cash & Cash Equivalents</td>
+      <td style="text-align:right">${{ stocks_total_cce|floatformat:2 }} </td>
+    </tr>
+    {% endif %}
+    {% if stocks_total_commodites > 0 %}
+        <tr>
+      <td>Commodites</td>
+      <td style="text-align:right">${{ stocks_total_commodites|floatformat:2 }} </td>
+    </tr>
+    {% endif %}
+    {% if stocks_total_diversified > 0 %}
+        <tr>
+      <td>Diversified</td>
+      <td style="text-align:right">${{ stocks_total_diversified|floatformat:2 }} </td>
+    </tr>
+    {% endif %}
+    {% if stocks_total_reits > 0 %}
+        <tr>
+      <td>Reits</td>
+      <td style="text-align:right">${{ stocks_total_reits|floatformat:2 }} </td>
+    </tr>
+    {% endif %}
+    {% if stocks_total_other > 0 %}
+    <tr>
+      <td>Other</td>
+      <td style="text-align:right">${{ stocks_total_other|floatformat:2 }} </td>
+    </tr>
+    {% endif %}
+    </table>
+      <h6>Commodities</h6>
+       <div class="progress">
+        <div class="progress-bar" role="progressbar" style="width: {{ commodities_progress|floatformat }}%;" aria-valuenow="{{ commodities_progress|floatformat }}" aria-valuemin="0" aria-valuemax="100">{{ commodities_progress|floatformat }}%</div>
+      </div>
+      <table class="table table-hover">
+      <thead>
+       <tr>
+          <th scope="col">Commodities</th>
+          <th style="text-align:right" scope="col">${{ commodities_total_value|floatformat:2 }}</th>
+        </tr>
+      </thead>
+    <tbody>
+
+             {% for obj in commod_qs %}
+                  {% if obj.total > 0 %}
+    <tr>
+       <td>{{ obj.commodity_class }}</td>
+       <td  style="text-align:right"> ${{ obj.total|floatformat:2 }}</td>
+    </tr>
+    {% endif %}
+       {% endfor %}
+    </tbody>
+      </table>
+    </div>
+    </div>
+    <div class="col-sm">
+    
+  </div>
+</div>
+
+
+
+
+        </div>
+      </div> 
+<br> 
+
+
+
+
+{% endblock content %}
