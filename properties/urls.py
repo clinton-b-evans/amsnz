@@ -11,7 +11,6 @@ from .views import (
     add_property,
     update_property,
     delete_property,
-    pam_home_view,
 )
 
 app_name = "properties"

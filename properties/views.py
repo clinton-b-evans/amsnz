@@ -231,7 +231,6 @@ def property_detail_view(request, **kwargs):
 
     obj = Property.objects.get(pk=pk)
     contact_obj = Contact.objects.filter(properties=pk)
-    print(contact_obj)
 
     reminders = Reminder.objects.filter(property=obj).order_by("due_date")
     reminders_count = reminders.count()
@@ -361,7 +360,6 @@ def property_summary_view(request, year, *args, **kwargs):
     print(CurrentYearGoal())
     property_goal = real_estate_percent * current_goal
     total_rent_after_vacany_rate = 0
-    # property_transactions = []
 
     """
     get each property objects data, calculate net value
@@ -378,12 +376,6 @@ def property_summary_view(request, year, *args, **kwargs):
         )
         total_operating_expenses += obj.operating_cost
         total_rent_after_vacany_rate += obj.rent_after_vacany_rate
-        # qs_prop_trans = Transactions.objects.filter(property_id=obj.id)
-        # property_transactions = list(qs_prop_trans)
-    #
-    # for trans_obj in property_transactions:
-    #     qs_yearly = trans_obj.filter(date__year=year)
-    #     print(qs_yearly)
 
     total_properties = qs.count()
     total_assets = qs.aggregate(Sum("market_value")).get("market_value__sum")
@@ -574,19 +566,33 @@ def property_summary_view(request, year, *args, **kwargs):
     cf_cashflow = cf_income_yearly - cf_expense_yearly
 
     """
-    Display assets, liabilities and networth of all years on chart
+    ###### Display assets, liabilities and networth of all years on chart ######
+    """
+    """
+    extracted all Years from Database 
     """
     years = list(Property.objects.values_list("purchase_date__year").distinct())
     years_list = []
     for data in years:
         for item in data:
             years_list.append(item)
+    """
+    Sort extracted Years List
+    """
+
+    def sort(myList):
+        myList.sort(reverse=True)
+        return myList
+
+    years_list = sort(years_list)
+    print(years_list)
+
     yearwise_graph_assets = []
     yearwise_graph_libs = []
     yearwise_networths = []
 
     """
-    Get every year records
+    Get all years records from apps
     """
     for my_year in years_list:
         props_qs = Property.objects.filter(purchase_date__year=my_year)
@@ -657,9 +663,9 @@ def property_summary_view(request, year, *args, **kwargs):
         yearwise_graph_libs.append(yearwise_graph_lib)
         yearwise_networths.append(yearwise_networth)
 
-    print("#### Assets####", yearwise_graph_assets)
-    print("#### Liabilities####", yearwise_graph_libs)
-    print("#### networth####", yearwise_networths)
+    print("#### Assets ####", yearwise_graph_assets)
+    print("#### Liabilities ####", yearwise_graph_libs)
+    print("#### networth ####", yearwise_networths)
     """
     Single selected Year graph assets, liabilities and networth.
     """
@@ -722,6 +728,7 @@ def property_summary_view(request, year, *args, **kwargs):
         "graph_lib": graph_lib,
         "graph_nw": graph_nw,
         # ALL Years list of assets, liabilities and networth
+        "years_list": years_list,
         "yearwise_graph_assets": yearwise_graph_assets,
         "yearwise_graph_libs": yearwise_graph_libs,
         "yearwise_networths": yearwise_networths,
@@ -778,8 +785,3 @@ def delete_property(request, pk):
         return HttpResponse('<script type="text/javascript">window.close()</script>')
 
     return render(request, "properties/delete_property.html", context)
-
-
-def pam_home_view():
-    return redirect("properties:summary")
-    # redirect(reverse('properties:summary', args=year))

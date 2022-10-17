@@ -140,6 +140,23 @@ def year_to_date(request, year):
     net_amount = total_income - total_expense
 
     categories = {x: y for x, y in categories.items() if y != 0}
+    """
+    extracted all Years from Database 
+    """
+    years = list(IncomeStatement.objects.values_list("date__year").distinct())
+    years_list = []
+    for data in years:
+        for item in data:
+            years_list.append(item)
+    """
+    Sort extracted Years List
+    """
+
+    def sort(myList):
+        myList.sort(reverse=True)
+        return myList
+
+    years_list = sort(years_list)
     context = {
         "object_list": qs,
         "year": year,
@@ -147,5 +164,6 @@ def year_to_date(request, year):
         "total_expense": total_expense,
         "total_amount": net_amount,
         "categories": categories,
+        "years_list": years_list,
     }
     return render(request, "incomestatements/ytd.html", context)

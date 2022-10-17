@@ -125,6 +125,11 @@ def update_category(request, pk):
     return render(request, "incomestatements/add.html", context)
 
 
+"""
+function to display yearly profit and loss
+"""
+
+
 def year_to_date(request, year):
     prop_qs = Property.objects.all()
     property_list = request.GET.getlist("properties")
@@ -155,6 +160,7 @@ def year_to_date(request, year):
     total_income = 0
     total_expense = 0
     total = 0
+    # get property category data by property name
     for item in qs:
         cat_qs = PropertyCategory.objects.get(name=item.propcategory)
         if cat_qs.transaction_type == "Income":
@@ -163,19 +169,25 @@ def year_to_date(request, year):
             total_expense += item.amount
     total = total_income - total_expense
     categories = {x: y for x, y in categories.items() if y != 0}
+    # Active Categories
+    print("Active Categories--->", categories)
+    """
+    extracted all Years from Database 
+    """
+    years = list(PropertyIncomeStatement.objects.values_list("date__year").distinct())
+    years_list = []
+    for data in years:
+        for item in data:
+            years_list.append(item)
+    """
+    Sort extracted Years
+    """
 
-    # expense_name = ''
-    # expense_date_time = ''
-    # expense_prop_name = ''
-    # for key in categories:
-    #     qs_prop_is = PropertyIncomeStatement.objects.get(propcategory__name=key, date__year=year)
-    #     expense_name += qs_prop_is.name
-    #     expense_date = qs_prop_is.date
-    #     expense_date_time = expense_date
-    #     expense_prop_name += qs_prop_is.property.name
-    # print(expense_date_time)
-    # print(expense_name)
-    # print(expense_prop_name)
+    def sort(myList):
+        myList.sort(reverse=True)
+        return myList
+
+    years_list = sort(years_list)
     context = {
         "object_list": qs,
         "year": year,
@@ -184,20 +196,6 @@ def year_to_date(request, year):
         "expense": total_expense,
         "categories": categories,
         "prop_qs": prop_qs,
+        "years_list": years_list,
     }
     return render(request, "propertyincomestatements/ytd.html", context)
-
-
-# def expense_category_detail_view(request, **kwargs):
-#     name = kwargs.get("name")
-#     props_income_qs = PropertyIncomeStatement.objects.all()
-#     qs = props_income_qs.filter(propcategory=name)
-#     props_list = []
-#     for item in qs:
-#         props_list[item.name] += item.name
-#         props_list[item.amount] += item.amount
-#         props_list[item.property.name] += item.property.name
-#         props_list[item.date] += item.date
-#
-#     print(props_list)
-#     return HttpResponse(props_list)

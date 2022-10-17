@@ -6,13 +6,6 @@ from .views import (
     update_property_incomestatements,
     delete_property_incomestatement,
     year_to_date,
-    # expense_category_detail_view
-    # add_incomestatements,
-    # update_incomestatements,
-    # delete_incomestatement,
-    # add_category,
-    # update_category,
-    # year_to_date,
 )
 
 app_name = "incomestatements_property"
@@ -48,14 +41,4 @@ urlpatterns = [
         year_to_date,
         name="year-to-date",
     ),
-    # path(
-    #     "propertyincomestatements/expense_category_detail_view/",
-    #     expense_category_detail_view,
-    #     name="expense_category_detail",
-    # ),
-    # path('incomestatements/add', add_incomestatements, name='incomestatement-add'),
-    # path('incomestatements/add_category', add_category, name='category-add'),
-    # path('incomestatements/<str:pk>/edit',update_incomestatements, name='update-incomestatement'),
-    # path('incomestatements/<str:pk>/delete',delete_incomestatement, name='delete-incomestatement'),
-    # path('incomestatements/<str:pk>/edit_category',update_category, name='update-category'),
 ]

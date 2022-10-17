@@ -19,6 +19,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "mathfilters",
     # my apps
+    "Authentication",
     "properties",
     "reminders",
     "contacts",
