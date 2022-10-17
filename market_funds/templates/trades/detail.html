@@ -1,0 +1,283 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ object.name }}
+    <h6><a href="/summary">back</a></h6>
+      <button type="button" onclick="Toasty()" class="btn btn-primary">{{ reminders_count }} Reminders <span class="badge badge-success">
+      </span></button>
+{% endblock title %}
+
+{% block content %}
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load("current", {packages:["corechart"]});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Task', 'Hours per Day'],
+          ['Loan', {{object.loan_amount|stringformat:".2f"}}],
+          ['Equity', {{ equity|stringformat:".2f"}} ],
+
+        ]);
+
+        var options = {
+          title: 'Loan to Value',
+          is3D: true,
+          colors: ['#32CD32', '#228B22']
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+        chart.draw(data, options);
+      }
+    </script>
+            <script>
+            var option = 
+            {
+                animation : true,
+                delay : 2000
+            };
+            
+            function Toasty( )
+            {
+                var toastHTMLElement = document.getElementById( 'EpicToast' );
+                
+                var toastElement = new bootstrap.Toast( toastHTMLElement, option );
+                
+                toastElement.show( );
+            }
+            
+            
+            
+        </script>
+    <style>
+    #mortgageRepaymentValue, #rentalYieldValue, #rentalYieldValue, #operatingExpensesValue, #rentAfterVacancyRateValue, #netIncomeValue, #netOperatingIncomeValue, #netIncomeValue { text-align: right; },
+    
+</style>
+
+
+<div class="container">
+  <div class="container">
+            <div class="row">
+                <div class="col-12">                    
+                    <div class="toast" id="EpicToast" role="alert" aria-live="assertive" aria-atomic="true" style="float:right;">
+                        <div class="toast-header">
+                            <strong class="mr-auto">Reminders</strong>
+                        
+                        </div>
+                        
+                        <div class="toast-body">
+                                {% for reminder in reminders %}
+      <li>{{ reminder.detail}} - {{ reminder.due_date }} </li>
+       {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+<div class="row">
+    <div class="col-sm">
+        <img src='../../media/no_picture.png' width='256' height='256'>
+        </div>
+        <div class="col-sm" id="piechart_3d" style="width: 100%; height: 250px;"></div>
+
+           <table>
+               <tr>
+                <th>Street Address</th>
+                <td>{{ object.street_address }}</td>
+            </tr>
+                        <tr>
+                <th>Purchase Date</th>
+                <td>{{ object.purchase_date }}</td>
+            </tr>
+   </table>
+   <br>
+        </div>
+    
+</div>
+
+  <div class="row">
+    <div class="col-med">
+
+       <table class="table table-striped table-hover">
+
+        <tbody>
+        <thead>
+            <tr>
+                <th colspan="2">Property Information</th>
+            </tr>
+        </thead>
+            <tr>
+                <td>Property Type</td>
+                <td>{{ object.property_type }}</td>
+            </tr>
+
+                <td>Land Size</td>
+                <td>{{ object.land_size }}</td>
+            </tr>
+            <tr>
+                <td>Building Size</td>
+                <td>{{ object.building_size }}</td>
+            </tr>
+
+            <tr>
+                <td>Bedrooms</td>
+                <td>{{ object.bedrooms }}</td>
+            </tr>
+            <tr>
+                <td>Bathrooms</td>
+                <td>{{ object.bathrooms }}</td>
+            </tr>
+            <tr>
+                <td>Garage Type</td>
+                <td>{{ object.garage }}<br></td>
+            </tr>
+            <tr>
+                <td>Purchase Price</td>
+                <td>${{ object.purchase_price|floatformat:2 }}</td>
+            </tr>
+            <tr>
+                <td>Market Value</td>
+                <td>${{ object.market_value|floatformat:2}}</td>
+            </tr>
+            <tr>
+                <td>Rates</td>
+                <td>${{ object.rates|floatformat:2 }}<br></td>
+            </tr>
+            <tr>
+                <td>Vacancy Rate</td>
+                <td>{{ object.vacancy_rate|floatformat:2 }}%</td>
+            </tr>
+        </tbody>
+        </table>
+        <br>
+
+        <table class="table table-sm">
+        <tbody>
+        <thead>
+            <tr>
+                <th colspan="2">Loan Information</th>
+            </tr>
+        </thead>
+            <tr>
+                <td>Term Left</td>
+                <td>{{ loan_term_left|floatformat:2 }} years<br></td>
+            </tr>
+            <tr>
+                <td>Loan Amount</td>
+                <td>${{ object.loan_amount|floatformat:2 }}<br></td>
+            </tr>
+            <tr>
+                <td>Interest Rate</td>
+                <td>{{ object.interest_rate|floatformat:2 }}%<br></td>
+            </tr>
+            <tr>
+                <td>Repayments</td>
+                <td>${{ object.repayments|floatformat:2 }}<br></td>
+            </tr>
+            
+        </tbody>
+    </table>
+    <table class="table table-sm">
+        <tbody>
+            <thead>
+                <tr>
+                    <th colspan="2">Investment Information</th>
+                    <td><select name="weekMonthYear" id="weekMonthYear">
+  <option value="Weekly">Weekly</option>
+  <option value="Monthly">Monthly</option>
+  <option value="Yearly">Yearly</option>
+</select>
+<input type="button" value="CHANGE" onclick="selectFunction()" /></td>
+                </tr>
+            </thead>
+            <tr>
+                <td colspan="2">Equity:</td>
+                <td></td>
+                <td>${{ equity }}<br></td>
+            </tr>
+            <tr>
+                <td></td>
+
+            </tr>
+            <tr>
+                <td>Rental Yield:</td>
+                <td></td>
+                <td id="rentalYield">Yearly:</td>
+                <td id="rentalYieldValue">${{ object.rent|floatformat:2  }}</td>
+             
+            </tr>
+            <tr>
+                <td>Rent After Vacancy Rate:</td>
+                <td></td>
+                <td id="rentAfterVacancyRate">Yearly</td>
+                <td id="rentAfterVacancyRateValue" class="rightAlign">${{ rent_after_vacany_rate|floatformat:2  }}</td>
+            </tr>
+            <tr>
+                <td>Operating Expenses</td>
+                <td></td>
+                <td id="operatingExpenses">Yearly</td>
+                <td id="operatingExpensesValue" class="rightAlign">${{ operating_expenses|floatformat:2  }}</td>
+            </tr>
+            <tr>
+                <td>Net Operating Income</td>
+                <td>{{ net_operating_income_percent|floatformat:2 }}%</td>
+                <td id="netOperatingIncome">Yearly</td>
+                <td id="netOperatingIncomeValue" class="rightAlign">${{ net_operating_income|floatformat:2  }}</td>
+            </tr>
+            <tr>
+                <td>Cap Rate</td>
+                <td>{{ cap_rate|floatformat:2 }}% </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Gross Yield</td>
+                <td>{{ gross_yield|floatformat:2 }}% </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Loan To Value</td>
+                <td>{{ loan_to_value|floatformat:2 }}% </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Mortgage Repayment</td>
+                <td></td>
+                <td id="mortgageRepayment">Yearly:</td>
+                <td id="mortgageRepaymentValue">${{ mortgage_repayment|floatformat:2 }}</td>
+            </tr>
+            <tr>
+                <td>Net Income</td>
+                <td></td>
+                <td id="netIncome">Yearly:</td>
+                <td id="netIncomeValue">${{ net_income|floatformat:2 }}</td>
+            </tr>
+
+
+        </tbody>
+    </table>
+    </div>
+    <div class="col-sm">
+
+    </div>
+    <div class="col-sm">
+    </div>
+  </div>
+</div>
+
+
+{% endblock content %}

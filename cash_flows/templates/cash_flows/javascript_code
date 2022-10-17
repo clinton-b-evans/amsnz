@@ -1,0 +1,94 @@
+<script type="text/javascript">
+    let clicked = "monthly";
+    var selectFunction = function() {
+      var weekMonthYear = document.getElementById("weekMonthYear").value;
+      if (weekMonthYear == "Weekly") {
+        if (clicked == "monthly") {
+          let myTable = document.getElementById('myTable');
+          let tr = myTable.getElementsByClassName('dollar');
+            for(var i=0; i<tr.length; i++) {
+              str  = tr[i].innerHTML;
+              newStr = str.replace('$','');
+              newStr = newStr.replace(',','');
+              newNumb = parseFloat(newStr);
+              newNumb = (newNumb * 12 / 52).toFixed(2);
+              tr[i].innerHTML = "$" + newNumb;
+            }
+          clicked = "weekly";  
+        }
+        if (clicked == "yearly") {
+          let myTable = document.getElementById('myTable');
+          let tr = myTable.getElementsByClassName('dollar');
+            for(var i=0; i<tr.length; i++) {
+              str  = tr[i].innerHTML;
+              newStr = str.replace('$','');
+              newStr = newStr.replace(',','');
+              newNumb = parseFloat(newStr);
+              newNumb = (newNumb / 52).toFixed(2);
+              tr[i].innerHTML = "$" + newNumb;
+            }
+          clicked = "weekly";  
+        }
+           // document.getElementById("dollar").innerHTML = "weekly"; 
+
+            } else if (weekMonthYear == "Monthly") {
+           // document.getElementById("dollar").innerHTML = "monthly"; 
+            if (clicked == "weekly") {
+              let myTable = document.getElementById('myTable');
+              let tr = myTable.getElementsByClassName('dollar');
+                for(var i=0; i<tr.length; i++) {
+                  str  = tr[i].innerHTML;
+                  newStr = str.replace('$','');
+                  newStr = newStr.replace(',','');
+                  newNumb = parseFloat(newStr);
+                  newNumb = (newNumb * 52 / 12).toFixed(2);
+                  tr[i].innerHTML = "$" + newNumb;
+                }
+              clicked = "monthly";  
+            }
+            if (clicked == "yearly") {
+              let myTable = document.getElementById('myTable');
+              let tr = myTable.getElementsByClassName('dollar');
+                for(var i=0; i<tr.length; i++) {
+                  str  = tr[i].innerHTML;
+                  newStr = str.replace('$','');
+                  newStr = newStr.replace(',','');
+                  newNumb = parseFloat(newStr);
+                  newNumb = (newNumb / 12).toFixed(2);
+                  tr[i].innerHTML = "$" + newNumb;
+                }
+              clicked = "monthly";  
+            }
+
+            } else if (weekMonthYear == "Yearly") {
+          //  document.getElementById("dollar").innerHTML = "yearly"; 
+            if (clicked == "monthly") {
+              let myTable = document.getElementById('myTable');
+              let tr = myTable.getElementsByClassName('dollar');
+                for(var i=0; i<tr.length; i++) {
+                  str  = tr[i].innerHTML;
+                  newStr = str.replace('$','');
+                  newStr = newStr.replace(',','');
+                  newNumb = parseFloat(newStr);
+                  newNumb = (newNumb * 12).toFixed(2);
+                  tr[i].innerHTML = "$" + newNumb;
+                }
+              clicked = "yearly";  
+          }
+            if (clicked == "weekly") {
+              let myTable = document.getElementById('myTable');
+              let tr = myTable.getElementsByClassName('dollar');
+                for(var i=0; i<tr.length; i++) {
+                  str  = tr[i].innerHTML;
+                  newStr = str.replace('$','');
+                  newStr = newStr.replace(',','');
+                  newNumb = parseFloat(newStr);
+                  newNumb = (newNumb * 52).toFixed(2);
+                  tr[i].innerHTML = "$" + newNumb;
+                }
+              clicked = "yearly";  
+          }
+            }
+
+    }
+    </script>

@@ -1,0 +1,13 @@
+<div class="main">
+    <!-- Create a Form -->
+    <form method="POST">
+        <!-- Security token by Django -->
+        {% csrf_token %}
+        <h2>You are about to delete a Crypto Currency</h2>
+        <p>Are you want to delete {{ object.name }}?</p>
+        <p>This action cannot be undone.</p>
+        <p>All transctions for this fund will be lost</p>
+        <input type="submit" value="Delete" />
+        <a href="#" onclick="javascript:window.close()"> <input type="submit" value="Cancel" /> </a>
+    </form>
+</div>
