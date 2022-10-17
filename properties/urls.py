@@ -17,8 +17,6 @@ from .views import (
 app_name = "properties"
 
 urlpatterns = [
-    # path("", pam_home_view, name="home"),
-    path("", RedirectView.as_view(url="summary/")),
     path("properties/", property_list_view, name="list"),
     path("properties/weekly/", property_list_weekly, name="weekly-list"),
     path("properties/monthly/", property_list_monthly, name="monthly-list"),
