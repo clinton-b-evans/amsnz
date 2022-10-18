@@ -55,7 +55,7 @@ function popitup(url) {
   <tbody>
 
 
-{% for key, value in categories.items %} 
+{% for key, value in categories_yearly.items %}
 
 <tr>
   <td>
@@ -77,14 +77,14 @@ const myChart = new Chart(ctx, {
     type: 'doughnut',
     data: {
         labels: [
-        {% for key, value in categories.items %} 
+        {% for key, value in categories_yearly.items %}
             '{{key}}',
         {% endfor %}
         ],
         datasets: [{
             label: 'Categories',
             data: [
-        {% for key, value in categories.items %}
+        {% for key, value in categories_yearly.items %}
             '{{value|stringformat:"i"}}',
         {% endfor %}
             ],

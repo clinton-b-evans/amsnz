@@ -1,5 +1,8 @@
+import datetime
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
+from django.db.models.functions import TruncMonth
+from django.db.models import Count, Sum
 
 from incomestatements.forms import CategoryForm
 from incomestatements.models import Category
@@ -143,20 +146,62 @@ def year_to_date(request, year):
     qs = qs.filter(date__year=year)
     cat_dict = PropertyCategory.objects.all()
     categories = {}
-    for item in cat_dict:
-        categories[item.name] = 0
-        # categories[item.property] = ''
+    categories_total_yearly = {}
+    categories_total_monthly = {}
+    """
+    Display monthly total expenses for that time period
+    """
+    props_monthly_total = (
+        qs.annotate(month=TruncMonth("date"))
+        .values("month")
+        .annotate(total_amount=Sum("amount"))
+    )
+    # print(list(props_monthly_total))
 
+    """
+    Create categories and expenses list
+    """
+    for item in cat_dict:
+        categories_total_monthly[item.name] = 0
+        categories_total_yearly[item.name] = 0
+        categories[item.name] = 0
+
+    today = datetime.date.today()
+    current_month = today.month
+    qs_monthly = qs.filter(date__month=current_month)
+    print("Monthly property objects---> ", qs_monthly)
+
+    total_monthly = 0
+    for item in qs_monthly:
+        cat_qs = PropertyCategory.objects.get(name=item.propcategory)
+
+        if cat_qs.name in categories_total_monthly:
+            # total_monthly += item.amount
+            # print(total_monthly)
+            # new = qs.annotate(month=TruncMonth(item.date), total=Sum(item.amount))\
+            #         .values('month', "total").distinct()
+            # print("#### Each Month Data ####", list(new))
+            # categories[item.property] += item.property.name
+            categories_total_monthly[cat_qs.name] += item.amount
+
+    # ####  Yearly Summation of expenses
     for item in qs:
         cat_qs = PropertyCategory.objects.get(name=item.propcategory)
-        # categories[item.property] += item.property.name
 
-        if cat_qs.name in categories:
-            categories[cat_qs.name] += item.amount
+        if cat_qs.name in categories_total_yearly:
+            # total_monthly += item.amount
+            # print(total_monthly)
+            # new = qs.annotate(month=TruncMonth(item.date), total=Sum(item.amount)) \
+            #     .values('month', "total").distinct()
+            # print("#### Each Month Data ####", list(new))
+            categories_total_yearly[cat_qs.name] += item.amount
 
-        else:
-            print("Here is thing")
-    print("#### category Data #####", categories)
+    categories_lists = list(categories.keys())
+    print(">>>> category List -->>>", categories_lists)
+
+    print(">>>> category total Yearly -->>>", categories_total_yearly)
+    print(">>>> category total monthly -->>>", categories_total_monthly)
+
     total_income = 0
     total_expense = 0
     total = 0
@@ -168,21 +213,21 @@ def year_to_date(request, year):
         else:
             total_expense += item.amount
     total = total_income - total_expense
-    categories = {x: y for x, y in categories.items() if y != 0}
-    # Active Categories
-    print("Active Categories--->", categories)
+    category_total_yearly = {x: y for x, y in categories_total_yearly.items() if y != 0}
+    category_total_monthly = {
+        x: y for x, y in categories_total_monthly.items() if y != 0
+    }
+    # print("Property's category total expenses --->", category_total)
+
     """
-    extracted all Years from Database 
+    extracted all Property Income Statement Years from Database 
     """
     years = list(PropertyIncomeStatement.objects.values_list("date__year").distinct())
     years_list = []
     for data in years:
         for item in data:
             years_list.append(item)
-    """
-    Sort extracted Years
-    """
-
+    #   Sort extracted Years list
     def sort(myList):
         myList.sort(reverse=True)
         return myList
@@ -194,7 +239,10 @@ def year_to_date(request, year):
         "total": total,
         "income": total_income,
         "expense": total_expense,
-        "categories": categories,
+        "categories_yearly": category_total_yearly,
+        "categories_monthly": category_total_monthly,
+        "categories_lists": categories_lists,
+        "props_monthly_total": props_monthly_total,
         "prop_qs": prop_qs,
         "years_list": years_list,
     }
