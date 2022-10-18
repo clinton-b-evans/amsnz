@@ -8,18 +8,22 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('incomestatements', '0003_alter_incomestatement_name'),
+        ("incomestatements", "0003_alter_incomestatement_name"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='incomestatement',
-            name='category',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='incomestatements.category'),
+            model_name="incomestatement",
+            name="category",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="incomestatements.category",
+            ),
         ),
         migrations.AlterField(
-            model_name='incomestatement',
-            name='date',
+            model_name="incomestatement",
+            name="date",
             field=models.DateField(default=datetime.date.today),
         ),
     ]

@@ -7,21 +7,58 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Commodity',
+            name="Commodity",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('commodity_class', models.CharField(max_length=120)),
-                ('weight', models.DecimalField(blank=True, decimal_places=2, default=0.0, max_digits=6)),
-                ('spot_price', models.DecimalField(blank=True, decimal_places=2, default=0.0, max_digits=6)),
-                ('value', models.DecimalField(blank=True, decimal_places=2, default=0.0, max_digits=6)),
-                ('total', models.DecimalField(blank=True, decimal_places=2, default=0.0, max_digits=6)),
-                ('profit', models.DecimalField(blank=True, decimal_places=2, default=0.0, max_digits=6)),
-                ('percent', models.DecimalField(blank=True, decimal_places=2, default=0.0, max_digits=6)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("commodity_class", models.CharField(max_length=120)),
+                (
+                    "weight",
+                    models.DecimalField(
+                        blank=True, decimal_places=2, default=0.0, max_digits=6
+                    ),
+                ),
+                (
+                    "spot_price",
+                    models.DecimalField(
+                        blank=True, decimal_places=2, default=0.0, max_digits=6
+                    ),
+                ),
+                (
+                    "value",
+                    models.DecimalField(
+                        blank=True, decimal_places=2, default=0.0, max_digits=6
+                    ),
+                ),
+                (
+                    "total",
+                    models.DecimalField(
+                        blank=True, decimal_places=2, default=0.0, max_digits=6
+                    ),
+                ),
+                (
+                    "profit",
+                    models.DecimalField(
+                        blank=True, decimal_places=2, default=0.0, max_digits=6
+                    ),
+                ),
+                (
+                    "percent",
+                    models.DecimalField(
+                        blank=True, decimal_places=2, default=0.0, max_digits=6
+                    ),
+                ),
             ],
         ),
     ]

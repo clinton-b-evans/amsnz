@@ -8,18 +8,26 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('properties', '0037_alter_property_loan_amount_alter_property_loan_term'),
+        ("properties", "0037_alter_property_loan_amount_alter_property_loan_term"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Contact',
+            name="Contact",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('first_name', models.CharField(max_length=120)),
-                ('last_name', models.CharField(max_length=120)),
-                ('contact_number', models.IntegerField()),
-                ('properties', models.ManyToManyField(to='properties.Property')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("first_name", models.CharField(max_length=120)),
+                ("last_name", models.CharField(max_length=120)),
+                ("contact_number", models.IntegerField()),
+                ("properties", models.ManyToManyField(to="properties.Property")),
             ],
         ),
     ]

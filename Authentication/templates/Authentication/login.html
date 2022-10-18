@@ -1,0 +1,13 @@
+{% load static  %}
+{% block content %}      
+
+{% load crispy_forms_tags %}
+<h4>{{form.errors}}</h4>
+  <form method="POST" action="">
+    {% csrf_token %}
+      {{form|crispy}}
+    <input type="submit" value="Login">
+  </form>
+Don't have an account? <a href="{% url 'Authentication:register_user' %}" class="ml-2">Sign Up</a>
+
+{% endblock %}

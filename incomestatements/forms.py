@@ -5,18 +5,20 @@ from django.forms import TextInput
 
 
 class DateInput(forms.DateInput):
-    input_type = 'date'
+    input_type = "date"
+
 
 class IncomeStatementForm(ModelForm):
     class Meta:
         model = IncomeStatement
-        fields = '__all__'
+        fields = "__all__"
         widgets = {
-            'date': DateInput(),
-             'amount': TextInput(),
+            "date": DateInput(),
+            "amount": TextInput(),
         }
+
 
 class CategoryForm(ModelForm):
     class Meta:
         model = Category
-        fields = '__all__'
+        fields = "__all__"

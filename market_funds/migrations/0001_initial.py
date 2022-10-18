@@ -7,26 +7,41 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='ExchangeTradedFund',
+            name="ExchangeTradedFund",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=120)),
-                ('ticker', models.CharField(max_length=6)),
-                ('asset_class', models.CharField(max_length=30)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=120)),
+                ("ticker", models.CharField(max_length=6)),
+                ("asset_class", models.CharField(max_length=30)),
             ],
         ),
         migrations.CreateModel(
-            name='IndexFund',
+            name="IndexFund",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=120)),
-                ('ticker', models.CharField(max_length=6)),
-                ('asset_class', models.CharField(max_length=30)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=120)),
+                ("ticker", models.CharField(max_length=6)),
+                ("asset_class", models.CharField(max_length=30)),
             ],
         ),
     ]

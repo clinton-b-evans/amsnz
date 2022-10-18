@@ -6,13 +6,16 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('incomestatements', '0002_category_remove_incomestatement_transaction_type_and_more'),
+        (
+            "incomestatements",
+            "0002_category_remove_incomestatement_transaction_type_and_more",
+        ),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='incomestatement',
-            name='name',
+            model_name="incomestatement",
+            name="name",
             field=models.CharField(blank=True, max_length=120),
         ),
     ]

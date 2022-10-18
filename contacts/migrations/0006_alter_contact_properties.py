@@ -6,14 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('properties', '0037_alter_property_loan_amount_alter_property_loan_term'),
-        ('contacts', '0005_contact_service_area_alter_contact_contact_number'),
+        ("properties", "0037_alter_property_loan_amount_alter_property_loan_term"),
+        ("contacts", "0005_contact_service_area_alter_contact_contact_number"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='contact',
-            name='properties',
-            field=models.ManyToManyField(blank=True, to='properties.Property', verbose_name='Properties - Hold CTRL/CMD to select multiple'),
+            model_name="contact",
+            name="properties",
+            field=models.ManyToManyField(
+                blank=True,
+                to="properties.Property",
+                verbose_name="Properties - Hold CTRL/CMD to select multiple",
+            ),
         ),
     ]

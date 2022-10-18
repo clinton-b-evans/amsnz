@@ -6,80 +6,95 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('properties', '0008_alter_property_bathrooms_alter_property_bedrooms_and_more'),
+        (
+            "properties",
+            "0008_alter_property_bathrooms_alter_property_bedrooms_and_more",
+        ),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='property',
-            name='building_size',
+            model_name="property",
+            name="building_size",
             field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='property',
-            name='interest_rate',
+            model_name="property",
+            name="interest_rate",
             field=models.DecimalField(decimal_places=2, default=0, max_digits=5),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='property',
-            name='loan_amount',
+            model_name="property",
+            name="loan_amount",
             field=models.DecimalField(decimal_places=2, default=0, max_digits=12),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='property',
-            name='loan_term',
+            model_name="property",
+            name="loan_term",
             field=models.DecimalField(decimal_places=2, max_digits=5),
         ),
         migrations.AlterField(
-            model_name='property',
-            name='market_value',
+            model_name="property",
+            name="market_value",
             field=models.DecimalField(decimal_places=2, max_digits=12),
         ),
         migrations.AlterField(
-            model_name='property',
-            name='other_income',
+            model_name="property",
+            name="other_income",
             field=models.DecimalField(decimal_places=2, max_digits=12),
         ),
         migrations.AlterField(
-            model_name='property',
-            name='property_type',
-            field=models.CharField(blank=True, choices=[('Residential', 'Residential'), ('Commerical', 'Commerical'), ('Industrial', 'Industrial'), ('Retail', 'Retail'), ('Land', 'Land'), ('Other', 'Other')], max_length=100, null=True),
+            model_name="property",
+            name="property_type",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("Residential", "Residential"),
+                    ("Commerical", "Commerical"),
+                    ("Industrial", "Industrial"),
+                    ("Retail", "Retail"),
+                    ("Land", "Land"),
+                    ("Other", "Other"),
+                ],
+                max_length=100,
+                null=True,
+            ),
         ),
         migrations.AlterField(
-            model_name='property',
-            name='purchase_date',
+            model_name="property",
+            name="purchase_date",
             field=models.DateTimeField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='property',
-            name='purchase_price',
+            model_name="property",
+            name="purchase_price",
             field=models.DecimalField(decimal_places=2, max_digits=12),
         ),
         migrations.AlterField(
-            model_name='property',
-            name='rates',
+            model_name="property",
+            name="rates",
             field=models.DecimalField(decimal_places=2, max_digits=5),
         ),
         migrations.AlterField(
-            model_name='property',
-            name='rent',
+            model_name="property",
+            name="rent",
             field=models.DecimalField(decimal_places=2, max_digits=12),
         ),
         migrations.AlterField(
-            model_name='property',
-            name='repayments',
+            model_name="property",
+            name="repayments",
             field=models.DecimalField(decimal_places=2, max_digits=10),
         ),
         migrations.AlterField(
-            model_name='property',
-            name='street_address',
+            model_name="property",
+            name="street_address",
             field=models.TextField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='property',
-            name='vacancy_rate',
+            model_name="property",
+            name="vacancy_rate",
             field=models.DecimalField(decimal_places=2, default=0, max_digits=5),
         ),
     ]

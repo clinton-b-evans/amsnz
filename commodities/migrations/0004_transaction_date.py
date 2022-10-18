@@ -7,13 +7,15 @@ import django.utils.timezone
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('commodities', '0003_alter_commodity_options_remove_commodity_value_and_more'),
+        ("commodities", "0003_alter_commodity_options_remove_commodity_value_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='transaction',
-            name='date',
-            field=models.DateField(blank=True, default=django.utils.timezone.now, null=True),
+            model_name="transaction",
+            name="date",
+            field=models.DateField(
+                blank=True, default=django.utils.timezone.now, null=True
+            ),
         ),
     ]

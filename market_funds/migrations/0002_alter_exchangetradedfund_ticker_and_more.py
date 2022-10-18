@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('market_funds', '0001_initial'),
+        ("market_funds", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='exchangetradedfund',
-            name='ticker',
+            model_name="exchangetradedfund",
+            name="ticker",
             field=models.CharField(blank=True, max_length=6, null=True),
         ),
         migrations.AlterField(
-            model_name='indexfund',
-            name='ticker',
+            model_name="indexfund",
+            name="ticker",
             field=models.CharField(blank=True, max_length=6, null=True),
         ),
     ]

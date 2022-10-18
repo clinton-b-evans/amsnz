@@ -3,10 +3,8 @@ from .views import (
     update_retirementgoal,
 )
 
-app_name = 'retirement_goals'
+app_name = "retirement_goals"
 
 urlpatterns = [
-    path('retiregoals/',update_retirementgoal, name='update_retirementgoal'),
-
-
+    path("retiregoals/", update_retirementgoal, name="update_retirementgoal"),
 ]

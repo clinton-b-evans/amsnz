@@ -6,16 +6,23 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('market_funds', '0010_remove_trade_asset_class_alter_indexfund_asset_class'),
+        ("market_funds", "0010_remove_trade_asset_class_alter_indexfund_asset_class"),
     ]
 
     operations = [
         migrations.DeleteModel(
-            name='ExchangeTradedFund',
+            name="ExchangeTradedFund",
         ),
         migrations.AddField(
-            model_name='indexfund',
-            name='fund_type',
-            field=models.CharField(choices=[('Index Fund', 'Index Fund'), ('Exchange Traded Fund', 'Exchange Traded Fund')], max_length=100, null=True),
+            model_name="indexfund",
+            name="fund_type",
+            field=models.CharField(
+                choices=[
+                    ("Index Fund", "Index Fund"),
+                    ("Exchange Traded Fund", "Exchange Traded Fund"),
+                ],
+                max_length=100,
+                null=True,
+            ),
         ),
     ]

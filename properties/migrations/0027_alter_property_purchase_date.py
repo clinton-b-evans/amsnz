@@ -7,13 +7,15 @@ import django.utils.timezone
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('properties', '0026_delete_reminder'),
+        ("properties", "0026_delete_reminder"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='property',
-            name='purchase_date',
-            field=models.DateField(blank=True, default=django.utils.timezone.now, null=True),
+            model_name="property",
+            name="purchase_date",
+            field=models.DateField(
+                blank=True, default=django.utils.timezone.now, null=True
+            ),
         ),
     ]

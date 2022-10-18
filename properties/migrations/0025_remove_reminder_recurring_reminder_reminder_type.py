@@ -6,17 +6,26 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('properties', '0024_rename_date_reminder_due_date_reminder_recurring'),
+        ("properties", "0024_rename_date_reminder_due_date_reminder_recurring"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='reminder',
-            name='recurring',
+            model_name="reminder",
+            name="recurring",
         ),
         migrations.AddField(
-            model_name='reminder',
-            name='reminder_type',
-            field=models.CharField(choices=[('oneoff', 'One Off'), ('weekly', 'Weekly'), ('monthly', 'Monthly'), ('yearly', 'Yearly')], default='oneoff', max_length=120),
+            model_name="reminder",
+            name="reminder_type",
+            field=models.CharField(
+                choices=[
+                    ("oneoff", "One Off"),
+                    ("weekly", "Weekly"),
+                    ("monthly", "Monthly"),
+                    ("yearly", "Yearly"),
+                ],
+                default="oneoff",
+                max_length=120,
+            ),
         ),
     ]

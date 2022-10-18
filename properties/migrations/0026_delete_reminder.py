@@ -6,11 +6,11 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('properties', '0025_remove_reminder_recurring_reminder_reminder_type'),
+        ("properties", "0025_remove_reminder_recurring_reminder_reminder_type"),
     ]
 
     operations = [
         migrations.DeleteModel(
-            name='Reminder',
+            name="Reminder",
         ),
     ]

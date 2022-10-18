@@ -7,30 +7,59 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('commodities', '0002_alter_commodity_commodity_class'),
+        ("commodities", "0002_alter_commodity_commodity_class"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='commodity',
-            options={'verbose_name_plural': 'commodities'},
+            name="commodity",
+            options={"verbose_name_plural": "commodities"},
         ),
         migrations.RemoveField(
-            model_name='commodity',
-            name='value',
+            model_name="commodity",
+            name="value",
         ),
         migrations.RemoveField(
-            model_name='commodity',
-            name='weight',
+            model_name="commodity",
+            name="weight",
         ),
         migrations.CreateModel(
-            name='Transaction',
+            name="Transaction",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('transaction_type', models.CharField(choices=[('Buy', 'Buy'), ('Sell', 'Sell')], max_length=100)),
-                ('weight', models.DecimalField(blank=True, decimal_places=2, default=0.0, max_digits=8)),
-                ('value', models.DecimalField(blank=True, decimal_places=2, default=0.0, max_digits=6)),
-                ('commodity', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='commodities.commodity')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "transaction_type",
+                    models.CharField(
+                        choices=[("Buy", "Buy"), ("Sell", "Sell")], max_length=100
+                    ),
+                ),
+                (
+                    "weight",
+                    models.DecimalField(
+                        blank=True, decimal_places=2, default=0.0, max_digits=8
+                    ),
+                ),
+                (
+                    "value",
+                    models.DecimalField(
+                        blank=True, decimal_places=2, default=0.0, max_digits=6
+                    ),
+                ),
+                (
+                    "commodity",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="commodities.commodity",
+                    ),
+                ),
             ],
         ),
     ]

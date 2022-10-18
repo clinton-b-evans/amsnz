@@ -7,17 +7,33 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='PersonalBalance',
+            name="PersonalBalance",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('description', models.CharField(max_length=200)),
-                ('entry_type', models.CharField(choices=[('Asset', 'Asset'), ('Liability', 'Liability')], max_length=100)),
-                ('amount', models.DecimalField(decimal_places=2, default=0, max_digits=5)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("description", models.CharField(max_length=200)),
+                (
+                    "entry_type",
+                    models.CharField(
+                        choices=[("Asset", "Asset"), ("Liability", "Liability")],
+                        max_length=100,
+                    ),
+                ),
+                (
+                    "amount",
+                    models.DecimalField(decimal_places=2, default=0, max_digits=5),
+                ),
             ],
         ),
     ]

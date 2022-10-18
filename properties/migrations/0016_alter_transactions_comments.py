@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('properties', '0015_property_image'),
+        ("properties", "0015_property_image"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='transactions',
-            name='comments',
+            model_name="transactions",
+            name="comments",
             field=models.TextField(blank=True, max_length=255, null=True),
         ),
     ]

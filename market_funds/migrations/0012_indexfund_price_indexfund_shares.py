@@ -6,18 +6,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('market_funds', '0011_delete_exchangetradedfund_indexfund_fund_type'),
+        ("market_funds", "0011_delete_exchangetradedfund_indexfund_fund_type"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='indexfund',
-            name='price',
-            field=models.DecimalField(blank=True, decimal_places=2, default=0.0, max_digits=12),
+            model_name="indexfund",
+            name="price",
+            field=models.DecimalField(
+                blank=True, decimal_places=2, default=0.0, max_digits=12
+            ),
         ),
         migrations.AddField(
-            model_name='indexfund',
-            name='shares',
-            field=models.DecimalField(blank=True, decimal_places=6, default=0.0, max_digits=12),
+            model_name="indexfund",
+            name="shares",
+            field=models.DecimalField(
+                blank=True, decimal_places=6, default=0.0, max_digits=12
+            ),
         ),
     ]

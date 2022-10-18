@@ -7,25 +7,46 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('incomestatements', '0001_initial'),
+        ("incomestatements", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Category',
+            name="Category",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=120)),
-                ('transaction_type', models.CharField(blank=True, choices=[('Income', 'Income'), ('Expense', 'Expense')], max_length=100, null=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=120)),
+                (
+                    "transaction_type",
+                    models.CharField(
+                        blank=True,
+                        choices=[("Income", "Income"), ("Expense", "Expense")],
+                        max_length=100,
+                        null=True,
+                    ),
+                ),
             ],
         ),
         migrations.RemoveField(
-            model_name='incomestatement',
-            name='transaction_type',
+            model_name="incomestatement",
+            name="transaction_type",
         ),
         migrations.AddField(
-            model_name='incomestatement',
-            name='category',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='incomestatements.category'),
+            model_name="incomestatement",
+            name="category",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="incomestatements.category",
+            ),
         ),
     ]

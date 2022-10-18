@@ -6,13 +6,13 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('market_funds', '0007_trade_type'),
+        ("market_funds", "0007_trade_type"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='trade',
-            old_name='share_price_at_purchase',
-            new_name='current_share_price',
+            model_name="trade",
+            old_name="share_price_at_purchase",
+            new_name="current_share_price",
         ),
     ]

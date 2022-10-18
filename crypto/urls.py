@@ -6,12 +6,11 @@ from .views import (
     delete_crypto,
 )
 
-app_name = 'crypto'
+app_name = "crypto"
 
 urlpatterns = [
-    path('crypto/', crypto_list_view, name='crypto-list'),
-    path('crypto/add', add_crypto, name='crypto-add'),
-    path('crypto/<str:pk>/edit',update_crypto, name='update-crypto'),
-    path('crypto/<str:pk>/delete',delete_crypto, name='delete-crypto'),
-
+    path("crypto/", crypto_list_view, name="crypto-list"),
+    path("crypto/add", add_crypto, name="crypto-add"),
+    path("crypto/<str:pk>/edit", update_crypto, name="update-crypto"),
+    path("crypto/<str:pk>/delete", delete_crypto, name="delete-crypto"),
 ]

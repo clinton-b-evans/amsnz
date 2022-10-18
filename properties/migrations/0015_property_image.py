@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('properties', '0014_alter_transactions_options'),
+        ("properties", "0014_alter_transactions_options"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='property',
-            name='image',
-            field=models.ImageField(default='no_picture.png', upload_to='products'),
+            model_name="property",
+            name="image",
+            field=models.ImageField(default="no_picture.png", upload_to="products"),
         ),
     ]

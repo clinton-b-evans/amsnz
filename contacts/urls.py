@@ -7,11 +7,11 @@ from .views import (
     delete_contact,
 )
 
-app_name = 'contacts'
+app_name = "contacts"
 
 urlpatterns = [
-    path('contacts/',contact_list_view, name='main'),
-    path('contacts/add', add_contact, name='add-contact'),
-    path('contacts/<str:pk>/edit',update_contact, name='update-contact'),
-    path('contacts/<str:pk>/delete',delete_contact, name='delete-contact'),
+    path("contacts/", contact_list_view, name="main"),
+    path("contacts/add", add_contact, name="add-contact"),
+    path("contacts/<str:pk>/edit", update_contact, name="update-contact"),
+    path("contacts/<str:pk>/delete", delete_contact, name="delete-contact"),
 ]

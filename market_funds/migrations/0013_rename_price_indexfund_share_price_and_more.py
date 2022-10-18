@@ -6,27 +6,29 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('market_funds', '0012_indexfund_price_indexfund_shares'),
+        ("market_funds", "0012_indexfund_price_indexfund_shares"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='indexfund',
-            old_name='price',
-            new_name='share_price',
+            model_name="indexfund",
+            old_name="price",
+            new_name="share_price",
         ),
         migrations.RenameField(
-            model_name='trade',
-            old_name='current_share_price',
-            new_name='share_price',
+            model_name="trade",
+            old_name="current_share_price",
+            new_name="share_price",
         ),
         migrations.RemoveField(
-            model_name='trade',
-            name='price',
+            model_name="trade",
+            name="price",
         ),
         migrations.AddField(
-            model_name='trade',
-            name='shares',
-            field=models.DecimalField(blank=True, decimal_places=6, default=0.0, max_digits=12),
+            model_name="trade",
+            name="shares",
+            field=models.DecimalField(
+                blank=True, decimal_places=6, default=0.0, max_digits=12
+            ),
         ),
     ]

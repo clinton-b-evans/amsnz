@@ -6,17 +6,15 @@ from .views import (
     delete_indexfund,
     add_trade,
     indexfund_detail_view,
-    
 )
 
-app_name = 'market_funds'
+app_name = "market_funds"
 
 urlpatterns = [
-    path('marketfunds/', fund_list_view, name='fund-list'),
-    path('marketfund/<str:pk>/', indexfund_detail_view, name='fund-detail'),  
-    path('marketfunds/add', add_indexfund, name='fund-add'),
-    path('trade/add', add_trade, name='trade-add'),
-    path('marketfunds/<str:pk>/edit',update_indexfund, name='update-indexfund'),
-    path('marketfunds/<str:pk>/delete',delete_indexfund, name='delete-indexfund'),
-
+    path("marketfunds/", fund_list_view, name="fund-list"),
+    path("marketfund/<str:pk>/", indexfund_detail_view, name="fund-detail"),
+    path("marketfunds/add", add_indexfund, name="fund-add"),
+    path("trade/add", add_trade, name="trade-add"),
+    path("marketfunds/<str:pk>/edit", update_indexfund, name="update-indexfund"),
+    path("marketfunds/<str:pk>/delete", delete_indexfund, name="delete-indexfund"),
 ]

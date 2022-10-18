@@ -224,7 +224,6 @@ Financial Plan
     var totalSWR = ((realEstate * netWorth / 100) * (realEstateSWR / 100)) + ((stocks * netWorth / 100) * (stocksSWR / 100));
     var totalSWRFormatted = returnMoney(totalSWR);
     var adjustedGoal = returnMoney({{ adjusted_goal }});
-
     document.getElementById("id_adjusted_goal").innerHTML = adjustedGoal;
     document.getElementById("id_real_estate_p").innerHTML = returnMoney((realEstate * netWorth / 100));
     document.getElementById("id_stocks_p").innerHTML = returnMoney((stocks * netWorth / 100));

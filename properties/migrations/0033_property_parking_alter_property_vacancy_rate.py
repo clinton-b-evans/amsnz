@@ -6,18 +6,23 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('properties', '0032_alter_property_bathrooms_alter_property_bedrooms_and_more'),
+        (
+            "properties",
+            "0032_alter_property_bathrooms_alter_property_bedrooms_and_more",
+        ),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='property',
-            name='parking',
+            model_name="property",
+            name="parking",
             field=models.PositiveIntegerField(default=0),
         ),
         migrations.AlterField(
-            model_name='property',
-            name='vacancy_rate',
-            field=models.DecimalField(decimal_places=2, default=0, max_digits=5, verbose_name='Vacancy Rate %'),
+            model_name="property",
+            name="vacancy_rate",
+            field=models.DecimalField(
+                decimal_places=2, default=0, max_digits=5, verbose_name="Vacancy Rate %"
+            ),
         ),
     ]

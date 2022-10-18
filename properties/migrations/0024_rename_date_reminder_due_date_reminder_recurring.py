@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('properties', '0023_rename_reminders_reminder'),
+        ("properties", "0023_rename_reminders_reminder"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='reminder',
-            old_name='date',
-            new_name='due_date',
+            model_name="reminder",
+            old_name="date",
+            new_name="due_date",
         ),
         migrations.AddField(
-            model_name='reminder',
-            name='recurring',
+            model_name="reminder",
+            name="recurring",
             field=models.BooleanField(null=True),
         ),
     ]

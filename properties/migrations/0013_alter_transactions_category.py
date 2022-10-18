@@ -6,13 +6,27 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('properties', '0012_transactions'),
+        ("properties", "0012_transactions"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='transactions',
-            name='category',
-            field=models.CharField(choices=[('Capital Introduced', 'Capital Introduced'), ('Management Fee', 'Management Fee'), ('Insurance', 'Insurance'), ('Interest', 'Interest'), ('Mortage', 'Mortage'), ('Repairs and Maintenance', 'Repairs and Maintenance'), ('Rates', 'Rates'), ('Rent Received', 'Rent Received'), ('Sundry Expense', 'Sundry Expense'), ('Other', 'Other')], max_length=128),
+            model_name="transactions",
+            name="category",
+            field=models.CharField(
+                choices=[
+                    ("Capital Introduced", "Capital Introduced"),
+                    ("Management Fee", "Management Fee"),
+                    ("Insurance", "Insurance"),
+                    ("Interest", "Interest"),
+                    ("Mortage", "Mortage"),
+                    ("Repairs and Maintenance", "Repairs and Maintenance"),
+                    ("Rates", "Rates"),
+                    ("Rent Received", "Rent Received"),
+                    ("Sundry Expense", "Sundry Expense"),
+                    ("Other", "Other"),
+                ],
+                max_length=128,
+            ),
         ),
     ]

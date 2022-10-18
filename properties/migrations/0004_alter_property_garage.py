@@ -6,13 +6,24 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('properties', '0003_alter_property_property_type'),
+        ("properties", "0003_alter_property_property_type"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='property',
-            name='garage',
-            field=models.CharField(choices=[('None', 'None'), ('Carport', 'Carport'), ('Single', 'Single'), ('Single with Workshop', 'Single with Workshop'), ('Double', 'Double'), ('Double with Workshop', 'Double with Workshop'), ('Other', 'Other')], max_length=100),
+            model_name="property",
+            name="garage",
+            field=models.CharField(
+                choices=[
+                    ("None", "None"),
+                    ("Carport", "Carport"),
+                    ("Single", "Single"),
+                    ("Single with Workshop", "Single with Workshop"),
+                    ("Double", "Double"),
+                    ("Double with Workshop", "Double with Workshop"),
+                    ("Other", "Other"),
+                ],
+                max_length=100,
+            ),
         ),
     ]

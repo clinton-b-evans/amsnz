@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('contacts', '0004_alter_contact_properties'),
+        ("contacts", "0004_alter_contact_properties"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='contact',
-            name='service_area',
+            model_name="contact",
+            name="service_area",
             field=models.CharField(blank=True, max_length=100),
         ),
         migrations.AlterField(
-            model_name='contact',
-            name='contact_number',
+            model_name="contact",
+            name="contact_number",
             field=models.CharField(blank=True, max_length=12, null=True),
         ),
     ]

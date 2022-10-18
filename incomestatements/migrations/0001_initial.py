@@ -7,18 +7,38 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='IncomeStatement',
+            name="IncomeStatement",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=120)),
-                ('transaction_type', models.CharField(blank=True, choices=[('Income', 'Income'), ('Expense', 'Expense')], max_length=100, null=True)),
-                ('amount', models.DecimalField(blank=True, decimal_places=2, default=0.0, max_digits=12)),
-                ('date', models.DateField()),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=120)),
+                (
+                    "transaction_type",
+                    models.CharField(
+                        blank=True,
+                        choices=[("Income", "Income"), ("Expense", "Expense")],
+                        max_length=100,
+                        null=True,
+                    ),
+                ),
+                (
+                    "amount",
+                    models.DecimalField(
+                        blank=True, decimal_places=2, default=0.0, max_digits=12
+                    ),
+                ),
+                ("date", models.DateField()),
             ],
         ),
     ]

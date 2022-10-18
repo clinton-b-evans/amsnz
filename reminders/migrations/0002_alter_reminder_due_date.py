@@ -7,13 +7,15 @@ import django.utils.timezone
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('reminders', '0001_initial'),
+        ("reminders", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='reminder',
-            name='due_date',
-            field=models.DateField(blank=True, default=django.utils.timezone.now, null=True),
+            model_name="reminder",
+            name="due_date",
+            field=models.DateField(
+                blank=True, default=django.utils.timezone.now, null=True
+            ),
         ),
     ]

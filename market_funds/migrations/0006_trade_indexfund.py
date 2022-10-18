@@ -7,13 +7,18 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('market_funds', '0005_trade'),
+        ("market_funds", "0005_trade"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='trade',
-            name='indexfund',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='market_funds.indexfund'),
+            model_name="trade",
+            name="indexfund",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="market_funds.indexfund",
+            ),
         ),
     ]

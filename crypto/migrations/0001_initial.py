@@ -7,18 +7,35 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Crypto',
+            name="Crypto",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=120)),
-                ('ticker', models.CharField(blank=True, max_length=6, null=True)),
-                ('qty', models.DecimalField(blank=True, decimal_places=4, default=0.0, max_digits=12)),
-                ('spot_price', models.DecimalField(blank=True, decimal_places=2, default=0.0, max_digits=12)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=120)),
+                ("ticker", models.CharField(blank=True, max_length=6, null=True)),
+                (
+                    "qty",
+                    models.DecimalField(
+                        blank=True, decimal_places=4, default=0.0, max_digits=12
+                    ),
+                ),
+                (
+                    "spot_price",
+                    models.DecimalField(
+                        blank=True, decimal_places=2, default=0.0, max_digits=12
+                    ),
+                ),
             ],
         ),
     ]

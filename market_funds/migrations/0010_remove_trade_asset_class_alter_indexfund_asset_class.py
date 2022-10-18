@@ -6,17 +6,30 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('market_funds', '0009_alter_trade_current_share_price'),
+        ("market_funds", "0009_alter_trade_current_share_price"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='trade',
-            name='asset_class',
+            model_name="trade",
+            name="asset_class",
         ),
         migrations.AlterField(
-            model_name='indexfund',
-            name='asset_class',
-            field=models.CharField(blank=True, choices=[('Equities', 'Equities'), ('Bonds', 'Bonds'), ('Cash & Cash Equivalents', 'Cash & Cash Equivalents'), ('Commodites', 'Commodites'), ('Diversified', 'Diversified'), ('Reits', 'Reits'), ('Other', 'Other')], max_length=100, null=True),
+            model_name="indexfund",
+            name="asset_class",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("Equities", "Equities"),
+                    ("Bonds", "Bonds"),
+                    ("Cash & Cash Equivalents", "Cash & Cash Equivalents"),
+                    ("Commodites", "Commodites"),
+                    ("Diversified", "Diversified"),
+                    ("Reits", "Reits"),
+                    ("Other", "Other"),
+                ],
+                max_length=100,
+                null=True,
+            ),
         ),
     ]

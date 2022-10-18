@@ -90,16 +90,17 @@ const myChart = new Chart(ctx, {
     type: 'doughnut',
     data: {
         labels: [
-        {% for key, value in categories.items %} 
-        '{{key}}',
-{% endfor %}
+        {% for key, value in categories.items %}
+            '{{key}}',
+        {% endfor %}
         ],
+
         datasets: [{
             label: 'Categories',
             data: [
-                    {% for key, value in categories.items %} 
-        '{{value|stringformat:"i"}}',
-{% endfor %}
+        {% for key, value in categories.items %}
+            '{{value|stringformat:"i"}}',
+        {% endfor %}
             ],
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',

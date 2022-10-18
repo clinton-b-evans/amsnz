@@ -6,13 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('market_funds', '0008_rename_share_price_at_purchase_trade_current_share_price'),
+        (
+            "market_funds",
+            "0008_rename_share_price_at_purchase_trade_current_share_price",
+        ),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='trade',
-            name='current_share_price',
-            field=models.DecimalField(blank=True, decimal_places=6, default=0.0, max_digits=12),
+            model_name="trade",
+            name="current_share_price",
+            field=models.DecimalField(
+                blank=True, decimal_places=6, default=0.0, max_digits=12
+            ),
         ),
     ]

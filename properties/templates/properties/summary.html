@@ -6,6 +6,16 @@ Summary Dashboard
 {% endblock title %}
 
 {% block content %}
+
+<!--SELECT YEAR -->
+<select class="form-control" onchange="location = this.value;">
+  <option selected="" value="" disabled>Select year</option>
+  <option value="../2019">2019</option>
+  <option value="../2020">2020</option>
+  <option value="../2021">2021</option>
+  <option value="../2022">2022</option>
+</select>
+
 <script src="https://www.chartjs.org/dist/2.6.0/Chart.bundle.js"></script>
 
 <script src="https://www.chartjs.org/samples/2.6.0/utils.js"></script>
@@ -18,7 +28,7 @@ Summary Dashboard
     </div>
   <script>
         var chartData = {
-            labels: ["2022","2023"],
+            labels: ["2019", "2020", "2021", "2022"],
             datasets: [{
                 type: 'line',
                 label: 'Networth',

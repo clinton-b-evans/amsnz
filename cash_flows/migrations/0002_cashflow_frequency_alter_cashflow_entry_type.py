@@ -6,18 +6,31 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cash_flows', '0001_initial'),
+        ("cash_flows", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='cashflow',
-            name='frequency',
-            field=models.CharField(choices=[('Weekly', 'Weekly'), ('Fortnightly', 'Fortnightly'), ('Monthly', 'Monthly'), ('Yearly', 'Yearly')], default='Monthly', max_length=100),
+            model_name="cashflow",
+            name="frequency",
+            field=models.CharField(
+                choices=[
+                    ("Weekly", "Weekly"),
+                    ("Fortnightly", "Fortnightly"),
+                    ("Monthly", "Monthly"),
+                    ("Yearly", "Yearly"),
+                ],
+                default="Monthly",
+                max_length=100,
+            ),
         ),
         migrations.AlterField(
-            model_name='cashflow',
-            name='entry_type',
-            field=models.CharField(choices=[('Income', 'Income'), ('Expense', 'Expense')], default='Expense', max_length=100),
+            model_name="cashflow",
+            name="entry_type",
+            field=models.CharField(
+                choices=[("Income", "Income"), ("Expense", "Expense")],
+                default="Expense",
+                max_length=100,
+            ),
         ),
     ]
