@@ -6,14 +6,14 @@ Summary Dashboard
 {% endblock title %}
 
 {% block content %}
-<script src="https://www.chartjs.org/dist/2.6.0/Chart.bundle.js">
-</script>
+<script src="https://www.chartjs.org/dist/2.6.0/Chart.bundle.js"></script>
 
-<script src="https://www.chartjs.org/samples/2.6.0/utils.js">
-</script>
+<script src="https://www.chartjs.org/samples/2.6.0/utils.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
 
-    <div style="width: 75%">
+    <!-- <div style="width: 75%">
         <canvas id="canvas" style="display: block; height: 561px; width: 1122px;" width="2244" height="1122"></canvas>
     </div>
   <script>
@@ -80,143 +80,261 @@ Summary Dashboard
             });
             window.myMixedChart.update();
         });
-    </script>
+    </script> -->
+  <div class="row">
+    <div class="col-lg-8 mb-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Mixed Chart</h5>
+
+          <!-- Column Chart -->
+          <div id="Chart"></div>
+
+          <script>
+            document.addEventListener("DOMContentLoaded", () => {
+              new ApexCharts(document.querySelector("#Chart"), {
+                series: [{
+                  name: 'Total Assets',
+                  type: 'column',
+                  data: [55000, 85000, 150000, 1.5, 2.5, 2.8, 3.8, 4.6, 1.5, 2.5, 2.8, 3.8, 4.6, 2.8, 3.8, 4.6]
+                }, {
+                  name: 'Liabilities',
+                  type: 'column',
+                  data: [10000, 30000, 25000, 4, 4.1, 4.9, 6.5, 8.5, 1.5, 2.5, 2.8, 3.8, 4.6, 2.8, 3.8, 4.6]
+                }, {
+                  name: 'Networth',
+                  type: 'line',
+                  data: [40000, 55000, 125000, 3.6, 4.5, 4, 5, 8, 1.5, 2.5, 2.8, 3.8, 4.6, 2.8, 3.8, 4.6]
+                }],
+                chart: {
+                  height: 450,
+                  type: 'line',
+                  stacked: false
+                },
+                dataLabels: {
+                  enabled: false
+                },
+                stroke: {
+                  width: [1, 1, 4]
+                },
+                title: {
+                  text: 'Networth Tracker (2020 - 2035)',
+                  align: 'center',
+                  // offsetX: 110
+                },
+                xaxis: {
+                  categories: [2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034, 2035],
+                },
+                yaxis: [
+                  {
+                    axisTicks: {
+                      show: true,
+                    },
+                    axisBorder: {
+                      show: true,
+                      color: '#008FFB'
+                    },
+                    labels: {
+                      style: {
+                        colors: '#008FFB',
+                      }
+                    },
+                    title: {
+                      text: "Total Assets",
+                      style: {
+                        color: '#008FFB',
+                      }
+                    },
+                    tooltip: {
+                      enabled: true
+                    }
+                  }
+                ],
+                tooltip: {
+                  fixed: {
+                    enabled: true,
+                    position: 'topLeft', // topRight, topLeft, bottomRight, bottomLeft
+                    offsetY: 30,
+                    offsetX: 60
+                  },
+                },
+                legend: {
+                  horizontalAlign: 'center',
+                  // offsetX: 40
+                }
+              }).render();
+            });
+          </script>
+          <!-- End Mixed Chart -->
+
+        </div>
+      </div>
+    </div>  
+    <div class="col-lg-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title mb-5">Pie Chart</h5>
+
+          <!-- Pie Chart -->
+          <div id="pieChart" class="mb-5"></div>
+
+          <script>
+            document.addEventListener("DOMContentLoaded", () => {
+              new ApexCharts(document.querySelector("#pieChart"), {
+                series: [44, 55, 13, 43, 22],
+                chart: {
+                  height: 450,
+                  type: 'pie',
+                  toolbar: {
+                    show: true
+                  }
+                },
+                title: {
+                  text: 'Networth Tracker {{year}}',
+                  align: 'center',
+                  // offsetX: 110
+                },
+                labels: ['Team A', 'Team B', 'Team C', 'Team D', 'Team E']
+              }).render();
+            });
+          </script>
+          <!-- End Pie Chart -->
+
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="row">
     <div class="col-sm" style="font-size:small">
-    <h6>Property Summary</h6>
+      <h6>Property Summary</h6>
       <table class="table table-hover">
-      <thead>
-       <tr>
-          <th scope="col">Number of Properties</th>
-          <th style="text-align:right" scope="col">{{ total_properties }}</th>
-        </tr>
-      </thead>
-    <tbody>
+        <thead>
+          <tr>
+            <th scope="col">Number of Properties</th>
+            <th style="text-align:right" scope="col">{{ total_properties }}</th>
+          </tr>
+        </thead>
 
-    <tr>
-      <td>Assets</td>
-      <div class="progress">
-        <div class="progress-bar" role="progressbar" style="width: {{ property_progress|floatformat }}%;" aria-valuenow="{{ property_progress|floatformat }}" aria-valuemin="0" aria-valuemax="100">{{ property_progress|floatformat }}%</div>
-      </div>
-      <td style="text-align:right">${{ total_assets|floatformat:0 }} </td>
-    </tr>
-    <tr>
-      <td>Liabilities</td>
-      <td style="text-align:right">${{ total_liabilities|floatformat:0 }} </td>
-    </tr>
-    <tr>
-      <td>Net Worth</td>
-      <td style="text-align:right">${{ total_networth|floatformat:0 }} </td>
-    </tr>
-    <tr>
-    <td>
-    </td>
-    <td>
-    </td>
-    </tr>
-      <thead>
-        <tr>
-          <th scope="col">Income</th>
-          <th style="text-align:right" scope="col">${{ total_income|floatformat:0 }}</th>
-        </tr>
-      </thead>
-      <tr>
-      <td>Rental Income</td>
-      <td style="text-align:right">${{ total_rent|floatformat:0 }}</td>
-      </tr>
-      <tr>
-      <td>Other Income:</td>
-      <td style="text-align:right">${{ total_other_income|floatformat:0 }}</td>
-      </tr>
-      <tr>
-      <td>
-      </td>
-      <td>
-     <td>
-      </tr>
-      <thead>
-        <tr>
-          <th scope="col">Expense</th>
-          <th style="text-align:right" scope="col">${{ total_expenses|floatformat:0 }}</th>
-        </tr>
-      </thead>
-      <tr>
-      <td>Operating Expenses</td>
-      <td style="text-align:right">${{ total_operating_expenses|floatformat:0 }}</td>
-      </tr>
-      <tr>
-      <td>Repayments</td>
-      <td style="text-align:right">${{ total_repayments|floatformat:0 }}</td>
-      </tr>
-      <tr>
-      <td></td>
-      <td></td>
-      </tr>
-      <thead>
-        <tr>
-          <th scope="col">Net Rental Income</th>
-          <th style="text-align:right" scope="col">${{ total_net_rental_income|floatformat:0 }}</th>
-        </tr>
-      </thead>
-      <tr>
-      <td></td>
-      <td></td>
-      </tr>
-      <thead>
-        <tr>
-          <th scope="col">Risk Assessment</th>
-          <th scope="col"></th>
-        </tr>
-      </thead>
-      <tr>
-        <td>Debt to Income Ratio</td>
-        <td style="text-align:right">1:{{ loan_to_debt_ratio|floatformat:2 }} | {{ loan_to_debt_percent|floatformat:2 }}%</td>
-      </tr>
-      <tr>
-          <td>Debt Service Coverage Ratio</td>
-          <td style="text-align:right">1:{{ debt_service_coverage_ratio|floatformat:2 }} | {{ debt_service_coverage_percent|floatformat:2 }}%</td>
-      </tr>
-        <tr>
-          <td>Break Even Point</td>
-          <td style="text-align:right">{{ break_even_point|floatformat:2 }}%</td>
-        </tr>
-      </tbody>
+        <tbody>
+          <tr>
+            <td>Assets</td>
+            <div class="progress">
+              <div class="progress-bar" role="progressbar" style="width: {{ property_progress|floatformat }}%;" aria-valuenow="{{ property_progress|floatformat }}" aria-valuemin="0" aria-valuemax="100">{{ property_progress|floatformat }}%</div>
+            </div>
+            <td style="text-align:right">${{ total_assets|floatformat:0 }} </td>
+          </tr>
+          <tr>
+            <td>Liabilities</td>
+            <td style="text-align:right">${{ total_liabilities|floatformat:0 }} </td>
+          </tr>
+          <tr>
+            <td>Net Worth</td>
+            <td style="text-align:right">${{ total_networth|floatformat:0 }} </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+          </tr>
+          <thead>
+            <tr>
+              <th scope="col">Income</th>
+              <th style="text-align:right" scope="col">${{ total_income|floatformat:0 }}</th>
+            </tr>
+          </thead>
+          <tr>
+            <td>Rental Income</td>
+            <td style="text-align:right">${{ total_rent|floatformat:0 }}</td>
+          </tr>
+          <tr>
+            <td>Other Income:</td>
+            <td style="text-align:right">${{ total_other_income|floatformat:0 }}</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><td>
+          </tr>
+          <thead>
+            <tr>
+              <th scope="col">Expense</th>
+              <th style="text-align:right" scope="col">${{ total_expenses|floatformat:0 }}</th>
+            </tr>
+          </thead>
+          <tr>
+            <td>Operating Expenses</td>
+            <td style="text-align:right">${{ total_operating_expenses|floatformat:0 }}</td>
+          </tr>
+          <tr>
+            <td>Repayments</td>
+            <td style="text-align:right">${{ total_repayments|floatformat:0 }}</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+          </tr>
+          <thead>
+            <tr>
+              <th scope="col">Net Rental Income</th>
+              <th style="text-align:right" scope="col">${{ total_net_rental_income|floatformat:0 }}</th>
+            </tr>
+          </thead>
+          <tr>
+          <td></td>
+          <td></td>
+          </tr>
+          <thead>
+            <tr>
+              <th scope="col">Risk Assessment</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tr>
+            <td>Debt to Income Ratio</td>
+            <td style="text-align:right">1:{{ loan_to_debt_ratio|floatformat:2 }} | {{ loan_to_debt_percent|floatformat:2 }}%</td>
+          </tr>
+          <tr>
+            <td>Debt Service Coverage Ratio</td>
+            <td style="text-align:right">1:{{ debt_service_coverage_ratio|floatformat:2 }} | {{ debt_service_coverage_percent|floatformat:2 }}%</td>
+          </tr>
+          <tr>
+            <td>Break Even Point</td>
+            <td style="text-align:right">{{ break_even_point|floatformat:2 }}%</td>
+          </tr>
+        </tbody>
       </table>
     </div>
+
     <div class="col-sm" style="font-size:small">
-
- <h6>Personal Summary</h6>
+      <h6>Personal Summary</h6>
       <table class="table table-hover">
-      <thead>
-       <tr>
-          <th scope="col">Balance Sheet</th>
-          <th style="text-align:right" scope="col"></th>
-        </tr>
-      </thead>
-    <tbody>
-
-    <tr>
-      <td>Assets</td>
-      <td style="text-align:right">${{ total_pb_assets|floatformat:2 }} </td>
-    </tr>
-        <tr>
-      <td>Savings</td>
-      <td style="text-align:right">${{ savings_total|floatformat:2 }} </td>
-    </tr>
-        <tr>
-      <td>Retirement Accounts</td>
-      <td style="text-align:right">${{ total_retirement|floatformat:2 }} </td>
-    </tr>
-    <tr>
-      <td>Liabilities</td>
-      <td style="text-align:right">${{ total_pb_liabilities|floatformat:2 }} </td>
-    </tr>
-    <tr>
-      <td>Net Worth</td>
-      <td style="text-align:right">${{ pb_networth|floatformat:2 }} </td>
-    </tr>
-    </tbody>
+        <thead>
+          <tr>
+            <th scope="col">Balance Sheet</th>
+            <th style="text-align:right" scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Assets</td>
+            <td style="text-align:right">${{ total_pb_assets|floatformat:2 }} </td>
+          </tr>
+          <tr>
+            <td>Savings</td>
+            <td style="text-align:right">${{ savings_total|floatformat:2 }} </td>
+          </tr>
+          <tr>
+            <td>Retirement Accounts</td>
+            <td style="text-align:right">${{ total_retirement|floatformat:2 }} </td>
+          </tr>
+          <tr>
+            <td>Liabilities</td>
+            <td style="text-align:right">${{ total_pb_liabilities|floatformat:2 }} </td>
+          </tr>
+          <tr>
+            <td>Net Worth</td>
+            <td style="text-align:right">${{ pb_networth|floatformat:2 }} </td>
+          </tr>
+        </tbody>
     <thead>
        <tr>
           <th scope="col">Cash Flow</th>

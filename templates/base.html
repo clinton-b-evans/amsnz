@@ -1,215 +1,1490 @@
-
+{% load static %}
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-    <meta name="generator" content="Hugo 0.88.1">
-    <title>PAM</title>
 
-    <script>
-//pie
-var ctxP = document.getElementById("pieChart").getContext('2d');
-var myPieChart = new Chart(ctxP, {
-type: 'pie',
-data: {
-labels: ["Red", "Green", "Yellow", "Grey", "Dark Grey"],
-datasets: [{
-data: [300, 50, 100, 40, 120],
-backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
-hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774"]
-}]
-},
-options: {
-responsive: true
-}
-});
-    </script>
-
-<script language="javascript" type="text/javascript">
-<!--
-function popitup(url) {
-    newwindow=window.open(url,'{{title}}','height=510,width=384');
-    if (window.focus) {newwindow.focus()}
-    return false;
-}
-// -->
-</script>
-    <!-- Bootstrap core CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-
-    <!-- Favicons -->
-<link rel="apple-touch-icon" href="/docs/5.1/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
-<link rel="icon" href="/docs/5.1/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
-<link rel="icon" href="/docs/5.1/assets/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
-<link rel="manifest" href="/docs/5.1/assets/img/favicons/manifest.json">
-<link rel="mask-icon" href="/docs/5.1/assets/img/favicons/safari-pinned-tab.svg" color="#7952b3">
-<link rel="icon" href="/docs/5.1/assets/img/favicons/favicon.ico">
-<meta name="theme-color" content="#7952b3">
-
-
-    <style>
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        user-select: none;
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+  <meta name="generator" content="Hugo 0.88.1">
+  <title>PAM</title>
+  
+  <!-- Select2 -->
+  <link rel="stylesheet" href="{% static 'select2/css/select2.min.css' %}">
+  <script>
+    //pie
+    var ctxP = document.getElementById("pieChart").getContext('2d');
+    var myPieChart = new Chart(ctxP, {
+      type: 'pie',
+      data: {
+        labels: ["Red", "Green", "Yellow", "Grey", "Dark Grey"],
+        datasets: [{
+          data: [300, 50, 100, 40, 120],
+          backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
+          hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774"]
+        }]
+      },
+      options: {
+        responsive: true
       }
+    });
+  </script>
 
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
-        }
+  <script language="javascript" type="text/javascript">
+
+    function popitup(url) {
+      newwindow = window.open(url, '{{title}}', 'height=510,width=384');
+      if (window.focus) { newwindow.focus() }
+      return false;
+    }
+
+  </script>
+  <!-- Bootstrap core CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
+
+
+  <!-- Select2 -->
+  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> -->
+
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+
+  <!-- jQuery -->
+  <script src="{% static 'jquery/jquery.min.js' %}"></script>
+
+  <!-- Select2 -->
+  <script src="{% static 'select2/js/select2.full.min.js' %}"></script>
+
+  <!-- Favicons -->
+  <link rel="apple-touch-icon" href="/docs/5.1/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
+  <link rel="icon" href="/docs/5.1/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="/docs/5.1/assets/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
+  <link rel="manifest" href="/docs/5.1/assets/img/favicons/manifest.json">
+  <link rel="mask-icon" href="/docs/5.1/assets/img/favicons/safari-pinned-tab.svg" color="#7952b3">
+  <link rel="icon" href="/docs/5.1/assets/img/favicons/favicon.ico">
+  <meta name="theme-color" content="#7952b3">
+
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"> -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+
+
+
+  <style>
+    *, ::after, ::before {
+      box-sizing: border-box;
+    }
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
       }
-    </style>
+    }
 
-    
-    <!-- Custom styles for this template -->
-   
-  </head>
-  <body>
-    
-<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">AMS</a>
-  <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="navbar-nav">
-    <div class="nav-item text-nowrap">
-      <a class="nav-link px-3" href="/admin">Admin</a>
-    </div>
-  </div>
-</header>
+    a {
+      text-decoration: none;
+    }
 
-<div class="container-fluid">
-  <div class="row">
-    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-      <div class="position-sticky pt-3">
-        <ul class="nav flex-column">
-          <li class="nav-item">
-            <strong>General</strong>
-              <a class="nav-link active" aria-current="page" href="/summary">
-            <span data-feather="home"></span>
-              Summary Dashboard
+    body {
+      font-family: "Open Sans", sans-serif;
+      background: #f6f9ff;
+      color: #444444;
+    }
+
+    .header {
+      transition: all 0.5s;
+      z-index: 997;
+      height: 60px;
+      box-shadow: 0px 2px 20px rgb(1 41 112 / 10%);
+      background-color: #fff;
+      padding-left: 20px;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 60px;
+      left: 0;
+      bottom: 0;
+      width: 300px;
+      z-index: 996;
+      transition: all 0.3s;
+      padding: 20px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #aab7cf transparent;
+      box-shadow: 0px 0px 20px rgb(1 41 112 / 10%);
+      background-color: #fff;
+    }
+
+    #main {
+      margin-top: 60px;
+      padding: 20px 30px;
+      transition: all 0.3s;
+    }
+
+    @media (min-width: 1200px) {
+      #main, #footer {
+          margin-left: 300px;
+      }
+    }
+
+    /*--------------------------------------------------------------
+    # General
+    --------------------------------------------------------------*/
+    :root {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Open Sans", sans-serif;
+      background: #f6f9ff;
+      color: #444444;
+    }
+
+    a {
+      color: #4154f1;
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: #717ff5;
+      text-decoration: none;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: "Nunito", sans-serif;
+    }
+
+    /* Bordered Tabs */
+    .nav-tabs-bordered {
+      border-bottom: 2px solid #ebeef4;
+    }
+    .nav-tabs-bordered .nav-link {
+      margin-bottom: -2px;
+      border: none;
+      color: #2c384e;
+    }
+    .nav-tabs-bordered .nav-link:hover, .nav-tabs-bordered .nav-link:focus {
+      color: #4154f1;
+    }
+    .nav-tabs-bordered .nav-link.active {
+      background-color: #f6f9ff;
+      color: #4154f1;
+      border-radius: 2rem;
+      border-bottom: 2px solid #4154f1;
+      font-weight: 700;
+    }
+
+    /*--------------------------------------------------------------
+    # Override some default Bootstrap stylings
+    --------------------------------------------------------------*/
+    /* Dropdown menus */
+    .dropdown-menu {
+      border-radius: 4px;
+      padding: 10px 0;
+      -webkit-animation-name: dropdown-animate;
+      animation-name: dropdown-animate;
+      -webkit-animation-duration: 0.2s;
+      animation-duration: 0.2s;
+      -webkit-animation-fill-mode: both;
+      animation-fill-mode: both;
+      border: 0;
+      box-shadow: 0 5px 30px 0 rgba(82, 63, 105, 0.2);
+    }
+    .dropdown-menu .dropdown-header, .dropdown-menu .dropdown-footer {
+      text-align: center;
+      font-size: 15px;
+      padding: 10px 25px;
+    }
+    .dropdown-menu .dropdown-footer a {
+      color: #444444;
+      text-decoration: underline;
+    }
+    .dropdown-menu .dropdown-footer a:hover {
+      text-decoration: none;
+    }
+    .dropdown-menu .dropdown-divider {
+      color: #a5c5fe;
+      margin: 0;
+    }
+    .dropdown-menu .dropdown-item {
+      font-size: 14px;
+      padding: 10px 15px;
+      transition: 0.3s;
+    }
+    .dropdown-menu .dropdown-item i {
+      margin-right: 10px;
+      font-size: 18px;
+      line-height: 0;
+    }
+    .dropdown-menu .dropdown-item:hover {
+      background-color: #f6f9ff;
+    }
+
+    @media (min-width: 768px) {
+      .dropdown-menu-arrow::before {
+        content: "";
+        width: 13px;
+        height: 13px;
+        background: #fff;
+        position: absolute;
+        top: -7px;
+        right: 20px;
+        transform: rotate(45deg);
+        border-top: 1px solid #eaedf1;
+        border-left: 1px solid #eaedf1;
+      }
+    }
+    @-webkit-keyframes dropdown-animate {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+      0% {
+        opacity: 0;
+      }
+    }
+    @keyframes dropdown-animate {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+      0% {
+        opacity: 0;
+      }
+    }
+
+    /*--------------------------------------------------------------
+    # Header
+    --------------------------------------------------------------*/
+    .logo {
+      line-height: 1;
+    }
+    @media (min-width: 1200px) {
+      .logo {
+        width: 280px;
+      }
+    }
+    .logo img {
+      max-height: 26px;
+      margin-right: 6px;
+    }
+    .logo span {
+      font-size: 26px;
+      font-weight: 700;
+      color: #012970;
+      font-family: "Nunito", sans-serif;
+    }
+
+    .header {
+      transition: all 0.5s;
+      z-index: 997;
+      height: 60px;
+      box-shadow: 0px 2px 20px rgba(1, 41, 112, 0.1);
+      background-color: #fff;
+      padding-left: 20px;
+      /* Toggle Sidebar Button */
+      /* Search Bar */
+    }
+    .header .toggle-sidebar-btn {
+      font-size: 32px;
+      padding-left: 10px;
+      cursor: pointer;
+      color: #012970;
+    }
+    .header .search-bar {
+      min-width: 360px;
+      padding: 0 20px;
+    }
+    @media (max-width: 1199px) {
+      .header .search-bar {
+        position: fixed;
+        top: 50px;
+        left: 0;
+        right: 0;
+        padding: 20px;
+        box-shadow: 0px 0px 15px 0px rgba(1, 41, 112, 0.1);
+        background: white;
+        z-index: 9999;
+        transition: 0.3s;
+        visibility: hidden;
+        opacity: 0;
+      }
+      .header .search-bar-show {
+        top: 60px;
+        visibility: visible;
+        opacity: 1;
+      }
+    }
+    .header .search-form {
+      width: 100%;
+    }
+    .header .search-form input {
+      border: 0;
+      font-size: 14px;
+      color: #012970;
+      border: 1px solid rgba(1, 41, 112, 0.2);
+      padding: 7px 38px 7px 8px;
+      border-radius: 3px;
+      transition: 0.3s;
+      width: 100%;
+    }
+    .header .search-form input:focus, .header .search-form input:hover {
+      outline: none;
+      box-shadow: 0 0 10px 0 rgba(1, 41, 112, 0.15);
+      border: 1px solid rgba(1, 41, 112, 0.3);
+    }
+    .header .search-form button {
+      border: 0;
+      padding: 0;
+      margin-left: -30px;
+      background: none;
+    }
+    .header .search-form button i {
+      color: #012970;
+    }
+
+    /*--------------------------------------------------------------
+    # Header Nav
+    --------------------------------------------------------------*/
+    .header-nav ul {
+      list-style: none;
+    }
+    .header-nav > ul {
+      margin: 0;
+      padding: 0;
+    }
+    .header-nav .nav-icon {
+      font-size: 20px;
+      color: #012970;
+    }
+    .header-nav .nav-profile {
+      color: #012970;
+    }
+    .header-nav .nav-profile img {
+      max-height: 36px;
+    }
+    .header-nav .nav-profile span {
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .header-nav .badge-number {
+      position: absolute;
+      inset: 4px 6px auto auto;
+      font-weight: normal;
+      font-size: 11px;
+      padding: 3px 6px;
+    }
+    .header-nav .notifications .notification-item {
+      display: flex;
+      align-items: center;
+      padding: 15px 10px;
+      transition: 0.3s;
+    }
+    .header-nav .notifications .notification-item i {
+      margin: 0 20px 0 10px;
+      font-size: 24px;
+    }
+    .header-nav .notifications .notification-item h4 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+    .header-nav .notifications .notification-item p {
+      font-size: 13px;
+      margin-bottom: 3px;
+      color: #919191;
+    }
+    .header-nav .notifications .notification-item:hover {
+      background-color: #f6f9ff;
+    }
+    .header-nav .messages .message-item {
+      padding: 15px 10px;
+      transition: 0.3s;
+    }
+    .header-nav .messages .message-item a {
+      display: flex;
+    }
+    .header-nav .messages .message-item img {
+      margin: 0 20px 0 10px;
+      max-height: 40px;
+    }
+    .header-nav .messages .message-item h4 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: #444444;
+    }
+    .header-nav .messages .message-item p {
+      font-size: 13px;
+      margin-bottom: 3px;
+      color: #919191;
+    }
+    .header-nav .messages .message-item:hover {
+      background-color: #f6f9ff;
+    }
+    .header-nav .profile {
+      min-width: 240px;
+      padding-bottom: 0;
+    }
+    .header-nav .profile .dropdown-header h6 {
+      font-size: 18px;
+      margin-bottom: 0;
+      font-weight: 600;
+      color: #444444;
+    }
+    .header-nav .profile .dropdown-header span {
+      font-size: 14px;
+    }
+    .header-nav .profile .dropdown-item {
+      font-size: 14px;
+      padding: 10px 15px;
+      transition: 0.3s;
+    }
+    .header-nav .profile .dropdown-item i {
+      margin-right: 10px;
+      font-size: 18px;
+      line-height: 0;
+    }
+    .header-nav .profile .dropdown-item:hover {
+      background-color: #f6f9ff;
+    }
+
+    /*--------------------------------------------------------------
+    # Sidebar
+    --------------------------------------------------------------*/
+    .sidebar {
+      position: fixed;
+      top: 60px;
+      left: 0;
+      bottom: 0;
+      width: 300px;
+      z-index: 996;
+      transition: all 0.3s;
+      padding: 20px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #aab7cf transparent;
+      box-shadow: 0px 0px 20px rgba(1, 41, 112, 0.1);
+      background-color: #fff;
+    }
+    @media (max-width: 1199px) {
+      .sidebar {
+        left: -300px;
+      }
+    }
+    .sidebar::-webkit-scrollbar {
+      width: 5px;
+      height: 8px;
+      background-color: #fff;
+    }
+    .sidebar::-webkit-scrollbar-thumb {
+      background-color: #aab7cf;
+    }
+
+    @media (min-width: 1200px) {
+      #main, #footer {
+        margin-left: 300px;
+      }
+    }
+    @media (max-width: 1199px) {
+      .toggle-sidebar .sidebar {
+        left: 0;
+      }
+    }
+    @media (min-width: 1200px) {
+      .toggle-sidebar #main, .toggle-sidebar #footer {
+        margin-left: 0;
+      }
+      .toggle-sidebar .sidebar {
+        left: -300px;
+      }
+    }
+
+    .sidebar-nav {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+    .sidebar-nav li {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+    .sidebar-nav .nav-item {
+      margin-bottom: 5px;
+    }
+    .sidebar-nav .nav-heading {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: #899bbd;
+      font-weight: 600;
+      margin: 10px 0 5px 15px;
+    }
+    .sidebar-nav .nav-link {
+      display: flex;
+      align-items: center;
+      font-size: 15px;
+      font-weight: 600;
+      color: #4154f1;
+      transition: 0.3;
+      background: #f6f9ff;
+      padding: 10px 15px;
+      border-radius: 4px;
+    }
+    .sidebar-nav .nav-link i {
+      font-size: 16px;
+      margin-right: 10px;
+      color: #4154f1;
+    }
+    .sidebar-nav .nav-link.collapsed {
+      color: #012970;
+      background: #fff;
+    }
+    .sidebar-nav .nav-link.collapsed i {
+      color: #899bbd;
+    }
+    .sidebar-nav .nav-link:hover {
+      color: #4154f1;
+      background: #f6f9ff;
+    }
+    .sidebar-nav .nav-link:hover i {
+      color: #4154f1;
+    }
+    .sidebar-nav .nav-link .bi-chevron-down {
+      margin-right: 0;
+      transition: transform 0.2s ease-in-out;
+    }
+    .sidebar-nav .nav-link:not(.collapsed) .bi-chevron-down {
+      transform: rotate(180deg);
+    }
+    .sidebar-nav .nav-content {
+      padding: 5px 0 0 0;
+      margin: 0;
+      list-style: none;
+    }
+    .sidebar-nav .nav-content a {
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: #012970;
+      transition: 0.3;
+      padding: 10px 0 10px 40px;
+      transition: 0.3s;
+    }
+    .sidebar-nav .nav-content a i {
+      font-size: 6px;
+      margin-right: 8px;
+      line-height: 0;
+      border-radius: 50%;
+    }
+    .sidebar-nav .nav-content a:hover, .sidebar-nav .nav-content a.active {
+      color: #4154f1;
+    }
+    .sidebar-nav .nav-content a.active i {
+      background-color: #4154f1;
+    }
+  </style>
+
+
+  <!-- Custom styles for this template -->
+
+</head>
+
+<body>
+
+    <!-- ======= Header ======= -->
+    <header id="header" class="header fixed-top d-flex align-items-center">
+
+      <div class="d-flex align-items-center justify-content-between">
+        <a href="index.html" class="logo d-flex align-items-center">
+          <img src="assets/img/logo.png" alt="">
+          <span class="d-none d-lg-block">AMS Admin</span>
+        </a>
+        <i class="bi bi-list toggle-sidebar-btn"></i>
+      </div><!-- End Logo -->
+  
+      <div class="search-bar">
+        <form class="search-form d-flex align-items-center" method="POST" action="#">
+          <input type="text" name="query" placeholder="Search" title="Enter search keyword">
+          <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+        </form>
+      </div><!-- End Search Bar -->
+  
+      <nav class="header-nav ms-auto">
+        <ul class="d-flex align-items-center">
+  
+          <li class="nav-item d-block d-lg-none">
+            <a class="nav-link nav-icon search-bar-toggle " href="#">
+              <i class="bi bi-search"></i>
             </a>
-          </li>
+          </li><!-- End Search Icon-->
+  
+          <li class="nav-item dropdown">
+  
+            <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+              <i class="bi bi-bell"></i>
+              <span class="badge bg-primary badge-number">4</span>
+            </a><!-- End Notification Icon -->
+  
+            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
+              <li class="dropdown-header">
+                You have 4 new notifications
+                <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
+              </li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+  
+              <li class="notification-item">
+                <i class="bi bi-exclamation-circle text-warning"></i>
+                <div>
+                  <h4>Lorem Ipsum</h4>
+                  <p>Quae dolorem earum veritatis oditseno</p>
+                  <p>30 min. ago</p>
+                </div>
+              </li>
+  
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+  
+              <li class="notification-item">
+                <i class="bi bi-x-circle text-danger"></i>
+                <div>
+                  <h4>Atque rerum nesciunt</h4>
+                  <p>Quae dolorem earum veritatis oditseno</p>
+                  <p>1 hr. ago</p>
+                </div>
+              </li>
+  
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+  
+              <li class="notification-item">
+                <i class="bi bi-check-circle text-success"></i>
+                <div>
+                  <h4>Sit rerum fuga</h4>
+                  <p>Quae dolorem earum veritatis oditseno</p>
+                  <p>2 hrs. ago</p>
+                </div>
+              </li>
+  
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+  
+              <li class="notification-item">
+                <i class="bi bi-info-circle text-primary"></i>
+                <div>
+                  <h4>Dicta reprehenderit</h4>
+                  <p>Quae dolorem earum veritatis oditseno</p>
+                  <p>4 hrs. ago</p>
+                </div>
+              </li>
+  
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li class="dropdown-footer">
+                <a href="#">Show all notifications</a>
+              </li>
+  
+            </ul><!-- End Notification Dropdown Items -->
+  
+          </li><!-- End Notification Nav -->
+  
+          <li class="nav-item dropdown">
+  
+            <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+              <i class="bi bi-chat-left-text"></i>
+              <span class="badge bg-success badge-number">3</span>
+            </a><!-- End Messages Icon -->
+  
+            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages">
+              <li class="dropdown-header">
+                You have 3 new messages
+                <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
+              </li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+  
+              <li class="message-item">
+                <a href="#">
+                  <img src="assets/img/messages-1.jpg" alt="" class="rounded-circle">
+                  <div>
+                    <h4>Maria Hudson</h4>
+                    <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
+                    <p>4 hrs. ago</p>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+  
+              <li class="message-item">
+                <a href="#">
+                  <img src="assets/img/messages-2.jpg" alt="" class="rounded-circle">
+                  <div>
+                    <h4>Anna Nelson</h4>
+                    <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
+                    <p>6 hrs. ago</p>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+  
+              <li class="message-item">
+                <a href="#">
+                  <img src="assets/img/messages-3.jpg" alt="" class="rounded-circle">
+                  <div>
+                    <h4>David Muldon</h4>
+                    <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
+                    <p>8 hrs. ago</p>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+  
+              <li class="dropdown-footer">
+                <a href="#">Show all messages</a>
+              </li>
+  
+            </ul><!-- End Messages Dropdown Items -->
+  
+          </li><!-- End Messages Nav -->
+  
+          <li class="nav-item dropdown pe-3">
+  
+            <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+              <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
+              <span class="d-none d-md-block dropdown-toggle ps-2">K. Anderson</span>
+            </a><!-- End Profile Iamge Icon -->
+  
+            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+              <li class="dropdown-header">
+                <h6>Kevin Anderson</h6>
+                <span>Web Designer</span>
+              </li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+  
+              <li>
+                <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                  <i class="bi bi-person"></i>
+                  <span>My Profile</span>
+                </a>
+              </li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+  
+              <li>
+                <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                  <i class="bi bi-gear"></i>
+                  <span>Account Settings</span>
+                </a>
+              </li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+  
+              <li>
+                <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
+                  <i class="bi bi-question-circle"></i>
+                  <span>Need Help?</span>
+                </a>
+              </li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+  
+              <li>
+                <a class="dropdown-item d-flex align-items-center" href="#">
+                  <i class="bi bi-box-arrow-right"></i>
+                  <span>Sign Out</span>
+                </a>
+              </li>
+  
+            </ul><!-- End Profile Dropdown Items -->
+          </li><!-- End Profile Nav -->
+  
+        </ul>
+      </nav><!-- End Icons Navigation -->
+  
+    </header><!-- End Header -->
+  
+    <!-- ======= Sidebar ======= -->
+    <aside id="sidebar" class="sidebar">
+  
+      <ul class="sidebar-nav" id="sidebar-nav">
+  
+        <li class="nav-item">
+          <a class="nav-link" href="/summary">
+            <i class="bi bi-grid"></i>
+            <span>Summary Dashboard</span>
+            <!-- <span data-feather="home">Summary Dashboard</span> -->
+          </a>
+          <!-- <a class="nav-link active" aria-current="page" href="/summary">
+            <span data-feather="home"></span>
+            Summary Dashboard
+          </a> -->
+        </li><!-- End Summary Dashboard Nav -->
+
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="/retiregoals">
+            <i class="bi bi-cash-coin"></i>
+            <span>Financial Plan</span>
+            <!-- <span data-feather="home">Financial Plan</span> -->
+          </a>
+          <!-- <a class="nav-link active" aria-current="page" href="/retiregoals">
+            <span data-feather="home"></span>
+            Financial Plan
+          </a> -->
+        </li><!-- End Financial Plan Page Nav -->
+
+        <li class="nav-heading">Investments</li>
+  
+        <li class="nav-item">
+          <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+            <i class="bi bi-house"></i><span>Property</span><i class="bi bi-chevron-down ms-auto"></i>
+          </a>
+          <ul id="components-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+            <li>
+              <a href="/properties">
+                <i class="bi bi-circle"></i>
+                <span>Property Portfolio</span>
+                <!-- <span data-feather="file">Property Portfolio</span> -->
+              </a>
+              <!-- <a class="nav-link" href="/properties">
+                <span data-feather="file"></span>
+                Property Portfolio
+              </a> -->
+            </li>
+            <li>
+              <a href="/propertyincomestatements">
+                <i class="bi bi-circle"></i>
+                <span>Income Statements</span>
+                <!-- <span data-feather="file">Income Statements</span> -->
+              </a>
+              <!-- <a class="nav-link" href="/propertyincomestatements">
+                <span data-feather="file"></span>
+                - Income Statements
+              </a> -->
+            </li>
+            <li>
+              <a href="/propertyincomestatements/yeartodate/2022/">
+                <i class="bi bi-circle"></i>
+                <span>Profit and Loss</span>
+                <!-- <span data-feather="file">Profit and Loss</span> -->
+              </a>
+              <!-- <a class="nav-link" href="/propertyincomestatements/yeartodate/2022/">
+                <span data-feather="file"></span>
+                - Budget Year To Date
+              </a> -->
+            </li>
+          </ul>
+        </li><!-- End Property Nav -->
+
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="/marketfunds">
+            <i class="bi bi-graph-up-arrow"></i>
+            <span>Stock Porfolio</span>
+            <!-- <span data-feather="home">Stock Porfolio</span> -->
+          </a>
+          <!-- <a class="nav-link" href="/marketfunds">
+            <span data-feather="file"></span>
+            Stock Portfolio
+          </a> -->
+        </li><!-- End Stock Porfolio Page Nav -->
+
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="/commodities">
+            <i class="bi bi-gem"></i>
+            <span>Commodities</span>
+            <!-- <span data-feather="file">Commodities</span> -->
+          </a>
+          <!-- <a class="nav-link" href="/commodities">
+            <span data-feather="file"></span>
+            Commodities
+          </a> -->
+        </li><!-- End Commodities Page Nav -->
+
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="/crypto">
+            <i class="bi bi-currency-bitcoin"></i>
+            <span>Crypto</span>
+            <!-- <span data-feather="file">Crypto</span> -->
+          </a>
+          <!-- <a class="nav-link" href="/crypto">
+            <span data-feather="file"></span>
+            Crypto
+          </a> -->
+        </li><!-- End Crypto Page Nav -->
+
+        <li class="nav-heading">Personal</li>
+
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="/personal_balances">
+            <i class="bi bi-journal-text"></i>
+            <span>Balance Sheet</span>
+            <!-- <span data-feather="home">Balance Sheet</span> -->
+          </a>
+          <!-- <a class="nav-link" href="/personal_balances">
+            <span data-feather="file"></span>
+            Balance Sheet
+          </a> -->
+        </li><!-- End Personal Balance Sheet Page Nav -->
+
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="/incomestatements">
+            <i class="bi bi-receipt"></i>
+            <span>Income Statement</span>
+            <!-- <span data-feather="file">Income Statement</span> -->
+          </a>
+          <!-- <a class="nav-link" href="/incomestatements">
+            <span data-feather="file"></span>
+            Income Statement
+          </a> -->
+        </li><!-- End Personal Income Statement Page Nav -->
+
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="/incomestatements/yeartodate/2022">
+            <i class="bi bi-bar-chart-line"></i>
+            <span>Profit and Loss</span>
+            <!-- <span data-feather="file">Profit and Loss</span> -->
+          </a>
+          <!-- <a class="nav-link" href="/incomestatements/yeartodate/2022">
+            <span data-feather="file"></span>
+            Budget - YTD
+          </a> -->
+        </li><!-- End Personal P&L Page Nav -->
+
+        <li class="nav-heading">Tools</li>
+
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="/reminders">
+            <i class="bi bi-bell"></i>
+            <span>Reminders</span>
+            <!-- <span data-feather="file">Reminders</span> -->
+          </a>
+          <!-- <a class="nav-link" href="/reminders">
+            <span data-feather="file"></span>
+            Reminders
+          </a> -->
+        </li><!-- End Reminder Page Nav -->
+
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="/contacts">
+            <i class="bi bi-telephone"></i>
+            <span>Contact</span>
+            <!-- <span data-feather="users">Contact</span> -->
+          </a>
+          <!-- <a class="nav-link" href="/contacts">
+            <span data-feather="users"></span>
+            Contacts
+          </a> -->
+        </li><!-- End Contact Page Nav -->
+  
+      </ul>
+  
+    </aside><!-- End Sidebar-->
+
+  <!-- <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">AMS</a>
+    <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
+      data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="navbar-nav">
+      <div class="nav-item text-nowrap">
+        <a class="nav-link px-3" href="/admin">Admin</a>
+      </div>
+    </div>
+  </header>
+
+      <aside id="sidebar" class="sidebar d-lg-block bg-light sidebar collapse vh-100">
+        <div class="pt-3">
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <strong>General</strong>
+              <a class="nav-link active" aria-current="page" href="/summary">
+                <span data-feather="home"></span>
+                Summary Dashboard
+              </a>
+            </li>
             <a class="nav-link active" aria-current="page" href="/retiregoals">
               <span data-feather="home"></span>
               Financial Plan
             </a>
-          </li>
-          <li class="nav-item">
-          <strong>Investments</strong>
-          <li class="nav-item">
-            <a class="nav-link" href="/properties">
-              <span data-feather="file"></span>
-              Property Portfolio
-            </a>
-                      <li class="nav-item">
-            <a class="nav-link" href="/propertyincomestatements">
-              <span data-feather="file"></span>
-              - Income Statements
-            </a>
-            <a class="nav-link" href="/propertyincomestatements/yeartodate/2022/">
-              <span data-feather="file"></span>
-              - Budget Year To Date
-            </a>
-          </li>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/marketfunds">
-              <span data-feather="file"></span>
-              Stock Portfolio
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/commodities">
-              <span data-feather="file"></span>
-              Commodities
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/crypto">
-              <span data-feather="file"></span>
-             Crypto
-            </a>
-          </li>
-          <li class="nav-item">
-          <strong>Personal</strong>
-          <a class="nav-link" href="/personal_balances">
-            <span data-feather="file"></span>
-            Balance Sheet
-            </a>
-            <a class="nav-link" href="/cashflows">
-            <span data-feather="file"></span>
-            Cashflow Statement
-            </a>
-            <a class="nav-link" href="/incomestatements">
-            <span data-feather="file"></span>
-            Income Statement
-            </a>
-            <a class="nav-link" href="/incomestatements/yeartodate/2022">
-            <span data-feather="file"></span>
-            Budget - YTD
-            </a>
-          </li>
-          <li class="nav-item">
-          <strong>Tools</strong>
-          <a class="nav-link" href="/reminders">
-            <span data-feather="file"></span>
-            Reminders
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/contacts">
-              <span data-feather="users"></span>
-            Contacts
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="bar-chart-2"></span>
-            </a>
-          </li>
-          <li class="nav-item">
-          <strong>Quick Adds</strong>
-            <a class="nav-link" href="popupex.html" onclick="return popitup('/reminders/add_reminder')">Reminder</a>
-            <a class="nav-link" href="#">
-              <span data-feather="layers"></span>
-            </a>
-          </li>
-        </ul>
-
-      </div>
-    </nav>
-
-    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">{% block title %} {% endblock title %}</h1>
-        <div class="btn-toolbar mb-2 mb-md-0">
+            </li>
+            <li class="nav-item">
+              <strong>Investments</strong>
+            <li class="nav-item">
+              <a class="nav-link" href="/properties">
+                <span data-feather="file"></span>
+                Property Portfolio
+              </a>
+            <li class="nav-item">
+              <a class="nav-link" href="/propertyincomestatements">
+                <span data-feather="file"></span>
+                - Income Statements
+              </a>
+              <a class="nav-link" href="/propertyincomestatements/yeartodate/2022/">
+                <span data-feather="file"></span>
+                - Budget Year To Date
+              </a>
+            </li>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/marketfunds">
+                <span data-feather="file"></span>
+                Stock Portfolio
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/commodities">
+                <span data-feather="file"></span>
+                Commodities
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/crypto">
+                <span data-feather="file"></span>
+                Crypto
+              </a>
+            </li>
+            <li class="nav-item">
+              <strong>Personal</strong>
+              <a class="nav-link" href="/personal_balances">
+                <span data-feather="file"></span>
+                Balance Sheet
+              </a>
+              <a class="nav-link" href="/cashflows">
+                <span data-feather="file"></span>
+                Cashflow Statement
+              </a>
+              <a class="nav-link" href="/incomestatements">
+                <span data-feather="file"></span>
+                Income Statement
+              </a>
+              <a class="nav-link" href="/incomestatements/yeartodate/2022">
+                <span data-feather="file"></span>
+                Budget - YTD
+              </a>
+            </li>
+            <li class="nav-item">
+              <strong>Tools</strong>
+              <a class="nav-link" href="/reminders">
+                <span data-feather="file"></span>
+                Reminders
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/contacts">
+                <span data-feather="users"></span>
+                Contacts
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <span data-feather="bar-chart-2"></span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <strong>Quick Adds</strong>
+              <a class="nav-link" href="popupex.html" onclick="return popitup('/reminders/add_reminder')">Reminder</a>
+              <a class="nav-link" href="#">
+                <span data-feather="layers"></span>
+              </a>
+            </li>
+          </ul>
 
         </div>
-      </div>
-   {% block content %}
-   {% endblock content %}
-    </div>
-   
-    </main>
-  </div>
-</div>
+      </aside> -->
+
+      <main id="main" class="main">
+        <div class="justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+          <h1 class="h2">{% block title %} {% endblock title %}</h1>
+          <div class="btn-toolbar mb-2 mb-md-0">
+
+          </div>
+        </div>
+        {% block content %}
+        {% endblock content %}
+      </main>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
 
-      <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" crossorigin="anonymous"></script>
-      <script>
-      var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-  return new bootstrap.Tooltip(tooltipTriggerEl)
-})
-      </script>
-  </body>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+    crossorigin="anonymous"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"
+    integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE"
+    crossorigin="anonymous"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"
+    integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha"
+    crossorigin="anonymous"></script>
+
+  <script>
+    $(function () {
+      //Initialize Select2 Elements
+      $('.select2').select2()
+    })
+  </script>
+  <script>
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+  </script>
+
+  <script>
+    (function() {
+      "use strict";
+
+      /**
+       * Easy selector helper function
+       */
+      const select = (el, all = false) => {
+        el = el.trim()
+        if (all) {
+          return [...document.querySelectorAll(el)]
+        } else {
+          return document.querySelector(el)
+        }
+      }
+
+      /**
+       * Easy event listener function
+       */
+      const on = (type, el, listener, all = false) => {
+        if (all) {
+          select(el, all).forEach(e => e.addEventListener(type, listener))
+        } else {
+          select(el, all).addEventListener(type, listener)
+        }
+      }
+
+      /**
+       * Easy on scroll event listener 
+       */
+      const onscroll = (el, listener) => {
+        el.addEventListener('scroll', listener)
+      }
+
+      /**
+       * Sidebar toggle
+       */
+      if (select('.toggle-sidebar-btn')) {
+        on('click', '.toggle-sidebar-btn', function(e) {
+          select('body').classList.toggle('toggle-sidebar')
+        })
+      }
+
+      /**
+       * Search bar toggle
+       */
+      if (select('.search-bar-toggle')) {
+        on('click', '.search-bar-toggle', function(e) {
+          select('.search-bar').classList.toggle('search-bar-show')
+        })
+      }
+
+      /**
+       * Navbar links active state on scroll
+       */
+      let navbarlinks = select('#navbar .scrollto', true)
+      const navbarlinksActive = () => {
+        let position = window.scrollY + 200
+        navbarlinks.forEach(navbarlink => {
+          if (!navbarlink.hash) return
+          let section = select(navbarlink.hash)
+          if (!section) return
+          if (position >= section.offsetTop && position <= (section.offsetTop + section.offsetHeight)) {
+            navbarlink.classList.add('active')
+          } else {
+            navbarlink.classList.remove('active')
+          }
+        })
+      }
+      window.addEventListener('load', navbarlinksActive)
+      onscroll(document, navbarlinksActive)
+
+      /**
+       * Toggle .header-scrolled class to #header when page is scrolled
+       */
+      let selectHeader = select('#header')
+      if (selectHeader) {
+        const headerScrolled = () => {
+          if (window.scrollY > 100) {
+            selectHeader.classList.add('header-scrolled')
+          } else {
+            selectHeader.classList.remove('header-scrolled')
+          }
+        }
+        window.addEventListener('load', headerScrolled)
+        onscroll(document, headerScrolled)
+      }
+
+        /**
+         * Back to top button
+         */
+        let backtotop = select('.back-to-top')
+        if (backtotop) {
+          const toggleBacktotop = () => {
+            if (window.scrollY > 100) {
+              backtotop.classList.add('active')
+            } else {
+              backtotop.classList.remove('active')
+            }
+          }
+          window.addEventListener('load', toggleBacktotop)
+          onscroll(document, toggleBacktotop)
+        }
+
+        /**
+         * Initiate tooltips
+         */
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+          return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+
+        /**
+         * Initiate quill editors
+         */
+        if (select('.quill-editor-default')) {
+          new Quill('.quill-editor-default', {
+            theme: 'snow'
+          });
+        }
+
+        if (select('.quill-editor-bubble')) {
+          new Quill('.quill-editor-bubble', {
+            theme: 'bubble'
+          });
+        }
+
+        if (select('.quill-editor-full')) {
+          new Quill(".quill-editor-full", {
+            modules: {
+              toolbar: [
+                [{
+                  font: []
+                }, {
+                  size: []
+                }],
+                ["bold", "italic", "underline", "strike"],
+                [{
+                    color: []
+                  },
+                  {
+                    background: []
+                  }
+                ],
+                [{
+                    script: "super"
+                  },
+                  {
+                    script: "sub"
+                  }
+                ],
+                [{
+                    list: "ordered"
+                  },
+                  {
+                    list: "bullet"
+                  },
+                  {
+                    indent: "-1"
+                  },
+                  {
+                    indent: "+1"
+                  }
+                ],
+                ["direction", {
+                  align: []
+                }],
+                ["link", "image", "video"],
+                ["clean"]
+              ]
+            },
+            theme: "snow"
+          });
+        }
+
+        /**
+         * Initiate TinyMCE Editor
+         */
+
+        var useDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        tinymce.init({
+          selector: 'textarea.tinymce-editor',
+          plugins: 'print preview paste importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern noneditable help charmap quickbars emoticons',
+          imagetools_cors_hosts: ['picsum.photos'],
+          menubar: 'file edit view insert format tools table help',
+          toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl',
+          toolbar_sticky: true,
+          autosave_ask_before_unload: true,
+          autosave_interval: '30s',
+          autosave_prefix: '{path}{query}-{id}-',
+          autosave_restore_when_empty: false,
+          autosave_retention: '2m',
+          image_advtab: true,
+          link_list: [{
+              title: 'My page 1',
+              value: 'https://www.tiny.cloud'
+            },
+            {
+              title: 'My page 2',
+              value: 'http://www.moxiecode.com'
+            }
+          ],
+          image_list: [{
+              title: 'My page 1',
+              value: 'https://www.tiny.cloud'
+            },
+            {
+              title: 'My page 2',
+              value: 'http://www.moxiecode.com'
+            }
+          ],
+          image_class_list: [{
+              title: 'None',
+              value: ''
+            },
+            {
+              title: 'Some class',
+              value: 'class-name'
+            }
+          ],
+          importcss_append: true,
+          file_picker_callback: function(callback, value, meta) {
+            /* Provide file and text for the link dialog */
+            if (meta.filetype === 'file') {
+              callback('https://www.google.com/logos/google.jpg', {
+                text: 'My text'
+              });
+            }
+
+            /* Provide image and alt text for the image dialog */
+            if (meta.filetype === 'image') {
+              callback('https://www.google.com/logos/google.jpg', {
+                alt: 'My alt text'
+              });
+            }
+
+            /* Provide alternative source and posted for the media dialog */
+            if (meta.filetype === 'media') {
+              callback('movie.mp4', {
+                source2: 'alt.ogg',
+                poster: 'https://www.google.com/logos/google.jpg'
+              });
+            }
+          },
+          templates: [{
+              title: 'New Table',
+              description: 'creates a new table',
+              content: '<div class="mceTmpl"><table width="98%%"  border="0" cellspacing="0" cellpadding="0"><tr><th scope="col"> </th><th scope="col"> </th></tr><tr><td> </td><td> </td></tr></table></div>'
+            },
+            {
+              title: 'Starting my story',
+              description: 'A cure for writers block',
+              content: 'Once upon a time...'
+            },
+            {
+              title: 'New list with dates',
+              description: 'New List with dates',
+              content: '<div class="mceTmpl"><span class="cdate">cdate</span><br /><span class="mdate">mdate</span><h2>My List</h2><ul><li></li><li></li></ul></div>'
+            }
+          ],
+          template_cdate_format: '[Date Created (CDATE): %m/%d/%Y : %H:%M:%S]',
+          template_mdate_format: '[Date Modified (MDATE): %m/%d/%Y : %H:%M:%S]',
+          height: 600,
+          image_caption: true,
+          quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
+          noneditable_noneditable_class: 'mceNonEditable',
+          toolbar_mode: 'sliding',
+          contextmenu: 'link image imagetools table',
+          skin: useDarkMode ? 'oxide-dark' : 'oxide',
+          content_css: useDarkMode ? 'dark' : 'default',
+          content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+        });
+
+        /**
+         * Initiate Bootstrap validation check
+         */
+        var needsValidation = document.querySelectorAll('.needs-validation')
+
+        Array.prototype.slice.call(needsValidation)
+          .forEach(function(form) {
+            form.addEventListener('submit', function(event) {
+              if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+              }
+
+              form.classList.add('was-validated')
+            }, false)
+          })
+
+        /**
+         * Initiate Datatables
+         */
+        const datatables = select('.datatable', true)
+        datatables.forEach(datatable => {
+          new simpleDatatables.DataTable(datatable);
+        })
+
+        /**
+         * Autoresize echart charts
+         */
+        const mainContainer = select('#main');
+        if (mainContainer) {
+          setTimeout(() => {
+            new ResizeObserver(function() {
+              select('.echart', true).forEach(getEchart => {
+                echarts.getInstanceByDom(getEchart).resize();
+              })
+            }).observe(mainContainer);
+          }, 200);
+        }
+    })();
+  </script>
+
+</body>
+
 </html>
