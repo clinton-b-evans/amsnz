@@ -41,33 +41,51 @@ function popitup(url) {
  <div class="chart-container" style="position: relative; height:40vh; width:80vw">
   <div class="row">
     <div class="col">
-<canvas id="myChart" width="100px" height="100px"></canvas>
+<canvas id="myChart" width="50px" height=50px"></canvas>
  </div>
     <div class="col">
 
 <table class="table table-striped table-hover" style="font-size:small">
   <thead>
+    <p> <b>{{ year }}</b> Expense</p>
     <tr>
       <th>Category</th>
       <th>Amount</th>
     </tr>
   </thead>
   <tbody>
-
-
-{% for key, value in categories_yearly.items %}
-
-<tr>
-  <td>
-    <a href="#">{{key}}</a>
-    </td>
-  <td>{{value}}</td>
-</tr>
-{% endfor %}
+    {% for key, value in categories_yearly.items %}
+    <tr>
+      <td>
+        <a href="#">{{key}}</a>
+        </td>
+      <td>{{value}}</td>
+    </tr>
+    {% endfor %}
 </table>
-        </div>
-      </div> 
-      </div>
+
+<table class="table table-striped table-hover" style="font-size:small">
+  <thead>
+  <p> <b>{% now "F" %} {{ year }} </b>Expenses</p>
+    <tr>
+      <th>Category</th>
+      <th>Amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for key, value in categories_monthly.items %}
+    <tr>
+      <td>
+        <a href="#">{{key}}</a>
+        </td>
+      <td>{{value}}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+    </div>
+  </div>
+</div>
 </div>
 
 
