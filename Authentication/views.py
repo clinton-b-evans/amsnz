@@ -17,7 +17,7 @@ def register_user_view(request):
                 user = form.cleaned_data.get("username")
                 messages.success(request, "Account was created for " + user)
 
-                return redirect("login_user")
+                return redirect("Authentication:login_user")
 
         context = {"form": form}
         return render(request, "Authentication/register_user.html", context)
@@ -35,15 +35,16 @@ def login_user_view(request):
 
             if user is not None:
                 login(request, user)
-                return redirect("home")
+                messages.success(request, "Log in Successful")
+                return redirect("properties:list")
             else:
                 messages.info(request, "Username OR password is incorrect")
 
-        context = {}
-        return render(request, "Authentication/login.html", context)
+    form = AuthenticationForm()
+    return render(request, "Authentication/login.html", {"form": form})
 
 
 def logout_user_view(request):
     logout(request)
     messages.info(request, "You have successfully logged out.")
-    return redirect("login_user")
+    return redirect("Authentication:login_user")

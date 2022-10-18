@@ -1,0 +1,24 @@
+{% load static  %}
+{% load bootstrap %}
+
+{% block content %}
+<h2>Register New User</h2>
+    <ul>
+      {% if user.is_authenticated %}
+
+      <li>
+        <a href="{% url 'Authentication:logout_user'%}">Logout</a>
+      </li>
+      <li>
+        <a href="#">Welcome, {{user.username}}</a>
+      </li>
+
+      {% else %}
+
+      <li>
+        <a href="{% url 'Authentication:login_user'%}">Login</a>
+      </li>
+
+      {% endif %}
+    </ul>
+{% endblock content %}
