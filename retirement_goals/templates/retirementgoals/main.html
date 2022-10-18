@@ -20,11 +20,11 @@ Financial Plan
 <form class="bg-white p-4 shadow mb-5" action="" method=POST> 
   {% csrf_token %}
   <label>Start Date</label> &nbsp;
-  {{form.start_date }} 
+  {{form.start_date }} &nbsp; &nbsp; &nbsp;
   <label>Networth Goal</label> &nbsp;
-	{{ form.networth_goal }}
+	{{ form.networth_goal }} &nbsp; &nbsp; &nbsp;
   <label>Consumer Price Index</label> &nbsp;
-  {{ form.cpi }}
+  {{ form.cpi }} &nbsp; &nbsp; &nbsp;
 
   </br>
   </br>
@@ -46,8 +46,8 @@ Financial Plan
           <td></td>
         </tr>
         <tr>
-          <td>Cashflow:</td>
-          <td style="text-align:right" id="id_swr_total"></td>
+          <th>Cashflow:</th>
+          <th style="text-align:right" id="id_swr_total"></th>
           <td></td>
           <td></td>
           <td></td>
