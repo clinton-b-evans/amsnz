@@ -21,117 +21,16 @@ Year To Date {{ year }}
 
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
-<<<<<<< HEAD
-    <form action="/propertyincomestatements/yeartodate/{{year}}/" method="get">
-<select name="properties" id="properties" multiple>
-  {% for obj in prop_qs %}
-  <option value="{{ obj.pk }} ">{{ obj.name }}</option>
-  {% endfor %}
-</select>
-<button type="submit" value="Submit">Filter</button>
-</form>
- 
- <div class="chart-container" style="position: relative; height:40vh; width:80vw">
-  <div class="row">
-    <div class="col">
-<canvas id="myChart" width="50px" height=50px"></canvas>
- </div>
-    <div class="col">
-
-<table class="table table-striped table-hover" style="font-size:small">
-  <thead>
-    <p> <b>{{ year }}</b> Expense</p>
-    <tr>
-      <th>Category</th>
-      <th>Amount</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for key, value in categories_yearly.items %}
-    <tr>
-      <td>
-        <a href="#">{{key}}</a>
-        </td>
-      <td>{{value}}</td>
-    </tr>
-    {% endfor %}
-</table>
-
-<table class="table table-striped table-hover" style="font-size:small">
-  <thead>
-  <p> <b>{% now "F" %} {{ year }} </b>Expenses</p>
-    <tr>
-      <th>Category</th>
-      <th>Amount</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for key, value in categories_monthly.items %}
-    <tr>
-      <td>
-        <a href="#">{{key}}</a>
-        </td>
-      <td>{{value}}</td>
-    </tr>
-    {% endfor %}
-</table>
-
-    </div>
-  </div>
-</div>
-=======
-<!-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> -->
-
-
-<!-- <div class="mb-3">
-  <a href="popupex.html" onclick="return popitup('/incomestatements/add')"><button type="button"
-      class="btn btn-secondary btn-sm">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-plus"
-        viewBox="0 0 16 16">
-        <path
-          d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z" />
-        <path
-          d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
-      </svg>
-
-      New Entry
-    </button></a>
-  <a href="popupex.html" onclick="return popitup('/incomestatements/add_category')"><button type="button"
-      class="btn btn-secondary btn-sm">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-plus"
-        viewBox="0 0 16 16">
-        <path
-          d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z" />
-        <path
-          d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
-      </svg>
-
-      New Category
-    </button></a>
-</div> -->
-
 <div class="row">
   <div class="col-lg-3">
     <select class="form-control mb-3" onchange="location = this.value;">
       <option selected="" value="" disabled>Select year</option>
-      <option value="../2019">2019</option>
-      <option value="../2020">2020</option>
-      <option value="../2021">2021</option>
-      <option value="../2022">2022</option>
-      <option value="../2023">2023</option>
-      <option value="../2024">2024</option>
-      <option value="../2025">2025</option>
+
+      {% for year in years_list%}
+      <option value="../{{year|stringformat:"i"}}">{{year|stringformat:"i"}}</option>
+      {%endfor%}
     </select>
   </div>
-
-  <!-- <form action="/propertyincomestatements/yeartodate/{{year}}/" method="get">
-  <select name="properties" id="properties" multiple>
-    {% for obj in prop_qs %}
-    <option value="{{ obj.pk }} ">{{ obj.name }}</option>
-    {% endfor %}
-  </select>
-  <button type="submit" value="Submit">Filter</button>
-  </form> -->
 
   <div class="col-lg-4">
     <form class="form-group" action="/propertyincomestatements/yeartodate/{{year}}/" method="get">
@@ -139,13 +38,6 @@ Year To Date {{ year }}
         <div class="col-9 select2-purple mb-2">
           <select name="properties" id="properties" class="select2" multiple="multiple" data-placeholder="Select properties"
             data-dropdown-css-class="select2-purple" style="width: 100%;">
-            <!-- <option>Alabama</option>
-            <option>Alaska</option>
-            <option>California</option>
-            <option>Delaware</option>
-            <option>Tennessee</option>
-            <option>Texas</option>
-            <option>Washington</option> -->
             {% for obj in prop_qs %}
             <option value="{{ obj.pk }} ">{{ obj.name }}</option>
             {% endfor %}
@@ -157,35 +49,10 @@ Year To Date {{ year }}
       </div>
     </form>
   </div>
-
->>>>>>> fd869200ca9d94b5a381b1e7f17acfb2c95a7d81
-</div>
-
 <div class="chart-container mt-5" style="position: relative;">
   <div class="row justify-content-around">
     
     <div class="col-8 bg-light p-4 shadow">
-
-      <!-- <table class="table table-striped table-hover" style="font-size:small">
-        <thead>
-          <tr>
-            <th>Category</th>
-            <th>Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-
-
-          {% for key, value in categories.items %}
-
-          <tr>
-            <td>{{key}}</td>
-            <td>{{value}}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table> -->
-
       <table class="table table-hover" style="font-size:small">
         <thead>
           <tr>
@@ -202,6 +69,7 @@ Year To Date {{ year }}
             <th scope="col">Oct</th>
             <th scope="col">Nov</th>
             <th scope="col">Dec</th>
+            <th scope="col">Total</th>
           </tr>
         </thead>
         <tbody>
@@ -210,6 +78,7 @@ Year To Date {{ year }}
           </tr>
           <tr>
             <td scope="row">Job</td>
+            <td>$0</td>
             <td>$0</td>
             <td>$0</td>
             <td>$0</td>
@@ -237,40 +106,13 @@ Year To Date {{ year }}
             <td>$0</td>
             <td>$0</td>
             <td>$0</td>
-          </tr>
-          <tr>
-            <td scope="row">Interest</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
             <td>$0</td>
           </tr>
           <tr>
-            <td scope="row">Wages</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-          </tr>
           <thead>
             <tr>
               <th scope="row">Total</th>
+              <td>$0</td>
               <td>$0</td>
               <td>$0</td>
               <td>$0</td>
@@ -304,22 +146,8 @@ Year To Date {{ year }}
             <th scope="col">EXPENSES</th>
           </tr>
           <tr>
-            <td scope="row">Clothes</td>
+            <td scope="row">Maintenance</td>
             <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-          </tr>
-          <tr>
-            <td scope="row">Entertainment</td>
             <td>$0</td>
             <td>$0</td>
             <td>$0</td>
@@ -334,22 +162,8 @@ Year To Date {{ year }}
             <td>$0</td>
           </tr>
           <tr>
-            <td scope="row">Food</td>
+            <td scope="row">Rent</td>
             <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-          </tr>
-          <tr>
-            <td scope="row">Transport</td>
             <td>$0</td>
             <td>$0</td>
             <td>$0</td>
@@ -364,22 +178,8 @@ Year To Date {{ year }}
             <td>$0</td>
           </tr>
           <tr>
-            <td scope="row">Dance Lessons</td>
+            <td scope="row">Rates</td>
             <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-          </tr>
-          <tr>
-            <td scope="row">Petrol</td>
             <td>$0</td>
             <td>$0</td>
             <td>$0</td>
@@ -394,22 +194,8 @@ Year To Date {{ year }}
             <td>$0</td>
           </tr>
           <tr>
-            <td scope="row">Car Maintenance</td>
+            <td scope="row">Commission</td>
             <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-            <td>$0</td>
-          </tr>
-          <tr>
-            <td scope="row">Mobile Allowance</td>
             <td>$0</td>
             <td>$0</td>
             <td>$0</td>
@@ -424,7 +210,120 @@ Year To Date {{ year }}
             <td>$0</td>
           </tr>
           <tr>
-            <td scope="row">Studies</td>
+            <td scope="row">Accountant</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+          </tr>
+          <tr>
+            <td scope="row">Fees</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+          </tr>
+          <tr>
+            <td scope="row">Sundry Expense</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+          </tr>
+          <tr>
+            <td scope="row">Lawns</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+          </tr>
+          <tr>
+            <td scope="row">Electrical</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+          </tr>
+          <tr>
+            <td scope="row">Plumbing</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+          </tr>
+          <tr>
+            <td scope="row">Paydown</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+            <td>$0</td>
+          </tr>
+          <tr>
+            <td scope="row">Tsb</td>
+            <td>$0</td>
             <td>$0</td>
             <td>$0</td>
             <td>$0</td>
@@ -440,19 +339,10 @@ Year To Date {{ year }}
           </tr>
           <thead>
             <tr style="background-color: #ededed">
-              <th scope="row">Total</th>
-              <td>$0</td>
-              <td>$0</td>
-              <td>$0</td>
-              <td>$0</td>
-              <td>$0</td>
-              <td>$0</td>
-              <td>$0</td>
-              <td>$0</td>
-              <td>$0</td>
-              <td>$0</td>
-              <td>$0</td>
-              <td>$0</td>
+            <th scope="row">Total</th>
+            {% for k, v in month_expenses.items %}
+              <td><b>${{v}}</b></td>
+            {% endfor %}
             </tr>
           </thead>
         </tbody>
@@ -474,7 +364,7 @@ Year To Date {{ year }}
               ],
               datasets: [{
                 label: 'My First Dataset',
-                data: [300, 200],
+                data: [{{income|stringformat:"i"}}, {{expense|stringformat:"i"}}],
                 backgroundColor: [
                   'rgb(255, 99, 132)',
                   'rgb(54, 162, 235)',
@@ -487,45 +377,10 @@ Year To Date {{ year }}
         });
       </script>
     </div>
-    <!-- <div class="col-lg-4">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title mb-5">Pie Chart</h5>
 
-          <div id="pieChart" class="mb-5"></div>
-
-          <script>
-            document.addEventListener("DOMContentLoaded", () => {
-              new ApexCharts(document.querySelector("#pieChart"), {
-                series: [44, 55, 13, 43, 22],
-                chart: {
-                  height: 450,
-                  type: 'pie',
-                  toolbar: {
-                    show: true
-                  }
-                },
-                title: {
-                  text: 'Networth Tracker {{year}}',
-                  align: 'center',
-                },
-                labels: ['Team A', 'Team B', 'Team C', 'Team D', 'Team E']
-              }).render();
-            });
-          </script>
-
-        </div>
-      </div>
-    </div> -->
   </div>
 </div>
 </div>
-
-<!-- jQuery -->
-<!-- <script src="../../plugins/jquery/jquery.min.js"></script> -->
-
-<!-- Select2 -->
-<!-- <script src="../../plugins/select2/js/select2.full.min.js"></script> -->
 
 <script>
   $(function () {
@@ -541,14 +396,14 @@ Year To Date {{ year }}
     type: 'doughnut',
     data: {
       labels: [
-        {% for key, value in categories.items %} 
+        {% for key, value in categories_yearly.items %}
         '{{key}}',
 {% endfor %}
         ],
   datasets: [{
     label: 'Categories',
     data: [
-      {% for key, value in categories.items %} 
+      {% for key, value in categories_yearly.items %}
         '{{value|stringformat:"i"}}',
   {% endfor %}
   ],
@@ -593,9 +448,6 @@ Year To Date {{ year }}
 });
 </script>
 
-
-
 <br>
-
 
 {% endblock content %}

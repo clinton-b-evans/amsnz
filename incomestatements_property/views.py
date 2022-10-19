@@ -138,7 +138,7 @@ def year_to_date(request, year):
     """
     extracted all Property Income Statement Years from Database
     """
-    years = list(PropertyIncomeStatement.objects.values_list("date__year").distinct())
+    years = PropertyIncomeStatement.objects.values_list("date__year").distinct()
     years_list = []
     for data in years:
         for item in data:
@@ -149,7 +149,8 @@ def year_to_date(request, year):
         return myList
 
     years_list = sort_years_list(years_list)
-
+    print(years_list)
+    # print(type(years_list))
     prop_qs = Property.objects.all()
     property_list = request.GET.getlist("properties")
     if not property_list:
@@ -173,9 +174,20 @@ def year_to_date(request, year):
             month=ExtractMonth("date"), total=Sum("amount", output_field=FloatField())
         ).values("month", "total")
     )
-    result = []
-
-    # print(sum(item['total'] for item in props_monthly_total if Count(item['month']) is not 1))
+    month_expenses = {
+        "January": 0,
+        "February": 0,
+        "March": 0,
+        "April": 0,
+        "May": 0,
+        "June": 0,
+        "July": 0,
+        "August": 0,
+        "September": 0,
+        "October": 0,
+        "November": 0,
+        "December": 0,
+    }
 
     for item in props_monthly_total:
         month = int(item["month"])
@@ -183,10 +195,11 @@ def year_to_date(request, year):
         month = month.strftime("%B")
         item["month"] = month
 
-        if item["month"] not in [k["month"] for k in result]:
-            result.append({"month": item["month"], "total": item["total"]})
-    print("result-->", result)
-    print("Complete months expense--> ", props_monthly_total)
+    for item in props_monthly_total:
+        for key in month_expenses.keys():
+            if item["month"] == key:
+                month_expenses[key] += item["total"]
+    print("-->>>> Each months expenses-->>", month_expenses)
 
     """
     Create categories and expenses list
@@ -225,12 +238,12 @@ def year_to_date(request, year):
             total_income += item.amount
         else:
             total_expense += item.amount
+
     total = total_income - total_expense
     category_total_yearly = {x: y for x, y in categories_total_yearly.items() if y != 0}
     category_total_monthly = {
         x: y for x, y in categories_total_monthly.items() if y != 0
     }
-
     context = {
         "object_list": qs,
         "year": year,
@@ -240,7 +253,7 @@ def year_to_date(request, year):
         "categories_yearly": category_total_yearly,
         "categories_monthly": category_total_monthly,
         "categories_lists": categories_lists,
-        "props_monthly_total": props_monthly_total,
+        "month_expenses": month_expenses,
         "prop_qs": prop_qs,
         "years_list": years_list,
     }

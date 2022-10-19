@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from .models import Commodity, Transaction
 from .forms import CommodityForm, TransactionForm
 
+
 def commodity_list_view(request):
     qs = Commodity.objects.all()
     invested_total = 0

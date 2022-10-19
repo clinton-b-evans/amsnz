@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from .models import Trade, IndexFund
 from .forms import IndexFundForm, TradeForm
 
+
 def fund_list_view(request):
     qs = IndexFund.objects.all()
     total_value = 0
