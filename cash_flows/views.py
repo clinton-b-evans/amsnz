@@ -3,7 +3,6 @@ from .models import CashFlow
 from .forms import CashFlowForm
 from django.http import HttpResponse, HttpResponseRedirect
 
-
 # Create your views here.
 def cash_flow_list_view(request):
     selected = "Monthly"
@@ -199,5 +198,4 @@ def delete_cash_flow(request, pk):
         # after deleting redirect to
         # home page
         return HttpResponse('<script type="text/javascript">window.close()</script>')
-
     return render(request, "cash_flows/delete.html", context)

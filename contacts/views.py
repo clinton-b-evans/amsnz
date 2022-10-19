@@ -63,5 +63,4 @@ def delete_contact(request, pk):
         # after deleting redirect to
         # home page
         return HttpResponse('<script type="text/javascript">window.close()</script>')
-
     return render(request, "contacts/delete.html", context)

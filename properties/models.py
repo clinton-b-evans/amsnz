@@ -113,6 +113,5 @@ class Transactions(models.Model):
 
     class Meta:
         verbose_name_plural = "Transactions"
-
     def __str__(self):
         return f"{self.property_id.name} {self.transaction_type}: ${self.amount} for {self.category}"

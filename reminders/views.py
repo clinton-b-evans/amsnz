@@ -68,5 +68,4 @@ def delete_reminder(request, pk):
         # after deleting redirect to
         # home page
         return HttpResponse('<script type="text/javascript">window.close()</script>')
-
     return render(request, "reminders/delete.html", context)

@@ -3,7 +3,6 @@ from django.http import HttpResponse, HttpResponseRedirect
 from .models import Trade, IndexFund
 from .forms import IndexFundForm, TradeForm
 
-
 def fund_list_view(request):
     qs = IndexFund.objects.all()
     total_value = 0
@@ -64,7 +63,6 @@ def delete_indexfund(request, pk):
         # after deleting redirect to
         # home page
         return HttpResponse('<script type="text/javascript">window.close()</script>')
-
     return render(request, "market_funds/delete.html", context)
 
 

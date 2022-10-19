@@ -168,8 +168,6 @@ def year_to_date(request, year):
     """
     Display monthly total expenses for that time period
     """
-    import calendar
-
     props_monthly_total = list(
         qs.annotate(
             month=ExtractMonth("date"), total=Sum("amount", output_field=FloatField())
@@ -186,7 +184,6 @@ def year_to_date(request, year):
         item["month"] = month
 
         if item["month"] not in [k["month"] for k in result]:
-            print(item["month"])
             result.append({"month": item["month"], "total": item["total"]})
     print("result-->", result)
     print("Complete months expense--> ", props_monthly_total)

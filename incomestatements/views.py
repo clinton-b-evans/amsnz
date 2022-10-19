@@ -119,7 +119,6 @@ def year_to_date(request, year):
         categories[item.name] = 0
     for item in qs:
         cat_qs = Category.objects.get(name=item.category)
-
         print(cat_qs.name)
         print(item.amount)
         if cat_qs.name in categories:

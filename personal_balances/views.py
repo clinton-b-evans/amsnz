@@ -11,7 +11,6 @@ def personal_balance_list_view(request):
     qs_lib = PersonalBalance.objects.filter(entry_type="Liability")
     qs_save = PersonalBalance.objects.filter(entry_type="Savings")
     qs_retirement = PersonalBalance.objects.filter(entry_type="Retirement Acc")
-
     total_asset = 0
     total_liability = 0
     total_savings = 0
@@ -28,7 +27,6 @@ def personal_balance_list_view(request):
 
     for item in qs_retirement:
         total_retirement_acc = total_retirement_acc + item.amount
-
     networth = total_asset + total_savings + total_retirement_acc - total_liability
     if networth > 0:
         networth_class = "black"
@@ -197,5 +195,4 @@ def delete_personal_balance(request, pk):
         # after deleting redirect to
         # home page
         return HttpResponse('<script type="text/javascript">window.close()</script>')
-
     return render(request, "personal_balances/delete.html", context)

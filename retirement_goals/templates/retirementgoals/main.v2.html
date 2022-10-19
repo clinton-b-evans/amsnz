@@ -133,13 +133,14 @@ Financial Plan
 </tr>
 
 </table>
-<script>
-const button = document.querySelector('#button');
-var maxPercent = 100;
-var currentTotal = 0;
-var netWorth = document.getElementById('id_networth_goal').value;
 
- window.onload = function() {
+<script>
+  const button = document.querySelector('#button');
+  var maxPercent = 100;
+  var currentTotal = 0;
+  var netWorth = document.getElementById('id_networth_goal').value;
+
+  window.onload = function() {
     var realEstate = document.getElementById('id_real_estate').value;
     var stocks = document.getElementById('id_stocks').value;
     var crypto = document.getElementById('id_crypto').value;
@@ -155,11 +156,9 @@ var netWorth = document.getElementById('id_networth_goal').value;
     document.getElementById("id_collectables_p").innerHTML = "$" + collectables * netWorth / 100;
     document.getElementById("id_cash_p").innerHTML = "$" + cash * netWorth / 100;
     document.getElementById("demo").innerHTML = (realEstate * netWorth / 100) * (realEstateSWR / 100);
+  }
 
-
-
- }
-function checkTotal(name, value) {
+  function checkTotal(name, value) {
     el = name+"_p";
     document.getElementById(el).innerHTML = "$" + value * netWorth / 100;
     var realEstate = document.getElementById('id_real_estate').value;
@@ -172,17 +171,13 @@ function checkTotal(name, value) {
     parseInt(crypto, 10) + parseInt(commodities, 10) + parseInt(collectables, 10) + 
     parseInt(cash, 10);
 
-
-
-document.getElementById("demo").innerHTML = totalPercent;
-if (totalPercent < 101) { 
-document.getElementById("Button").disabled = false;
-} else {
-document.getElementById("Button").disabled = true;
-
-}
-  
-}
+    document.getElementById("demo").innerHTML = totalPercent;
+    if (totalPercent < 101) { 
+    document.getElementById("Button").disabled = false;
+    } else {
+    document.getElementById("Button").disabled = true;
+    }
+  }
 </script> 
 
 {% endblock content %}
