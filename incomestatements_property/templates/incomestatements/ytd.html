@@ -43,13 +43,9 @@ function popitup(url) {
               </button></a>
 <select class="form-control" onchange="location = this.value;"> 
     <option selected="" value="" disabled>Select year</option>
-    <option value="../2019">2019</option>
-    <option value="../2020">2020</option>
-    <option value="../2021">2021</option> 
-    <option value="../2022">2022</option> 
-    <option value="../2023">2023</option> 
-    <option value="../2024">2024</option> 
-    <option value="../2025">2025</option> 
+      {% for year in years_list%}
+      <option value="../{{year|stringformat:"i"}}"> {{year|stringformat:"i"}} </option>
+      {%endfor%}
 </select>
 
 <div id ="container" style="width:50%;">

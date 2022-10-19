@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static  %}
+{% load static %}
 
 {% block title %}
 Summary Dashboard
@@ -9,88 +9,18 @@ Summary Dashboard
 
 <!--SELECT YEAR -->
 <select class="form-control" onchange="location = this.value;">
-  <option selected="" value="" disabled>Select year</option>
-  <option value="../2019">2019</option>
-  <option value="../2020">2020</option>
-  <option value="../2021">2021</option>
-  <option value="../2022">2022</option>
+  {% for year in years_list%}
+  <option value="../{{year|stringformat:"i"}}"> {{year|stringformat:"i"}}</option>
+  {%endfor%}
 </select>
 
 <!-- <script src="https://www.chartjs.org/dist/2.6.0/Chart.bundle.js"></script> -->
 
 <!-- <script src="https://www.chartjs.org/samples/2.6.0/utils.js"></script> -->
 
-<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script src="{% static 'apexcharts/apexcharts.min.js' %}"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script> -->
 
-
-    <!-- <div style="width: 75%">
-        <canvas id="canvas" style="display: block; height: 561px; width: 1122px;" width="2244" height="1122"></canvas>
-    </div>
-  <script>
-        var chartData = {
-            labels: ["2019", "2020", "2021", "2022"],
-            datasets: [{
-                type: 'line',
-                label: 'Networth',
-                borderColor: window.chartColors.blue,
-                borderWidth: 2,
-                fill: false,
-                data: [
-                    {{ graph_nw|safe }},
-                    {{ graph_nw|safe }},
-
-                ]
-            }, {
-                type: 'bar',
-                label: 'Assets',
-                backgroundColor: window.chartColors.red,
-                data: [
-                    {{ graph_asset|safe }},
-                    {{ graph_asset|safe }},
-
-                ],
-                borderColor: 'white',
-                borderWidth: 2
-            }, {
-                type: 'bar',
-                label: 'Liabilities',
-                backgroundColor: window.chartColors.green,
-                data: [
-                    {{ graph_lib|safe }},
-                    {{ graph_lib|safe }},
-
-                ]
-            }]
-
-        };
-        window.onload = function() {
-            var ctx = document.getElementById("canvas").getContext("2d");
-            window.myMixedChart = new Chart(ctx, {
-                type: 'bar',
-                data: chartData,
-                options: {
-                    responsive: true,
-                    title: {
-                        display: true,
-                        text: 'Chart.js Combo Bar Line Chart'
-                    },
-                    tooltips: {
-                        mode: 'index',
-                        intersect: true
-                    }
-                }
-            });
-        };
-
-        document.getElementById('randomizeData').addEventListener('click', function() {
-            chartData.datasets.forEach(function(dataset) {
-                dataset.data = dataset.data.map(function() {
-                    return randomScalingFactor();
-                });
-            });
-            window.myMixedChart.update();
-        });
-    </script> -->
   <div class="row">
     <div class="col-lg-8 mb-4">
       <div class="card">
@@ -106,15 +36,15 @@ Summary Dashboard
                 series: [{
                   name: 'Total Assets',
                   type: 'column',
-                  data: [55000, 85000, 150000, 1.5, 2.5, 2.8, 3.8, 4.6, 1.5, 2.5, 2.8, 3.8, 4.6, 2.8, 3.8, 4.6]
+                  data: {{yearwise_graph_assets}}
                 }, {
                   name: 'Liabilities',
                   type: 'column',
-                  data: [10000, 30000, 25000, 4, 4.1, 4.9, 6.5, 8.5, 1.5, 2.5, 2.8, 3.8, 4.6, 2.8, 3.8, 4.6]
+                  data: {{yearwise_graph_libs}}
                 }, {
                   name: 'Networth',
                   type: 'line',
-                  data: [40000, 55000, 125000, 3.6, 4.5, 4, 5, 8, 1.5, 2.5, 2.8, 3.8, 4.6, 2.8, 3.8, 4.6]
+                  data: {{yearwise_networths}}
                 }],
                 chart: {
                   height: 450,
@@ -128,12 +58,12 @@ Summary Dashboard
                   width: [1, 1, 4]
                 },
                 title: {
-                  text: 'Networth Tracker (2020 - 2035)',
+                  text: 'Networth Tracker',
                   align: 'center',
                   // offsetX: 110
                 },
                 xaxis: {
-                  categories: [2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034, 2035],
+                  categories: {{years_list}},
                 },
                 yaxis: [
                   {
@@ -175,7 +105,6 @@ Summary Dashboard
               }).render();
             });
           </script>
-          <!-- End Mixed Chart -->
 
         </div>
       </div>
@@ -191,7 +120,7 @@ Summary Dashboard
           <script>
             document.addEventListener("DOMContentLoaded", () => {
               new ApexCharts(document.querySelector("#pieChart"), {
-                series: [44, 23, 33],
+                series: [{{graph_asset}}, {{graph_lib}}, {{graph_nw}}],
                 chart: {
                   height: 450,
                   type: 'pie',
@@ -202,13 +131,16 @@ Summary Dashboard
                 title: {
                   text: 'Networth Tracker {{year}}',
                   align: 'center',
-                  // offsetX: 110
                 },
+<<<<<<< HEAD
                 legend: {
                   horizontalAlign: 'center',
                   // offsetX: 40
                 },
                 labels: ['Assets', 'Liabilities', 'Networth']
+=======
+                labels: ['Asset', 'Liabilities', 'Networth',]
+>>>>>>> 0127d506919697f956a3d13630c260526086819d
               }).render();
             });
           </script>
@@ -481,10 +413,6 @@ Summary Dashboard
     
   </div>
 </div>
-
-
-
-
         </div>
       </div> 
 <br> 

@@ -357,7 +357,7 @@ def property_summary_view(request, year, *args, **kwargs):
     Estimate future value of current year goal networth
     """
     current_goal = FutureValue(CurrentYearGoal())
-    print(CurrentYearGoal())
+    # print(CurrentYearGoal())
     property_goal = real_estate_percent * current_goal
     total_rent_after_vacany_rate = 0
 
@@ -585,7 +585,6 @@ def property_summary_view(request, year, *args, **kwargs):
         return myList
 
     years_list = sort(years_list)
-    print(years_list)
 
     yearwise_graph_assets = []
     yearwise_graph_libs = []
@@ -659,16 +658,13 @@ def property_summary_view(request, year, *args, **kwargs):
         yearwise_graph_lib = yearwise_props_liabilities + yearwise_pb_liabilities
         yearwise_networth = yearwise_graph_asset - yearwise_graph_lib
 
-        yearwise_graph_assets.append(yearwise_graph_asset)
-        yearwise_graph_libs.append(yearwise_graph_lib)
-        yearwise_networths.append(yearwise_networth)
-
-    print("#### Assets ####", yearwise_graph_assets)
-    print("#### Liabilities ####", yearwise_graph_libs)
-    print("#### networth ####", yearwise_networths)
-    """
-    Single selected Year graph assets, liabilities and networth.
-    """
+        yearwise_graph_assets.append(float(yearwise_graph_asset))
+        yearwise_graph_libs.append(float(yearwise_graph_lib))
+        yearwise_networths.append(float(yearwise_networth))
+        """
+        Single selected Year graph assets, liabilities and networth.
+        """
+    print(years_list)
     graph_asset = (
         total_assets
         + total_pb_assets
@@ -680,6 +676,7 @@ def property_summary_view(request, year, *args, **kwargs):
     )
     graph_lib = total_liabilities + total_pb_liabilities
     graph_nw = graph_asset - graph_lib
+
     context = {
         "object_list": qs,
         "year": year,

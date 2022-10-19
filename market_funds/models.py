@@ -39,6 +39,7 @@ class IndexFund(models.Model):
         else:
             return f"{self.ticker } - {self.name}"
 
+
 class Trade(models.Model):
     date = models.DateField()
     indexfund = models.ForeignKey(
