@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static  %}
+{% load static %}
 {% load mathfilters %}
 
 {% block title %}
@@ -20,7 +20,10 @@ function popitup(url) {
   window.onblur= function() {window.onfocus= function () {location.reload(true)}};
 </script>
 
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<!-- Google Chart -->
+<script src="{% static 'GoogleChart/Gchart.js' %}"></script>
+<!-- <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> -->
+
 <script type="text/javascript">
   google.charts.load("current", {packages:["corechart"]});
   google.charts.setOnLoadCallback(drawChart);
@@ -33,8 +36,9 @@ function popitup(url) {
     ]);
 
     var options = {
-      title: '',
+      // title: '',
       is3D: true,
+      legend: {position: 'bottom', alignment: 'center'},
       colors: ['Gold', 'Silver', 'Green', 'Red']
     };
 
@@ -54,7 +58,7 @@ function popitup(url) {
 </a>
 
 <div class="row">
-  <div class="col-8 p-4 shadow">
+  <div class="col-8 p-4 bg-light shadow">
     <table class="table table-striped table-hover" style="font-size:small">
       <thead>
         <tr>
@@ -111,7 +115,7 @@ function popitup(url) {
     </table> 
   </div>
   <div class="col-4">
-    <div class="col-sm" id="piechart_3d" style="width: 100%; height: 250px;"></div>
+    <div class="col-sm" id="piechart_3d" style="width: 100%; height: 350px;"></div>
   </div>
 </div>
 

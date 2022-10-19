@@ -17,9 +17,14 @@ Year To Date {{ year }}
 
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script> -->
 
-<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<!-- <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> -->
+
+<!-- Google Chart -->
+<script src="{% static 'GoogleChart/Gchart.js' %}"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script> -->
 
 <!-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> -->
 
@@ -102,9 +107,8 @@ Year To Date {{ year }}
 </div>
 
 <div class="chart-container mt-5" style="position: relative;">
-  <div class="row justify-content-around">
-    
-    <div class="col-8 bg-light p-4 shadow">
+  <div class="row justify-content-around"> 
+    <div class="col-9 bg-light p-4 shadow">
 
       <!-- <table class="table table-striped table-hover" style="font-size:small">
         <thead>
@@ -398,34 +402,24 @@ Year To Date {{ year }}
         </tbody>
       </table>
     </div>
-    <div class="col-3 bg-light p-4 shadow">
-      <canvas id="myChart" width="50px" height="50px"></canvas>
 
-      <canvas id="pieChart" width="50px" height="50px"></canvas>
-      <script>
-        document.addEventListener("DOMContentLoaded", () => {
-          new Chart(document.querySelector('#pieChart'), {
-            type: 'pie',
-            data: {
-              labels: [
-                'Income',
-                'Expence',
-                // 'Yellow'
-              ],
-              datasets: [{
-                label: 'My First Dataset',
-                data: [300, 200],
-                backgroundColor: [
-                  'rgb(255, 99, 132)',
-                  'rgb(54, 162, 235)',
-                  // 'rgb(255, 205, 86)'
-                ],
-                hoverOffset: 4
-              }]
-            }
-          });
-        });
-      </script>
+    <div class="col-3">
+      <!-- <div align="center" class="mb-3">
+        <h5>Expenses</h5>
+        <canvas id="myChart" width="300px" height="300px"></canvas>
+      </div> -->
+
+      <!-- <div class="col p-2 bd-highlight">   -->
+        <div id="donutchart" class="mb-3 shadow" style="width: 100%; height: 400px;"></div>  
+      <!-- </div> -->
+
+      <!-- <div align="center">
+        <h5>Income Vs Expense</h5>
+        <canvas id="pieChart" width="30px" height="30px"></canvas>
+      </div> -->
+
+      <div id="piechart" class="mb-3 shadow" style="width: 100%; height: 400px;"></div> 
+
     </div>
     <!-- <div class="col-lg-4">
       <div class="card">
@@ -459,7 +453,6 @@ Year To Date {{ year }}
     </div> -->
   </div>
 </div>
-</div>
 
 <!-- jQuery -->
 <!-- <script src="../../plugins/jquery/jquery.min.js"></script> -->
@@ -474,6 +467,38 @@ Year To Date {{ year }}
   })
 </script>
 
+<!-- <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    new Chart(document.querySelector('#pieChart'), {
+      type: 'pie',
+      data: {
+        labels: [
+          'Income',
+          'Expence',
+          // 'Yellow'
+        ],
+        datasets: [{
+          label: 'My First Dataset',
+          data: [300, 200],
+          backgroundColor: [
+            'rgb(255, 99, 132)',
+            'rgb(54, 162, 235)',
+            // 'rgb(255, 205, 86)'
+          ],
+          hoverOffset: 4
+        }]
+      },
+      options: {
+        plugins: {
+          legend: {
+            position: 'bottom',
+            align: 'left',
+          },
+        },
+      }
+    });
+  });
+</script>
 
 <script>
   const ctx = document.getElementById('myChart');
@@ -481,58 +506,103 @@ Year To Date {{ year }}
     type: 'doughnut',
     data: {
       labels: [
-        {% for key, value in categories.items %} 
+        {% for key, value in categories_yearly.items %} 
         '{{key}}',
-{% endfor %}
-        ],
-  datasets: [{
-    label: 'Categories',
-    data: [
-      {% for key, value in categories.items %} 
-        '{{value|stringformat:"i"}}',
-  {% endfor %}
-  ],
-    backgroundColor: [
-      'rgba(255, 99, 132, 0.2)',
-      'rgba(54, 162, 235, 0.2)',
-      'rgba(255, 206, 86, 0.2)',
-      'rgba(75, 192, 192, 0.2)',
-      'rgba(153, 102, 255, 0.2)',
-      'rgba(255, 159, 64, 0.2)'
-    ],
-      borderColor: [
-        'rgba(255, 99, 132, 1)',
-        'rgba(54, 162, 235, 1)',
-        'rgba(255, 206, 86, 1)',
-        'rgba(75, 192, 192, 1)',
-        'rgba(153, 102, 255, 1)',
-        'rgba(255, 159, 64, 1)'
+        {% endfor %}
       ],
+      datasets: [{
+        label: 'Categories',
+        data: [
+          {% for key, value in categories_yearly.items %} 
+          '{{value|stringformat:"i"}}',
+          {% endfor %}
+        ],
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)'
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)'
+        ],
         borderWidth: 1
-        }]
+      }]
     },
-  options: {
-    plugins: {
-      legend: {
-        position: "top",
-          align: "left",
-          },
-    },
-    // scales: {
-    //   y: {
-    //     ticks: {
-    //       display: false,
-    //         },
-    //     grid: {
-    //       display: false
-    //     },
-    //   },
+    options: {
+      plugins: {
+        legend: {
+          position: 'bottom',
+          align: 'left',
+        },
+      },
+    }
+  });
+</script> -->
 
-    // }
+<script type="text/javascript">
+  google.charts.load('current', {'packages':['corechart']});
+  google.charts.setOnLoadCallback(drawChart);
+
+  function drawChart() {
+
+    var data = google.visualization.arrayToDataTable([
+      ['Task', 'Hours per Day'],
+      ['Work',     11],
+      ['Eat',      2],
+      ['Commute',  2],
+      ['Watch TV', 2],
+      ['Sleep',    7]
+    ]);
+
+    var options = {
+      title: 'All Expenses',
+      // is3D: true,
+      pieHole: 0.4,
+      // legend: 'none',
+      // pieSliceText: 'label',
+      legend: {position: 'bottom', alignment: 'start'}
+    };
+
+    var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
+
+    chart.draw(data, options);
   }
-});
 </script>
 
+<script type="text/javascript">
+  google.charts.load('current', {'packages':['corechart']});
+  google.charts.setOnLoadCallback(drawChart);
+
+  function drawChart() {
+
+    var data = google.visualization.arrayToDataTable([
+      ['Task', 'Hours per Day'],
+      ['Income',     11],
+      ['Expense',    7]
+    ]);
+
+    var options = {
+      title: 'Income Vs Expense',
+      // is3D: true,
+      // pieHole: 0.4,
+      // legend: 'none',
+      // pieSliceText: 'label',
+      legend: {position: 'bottom', alignment: 'center'}
+    };
+
+    var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+    chart.draw(data, options);
+  }
+</script>
 
 
 <br>

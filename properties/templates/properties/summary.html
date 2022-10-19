@@ -16,9 +16,9 @@ Summary Dashboard
   <option value="../2022">2022</option>
 </select>
 
-<script src="https://www.chartjs.org/dist/2.6.0/Chart.bundle.js"></script>
+<!-- <script src="https://www.chartjs.org/dist/2.6.0/Chart.bundle.js"></script> -->
 
-<script src="https://www.chartjs.org/samples/2.6.0/utils.js"></script>
+<!-- <script src="https://www.chartjs.org/samples/2.6.0/utils.js"></script> -->
 
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
@@ -191,7 +191,7 @@ Summary Dashboard
           <script>
             document.addEventListener("DOMContentLoaded", () => {
               new ApexCharts(document.querySelector("#pieChart"), {
-                series: [44, 55, 13, 43, 22],
+                series: [44, 23, 33],
                 chart: {
                   height: 450,
                   type: 'pie',
@@ -204,7 +204,11 @@ Summary Dashboard
                   align: 'center',
                   // offsetX: 110
                 },
-                labels: ['Team A', 'Team B', 'Team C', 'Team D', 'Team E']
+                legend: {
+                  horizontalAlign: 'center',
+                  // offsetX: 40
+                },
+                labels: ['Assets', 'Liabilities', 'Networth']
               }).render();
             });
           </script>

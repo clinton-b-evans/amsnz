@@ -1,11 +1,14 @@
 {% extends "base.html" %}
+{% load static %}
 {% load crispy_forms_tags %}
 {% block title %}
 Financial Plan
 {% endblock title %}
 
 {% block content %}
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<!-- Google Chart -->
+<script src="{% static 'GoogleChart/Gchart.js' %}"></script>
+<!-- <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> -->
 
 <style>
   tr {
@@ -120,7 +123,7 @@ Financial Plan
     </div>
 
     <div class="col p-2 bd-highlight">  
-      <div id="piechart" style="width: 900px; height: 400px"></div>  
+      <div id="piechart" style="width: 750px; height: 450px"></div>  
     </div>
 
   </div>
@@ -303,7 +306,13 @@ Financial Plan
       ['Cash',CR],
     ]);
 
-    var options = {};
+    var options = {
+      // is3D: true,
+      // pieHole: 0.4,
+      // legend: 'none',
+      // pieSliceText: 'label',
+      legend: {position: 'labeled', alignment: 'center'}
+    };
 
     var chart = new google.visualization.PieChart(document.getElementById('piechart'));
 
