@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block title %}
     {{ object.name }} - <span style="font-size:14px"><a href="popupex.html" onclick="return popitup('/properties/{{ object.id }}/edit')">Edit</a></span>
      
@@ -8,7 +8,9 @@
 {% endblock title %}
 
 {% block content %}
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<!-- <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> -->
+<script src="{% static 'GoogleChart/Gchart.js' %}"></script>
+
 <script type="text/javascript">
     google.charts.load("current", {packages:["corechart"]});
     google.charts.setOnLoadCallback(drawChart);
@@ -126,7 +128,7 @@
     </div>
 
     <div class="card">
-        <div class="card-body">
+        <div class="card-body mt-3">
           <!-- <h5 class="card-title">Bordered Tabs Justified</h5> -->
 
           <!-- Bordered Tabs Justified -->
@@ -395,209 +397,6 @@
 
         </div>
       </div>
-
-    <!-- <div class="row">
-        <div class="col-med">
-            <table class="table table-striped table-hover">
-                <tbody>
-                    <thead>
-                        <tr>
-                            <th colspan="1">Property Information</th>
-                        </tr>
-                    </thead>
-                    <tr>
-                        <td>Property Type</td>
-                        <td id='#'>{{ object.property_type }}</td>
-                    </tr>
-                    <tr>
-                        <td>Land Size</td>
-                        <td>{{ object.land_size }}</td>
-                    </tr>
-                    <tr>
-                        <td>Building Size</td>
-                        <td>{{ object.building_size }}</td>
-                    </tr>
-                    <tr>
-                        <td>Lounge</td>
-                        <td>{{ object.lounge }}</td>
-                    </tr>
-                    <tr>
-                        <td>Bedrooms</td>
-                        <td>{{ object.bedrooms }}</td>
-                    </tr>
-                    <tr>
-                        <td>Bathrooms</td>
-                        <td>{{ object.bathrooms }}</td>
-                    </tr>
-                    <tr>
-                        <td>Parking</td>
-                        <td>{{ object.parking }}<br></td>
-                    </tr>
-                    <tr>
-                        <td>Garage Type</td>
-                        <td>{{ object.garage }}<br></td>
-                    </tr>
-                    <thead>
-                        <tr>
-                            <th colspan="2">General Information</th>
-                        </tr>
-                    </thead>
-                    <tr>
-                        <td>Vacancy Rate:</td>
-                        <td>{{ object.vacancy_rate|floatformat:2 }}%</td>
-                    </tr>
-                    <tr>
-                        <td>Management fee</td>
-                        <td>{{ object.management_fee|floatformat:2 }}%</td>
-                    </tr>
-                    <thead>
-                        <tr>
-                            <th colspan="2">Financial Information</th>
-                        </tr>
-                    </thead>
-                    <tr>
-                        <td>Market Value</td>
-                        <td>${{ object.market_value|floatformat:2}}</td>
-                    </tr>
-                    <tr>
-                        <td>Purchase Price</td>
-                        <td>${{ object.purchase_price|floatformat:2 }}</td>
-                    </tr>
-                    <tr>
-                        <td>Deposit</td>
-                        <td>${{ object.deposit }}</td>
-                    </tr>
-                    <tr>
-                        <td>Equity</td>
-                        <td>${{ equity }}</td>
-                    </tr>
-                    <thead>
-                        <tr>
-                            <th colspan="2">Loan Information</th>
-                        </tr>
-                    </thead>
-                    <tr>
-                        <td>Loan Amount</td>
-                        <td>${{ object.loan_amount|floatformat:2 }}</td>
-                    </tr>
-                    <tr>
-                        <td>Term Left</td>
-                        <td>{{ loan_term_left|floatformat:2 }} years</td>
-                    </tr>
-                    <tr>
-                        <td>Interest Rate</td>
-                        <td>{{ object.interest_rate|floatformat:2 }}%</td>
-                    </tr>
-                    <thead>
-                        <tr>
-                            <th colspan="2">Income</th>
-                        </tr>
-                    </thead>
-                    <tr>
-                        <td>Rent</td>
-                        <td><span id="rentalYieldValue">${{ object.rent|floatformat:2  }}</span></td>
-                    </tr> 
-                    <thead>
-                        <tr>
-                            <th colspan="2">Expenses</th>
-                        </tr>
-                    </thead>
-                    <tr>
-                        <td>Repayments</td>
-                        <td>${{ object.repayments|floatformat:2 }}</td>
-                    </tr>
-                    <tr>
-                        <td>Insurance</td>
-                        <td>${{ object.insurance|floatformat:2 }}</td>
-                    </tr>
-                    <tr>
-                        <td>Management Fee</td>
-                        <td>${{ net_management|floatformat:2 }}</td>
-                    </tr>
-                    <tr>
-                        <td>Body Corp fee</td>
-                        <td>${{ object.bodycorp_fee|floatformat:2 }}</td>
-                    </tr>
-                    <tr>
-                        <td>Maintenance</td>
-                        <td>${{ object.maintenance|floatformat:2 }}</td>
-                    </tr>
-                    <tr>
-                        <td>Rates</td>
-                        <td>${{ object.rates|floatformat:2 }}<br></td>
-                    </tr>
-                    <thead>
-                        <tr>
-                            <th colspan="2">Property Performance</th>
-                        </tr>
-                    </thead>
-                    <tr>
-                        <td>Gross Rental Income</td>
-                        <td>${{ object.rent|floatformat:2  }}</td>
-                    </tr>
-
-                    <tr>
-                        <td>Rent After Vacancy</td>
-                        <td><span id="rentAfterVacancyRateValue">${{ rent_after_vacany_rate|floatformat:2  }}</span></td>
-                    </tr>
-                    <tr>
-                        <td>Operating Expenses</td>
-                        <td><span id="operatingExpensesValue" >${{ operating_expenses|floatformat:2  }}</span></td>
-                    </tr>
-                    <tr>
-                        <td>Net Operating Income</td>
-                        <td><span id="netOperatingIncomeValue"> ${{ net_operating_income|floatformat:2  }}</span></td>
-                    </tr>
-                    <tr>
-                        <td>Mortgage Repayment</td>
-                        <td><span id="mortgageRepaymentValue">${{ mortgage_repayment|floatformat:2 }}</span></td>
-                    </tr>
-                    <tr>
-                        <td>Net Income</td>
-                        <td><span id="netIncomeValue">${{ net_income|floatformat:2 }}</span></td>
-                    </tr>
-                    <thead>
-                        <tr>
-                            <th colspan="2">Investment Info</th>
-                        </tr>
-                    </thead>
-                    <tr>
-                        <td>Gross Yield</td>
-                        <td>{{ gross_yield|floatformat:2 }}%</td>
-                    </tr>
-                    <tr>
-                        <td>Net Operating Income</td>
-                        <td>{{ net_operating_income_percent|floatformat:2 }}%</td>
-                    </tr>
-                    <tr>
-                        <td>Loan To Value</td>
-                        <td>{{ loan_to_value|floatformat:2 }}% </td>
-                    </tr>
-                    <tr>
-                        <td>Cap Rate</td>
-                        <td>{{ cap_rate|floatformat:2 }}% </td>
-                    </tr>
-                    <thead>
-                        <tr>
-                        <th colspan="2">Property Contacts</th>
-                        </tr>
-                    </thead>
-                    {% for obj in contact_obj %}
-                    <tr>
-                        <td>{{ obj.occupation }}</td>
-                        <td><a href="tel:{{ obj.contact_number }}">{{ obj.first_name }}</a></td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <div class="col-sm">
-
-        </div>
-        <div class="col-sm">
-        </div>
-    </div> -->
-<!-- </div> -->
 
 
 {% endblock content %}
