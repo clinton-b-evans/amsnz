@@ -28,15 +28,11 @@ Profit and Loss {{ year }}
 
 <div class="row">
   <div class="col-lg-3">
-    <select class="form-control mb-3" onchange="location = this.value;">
+    <select class="form-control" onchange="location = this.value;">
       <option selected="" value="" disabled>Select year</option>
-      <option value="../2019">2019</option>
-      <option value="../2020">2020</option>
-      <option value="../2021">2021</option>
-      <option value="../2022">2022</option>
-      <option value="../2023">2023</option>
-      <option value="../2024">2024</option>
-      <option value="../2025">2025</option>
+      {% for year in years_list%}
+      <option value='../{{year|stringformat:"i"}}'> {{year|stringformat:"i"}}</option>
+      {%endfor%}
     </select>
   </div>
 
@@ -66,7 +62,7 @@ Profit and Loss {{ year }}
             <table class="table table-hover" style="font-size:small">
               <thead>
                 <tr>
-                  <th>YEAR - {{year}}</th>
+     <th>YEAR - {{year}}</th>
                   <th scope="col">Jan</th>
                   <th scope="col">Feb</th>
                   <th scope="col">Mar</th>
@@ -387,14 +383,11 @@ Profit and Loss {{ year }}
     google.charts.setOnLoadCallback(drawChart);
 
     function drawChart() {
-
       var data = google.visualization.arrayToDataTable([
-        ['Task', 'Hours per Day'],
-        ['Work', 11],
-        ['Eat', 2],
-        ['Commute', 2],
-        ['Watch TV', 2],
-        ['Sleep', 7]
+      ['Task', 'Hours per Day'],
+      {% for key, value in categories_yearly.items %}
+      ['{{key}}', {{value}}],
+      {% endfor %}
       ]);
 
       var options = {
@@ -438,9 +431,4 @@ Profit and Loss {{ year }}
     chart.draw(data, options);
   }
   </script>
-
-
-  <br>
-
-
   {% endblock content %}
