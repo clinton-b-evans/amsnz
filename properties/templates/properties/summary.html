@@ -8,11 +8,17 @@ Summary Dashboard
 {% block content %}
 
 <!--SELECT YEAR -->
-<select class="form-control" onchange="location = this.value;">
-  {% for year in years_list%}
-  <option value="../{{year|stringformat:"i"}}"> {{year|stringformat:"i"}}</option>
-  {%endfor%}
-</select>
+<div class="row">
+  <div class="col-lg-8">
+        <select class="form-control" onchange="location = this.value;">
+          <option selected="" value="" disabled>Select year</option>
+          {% for year in years_list%}
+          <option value='../{{year|stringformat:"i"}}'> {{year|stringformat:"i"}}</option>
+          {%endfor%}
+        </select>
+  </div>
+</div>
+<br>
 
 <!-- <script src="https://www.chartjs.org/dist/2.6.0/Chart.bundle.js"></script> -->
 

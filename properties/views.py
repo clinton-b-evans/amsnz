@@ -581,7 +581,7 @@ def property_summary_view(request, year, *args, **kwargs):
     """
 
     def sort(myList):
-        myList.sort(reverse=True)
+        myList.sort()
         return myList
 
     years_list = sort(years_list)
@@ -664,7 +664,6 @@ def property_summary_view(request, year, *args, **kwargs):
         """
         Single selected Year graph assets, liabilities and networth.
         """
-    print(years_list)
     graph_asset = (
         total_assets
         + total_pb_assets

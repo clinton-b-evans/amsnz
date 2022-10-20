@@ -28,15 +28,11 @@ Year To Date {{ year }}
 
 <div class="row">
   <div class="col-lg-3">
-    <select class="form-control mb-3" onchange="location = this.value;">
+    <select class="form-control" onchange="location = this.value;">
       <option selected="" value="" disabled>Select year</option>
-      <option value="../2019">2019</option>
-      <option value="../2020">2020</option>
-      <option value="../2021">2021</option>
-      <option value="../2022">2022</option>
-      <option value="../2023">2023</option>
-      <option value="../2024">2024</option>
-      <option value="../2025">2025</option>
+      {% for year in years_list%}
+      <option value='../{{year|stringformat:"i"}}'> {{year|stringformat:"i"}}</option>
+      {%endfor%}
     </select>
   </div>
 
@@ -120,19 +116,10 @@ Year To Date {{ year }}
               <thead>
                 <tr>
                   <th scope="row">Total</th>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
+                {% for k, v in month_income.items %}
+                  <th>${{v}}</th>
+                {% endfor %}
+                <th></th>
                 </tr>
               </thead>
             <tr>
@@ -155,22 +142,6 @@ Year To Date {{ year }}
             </tr>
             <tr>
               <td scope="row">Maintenance</td>
-              <td>$0</td>
-              <td>$0</td>
-              <td>$0</td>
-              <td>$0</td>
-              <td>$0</td>
-              <td>$0</td>
-              <td>$0</td>
-              <td>$0</td>
-              <td>$0</td>
-              <td>$0</td>
-              <td>$0</td>
-              <td>$0</td>
-              <td>$0</td>
-            </tr>
-            <tr>
-              <td scope="row">Rent</td>
               <td>$0</td>
               <td>$0</td>
               <td>$0</td>
@@ -349,8 +320,9 @@ Year To Date {{ year }}
               <tr style="background-color: #ededed">
                 <th scope="row">Total</th>
                 {% for k, v in month_expenses.items %}
-                <td><b>${{v}}</b></td>
+                  <th>${{v}}</th>
                 {% endfor %}
+                <th></th>
               </tr>
             </thead>
           </tbody>
@@ -375,99 +347,16 @@ Year To Date {{ year }}
     })
   </script>
 
-  <!-- <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    new Chart(document.querySelector('#pieChart'), {
-      type: 'pie',
-      data: {
-        labels: [
-          'Income',
-          'Expence',
-          // 'Yellow'
-        ],
-        datasets: [{
-          label: 'My First Dataset',
-          data: [300, 200],
-          backgroundColor: [
-            'rgb(255, 99, 132)',
-            'rgb(54, 162, 235)',
-            // 'rgb(255, 205, 86)'
-          ],
-          hoverOffset: 4
-        }]
-      },
-      options: {
-        plugins: {
-          legend: {
-            position: 'bottom',
-            align: 'left',
-          },
-        },
-      }
-    });
-  });
-</script>
-
-<script>
-  const ctx = document.getElementById('myChart');
-  const myChart = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: [
-        {% for key, value in categories_yearly.items %} 
-        '{{key}}',
-        {% endfor %}
-      ],
-      datasets: [{
-        label: 'Categories',
-        data: [
-          {% for key, value in categories_yearly.items %} 
-          '{{value|stringformat:"i"}}',
-          {% endfor %}
-        ],
-        backgroundColor: [
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(255, 206, 86, 0.2)',
-          'rgba(75, 192, 192, 0.2)',
-          'rgba(153, 102, 255, 0.2)',
-          'rgba(255, 159, 64, 0.2)'
-        ],
-        borderColor: [
-          'rgba(255, 99, 132, 1)',
-          'rgba(54, 162, 235, 1)',
-          'rgba(255, 206, 86, 1)',
-          'rgba(75, 192, 192, 1)',
-          'rgba(153, 102, 255, 1)',
-          'rgba(255, 159, 64, 1)'
-        ],
-        borderWidth: 1
-      }]
-    },
-    options: {
-      plugins: {
-        legend: {
-          position: 'bottom',
-          align: 'left',
-        },
-      },
-    }
-  });
-</script> -->
-
   <script type="text/javascript">
     google.charts.load('current', { 'packages': ['corechart'] });
     google.charts.setOnLoadCallback(drawChart);
 
     function drawChart() {
-
       var data = google.visualization.arrayToDataTable([
-        ['Task', 'Hours per Day'],
-        ['Work', 11],
-        ['Eat', 2],
-        ['Commute', 2],
-        ['Watch TV', 2],
-        ['Sleep', 7]
+      ['Task', 'Hours per Day'],
+      {% for key, value in categories_yearly.items %}
+      ['{{key}}', {{value}}],
+      {% endfor %}
       ]);
 
       var options = {
@@ -511,9 +400,4 @@ Year To Date {{ year }}
     chart.draw(data, options);
   }
   </script>
-
-
-  <br>
-
-
   {% endblock content %}
