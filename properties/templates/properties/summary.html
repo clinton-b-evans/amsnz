@@ -7,25 +7,27 @@ Summary Dashboard
 
 {% block content %}
 
-<!--SELECT YEAR -->
-<div class="row">
-  <div class="col-lg-8">
-        <select class="form-control" onchange="location = this.value;">
-          <option selected="" value="" disabled>Select year</option>
-          {% for year in years_list%}
-          <option value='../{{year|stringformat:"i"}}'> {{year|stringformat:"i"}}</option>
-          {%endfor%}
-        </select>
-  </div>
-</div>
-<br>
-
 <!-- <script src="https://www.chartjs.org/dist/2.6.0/Chart.bundle.js"></script> -->
 
 <!-- <script src="https://www.chartjs.org/samples/2.6.0/utils.js"></script> -->
 
 <script src="{% static 'apexcharts/apexcharts.min.js' %}"></script>
 <!-- <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script> -->
+
+<script src="{% static 'GoogleChart/Gchart.js' %}"></script>
+
+<section class="section dashboard">
+  <!--SELECT YEAR -->
+  <div class="row">
+    <div class="col-3">
+      <select class="form-control mb-3" onchange="location = this.value;">
+        <option selected="" value="" disabled>Select year</option>
+        {% for year in years_list%}
+        <option value="../{{year|stringformat:"i"}}"> {{year|stringformat:"i"}}</option>
+        {%endfor%}
+      </select>
+    </div>
+  </div>
 
   <div class="row">
     <div class="col-lg-8 mb-4">
@@ -34,7 +36,7 @@ Summary Dashboard
           <h5 class="card-title">Mixed Chart</h5>
 
           <!-- Column Chart -->
-          <div id="Chart"></div>
+          <div id="Chart" style="width: 100%; height: 480px;"></div>
 
           <script>
             document.addEventListener("DOMContentLoaded", () => {
@@ -117,11 +119,25 @@ Summary Dashboard
     </div>  
     <div class="col-lg-4">
       <div class="card">
-        <div class="card-body">
-          <h5 class="card-title mb-5">Pie Chart</h5>
+        <div class="filter">
+          <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+            <li class="dropdown-header text-start">
+              <h6>Filter</h6>
+            </li>
+
+            <li><a class="dropdown-item" href="#">Today</a></li>
+            <li><a class="dropdown-item" href="#">This Month</a></li>
+            <li><a class="dropdown-item" href="#">This Year</a></li>
+          </ul>
+        </div>
+        
+        <div class="card-body pb-0">
+          <h5 class="card-title">Pie Chart <span>| {{year}}</span></h5>
 
           <!-- Pie Chart -->
-          <div id="pieChart" class="mb-5"></div>
+          <!-- <div id="pieChart" class="mb-5"></div> -->
+          <div id="pieChart" style="width: 100%; height: 500px;"></div>
 
           <script>
             document.addEventListener("DOMContentLoaded", () => {
@@ -140,7 +156,8 @@ Summary Dashboard
                   // offsetX: 110
                 },
                 legend: {
-                  horizontalAlign: 'center',
+                  position: 'top'
+                  // horizontalAlign: 'center',
                   // offsetX: 40
                 },
                 labels: ['Assets', 'Liabilities', 'Networth']
@@ -284,140 +301,132 @@ Summary Dashboard
             <td style="text-align:right">${{ pb_networth|floatformat:2 }} </td>
           </tr>
         </tbody>
-    <thead>
-       <tr>
-          <th scope="col">Cash Flow</th>
-          <th style="text-align:right" scope="col"></th>
-        </tr>
-      </thead>
-          <tbody>
-
-    <tr>
-      <td>Income</td>
-      <td style="text-align:right">${{ cf_income_yearly|floatformat:2 }} </td>
-    </tr>
-    <tr>
-      <td>Expense</td>
-      <td style="text-align:right">${{ cf_expense_yearly|floatformat:2 }} </td>
-    </tr>
-    <tr>
-      <td>Cash Flow</td>
-      <td style="text-align:right">${{ cf_cashflow|floatformat:2 }} </td>
-    </tr>
-    
-    </tbody>
+        <thead>
+          <tr>
+            <th scope="col">Cash Flow</th>
+            <th style="text-align:right" scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Income</td>
+            <td style="text-align:right">${{ cf_income_yearly|floatformat:2 }} </td>
+          </tr>
+          <tr>
+            <td>Expense</td>
+            <td style="text-align:right">${{ cf_expense_yearly|floatformat:2 }} </td>
+          </tr>
+          <tr>
+            <td>Cash Flow</td>
+            <td style="text-align:right">${{ cf_cashflow|floatformat:2 }} </td>
+          </tr>
+        </tbody>
       </table>
 
- <h6>The Market</h6>
-       <div class="progress">
+      <h6>The Market</h6>
+      <div class="progress">
         <div class="progress-bar" role="progressbar" style="width: {{ stocks_total_progress|floatformat }}%;" aria-valuenow="{{ stocks_total_progress|floatformat }}" aria-valuemin="0" aria-valuemax="100">{{ stocks_total_progress|floatformat }}%</div>
       </div>
       <table class="table table-hover">
-      <thead>
-       <tr>
-          <th scope="col">Index Funds / ETF</th>
-          <th style="text-align:right" scope="col">${{ stocks_total_value|floatformat:2 }}</th>
-        </tr>
-      </thead>
-    <tbody>
-    {% if stocks_total_equities > 0 %}
-    <tr> 
-      <td>Equities</td>
-      <td style="text-align:right">${{ stocks_total_equities|floatformat:2 }} </td>
-    </tr>
-    {% endif %}
-    <tr>
-    {% if stocks_total_bonds > 0 %}
-    <tr>
-      <td>Bonds</td>
-      <td style="text-align:right">${{ stocks_total_bonds|floatformat:2 }} </td>
-    </tr>
-    {% endif %}
-    {% if stocks_total_cce > 0 %}
-    <tr>
-      <td>Cash & Cash Equivalents</td>
-      <td style="text-align:right">${{ stocks_total_cce|floatformat:2 }} </td>
-    </tr>
-    {% endif %}
-    {% if stocks_total_commodites > 0 %}
-        <tr>
-      <td>Commodites</td>
-      <td style="text-align:right">${{ stocks_total_commodites|floatformat:2 }} </td>
-    </tr>
-    {% endif %}
-    {% if stocks_total_diversified > 0 %}
-        <tr>
-      <td>Diversified</td>
-      <td style="text-align:right">${{ stocks_total_diversified|floatformat:2 }} </td>
-    </tr>
-    {% endif %}
-    {% if stocks_total_reits > 0 %}
-        <tr>
-      <td>Reits</td>
-      <td style="text-align:right">${{ stocks_total_reits|floatformat:2 }} </td>
-    </tr>
-    {% endif %}
-    {% if stocks_total_other > 0 %}
-    <tr>
-      <td>Other</td>
-      <td style="text-align:right">${{ stocks_total_other|floatformat:2 }} </td>
-    </tr>
-    {% endif %}
-    </table>
+        <thead>
+          <tr>
+            <th scope="col">Index Funds / ETF</th>
+            <th style="text-align:right" scope="col">${{ stocks_total_value|floatformat:2 }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if stocks_total_equities > 0 %}
+          <tr> 
+            <td>Equities</td>
+            <td style="text-align:right">${{ stocks_total_equities|floatformat:2 }} </td>
+          </tr>
+          {% endif %}
+          <tr>
+            {% if stocks_total_bonds > 0 %}
+            <tr>
+              <td>Bonds</td>
+              <td style="text-align:right">${{ stocks_total_bonds|floatformat:2 }} </td>
+            </tr>
+            {% endif %}
+            {% if stocks_total_cce > 0 %}
+            <tr>
+              <td>Cash & Cash Equivalents</td>
+              <td style="text-align:right">${{ stocks_total_cce|floatformat:2 }} </td>
+            </tr>
+            {% endif %}
+            {% if stocks_total_commodites > 0 %}
+            <tr>
+              <td>Commodites</td>
+              <td style="text-align:right">${{ stocks_total_commodites|floatformat:2 }} </td>
+            </tr>
+            {% endif %}
+            {% if stocks_total_diversified > 0 %}
+                <tr>
+              <td>Diversified</td>
+              <td style="text-align:right">${{ stocks_total_diversified|floatformat:2 }} </td>
+            </tr>
+            {% endif %}
+            {% if stocks_total_reits > 0 %}
+            <tr>
+              <td>Reits</td>
+              <td style="text-align:right">${{ stocks_total_reits|floatformat:2 }} </td>
+            </tr>
+            {% endif %}
+            {% if stocks_total_other > 0 %}
+            <tr>
+              <td>Other</td>
+              <td style="text-align:right">${{ stocks_total_other|floatformat:2 }} </td>
+            </tr>
+            {% endif %}
+        </tbody>
+      </table>
       <h6>Commodities</h6>
-       <div class="progress">
+      <div class="progress">
         <div class="progress-bar" role="progressbar" style="width: {{ commodities_progress|floatformat }}%;" aria-valuenow="{{ commodities_progress|floatformat }}" aria-valuemin="0" aria-valuemax="100">{{ commodities_progress|floatformat }}%</div>
       </div>
       <table class="table table-hover">
-      <thead>
-       <tr>
-          <th scope="col">Commodities</th>
-          <th style="text-align:right" scope="col">${{ commodities_total_value|floatformat:2 }}</th>
-        </tr>
-      </thead>
-    <tbody>
-
-             {% for obj in commod_qs %}
-                  {% if obj.total > 0 %}
-    <tr>
-       <td>{{ obj.commodity_class }}</td>
-       <td  style="text-align:right"> ${{ obj.total|floatformat:2 }}</td>
-    </tr>
-    {% endif %}
-       {% endfor %}
-    </tbody>
+        <thead>
+          <tr>
+              <th scope="col">Commodities</th>
+              <th style="text-align:right" scope="col">${{ commodities_total_value|floatformat:2 }}</th>
+            </tr>
+        </thead>
+        <tbody>
+          {% for obj in commod_qs %}
+          {% if obj.total > 0 %}
+          <tr>
+            <td>{{ obj.commodity_class }}</td>
+            <td  style="text-align:right"> ${{ obj.total|floatformat:2 }}</td>
+          </tr>
+          {% endif %}
+          {% endfor %}
+        </tbody>
       </table>
-     <h6>Crypto</h6>
-       <div class="progress">
+
+      <h6>Crypto</h6>
+      <div class="progress">
         <div class="progress-bar" role="progressbar" style="width: {{ crypto_progress|floatformat }}%;" aria-valuenow="{{ crypto_progress|floatformat }}" aria-valuemin="0" aria-valuemax="100">{{ crypto_progress|floatformat }}%</div>
       </div>
       <table class="table table-hover">
-      <thead>
-       <tr>
-          <th scope="col">Crypto</th>
-          <th style="text-align:right" scope="col">${{ crypto_total_value|floatformat:2 }}</th>
-        </tr>
-      </thead>
-    <tbody>
-
-             {% for obj in crypto_qs %}
-   
-    <tr>
-       <td>{{ obj.name }}</td>
-       <td style="text-align:right"> ${{ obj.total|floatformat:2 }}</td>
-    </tr>
-       {% endfor %}
-    </tbody>
+        <thead>
+          <tr>
+            <th scope="col">Crypto</th>
+            <th style="text-align:right" scope="col">${{ crypto_total_value|floatformat:2 }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for obj in crypto_qs %}
+          <tr>
+            <td>{{ obj.name }}</td>
+            <td style="text-align:right"> ${{ obj.total|floatformat:2 }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
       </table>
 
     </div>
-    </div>
-    <div class="col-sm">
-    
   </div>
-</div>
-        </div>
-      </div> 
+</section>
 <br> 
 
 
