@@ -3,7 +3,7 @@
 {% load mathfilters %}
 
 {% block title %}
-Profit and Loss {{ year }}
+<div class="title">Profit and Loss <span>| {{ year }}</span></div>
 {% endblock title %}
 
 {% block content %}
@@ -354,9 +354,23 @@ Profit and Loss {{ year }}
 
       <div class="col-lg-3">
 
-        <div id="donutchart" class="mb-3 shadow" style="width: 100%; height:400px"></div>
+        <div class="card">
+          <div class="card-body pb-0">
+            <h5 class="card-title">All Expenses <span>| {{year}}</span></h5>
+            <div id="donutchart" style="width: auto; height: 20rem;"></div>
+          </div>
+        </div>
 
-        <div id="piechart" class="shadow" style="width: 100%; height:400px"></div>
+        <!-- <div id="donutchart" class="mb-3 shadow" style="width: 100%; height:400px"></div> -->
+
+        <div class="card">
+          <div class="card-body pb-0">
+            <h5 class="card-title">Income vs Expense <span>| {{year}}</span></h5>
+            <div id="piechart" style="width: auto; height: 20rem;"></div>
+          </div>
+        </div>
+
+        <!-- <div id="piechart" class="shadow" style="width: 100%; height:400px"></div> -->
 
       </div>
 
@@ -383,12 +397,12 @@ Profit and Loss {{ year }}
       ]);
 
       var options = {
-        title: 'All Expenses',
+        // title: 'All Expenses',
         // is3D: true,
         pieHole: 0.4,
         // legend: 'none',
         // pieSliceText: 'label',
-        legend: { position: 'bottom', alignment: 'start' }
+        legend: { position: 'top', alignment: 'start' }
       };
 
       var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
@@ -410,12 +424,13 @@ Profit and Loss {{ year }}
     ]);
 
     var options = {
-      title: 'Income Vs Expense',
+      // title: 'Income Vs Expense',
       // is3D: true,
       // pieHole: 0.4,
       // legend: 'none',
       // pieSliceText: 'label',
-      legend: { position: 'bottom', alignment: 'center' }
+      legend: { position: 'top', alignment: 'center' },
+      colors: ['rgb(51, 102, 204)', 'rgb(153, 0, 153)',]
     };
 
     var chart = new google.visualization.PieChart(document.getElementById('piechart'));

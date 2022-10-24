@@ -413,9 +413,7 @@
       <li class="nav-heading">Support</li>
 
       <li class="nav-item">
-        <a {% if request.resolver_match.url_name == 'contact_us' %}
-        class="nav-link"{% else %}class="nav-link collapsed"
-        {% endif %} href="/contact_us">
+        <a {% if request.resolver_match.url_name == 'contact_us' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} href="/contact_us">
           <i class="bi bi-envelope"></i>
           <span>Feedback</span>
           <!-- <span data-feather="file">Reminders</span> -->

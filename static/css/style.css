@@ -913,6 +913,20 @@ h1, h2, h3, h4, h5, h6 {
   max-width: 120px;
 }
 
+.title {
+  /* padding: 20px 0 15px 0 !important; */
+  font-size: 2rem !important;
+  font-weight: 500 !important;
+  color: #012970 !important;
+  font-family: "Poppins", sans-serif !important;
+}
+
+.title span {
+  color: #899bbd !important;
+  font-size: 1.5rem !important;
+  font-weight: 400 !important;
+}
+
 /*--------------------------------------------------------------
 # F.A.Q Page
 --------------------------------------------------------------*/
@@ -992,7 +1006,7 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: 0;
 }
 .contact .php-email-form input:focus, .contact .php-email-form textarea:focus {
-  border-color: #4154f1;
+  border-color: #4154f1 !important;
 }
 .contact .php-email-form input {
   padding: 10px 15px;
@@ -1001,7 +1015,7 @@ h1, h2, h3, h4, h5, h6 {
   padding: 12px 15px;
 }
 .contact .php-email-form button[type=submit] {
-  background: #4154f1;
+  background: #4154f1 !important;
   border: 0;
   padding: 10px 30px;
   color: #fff;
@@ -1009,7 +1023,7 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: 4px;
 }
 .contact .php-email-form button[type=submit]:hover {
-  background: #5969f3;
+  background: #5969f3 !important;
 }
 @-webkit-keyframes animate-loading {
   0% {
