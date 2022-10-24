@@ -3,7 +3,7 @@
 {% load mathfilters %}
 
 {% block title %}
-Profit and Loss {{ year }}
+<div class="title">Profit and Loss <span>| {{ year }}</span></div>
 {% endblock title %}
 
 {% block content %}
@@ -332,6 +332,18 @@ function popitup(url) {
                   <th>${{v}}</th>
                   {% endfor %}
                   <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
                 </tr>
               </thead>
             </tbody>
@@ -345,11 +357,17 @@ function popitup(url) {
       <div class="card">
         <div class="card-body pb-0">
           <h5 class="card-title">All Expenses <span>| {{year}}</span></h5>
-          <div id="donutchart" class="mb-3" style="width: auto; height: 20rem;"></div>
+          <div id="donutchart" style="width: auto; height: 20rem;"></div>
         </div>
       </div>
 
-      <div id="piechart" style="width: 100%; height:400px"></div>
+      <div class="card">
+        <div class="card-body pb-0">
+          <h5 class="card-title">Income vs Expense <span>| {{year}}</span></h5>
+          <div id="piechart" style="width: auto; height: 20rem;"></div>
+        </div>
+      </div>
+      <!-- <div id="piechart" style="width: 100%; height:400px"></div> -->
 
     </div>
 
@@ -384,7 +402,7 @@ function popitup(url) {
       pieHole: 0.4,
       // legend: 'none',
       // pieSliceText: 'label',
-      legend: { position: 'bottom', alignment: 'start' }
+      legend: { position: 'top', alignment: 'start' },
     };
 
     var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
@@ -406,12 +424,13 @@ function popitup(url) {
   ]);
 
   var options = {
-    title: 'Income Vs Expense',
+    // title: 'Income Vs Expense',
     // is3D: true,
     // pieHole: 0.4,
     // legend: 'none',
     // pieSliceText: 'label',
-    legend: { position: 'bottom', alignment: 'center' }
+    legend: { position: 'top', alignment: 'center' },
+    colors: ['rgb(51, 102, 204)', 'rgb(153, 0, 153)',]
   };
 
   var chart = new google.visualization.PieChart(document.getElementById('piechart'));

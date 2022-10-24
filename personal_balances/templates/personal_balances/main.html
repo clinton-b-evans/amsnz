@@ -3,7 +3,7 @@
 {% load mathfilters %}
 
 {% block title %}
-Personal Balance Sheet
+<div class="title">Personal Balance Sheet <span>| Networth: ${{ networth }} </span></div>
 {% endblock title %}
 
 {% block content %}
@@ -49,15 +49,16 @@ function popitup(url) {
 </a>
 
 <div class="row">
-  <div class="col-8">
+  <div class="col-lg-6">
     <div class="card">
-      <div class="card-body mt-4">
+      <div class="card-body">
+        <h5 class="card-title">Savings</h5>
         <table class="table table-striped table-hover" style="font-size:small">
           <thead>
             <tr>
               <th style="text-align:left">Savings</th>
-              <th style="text-align:right"></th>
-              <th style="text-align:right"></th>
+              <th style="text-align:right">Amount</th>
+              <th style="text-align:right">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -99,13 +100,18 @@ function popitup(url) {
             </tr>
           </tbody>
         </table> 
+      </div>
+    </div>
     
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Retirement Accounts</h5>
         <table class="table table-striped table-hover" style="font-size:small">
           <thead>
             <tr>
               <th style="text-align:left">Retirement Accounts</th>
-              <th style="text-align:right"></th>
-              <th style="text-align:right"></th>
+              <th style="text-align:right">Amount</th>
+              <th style="text-align:right">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -146,14 +152,21 @@ function popitup(url) {
               <td></td>
             </tr>
           </tbody>
-        </table> 
-    
+        </table>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Assets</h5>
         <table class="table table-striped table-hover" style="font-size:small">
           <thead>
             <tr>
               <th style="text-align:left">Assets</th>
-              <th style="text-align:right"></th>
-              <th style="text-align:right"></th>
+              <th style="text-align:right">Amount</th>
+              <th style="text-align:right">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -195,13 +208,18 @@ function popitup(url) {
             </tr>
           </tbody>
         </table> 
-    
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Liabilities</h5>
         <table class="table table-striped table-hover" style="font-size:small">
           <thead>
             <tr>
               <th style="text-align:left">Liabilities</th>
-              <th style="text-align:right"></th>
-              <th style="text-align:right"></th>
+              <th style="text-align:right">Amount</th>
+              <th style="text-align:right">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -243,16 +261,22 @@ function popitup(url) {
             </tr>
           </tbody>
         </table> 
+      </div>
+    </div>
+
+  </div>
     
-        <table>
+
+    
+        <!-- <table>
           <thead>
             <th style="text-align:left">Networth: &nbsp;</th>
             <th style="text-align:right">${{ networth }}</th>
             <th></th>
           </thead>
-        </table>
-      </div>
-    </div>
+        </table> -->
+      <!-- </div>
+    </div> -->
 
   </div>
   <div class="col-4">
