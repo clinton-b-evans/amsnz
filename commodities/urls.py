@@ -25,9 +25,9 @@ urlpatterns = [
         update_transaction,
         name="update-transaction",
     ),
-    path("commodities/<str:pk>/delete", delete_commodity, name="delete"),
+    path("commodities/<str:pk>/delete/", delete_commodity, name="delete"),
     path(
-        "commodities/transaction/<str:pk>/delete",
+        "commodities/transaction/<str:pk>/delete/",
         delete_transaction,
         name="delete-transaction",
     ),

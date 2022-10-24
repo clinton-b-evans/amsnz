@@ -34,7 +34,8 @@ def commodity_list_view(request, year):
 
     for item in commodities_list:
         item.percent = (item.total / grand_total) * 100
-        print(item.percent)
+        # print("percent", item.percent)
+        # print("item", item.total / grand_total)
 
     years = list(Transaction.objects.values_list("date__year").distinct())
     years_list = []
@@ -66,7 +67,6 @@ def commodity_list_view(request, year):
         commodities_invested_all_years_total_list.append(
             float(invested_total_year_wise)
         )
-    print("invested_total_year_wise", commodities_invested_all_years_total_list)
 
     context = {
         "year": year,
@@ -89,6 +89,7 @@ def commodity_detail_view(request, **kwargs):
         "transactions": transactions,
         "name": name,
         "commodity": pk,
+        # 'year': year,
     }
     return render(request, "commodities/detail.html", context)
 
@@ -128,7 +129,7 @@ def update_commodity(request, pk):
 
 
 def delete_commodity(request, pk):
-    commodity = Commodity.objects.get(id=pk)
+    commodity = Commodity.objects.filter(id=pk)
     qs = Commodity.objects.get(id=pk)
     context = {
         "object": qs,
