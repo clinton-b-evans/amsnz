@@ -25,21 +25,19 @@ def register_user_view(request):
 
 
 def login_user_view(request):
-    if request.user.is_authenticated:
-        return redirect("home")
-    else:
-        if request.method == "POST":
-            username = request.POST.get("username")
-            password = request.POST.get("password")
 
-            user = authenticate(request, username=username, password=password)
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
 
-            if user is not None:
-                login(request, user)
-                messages.success(request, "Log in Successful")
-                return redirect("properties:list")
-            else:
-                messages.info(request, "Username OR password is incorrect")
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            messages.success(request, "Log in Successful")
+            return redirect("properties:list")
+        else:
+            messages.info(request, "Username OR password is incorrect")
 
     form = AuthenticationForm()
     return render(request, "Authentication/login.html", {"form": form})
