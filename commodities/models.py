@@ -5,8 +5,9 @@ from django.utils.timezone import now
 class Commodity(models.Model):
     commodity_class = models.CharField(max_length=120, unique=True)
     spot_price = models.DecimalField(
-        max_digits=6, decimal_places=2, blank=True, default=0.00
+        blank=True, default=0.0, max_digits=8, decimal_places=2
     )
+    date = models.DateField(null=True, blank=True, default=now)
 
     def __str__(self):
         return f"{self.commodity_class}"
@@ -25,11 +26,9 @@ class Transaction(models.Model):
         choices=TRANSACTION_TYPE_SOURCES, max_length=100, null=False, blank=False
     )
     weight = models.DecimalField(
-        max_digits=8, decimal_places=2, blank=True, default=0.00
+        blank=True, default=0.0, max_digits=8, decimal_places=2
     )
-    value = models.DecimalField(
-        max_digits=6, decimal_places=2, blank=True, default=0.00
-    )
+    value = models.DecimalField(blank=True, default=0.0, max_digits=8, decimal_places=2)
     date = models.DateField(null=True, blank=True, default=now)
 
     def __str__(self):

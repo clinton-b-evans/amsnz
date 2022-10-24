@@ -312,13 +312,17 @@ def property_detail_view(request, **kwargs):
     return render(request, "properties/detail.html", context)
 
 
+def sort(myList):
+    myList.sort()
+    return myList
+
+
 def property_summary_view(request, year, *args, **kwargs):
 
     """
     Get Property objects for selected year
     """
     qs = Property.objects.filter(purchase_date__year=year)
-    # qs_yearly = Property.objects.filter(purchase_date)
 
     """
     Get retirement goals objects for selected year
@@ -576,14 +580,6 @@ def property_summary_view(request, year, *args, **kwargs):
     for data in years:
         for item in data:
             years_list.append(item)
-    """
-    Sort extracted Years List
-    """
-
-    def sort(myList):
-        myList.sort()
-        return myList
-
     years_list = sort(years_list)
 
     yearwise_graph_assets = []

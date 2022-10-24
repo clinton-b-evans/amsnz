@@ -13,7 +13,7 @@ from .views import (
 app_name = "commodities"
 
 urlpatterns = [
-    path("commodities/", commodity_list_view, name="main"),
+    path("commodities/<str:year>/", commodity_list_view, name="commodities_list"),
     path("commodities/add", add_commodity, name="add"),
     path(
         "commodities/transaction/add/<str:pk>", add_transaction, name="transaction-add"
