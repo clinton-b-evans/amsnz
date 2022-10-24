@@ -1,0 +1,15 @@
+{% load static  %}
+{% load bootstrap %}
+
+{% block content %}
+<h2>Send Us Your Feedback</h2>
+<h4>{{contact_form.errors}}</h4>
+<form action="" method=POST>
+
+    {% csrf_token %}
+    {{ contact_form|bootstrap }}
+
+    <input type="submit" value="Submit">
+</form>
+
+{% endblock content %}

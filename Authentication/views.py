@@ -3,6 +3,7 @@ from .forms import RegisterUserForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
+from Authentication.forms import ContactUsForm
 
 
 def register_user_view(request):
@@ -48,3 +49,18 @@ def logout_user_view(request):
     logout(request)
     messages.info(request, "You have successfully logged out.")
     return redirect("Authentication:login_user")
+
+
+def contact_us_view(request):
+    form = ContactUsForm()
+    if request.method == "POST":
+        form = ContactUsForm(request.POST)
+        if form.is_valid():
+            form.save()
+            name = form.cleaned_data.get("name")
+            messages.success(
+                request, " Feedback submitted by " + name + "is successful"
+            )
+            return redirect("Authentication:login_user")
+    context = {"contact_form": form}
+    return render(request, "Authentication/contact_us.html", context)
