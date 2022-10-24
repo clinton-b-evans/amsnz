@@ -9,6 +9,12 @@ class RegisterUserForm(UserCreationForm):
         model = User
         fields = ["username", "email", "password1", "password2"]
 
+    def clean_username(self):
+        data = self.cleaned_data.get("username")
+        if "@" in data:
+            raise forms.ValidationError("Contains @")
+        return data
+
 
 class ContactUsForm(forms.ModelForm):
     class Meta:
