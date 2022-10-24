@@ -4,15 +4,44 @@ from .models import Trade, IndexFund
 from .forms import IndexFundForm, TradeForm
 
 
-def fund_list_view(request):
-    qs = IndexFund.objects.all()
+def sort(myList):
+    myList.sort()
+    return myList
+
+
+def fund_list_view(request, year):
+    index_fund_list_object = IndexFund.objects.filter(date__year=year)
     total_value = 0
-    for obj in qs:
+    for obj in index_fund_list_object:
         obj.value = round(obj.shares * obj.share_price, 2)
         total_value = total_value + obj.value
+
+    years = list(IndexFund.objects.values_list("date__year").distinct())
+    years_list = []
+    for data in years:
+        for item in data:
+            years_list.append(item)
+    years_list = sort(years_list)
+    print(years_list)
+
+    # Yearly date collection
+    index_fund_all_years_total_list = []
+    total_value_yearly = 0
+    for my_year in years_list:
+        index_fund_list_object = IndexFund.objects.filter(date__year=my_year)
+        print(index_fund_list_object)
+        for obj in index_fund_list_object:
+            obj.value = round(obj.shares * obj.share_price, 2)
+            total_value_yearly = total_value_yearly + obj.value
+        index_fund_all_years_total_list.append(float(total_value_yearly))
+    print(index_fund_all_years_total_list)
+
     context = {
-        "object_list": qs,
+        "index_fund_list_object": index_fund_list_object,
         "total_value": total_value,
+        "years_list": years_list,
+        "index_fund_all_years_total_list": index_fund_all_years_total_list,
+        "year": year,
     }
     return render(request, "market_funds/main.html", context)
 

@@ -56,7 +56,6 @@ def property_list_view(request):
 
     total_market_value = qs.aggregate(Sum("market_value")).get("market_value__sum")
     total_loan_amount = qs.aggregate(Sum("loan_amount")).get("loan_amount__sum")
-    # total_rent = qs.aggregate(Sum('rent')).get('rent__sum')
     total_repayments = (
         Property.objects.all().aggregate(Sum("repayments")).get("repayments__sum")
     )
@@ -74,10 +73,8 @@ def property_list_view(request):
         .get("management_fee__sum")
     )
 
-    # total_operating_costs = total_rates + total_insurance + total_maintenance + total_management_fee
     total_cap_rate = ((total_rent - total_operating_costs) / total_market_value) * 100
     total_loan_to_value = total_loan_amount / total_market_value * 100
-    # total_rent = f"{total_rent:,}"
 
     context = {
         "object_list": qs,
@@ -312,13 +309,17 @@ def property_detail_view(request, **kwargs):
     return render(request, "properties/detail.html", context)
 
 
+def sort(myList):
+    myList.sort()
+    return myList
+
+
 def property_summary_view(request, year, *args, **kwargs):
 
     """
     Get Property objects for selected year
     """
     qs = Property.objects.filter(purchase_date__year=year)
-    # qs_yearly = Property.objects.filter(purchase_date)
 
     """
     Get retirement goals objects for selected year
@@ -576,14 +577,6 @@ def property_summary_view(request, year, *args, **kwargs):
     for data in years:
         for item in data:
             years_list.append(item)
-    """
-    Sort extracted Years List
-    """
-
-    def sort(myList):
-        myList.sort()
-        return myList
-
     years_list = sort(years_list)
 
     yearwise_graph_assets = []

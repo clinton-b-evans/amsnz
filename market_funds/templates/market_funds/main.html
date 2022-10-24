@@ -3,10 +3,88 @@
 {% load mathfilters %}
 
 {% block title %}
-Stock Portfolio
+Stock Portfolio {{year}}
 {% endblock title %}
 
 {% block content %}
+<script src="{% static 'apexcharts/apexcharts.min.js' %}"></script>
+
+<div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Bar Chart</h5>
+          <div id="Chart" style="width: 100%; height: 480px;"></div>
+
+          <script>
+            document.addEventListener("DOMContentLoaded", () => {
+              new ApexCharts(document.querySelector("#Chart"), {
+                series: [ {
+                  name: 'Stock Market All Years Progress',
+                  type: 'column',
+                  data: {{index_fund_all_years_total_list}}
+                }],
+                chart: {
+                  height: 450,
+                  type: 'line',
+                  stacked: false
+                },
+                dataLabels: {
+                  enabled: false
+                },
+                stroke: {
+                  width: [1, 1, 4]
+                },
+                title: {
+                  text: 'Stock Portfolio Tracker',
+                  align: 'center',
+                  // offsetX: 110
+                },
+                xaxis: {
+                  categories: {{years_list}},
+                },
+                yaxis: [
+                  {
+                    axisTicks: {
+                      show: true,
+                    },
+                    axisBorder: {
+                      show: true,
+                      color: '#008FFB'
+                    },
+                    labels: {
+                      style: {
+                        colors: '#008FFB',
+                      }
+                    },
+                    title: {
+                      text: "Total Stock Portfolio ",
+                      style: {
+                        color: '#008FFB',
+                      }
+                    },
+                    tooltip: {
+                      enabled: true
+                    }
+                  }
+                ],
+                tooltip: {
+                  fixed: {
+                    enabled: true,
+                    position: 'topLeft', // topRight, topLeft, bottomRight, bottomLeft
+                    offsetY: 30,
+                    offsetX: 60
+                  },
+                },
+                legend: {
+                  horizontalAlign: 'center',
+                  // offsetX: 40
+                }
+              }).render();
+            });
+          </script>
+
+  </div>
+</div>
+
 <script language="javascript" type="text/javascript">
 <!--
 function popitup(url) {
@@ -20,6 +98,18 @@ function popitup(url) {
   window.onblur= function() {window.onfocus= function () {location.reload(true)}};
 </script>
 
+<div class="row">
+    <div class="col-4">
+      <select class="form-control mb-3" onchange="location = this.value;">
+        <option selected="" value="" disabled>Select year</option>
+        {% for year in years_list%}
+        <option value="../{{year|stringformat:"i"}}"> {{year|stringformat:"i"}}</option>
+        {%endfor%}
+      </select>
+    </div>
+  </div>
+</div>
+
 <div class="mb-3">
   <a href="popupex.html" onclick="return popitup('/marketfunds/add')" style="text-decoration: none;">
     <button type="button" class="btn btn-secondary btn-sm">
@@ -30,6 +120,7 @@ function popitup(url) {
       New Fund
     </button>
   </a>
+
   <a href="popupex.html" onclick="return popitup('/trade/add')" style="text-decoration: none;">
     <button type="button" class="btn btn-secondary btn-sm">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-plus" viewBox="0 0 16 16">
@@ -39,7 +130,7 @@ function popitup(url) {
       New Trade
     </button>
   </a>
-</div>  
+
 
 <div class="card">
   <div class="card-body mt-4">
@@ -55,7 +146,7 @@ function popitup(url) {
         </tr>
       </thead>
       <tbody>
-        {% for obj in object_list %}
+        {% for obj in index_fund_list_object %}
         <tr>
           <td style="text-align:left">{{ obj.name }}</td>
           <td style="text-align:right">{{ obj.ticker }}</td>

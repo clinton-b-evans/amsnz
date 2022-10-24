@@ -11,7 +11,9 @@ from .views import (
 app_name = "personal_balances"
 
 urlpatterns = [
-    path("personal_balances/", personal_balance_list_view, name="list"),
+    path(
+        "personal_balances/", personal_balance_list_view, name="personal_balances_list"
+    ),
     path("personal_balances/weekly", personal_balance_list_weekly, name="weekly-list"),
     path(
         "personal_balances/monthly", personal_balance_list_monthly, name="monthly-list"

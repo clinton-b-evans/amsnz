@@ -250,9 +250,6 @@
                 <span>Account Settings</span>
               </a>
             </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
 
             <li>
               <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
@@ -265,7 +262,7 @@
             </li>
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="{% url 'Authentication:login_user' %}">
+              <a class="dropdown-item d-flex align-items-center" href="/login">
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Sign Out</span>
               </a>
@@ -285,7 +282,8 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
       <li class="nav-item">
-        <a {% if request.resolver_match.url_name == 'summary' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} href="/summary/{% now 'Y' %}/">
+        <a {% if request.resolver_match.url_name == 'summary' %}
+        class="nav-link"{% else %}class="nav-link collapsed"{% endif %} href="/summary/{% now 'Y' %}/">
           <i class="bi bi-grid"></i>
           <span>Summary Dashboard</span>
           <!-- <span data-feather="home">Summary Dashboard</span> -->
@@ -308,21 +306,31 @@
         </a>
         <ul id="components-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
           <li class="nav-item">
-            <a {% if request.resolver_match.url_name == 'list' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} href="/properties">
+            <a {% if request.resolver_match.url_name == 'properties_list' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} href="/properties">
               <i class="bi bi-circle"></i>
               <span>Property Portfolio</span>
               <!-- <span data-feather="file">Property Portfolio</span> -->
             </a>
           </li>
           <li class="nav-item">
-            <a {% if request.resolver_match.url_name == 'property-incomestatement-list' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} href="/propertyincomestatements">
+            <a {% if request.resolver_match.url_name == 'property-incomestatement-list' %}
+            class="nav-link"
+            {% else %}
+              class="nav-link collapsed"
+            {% endif %}
+            href="/propertyincomestatements">
               <i class="bi bi-circle"></i>
               <span>Income Statements</span>
               <!-- <span data-feather="file">Income Statements</span> -->
             </a>
           </li>
           <li class="nav-item">
-            <a {% if request.resolver_match.url_name == 'year-to-date' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} href="/propertyincomestatements/yeartodate/2022/">
+            <a {% if request.resolver_match.url_name == 'property_year-to-date' %}
+            class="nav-link"
+            {% else %}
+            class="nav-link collapsed"
+            {% endif %}
+            href="/propertyincomestatements/yeartodate/{% now 'Y' %}/">
               <i class="bi bi-circle"></i>
               <span>Profit and Loss</span>
               <!-- <span data-feather="file">Profit and Loss</span> -->
@@ -332,7 +340,7 @@
       </li><!-- End Property Nav -->
 
       <li class="nav-item">
-        <a {% if request.resolver_match.url_name == 'fund-list' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} href="/marketfunds">
+        <a {% if request.resolver_match.url_name == 'Index_fund_list' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} href="/marketfunds/{% now 'Y' %}/">
           <i class="bi bi-graph-up-arrow"></i>
           <span>Stock Porfolio</span>
           <!-- <span data-feather="home">Stock Porfolio</span> -->
@@ -340,7 +348,7 @@
       </li><!-- End Stock Porfolio Page Nav -->
 
       <li class="nav-item">
-        <a {% if request.resolver_match.url_name == 'main' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} href="/commodities">
+        <a {% if request.resolver_match.url_name == 'main' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} href="/commodities/{% now 'Y' %}/">
           <i class="bi bi-gem"></i>
           <span>Commodities</span>
           <!-- <span data-feather="file">Commodities</span> -->
@@ -348,7 +356,7 @@
       </li><!-- End Commodities Page Nav -->
 
       <li class="nav-item">
-        <a {% if request.resolver_match.url_name == 'crypto-list' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} href="/crypto">
+        <a {% if request.resolver_match.url_name == 'crypto-list' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} href="/crypto/{% now 'Y' %}/">
           <i class="bi bi-currency-bitcoin"></i>
           <span>Crypto</span>
           <!-- <span data-feather="file">Crypto</span> -->
@@ -374,7 +382,7 @@
       </li><!-- End Personal Income Statement Page Nav -->
 
       <li class="nav-item">
-        <a {% if request.resolver_match.url_name == 'year-to-date' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} href="/incomestatements/yeartodate/2022">
+        <a {% if request.resolver_match.url_name == 'incomestatement_year_to_date' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} href="/incomestatements/yeartodate/{% now 'Y' %}/">
           <i class="bi bi-bar-chart-line"></i>
           <span>Profit and Loss</span>
           <!-- <span data-feather="file">Profit and Loss</span> -->
@@ -384,7 +392,7 @@
       <li class="nav-heading">Tools</li>
 
       <li class="nav-item">
-        <a {% if request.resolver_match.url_name == 'list' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} href="/reminders">
+        <a {% if request.resolver_match.url_name == 'reminders_list' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} href="/reminders">
           <i class="bi bi-bell"></i>
           <span>Reminders</span>
           <!-- <span data-feather="file">Reminders</span> -->
@@ -392,7 +400,10 @@
       </li><!-- End Reminder Page Nav -->
 
       <li class="nav-item">
-        <a {% if request.resolver_match.url_name == 'main' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} href="/contacts">
+        <a {% if request.resolver_match.url_name == 'contacts_list' %}
+        class="nav-link"{% else %}class="nav-link collapsed"
+        {% endif %}
+        href="/contacts">
           <i class="bi bi-telephone"></i>
           <span>Contact</span>
           <!-- <span data-feather="users">Contact</span> -->

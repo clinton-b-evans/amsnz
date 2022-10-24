@@ -254,23 +254,6 @@ def year_to_date(request, year):
         key = datetime.datetime.strptime(key, "%B").month
         qs_prop_income_each_month += list(income_qs.filter(date__month=key))
 
-    # Expense JSON Object
-    expenses_object = []
-    total = 0
-    # for i in qs_prop_expense_each_month:
-    #     cats_obj = PropertyCategory.objects.get(name=i.propcategory)
-    #     total += float(i.amount)
-    #     for key in month_expenses.keys():
-    #         if cats_obj not in expenses_object:
-    #             expenses_object.append({
-    #                 f"{cats_obj}": {
-    #                     "months": {
-    #                         key: total
-    #                     },
-    #                     "total_annual": total
-    #                 }
-    #             })
-    #     print(expenses_object)
     monthly_data = {
         "January": 0,
         "February": 0,
@@ -290,7 +273,7 @@ def year_to_date(request, year):
     for category in unique_categories_of_expenses:
         result[f"{list(category.values())[0]}"] = {"months": monthly_data, "total": 0}
 
-    for month in month_expenses.keys():
+    for month in monthly_data.keys():
         current_month_total_expense = 0
         month_int = datetime.datetime.strptime(month, "%B").month
         current_month_expenses = expense_qs.filter(date__month=month_int)
@@ -308,12 +291,11 @@ def year_to_date(request, year):
         result[f"{list(category.values())[0]}"]["total"] = sum(
             result[f"{list(category.values())[0]}"]["months"].values()
         )
-        # for category in unique_categories_of_expenses:
+        print(result)
+        print(sum(result[f"{list(category.values())[0]}"]["months"].values()))
 
-    # for expenese in expense_qs:
-
-    print("qs_property_expense_each_month", qs_prop_expense_each_month)
-    print("qs_property_income_each_month", qs_prop_income_each_month)
+    # print("qs_property_expense_each_month", qs_prop_expense_each_month)
+    # print("qs_property_income_each_month", qs_prop_income_each_month)
 
     # Yearly Summation of expenses
     for item in qs:

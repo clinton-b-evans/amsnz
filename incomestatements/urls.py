@@ -30,5 +30,9 @@ urlpatterns = [
         update_category,
         name="update-category",
     ),
-    path("incomestatements/yeartodate/<str:year>/", year_to_date, name="year-to-date"),
+    path(
+        "incomestatements/yeartodate/<str:year>/",
+        year_to_date,
+        name="incomestatement_year_to_date",
+    ),
 ]
