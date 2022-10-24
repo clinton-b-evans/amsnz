@@ -11,7 +11,7 @@ from .views import (
 app_name = "market_funds"
 
 urlpatterns = [
-    path("marketfunds/<str:year>/", fund_list_view, name="fund-list"),
+    path("marketfunds/<str:year>/", fund_list_view, name="Index_fund_list"),
     path("marketfund/<str:pk>/", indexfund_detail_view, name="fund-detail"),
     path("marketfunds/add", add_indexfund, name="fund-add"),
     path("trade/add", add_trade, name="trade-add"),

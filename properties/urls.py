@@ -16,7 +16,7 @@ from .views import (
 app_name = "properties"
 
 urlpatterns = [
-    path("properties/", property_list_view, name="list"),
+    path("properties/", property_list_view, name="properties_list"),
     path("properties/weekly/", property_list_weekly, name="weekly-list"),
     path("properties/monthly/", property_list_monthly, name="monthly-list"),
     path("summary/<str:year>/", property_summary_view, name="summary"),

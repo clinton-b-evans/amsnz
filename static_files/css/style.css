@@ -615,13 +615,6 @@ h1, h2, h3, h4, h5, h6 {
 .sidebar-nav .nav-link.collapsed i {
   color: #899bbd;
 }
-.sidebar-nav .nav-link.active {
-  color: #4154f1;
-  background: #f6f9ff;
-}
-.sidebar-nav .nav-link.active i {
-  color: #4154f1;
-}
 .sidebar-nav .nav-link:hover {
   color: #4154f1;
   background: #f6f9ff;

@@ -39,6 +39,6 @@ urlpatterns = [
     path(
         "propertyincomestatements/yeartodate/<str:year>/",
         year_to_date,
-        name="year-to-date",
+        name="property_year-to-date",
     ),
 ]

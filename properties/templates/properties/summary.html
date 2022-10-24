@@ -7,17 +7,11 @@ Summary Dashboard
 
 {% block content %}
 
-<!-- <script src="https://www.chartjs.org/dist/2.6.0/Chart.bundle.js"></script> -->
-
-<!-- <script src="https://www.chartjs.org/samples/2.6.0/utils.js"></script> -->
 
 <script src="{% static 'apexcharts/apexcharts.min.js' %}"></script>
-<!-- <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script> -->
-
 <script src="{% static 'GoogleChart/Gchart.js' %}"></script>
 
 <section class="section dashboard">
-  <!--SELECT YEAR -->
   <div class="row">
     <div class="col-3">
       <select class="form-control mb-3" onchange="location = this.value;">
