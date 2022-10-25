@@ -2,9 +2,9 @@
 {% load bootstrap %}
 {% block content %}
 <h2>Add Crypto</h2>
-<form action="" method=POST> 
+<form action="" method=POST>
     {% csrf_token %}
     {{ form|bootstrap }}
-    <input type="submit" value="Save"></button>
+    <input type="submit" value="Save">
 </form>
 {% endblock content %}

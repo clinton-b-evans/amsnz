@@ -2,6 +2,9 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from .models import Commodity, Transaction
 from .forms import CommodityForm, TransactionForm
+import requests
+
+COMMODITIES_API_KEY = "rhk8fw6wof9m507vu59ja24d1cxq56340g3nnt7u81zz0njwzujpj11c93p1"
 
 
 def sort(myList):
@@ -90,7 +93,6 @@ def commodity_detail_view(request, **kwargs):
         "transactions": transactions,
         "name": name,
         "commodity": pk,
-        # 'year': year,
     }
     return render(request, "commodities/detail.html", context)
 
@@ -98,8 +100,17 @@ def commodity_detail_view(request, **kwargs):
 def add_commodity(request):
     submitted = False
     if request.method == "POST":
+        commodity_class = request.POST.get("commodity_class")
+        url = f"https://commodities-api.com/api/latest?access_key=rhk8fw6wof9m507vu59ja24d1cxq56340g3nnt7u81zz0njwzujpj11c93p1&base=USD&symbols={commodity_class}"
+        response = requests.request("GET", url)
+        result = response.json()
+
+        spot_price = 1 / result["data"]["rates"][commodity_class]
+
         form = CommodityForm(request.POST)
         if form.is_valid():
+            form = form.save(commit=False)
+            form.spot_price = spot_price
             form.save()
             return HttpResponse(
                 '<script type="text/javascript">window.close()</script>'
@@ -137,10 +148,7 @@ def delete_commodity(request, pk):
     }
 
     if request.method == "POST":
-        # delete object
         commodity.delete()
-        # after deleting redirect to
-        # home page
         return HttpResponse('<script type="text/javascript">window.close()</script>')
 
     return render(request, "commodities/delete.html", context)
