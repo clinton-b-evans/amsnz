@@ -5,7 +5,6 @@ from django.http import HttpResponse, HttpResponseRedirect
 from .models import Crypto
 from .forms import CryptoForm
 import requests
-
 CRYPTO_API_KEY = "HBOtOtoU9lxxj6k0T1ybf6i"
 
 

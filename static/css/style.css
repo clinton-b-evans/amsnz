@@ -96,7 +96,7 @@ h1, h2, h3, h4, h5, h6 {
   animation-duration: 0.2s;
   -webkit-animation-fill-mode: both;
   animation-fill-mode: both;
-  border: 0;
+  border: 0 !important;
   box-shadow: 0 5px 30px 0 rgba(82, 63, 105, 0.2);
 }
 .dropdown-menu .dropdown-header, .dropdown-menu .dropdown-footer {
@@ -925,6 +925,13 @@ h1, h2, h3, h4, h5, h6 {
   color: #899bbd !important;
   font-size: 1.5rem !important;
   font-weight: 400 !important;
+}
+
+.min-title {
+  font-size: 18px !important;
+  font-weight: 500 !important;
+  color: #012970 !important;
+  font-family: "Poppins", sans-serif !important;
 }
 
 /*--------------------------------------------------------------

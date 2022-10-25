@@ -2,7 +2,7 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% block title %}
-Financial Plan
+<div class="title">Financial Plan</div>
 {% endblock title %}
 
 {% block content %}
@@ -31,8 +31,8 @@ Financial Plan
 
   </br>
   </br>
-  <div class="d-flex bd-highlight">
-    <div class="col p-2 bd-highlight">
+  <div class="row bd-highlight">
+    <div class="col-lg-6 p-2 bd-highlight">
       <table>
         <tr>
           <th>Current Year:</th>
@@ -122,16 +122,17 @@ Financial Plan
       </div>
     </div>
 
-    <div class="col p-2 bd-highlight">  
-      <div id="piechart" style="width: 750px; height: 450px"></div>  
+    <div class="col-lg-6">  
+      <div id="piechart" style="width: auto; height: 450px"></div>  
     </div>
 
   </div>
 </form>
     
+
 <div class="card">
-  <div class="card-body mt-4">
-    <table class="table table-striped table-hover" style="font-size:small">
+  <div class="card-body mt-4" style="overflow-x:auto;">
+    <table class="table table-striped table-responsive table-hover" style="font-size:small">
       <thead>
         <tr>
           <th>Year</th>

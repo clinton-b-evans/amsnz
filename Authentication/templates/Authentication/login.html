@@ -45,7 +45,7 @@ Don't have an account? <a href="{% url 'Authentication:register_user' %}" class=
                 </div>
 
                 <form method="POST" action="" class="row g-3 needs-validation" novalidate>
-
+                  {% csrf_token %}
                   <div class="col-12">
                     <label for="yourUsername" class="form-label">Username</label>
                     <div class="input-group has-validation">

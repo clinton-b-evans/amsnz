@@ -3,7 +3,7 @@
 {% load mathfilters %}
 
 {% block title %}
-Stock Portfolio {{year}}
+<div class="title">Stock Portfolio <span> | {{year}}</span></div>
 {% endblock title %}
 
 {% block content %}
@@ -94,21 +94,11 @@ function popitup(url) {
 }
 // -->
 </script>
+
 <script>
   window.onblur= function() {window.onfocus= function () {location.reload(true)}};
 </script>
 
-<div class="row">
-    <div class="col-4">
-      <select class="form-control mb-3" onchange="location = this.value;">
-        <option selected="" value="" disabled>Select year</option>
-        {% for year in years_list%}
-        <option value="../{{year|stringformat:"i"}}"> {{year|stringformat:"i"}}</option>
-        {%endfor%}
-      </select>
-    </div>
-  </div>
-</div>
 
 <div class="mb-3">
   <a href="popupex.html" onclick="return popitup('/marketfunds/add')" style="text-decoration: none;">
@@ -130,7 +120,29 @@ function popitup(url) {
       New Trade
     </button>
   </a>
+</div>
 
+<div class="row">
+  <div class="col-4">
+    <select class="form-control mb-3" onchange="location = this.value;">
+      <option selected="" value="" disabled>Select year</option>
+      {% for year in years_list%}
+      <option value="../{{year|stringformat:"i"}}"> {{year|stringformat:"i"}}</option>
+      {%endfor%}
+    </select>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-8">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Bar Chart</h5>
+        <div id="Chart" style="width: 100%;"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="card">
   <div class="card-body mt-4">
@@ -192,6 +204,74 @@ function popitup(url) {
 </div>
 
 <br> 
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    new ApexCharts(document.querySelector("#Chart"), {
+      series: [ {
+        name: 'Stock Market All Years Progress',
+        type: 'column',
+        data: {{index_fund_all_years_total_list}}
+      }],
+      chart: {
+        height: 350,
+        type: 'line',
+        stacked: false
+      },
+      dataLabels: {
+        enabled: false
+      },
+      stroke: {
+        width: [1, 1, 4]
+      },
+      title: {
+        text: 'Stock Portfolio Tracker',
+        align: 'center',
+        // offsetX: 110
+      },
+      xaxis: {
+        categories: {{years_list}},
+      },
+      yaxis: [
+        {
+          axisTicks: {
+            show: true,
+          },
+          axisBorder: {
+            show: true,
+            color: '#008FFB'
+          },
+          labels: {
+            style: {
+              colors: '#008FFB',
+            }
+          },
+          title: {
+            text: "Total Stock Portfolio ",
+            style: {
+              color: '#008FFB',
+            }
+          },
+          tooltip: {
+            enabled: true
+          }
+        }
+      ],
+      tooltip: {
+        fixed: {
+          enabled: true,
+          position: 'topLeft', // topRight, topLeft, bottomRight, bottomLeft
+          offsetY: 30,
+          offsetX: 60
+        },
+      },
+      legend: {
+        horizontalAlign: 'center',
+        // offsetX: 40
+      }
+    }).render();
+  });
+</script>
 
 
 {% endblock content %}
