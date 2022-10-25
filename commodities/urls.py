@@ -15,9 +15,7 @@ app_name = "commodities"
 urlpatterns = [
     path("commodities/<str:year>/", commodity_list_view, name="commodities_list"),
     path("commodities/add", add_commodity, name="add"),
-    path(
-        "commodities/transaction/add/<str:pk>", add_transaction, name="transaction-add"
-    ),
+    path("commodities/transaction/add/", add_transaction, name="transaction-add"),
     path("commodities/<pk>/", commodity_detail_view, name="detail"),
     path("commodities/<str:pk>/edit", update_commodity, name="update"),
     path(

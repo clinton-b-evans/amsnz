@@ -9,6 +9,82 @@
 {% block content %}
 <script src="{% static 'apexcharts/apexcharts.min.js' %}"></script>
 
+<div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Bar Chart</h5>
+          <div id="Chart" style="width: 100%; height: 50px;"></div>
+
+          <script>
+            document.addEventListener("DOMContentLoaded", () => {
+              new ApexCharts(document.querySelector("#Chart"), {
+                series: [ {
+                  name: 'Stock Market All Years Progress',
+                  type: 'column',
+                  data: {{index_fund_all_years_total_list}}
+                }],
+                chart: {
+                  height: 450,
+                  type: 'line',
+                  stacked: false
+                },
+                dataLabels: {
+                  enabled: false
+                },
+                stroke: {
+                  width: [1, 1, 4]
+                },
+                title: {
+                  text: 'Stock Portfolio Tracker',
+                  align: 'center',
+                  // offsetX: 110
+                },
+                xaxis: {
+                  categories: {{years_list}},
+                },
+                yaxis: [
+                  {
+                    axisTicks: {
+                      show: true,
+                    },
+                    axisBorder: {
+                      show: true,
+                      color: '#008FFB'
+                    },
+                    labels: {
+                      style: {
+                        colors: '#008FFB',
+                      }
+                    },
+                    title: {
+                      text: "Total Stock Portfolio ",
+                      style: {
+                        color: '#008FFB',
+                      }
+                    },
+                    tooltip: {
+                      enabled: true
+                    }
+                  }
+                ],
+                tooltip: {
+                  fixed: {
+                    enabled: true,
+                    position: 'topLeft', // topRight, topLeft, bottomRight, bottomLeft
+                    offsetY: 30,
+                    offsetX: 60
+                  },
+                },
+                legend: {
+                  horizontalAlign: 'center',
+                  // offsetX: 40
+                }
+              }).render();
+            });
+          </script>
+
+  </div>
+</div>
+
 <script language="javascript" type="text/javascript">
 <!--
 function popitup(url) {
@@ -46,7 +122,7 @@ function popitup(url) {
   </a>
 </div>
 
-<div class="row">
+<!-- <div class="row">
   <div class="col-4">
     <select class="form-control mb-3" onchange="location = this.value;">
       <option selected="" value="" disabled>Select year</option>
@@ -55,73 +131,94 @@ function popitup(url) {
       {%endfor%}
     </select>
   </div>
-</div>
+</div> -->
 
-<div class="row">
-  <div class="col-lg-8">
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Bar Chart</h5>
-        <div id="Chart" style="width: 100%;"></div>
+<div class="dashboard">
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Bar Chart</h5>
+          <div id="Chart" style="width: 100%;"></div>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<div class="card">
-  <div class="card-body mt-4">
-    <table class="table table-striped table-hover" style="font-size:small">
-      <thead>
-        <tr>
-          <th style="text-align:left">Fund</th>
-          <th style="text-align:right">Ticker</th>
-          <th style="text-align:right">Asset</th>
-          <th style="text-align:right">Shares</th>
-          <th style="text-align:right">Total</th>
-          <th style="text-align:right">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for obj in index_fund_list_object %}
-        <tr>
-          <td style="text-align:left">{{ obj.name }}</td>
-          <td style="text-align:right">{{ obj.ticker }}</td>
-          <td style="text-align:right">{{ obj.asset_class }} </td>
-          <td style="text-align:right">{{ obj.shares }}</td>
-          <td style="text-align:right">${{ obj.value }} </td>
-          <td style="text-align:right">
-            <a href="popupex.html" onclick="return popitup('/marketfunds/{{ obj.id }}/edit')" style="text-decoration: none;">
-              <button class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                  <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                  <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-                </svg>
-              </button>
-            </a>
-            <a href="popupex.html" onclick="return popitup('/marketfunds/{{ obj.pk }}/delete')" style="text-decoration: none;">
-              <button class="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                  <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                  <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                </svg>
-              </button>
-            </a>
-          </td>
-        </tr>
-        {% endfor %}
+  <div class="card">
+    <div class="filter">
+      <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i> </a>
+      <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow" >
+        <li class="dropdown-header text-start">
+          <h6>Filter</h6>
+        </li>
+        {% for year in years_list%}
+        <!-- <option value="../{{year|stringformat:"i"}}"> {{year|stringformat:"i"}}</option> -->
+        <li><a class="dropdown-item" href="../{{year|stringformat:"i"}}">{{year|stringformat:"i"}}</a></li>
+        {%endfor%}
+
+        <!-- <li><a class="dropdown-item" href="#">Today</a></li>
+        <li><a class="dropdown-item" href="#">This Month</a></li>
+        <li><a class="dropdown-item" href="#">This Year</a></li> -->
+      </ul>
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">Stock Summary <span> | {{year}}</span></h5>
+      <table class="table table-striped table-hover" style="font-size:small">
         <thead>
           <tr>
-            <th style="text-align:left">Total:</th>
-            <th style="text-align:right"></th>
-            <th style="text-align:right"></th>
-            <th style="text-align:right"></th>
-            <th style="text-align:right">${{ total_value }}</th>
-            <th style="text-align:right"></th>
+            <th style="text-align:left">Fund</th>
+            <th style="text-align:right">Ticker</th>
+            <th style="text-align:right">Asset</th>
+            <th style="text-align:right">Shares</th>
+            <th style="text-align:right">Share Price</th>
+          <th style="text-align:right">Total</th>
+            <th style="text-align:right">Action</th>
           </tr>
         </thead>
-    
-      </tbody>
-    </table> 
+        <tbody>
+          {% for obj in index_fund_list_object %}
+          <tr>
+            <td style="text-align:left">{{ obj.name }}</td>
+            <td style="text-align:right">{{ obj.ticker }}</td>
+            <td style="text-align:right">{{ obj.asset_class }} </td>
+            <td style="text-align:right">{{ obj.shares }}</td>
+            <td style="text-align:right">{{ obj.share_price }}</td>
+          <td style="text-align:right">${{ obj.value }} </td>
+            <td style="text-align:right">
+              <a href="popupex.html" onclick="return popitup('/marketfunds/{{ obj.id }}/edit')" style="text-decoration: none;">
+                <button class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                  </svg>
+                </button>
+              </a>
+              <a href="popupex.html" onclick="return popitup('/marketfunds/{{ obj.pk }}/delete')" style="text-decoration: none;">
+                <button class="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                  </svg>
+                </button>
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+          <thead>
+            <tr>
+              <th style="text-align:left">Total:</th>
+              <th style="text-align:right"></th>
+              <th style="text-align:right"></th>
+              <th style="text-align:right"></th>
+              <th style="text-align:right">${{ total_value }}</th>
+              <th style="text-align:right"></th>
+            </tr>
+          </thead>
+      
+        </tbody>
+        </table> 
+    </div>
   </div>
 </div>
 
