@@ -10,6 +10,7 @@ from incomestatements.models import Category
 from .models import PropertyIncomeStatement, PropertyCategory
 from properties.models import Property, Transactions
 from .forms import PropertyIncomeStatementForm, PropertyCategoryForm
+from copy import deepcopy
 
 
 def incomestatement_property_list_view(request):
@@ -271,7 +272,7 @@ def year_to_date(request, year):
     unique_categories_of_expenses = expense_qs.values("propcategory__name").distinct()
     result = {}
     for category in unique_categories_of_expenses:
-        result[f"{list(category.values())[0]}"] = {"months": monthly_data, "total": 0}
+        result[f"{list(category.values())[0]}"] = {"months": deepcopy(monthly_data), "total": 0}
 
     for month in monthly_data.keys():
         current_month_total_expense = 0
