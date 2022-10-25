@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-Summary Dashboard
+<div class="title">Summary Dashboard</div>
 {% endblock title %}
 
 {% block content %}
@@ -30,7 +30,7 @@ Summary Dashboard
           <h5 class="card-title">Mixed Chart</h5>
 
           <!-- Column Chart -->
-          <div id="Chart" style="width: 100%; height: 480px;"></div>
+          <div id="Chart" style="width: 100%;"></div>
 
           <script>
             document.addEventListener("DOMContentLoaded", () => {
@@ -49,7 +49,7 @@ Summary Dashboard
                   data: {{yearwise_networths}}
                 }],
                 chart: {
-                  height: 450,
+                  height: 350,
                   type: 'line',
                   stacked: false
                 },
@@ -60,7 +60,7 @@ Summary Dashboard
                   width: [1, 1, 4]
                 },
                 title: {
-                  text: 'Networth Tracker',
+                  text: 'Networth Tracker Timeline',
                   align: 'center',
                   // offsetX: 110
                 },
@@ -119,10 +119,16 @@ Summary Dashboard
             <li class="dropdown-header text-start">
               <h6>Filter</h6>
             </li>
+            {% for year in years_list%}
+            <!-- <option value="../{{year|stringformat:"i"}}"> {{year|stringformat:"i"}}</option> -->
+            <li><a class="dropdown-item" href="../{{year|stringformat:"i"}}">{{year|stringformat:"i"}}</a></li>
+            {%endfor%}
 
-            <li><a class="dropdown-item" href="#">Today</a></li>
+            
+
+            <!-- <li><a class="dropdown-item" href="#">Today</a></li>
             <li><a class="dropdown-item" href="#">This Month</a></li>
-            <li><a class="dropdown-item" href="#">This Year</a></li>
+            <li><a class="dropdown-item" href="#">This Year</a></li> -->
           </ul>
         </div>
         
@@ -131,14 +137,14 @@ Summary Dashboard
 
           <!-- Pie Chart -->
           <!-- <div id="pieChart" class="mb-5"></div> -->
-          <div id="pieChart" style="width: 100%; height: 500px;"></div>
+          <div id="pieChart" style="width: 100%;"></div>
 
           <script>
             document.addEventListener("DOMContentLoaded", () => {
               new ApexCharts(document.querySelector("#pieChart"), {
                 series: [{{graph_asset}}, {{graph_lib}}, {{graph_nw}}],
                 chart: {
-                  height: 450,
+                  height: 380,
                   type: 'pie',
                   toolbar: {
                     show: true
@@ -167,7 +173,7 @@ Summary Dashboard
 
   <div class="row">
     <div class="col-sm" style="font-size:small">
-      <h6>Property Summary</h6>
+      <h6 class="min-title">Property Summary</h6>
       <table class="table table-hover">
         <thead>
           <tr>
@@ -179,7 +185,7 @@ Summary Dashboard
         <tbody>
           <tr>
             <td>Assets</td>
-            <div class="progress">
+            <div class="progress mt-3 mb-2">
               <div class="progress-bar" role="progressbar" style="width: {{ property_progress|floatformat }}%;" aria-valuenow="{{ property_progress|floatformat }}" aria-valuemin="0" aria-valuemax="100">{{ property_progress|floatformat }}%</div>
             </div>
             <td style="text-align:right">${{ total_assets|floatformat:0 }} </td>
@@ -265,8 +271,8 @@ Summary Dashboard
     </div>
 
     <div class="col-sm" style="font-size:small">
-      <h6>Personal Summary</h6>
-      <table class="table table-hover">
+      <h6 class="min-title">Personal Summary</h6>
+      <table class="table table-hover mb-4">
         <thead>
           <tr>
             <th scope="col">Balance Sheet</th>
@@ -317,11 +323,11 @@ Summary Dashboard
         </tbody>
       </table>
 
-      <h6>The Market</h6>
-      <div class="progress">
+      <h6 class="min-title">The Market</h6>
+      <div class="progress mt-3 mb-2">
         <div class="progress-bar" role="progressbar" style="width: {{ stocks_total_progress|floatformat }}%;" aria-valuenow="{{ stocks_total_progress|floatformat }}" aria-valuemin="0" aria-valuemax="100">{{ stocks_total_progress|floatformat }}%</div>
       </div>
-      <table class="table table-hover">
+      <table class="table table-hover mb-4">
         <thead>
           <tr>
             <th scope="col">Index Funds / ETF</th>
@@ -374,11 +380,11 @@ Summary Dashboard
             {% endif %}
         </tbody>
       </table>
-      <h6>Commodities</h6>
-      <div class="progress">
+      <h6 class="min-title">Commodities</h6>
+      <div class="progress mt-3 mb-2">
         <div class="progress-bar" role="progressbar" style="width: {{ commodities_progress|floatformat }}%;" aria-valuenow="{{ commodities_progress|floatformat }}" aria-valuemin="0" aria-valuemax="100">{{ commodities_progress|floatformat }}%</div>
       </div>
-      <table class="table table-hover">
+      <table class="table table-hover mb-4">
         <thead>
           <tr>
               <th scope="col">Commodities</th>
@@ -397,8 +403,8 @@ Summary Dashboard
         </tbody>
       </table>
 
-      <h6>Crypto</h6>
-      <div class="progress">
+      <h6 class="min-title">Crypto</h6>
+      <div class="progress mt-3 mb-2">
         <div class="progress-bar" role="progressbar" style="width: {{ crypto_progress|floatformat }}%;" aria-valuenow="{{ crypto_progress|floatformat }}" aria-valuemin="0" aria-valuemax="100">{{ crypto_progress|floatformat }}%</div>
       </div>
       <table class="table table-hover">
