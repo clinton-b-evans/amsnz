@@ -12,7 +12,7 @@ from .views import (
 app_name = "incomestatements"
 
 urlpatterns = [
-    path("incomestatements/", incomestatements_list_view, name="incomestatement-list"),
+    path("incomestatements/", incomestatements_list_view, name="incomestatements"),
     path("incomestatements/add", add_incomestatements, name="incomestatement-add"),
     path("incomestatements/add_category", add_category, name="category-add"),
     path(

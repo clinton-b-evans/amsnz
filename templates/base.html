@@ -366,7 +366,7 @@
       <li class="nav-heading">Personal</li>
 
       <li class="nav-item">
-        <a {% if request.resolver_match.url_name == 'list' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} href="/personal_balances">
+        <a {% if request.resolver_match.url_name == 'personal_balances_list' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} href="/personal_balances">
           <i class="bi bi-journal-text"></i>
           <span>Balance Sheet</span>
           <!-- <span data-feather="home">Balance Sheet</span> -->
@@ -374,7 +374,7 @@
       </li><!-- End Personal Balance Sheet Page Nav -->
 
       <li class="nav-item">
-        <a {% if request.resolver_match.url_name == 'incomestatement-list' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} href="/incomestatements">
+        <a {% if request.resolver_match.url_name == 'incomestatements' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} href="/incomestatements">
           <i class="bi bi-receipt"></i>
           <span>Income Statement</span>
           <!-- <span data-feather="file">Income Statement</span> -->
