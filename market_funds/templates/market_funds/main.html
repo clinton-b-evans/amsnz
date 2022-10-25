@@ -12,7 +12,7 @@ Stock Portfolio {{year}}
 <div class="card">
         <div class="card-body">
           <h5 class="card-title">Bar Chart</h5>
-          <div id="Chart" style="width: 100%; height: 480px;"></div>
+          <div id="Chart" style="width: 100%; height: 50px;"></div>
 
           <script>
             document.addEventListener("DOMContentLoaded", () => {
@@ -141,6 +141,7 @@ function popitup(url) {
           <th style="text-align:right">Ticker</th>
           <th style="text-align:right">Asset</th>
           <th style="text-align:right">Shares</th>
+          <th style="text-align:right">Share Price</th>
           <th style="text-align:right">Total</th>
           <th style="text-align:right">Action</th>
         </tr>
@@ -152,6 +153,7 @@ function popitup(url) {
           <td style="text-align:right">{{ obj.ticker }}</td>
           <td style="text-align:right">{{ obj.asset_class }} </td>
           <td style="text-align:right">{{ obj.shares }}</td>
+          <td style="text-align:right">{{ obj.share_price }}</td>
           <td style="text-align:right">${{ obj.value }} </td>
           <td style="text-align:right">
             <a href="popupex.html" onclick="return popitup('/marketfunds/{{ obj.id }}/edit')" style="text-decoration: none;">

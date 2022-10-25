@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from .models import Trade, IndexFund
+import requests
 from .forms import IndexFundForm, TradeForm
 
 
@@ -22,19 +23,16 @@ def fund_list_view(request, year):
         for item in data:
             years_list.append(item)
     years_list = sort(years_list)
-    print(years_list)
 
     # Yearly date collection
     index_fund_all_years_total_list = []
     total_value_yearly = 0
     for my_year in years_list:
         index_fund_list_object = IndexFund.objects.filter(date__year=my_year)
-        print(index_fund_list_object)
         for obj in index_fund_list_object:
             obj.value = round(obj.shares * obj.share_price, 2)
             total_value_yearly = total_value_yearly + obj.value
         index_fund_all_years_total_list.append(float(total_value_yearly))
-    print(index_fund_all_years_total_list)
 
     context = {
         "index_fund_list_object": index_fund_list_object,
@@ -49,8 +47,19 @@ def fund_list_view(request, year):
 def add_indexfund(request):
     submitted = False
     if request.method == "POST":
+        ticker = request.POST.get("ticker")
+        url = f"https://eodhistoricaldata.com/api/search/{ticker}?api_token=6357d454b955c1.81464373&limit=1"
+        response = requests.get(url)
+        data = response.json()
+
+        share_price = 0
+        for item in data:
+            share_price = item["previousClose"]
+
         form = IndexFundForm(request.POST)
         if form.is_valid():
+            form = form.save(commit=False)
+            form.share_price = share_price
             form.save()
             return HttpResponse(
                 '<script type="text/javascript">window.close()</script>'

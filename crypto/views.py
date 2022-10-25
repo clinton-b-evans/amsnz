@@ -1,12 +1,12 @@
+import json
+
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from .models import Crypto
 from .forms import CryptoForm
 import requests
-import time
-from bs4 import BeautifulSoup
 
-API_KEY = "HBOtOtoU9lxxj6k0T1ybf6i"
+CRYPTO_API_KEY = "HBOtOtoU9lxxj6k0T1ybf6i"
 
 
 def sort(myList):
@@ -49,9 +49,6 @@ def crypto_list_view(request, year):
         for item in crypto_objects_list:
             item.percent = (item.total / grand_total) * 100
         crypto_all_years_total_list.append(float(total))
-    # url = f'https://fcsapi.com/api-v3/crypto/profile?symbol=btc&access_key={API_KEY}'
-    # response = requests.request("GET", url)
-    # print(response.json())
 
     context = {
         "crypto_objects_list": crypto_objects_list,
@@ -63,11 +60,34 @@ def crypto_list_view(request, year):
     return render(request, "crypto/main.html", context)
 
 
+# def get_crypto_price(ticker):
+# payload = json.dump({
+#     "name": request.POST.get('name'),
+#     "ticker": request.POST.get('ticker'),
+#     "qty": request.POST.get('qty'),
+#     "spot_price": request.POST.get('spot_price'),
+#     "date": request.POST.get('date'),
+#     })
+
+
 def add_crypto(request):
+
     submitted = False
     if request.method == "POST":
+        ticker = request.POST.get("ticker")
+        url = f"https://fcsapi.com/api-v3/crypto/latest?symbol={ticker}/usd&access_key=HBOtOtoU9lxxj6k0T1ybf6i"
+        response = requests.request("GET", url)
+        result = response.json()
+
+        spot_price = 0.0
+        for price in result["response"][:1]:
+            spot_price = price["c"]
+        spot_price = float(spot_price)
+
         form = CryptoForm(request.POST)
         if form.is_valid():
+            form = form.save(commit=False)
+            form.spot_price = spot_price
             form.save()
             return HttpResponse(
                 '<script type="text/javascript">window.close()</script>'
