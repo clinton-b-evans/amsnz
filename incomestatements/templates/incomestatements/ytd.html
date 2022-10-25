@@ -19,7 +19,7 @@ function popitup(url) {
 
 <script src="{% static 'GoogleChart/Gchart.js' %}"></script>
 
-<div class="row">
+<!-- <div class="row">
   <div class="col-lg-3">
     <select class="form-control mb-3" onchange="location = this.value;">
       <option selected="" value="" disabled>Select year</option>
@@ -32,345 +32,360 @@ function popitup(url) {
       <option value="../2025">2025</option>
     </select>
   </div>
-</div>
+</div> -->
 
-<div class="chart-container" style="position: relative;">
-  <div class="row justify-content-around">
+<div class="dashboard">
+  <div class="chart-container" style="position: relative;">
+    <div class="row justify-content-around">
 
-    <div class="col-lg-9">
-      <div class="card">
-        <div class="card-body mt-4">
-          <table class="table table-hover" style="font-size:small">
-            <thead>
-              <tr>
-                <th>YEAR - {{year}}</th>
-                <th scope="col">Jan</th>
-                <th scope="col">Feb</th>
-                <th scope="col">Mar</th>
-                <th scope="col">Apr</th>
-                <th scope="col">May</th>
-                <th scope="col">Jun</th>
-                <th scope="col">Jul</th>
-                <th scope="col">Aug</th>
-                <th scope="col">Sep</th>
-                <th scope="col">Oct</th>
-                <th scope="col">Nov</th>
-                <th scope="col">Dec</th>
-                <th scope="col">Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="col">INCOME</th>
-              </tr>
-              <tr>
-                <td scope="row">Job</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-              </tr>
-              <tr>
-                <td scope="row">Rent Received</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-              </tr>
-              <tr>
-                <thead>
-                  <tr>
-                    <th scope="row">Total</th>
-                    <td>$0</td>
-                    <td>$0</td>
-                    <td>$0</td>
-                    <td>$0</td>
-                    <td>$0</td>
-                    <td>$0</td>
-                    <td>$0</td>
-                    <td>$0</td>
-                    <td>$0</td>
-                    <td>$0</td>
-                    <td>$0</td>
-                    <td>$0</td>
-                    <td>$0</td>
-                  </tr>
-                </thead>
-              <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
-              <tr>
-                <th scope="col">EXPENSES</th>
-              </tr>
-              <tr>
-                <td scope="row">Maintenance</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-              </tr>
-              <tr>
-                <td scope="row">Rent</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-              </tr>
-              <tr>
-                <td scope="row">Rates</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-              </tr>
-              <tr>
-                <td scope="row">Commission</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-              </tr>
-              <tr>
-                <td scope="row">Accountant</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-              </tr>
-              <tr>
-                <td scope="row">Fees</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-              </tr>
-              <tr>
-                <td scope="row">Sundry Expense</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-              </tr>
-              <tr>
-                <td scope="row">Lawns</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-              </tr>
-              <tr>
-                <td scope="row">Electrical</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-              </tr>
-              <tr>
-                <td scope="row">Plumbing</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-              </tr>
-              <tr>
-                <td scope="row">Paydown</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-              </tr>
-              <tr>
-                <td scope="row">Tsb</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-                <td>$0</td>
-              </tr>
+      <div class="col-lg-9">
+        <div class="card">
+          <div class="filter">
+            <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+              <li class="dropdown-header text-start">
+                <h6>Filter</h6>
+              </li>
+              {% for year in years_list%}
+              <li><a class="dropdown-item" href="../{{year|stringformat:"i"}}">{{year|stringformat:"i"}}</a></li>
+              {%endfor%}
+
+            </ul>
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">Personal Profit and Loss <span>| {{year}}</span></h5>
+            <table class="table table-hover" style="font-size:small">
               <thead>
-                <tr style="background-color: #ededed">
-                  <th scope="row">Total</th>
-                  {% for k, v in month_expenses.items %}
-                  <th>${{v}}</th>
-                  {% endfor %}
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
+                <tr>
+                  <th>YEAR - {{year}}</th>
+                  <th scope="col">Jan</th>
+                  <th scope="col">Feb</th>
+                  <th scope="col">Mar</th>
+                  <th scope="col">Apr</th>
+                  <th scope="col">May</th>
+                  <th scope="col">Jun</th>
+                  <th scope="col">Jul</th>
+                  <th scope="col">Aug</th>
+                  <th scope="col">Sep</th>
+                  <th scope="col">Oct</th>
+                  <th scope="col">Nov</th>
+                  <th scope="col">Dec</th>
+                  <th scope="col">Total</th>
                 </tr>
               </thead>
-            </tbody>
-          </table>
+              <tbody>
+                <tr>
+                  <th scope="col">INCOME</th>
+                </tr>
+                <tr>
+                  <td scope="row">Job</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                </tr>
+                <tr>
+                  <td scope="row">Rent Received</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                </tr>
+                <tr>
+                  <thead>
+                    <tr>
+                      <th scope="row">Total</th>
+                      <td>$0</td>
+                      <td>$0</td>
+                      <td>$0</td>
+                      <td>$0</td>
+                      <td>$0</td>
+                      <td>$0</td>
+                      <td>$0</td>
+                      <td>$0</td>
+                      <td>$0</td>
+                      <td>$0</td>
+                      <td>$0</td>
+                      <td>$0</td>
+                      <td>$0</td>
+                    </tr>
+                  </thead>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <th scope="col">EXPENSES</th>
+                </tr>
+                <tr>
+                  <td scope="row">Maintenance</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                </tr>
+                <tr>
+                  <td scope="row">Rent</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                </tr>
+                <tr>
+                  <td scope="row">Rates</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                </tr>
+                <tr>
+                  <td scope="row">Commission</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                </tr>
+                <tr>
+                  <td scope="row">Accountant</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                </tr>
+                <tr>
+                  <td scope="row">Fees</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                </tr>
+                <tr>
+                  <td scope="row">Sundry Expense</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                </tr>
+                <tr>
+                  <td scope="row">Lawns</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                </tr>
+                <tr>
+                  <td scope="row">Electrical</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                </tr>
+                <tr>
+                  <td scope="row">Plumbing</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                </tr>
+                <tr>
+                  <td scope="row">Paydown</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                </tr>
+                <tr>
+                  <td scope="row">Tsb</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                </tr>
+                <thead>
+                  <tr style="background-color: #ededed">
+                    <th scope="row">Total</th>
+                    {% for k, v in month_expenses.items %}
+                    <th>${{v}}</th>
+                    {% endfor %}
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </thead>
+              </tbody>
+            </table>
+          </div>
         </div>
+
+      </div>
+
+      <div class="col-lg-3">
+        <div class="card">
+          <div class="card-body pb-0">
+            <h5 class="card-title">All Expenses <span>| {{year}}</span></h5>
+            <div id="donutchart" style="width: auto; height: 20rem;"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body pb-0">
+            <h5 class="card-title">Income vs Expense <span>| {{year}}</span></h5>
+            <div id="piechart" style="width: auto; height: 20rem;"></div>
+          </div>
+        </div>
+        <!-- <div id="piechart" style="width: 100%; height:400px"></div> -->
+
       </div>
 
     </div>
-
-    <div class="col-lg-3">
-      <div class="card">
-        <div class="card-body pb-0">
-          <h5 class="card-title">All Expenses <span>| {{year}}</span></h5>
-          <div id="donutchart" style="width: auto; height: 20rem;"></div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-body pb-0">
-          <h5 class="card-title">Income vs Expense <span>| {{year}}</span></h5>
-          <div id="piechart" style="width: auto; height: 20rem;"></div>
-        </div>
-      </div>
-      <!-- <div id="piechart" style="width: 100%; height:400px"></div> -->
-
-    </div>
-
   </div>
 </div>
 

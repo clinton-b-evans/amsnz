@@ -12,7 +12,7 @@
 <script src="{% static 'GoogleChart/Gchart.js' %}"></script>
 
 <section class="section dashboard">
-  <div class="row">
+  <!-- <div class="row">
     <div class="col-3">
       <select class="form-control mb-3" onchange="location = this.value;">
         <option selected="" value="" disabled>Select year</option>
@@ -21,13 +21,13 @@
         {%endfor%}
       </select>
     </div>
-  </div>
+  </div> -->
 
   <div class="row">
     <div class="col-lg-8 mb-4">
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">Mixed Chart</h5>
+          <h5 class="card-title">Networth Timeline</h5>
 
           <!-- Column Chart -->
           <div id="Chart" style="width: 100%;"></div>
@@ -101,6 +101,7 @@
                   },
                 },
                 legend: {
+                  position: 'top',
                   horizontalAlign: 'center',
                   // offsetX: 40
                 }
@@ -133,7 +134,7 @@
         </div>
         
         <div class="card-body pb-0">
-          <h5 class="card-title">Pie Chart <span>| {{year}}</span></h5>
+          <h5 class="card-title">Networth <span>| {{year}}</span></h5>
 
           <!-- Pie Chart -->
           <!-- <div id="pieChart" class="mb-5"></div> -->
