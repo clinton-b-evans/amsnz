@@ -101,12 +101,13 @@ function popitup(url) {
           <tbody>
             {% for obj in object_list %}
             <tr>
-              <td style="text-align:left"><a href='./{{obj.pk}}'>{{ obj.commodity_class }}</a></td>
-              <td style="text-align:right">{{ obj.totalweight }}</td>
+<!--              <td style="text-align:left"><a href='{{obj.pk}}/'>{{ obj.commodity_class }}</a></td>-->
+              <td style="text-align:left">{{ obj.commodity_class }}</td>
+              <td style="text-align:right">{{ obj.totalWeight }}</td>
               <td style="text-align:right">${{ obj.spot_price }} </td>
               <td style="text-align:right">${{ obj.total|floatformat:2 }}</td>
               <td style="text-align:right">${{ obj.invested }}</td>
-              <td style="text-align:right">{{ obj.percent|floatformat:2 }}%</td>
+              <td style="text-align:right">{{ obj.percentage|floatformat:2 }}%</td>
               <td style="text-align:right">
                 <a href="popupex.html" onclick="return popitup('/commodities/{{ obj.id }}/edit')" style="text-decoration: none;">
                   <button class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit">
@@ -217,10 +218,10 @@ function popitup(url) {
   google.charts.load("current", {packages:["corechart"]});
   google.charts.setOnLoadCallback(drawChart);
   function drawChart() {
-    var data = google.visualization.arrayToDataTable([
+var data = google.visualization.arrayToDataTable([
       ['Task', 'Hours per Day'],
       {% for obj in object_list %}
-      ['{{ obj.commodity_class }}', {{obj.percent|stringformat:".2f"}}],
+      ['{{ obj.commodity_class }}', {{obj.percentage|stringformat:".2f"}}],
       {% endfor %}
     ]);
 

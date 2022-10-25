@@ -10,31 +10,33 @@ def sort(myList):
 
 
 def commodity_list_view(request, year):
-    commodities_list = Commodity.objects.all()
+    commodities = Commodity.objects.all()
     invested_total = 0
-    for item in commodities_list:
-        item.totalweight = 0
-        item.invested = 0
-        transactions_list = Transaction.objects.filter(
-            commodity=item.pk, date__year=year
+    for commodity in commodities:
+        commodity.totalWeight = 0
+        commodity.invested = 0
+        transactions = Transaction.objects.filter(
+            commodity=commodity.pk, date__year=year
         )
-        for items in transactions_list:
-            if items.transaction_type == "Buy":
-                item.totalweight += items.weight
-                item.invested += items.value
-            if items.transaction_type == "Sell":
-                item.totalweight -= items.weight
-                item.invested -= items.value
-        item.total = item.totalweight * item.spot_price
-        invested_total += item.invested
+        for transaction in transactions:
+            if transaction.transaction_type == "Buy":
+                commodity.totalWeight += transaction.weight
+                commodity.invested += transaction.value
+            if transaction.transaction_type == "Sell":
+                commodity.totalWeight -= transaction.weight
+                commodity.invested -= transaction.value
+        commodity.total = commodity.totalWeight * commodity.spot_price
+        invested_total += commodity.invested
     grand_total = 0
 
-    for item in commodities_list:
-        grand_total += item.total
+    for commodity in commodities:
+        grand_total += commodity.total
+    print("Grand Total--> ", grand_total)
 
-    for item in commodities_list:
-        item.percent = (item.total / grand_total) * 100
-        print(item.percent)
+    for commodity in commodities:
+        commodity.percentage = (commodity.total / grand_total) * 100
+        if commodity.percentage < 0:
+            commodity.percentage = 0.0
 
     years = list(Transaction.objects.values_list("date__year").distinct())
     years_list = []
@@ -66,11 +68,10 @@ def commodity_list_view(request, year):
         commodities_invested_all_years_total_list.append(
             float(invested_total_year_wise)
         )
-    print("invested_total_year_wise", commodities_invested_all_years_total_list)
 
     context = {
         "year": year,
-        "object_list": commodities_list,
+        "object_list": commodities,
         "grand_total": grand_total,
         "invested_total": invested_total,
         "commodities_invested_all_years_total_list": commodities_invested_all_years_total_list,
@@ -89,6 +90,7 @@ def commodity_detail_view(request, **kwargs):
         "transactions": transactions,
         "name": name,
         "commodity": pk,
+        # 'year': year,
     }
     return render(request, "commodities/detail.html", context)
 
@@ -128,7 +130,7 @@ def update_commodity(request, pk):
 
 
 def delete_commodity(request, pk):
-    commodity = Commodity.objects.get(id=pk)
+    commodity = Commodity.objects.filter(id=pk)
     qs = Commodity.objects.get(id=pk)
     context = {
         "object": qs,

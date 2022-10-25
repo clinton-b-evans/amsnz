@@ -47,24 +47,35 @@
                   </div>
 
                   <form method="POST" action="" class="row g-3 needs-validation" novalidate>
+                        {% csrf_token %}
                     <div class="col-12">
-                      <label for="yourName" class="form-label">Your Name</label>
-                      <input type="text" name="name" class="form-control" id="yourName" required>
-                      <div class="invalid-feedback">Please, enter your name!</div>
+                      <label class="form-label">User Name</label>
+<!--                      <input type="text" name="User Name" class="form-control" id="yourName" required>-->
+                      {{form.username}}
+                      <div class="invalid-feedback">Please, enter your UserName!</div>
                     </div>
 
                     <div class="col-12">
-                      <label for="yourUsername" class="form-label">Username</label>
+                      <label class="form-label">Email</label>
                       <div class="input-group has-validation">
                         <span class="input-group-text" id="inputGroupPrepend">@</span>
-                        <input type="text" name="username" class="form-control" id="yourUsername" required>
-                        <div class="invalid-feedback">Please choose a username.</div>
+<!--                        <input type="text" name="username" value="{{form.email}}"  class="form-control" id="yourEmail" required>-->
+                                              {{form.email}}
+                        <div class="invalid-feedback">kindly add an email for account registration.</div>
                       </div>
                     </div>
 
                     <div class="col-12">
-                      <label for="yourPassword" class="form-label">Password</label>
-                      <input type="password" name="password" class="form-control" id="yourPassword" required>
+                      <label class="form-label">Password</label>
+<!--                      <input type="password" name="password" value="{{form.password1}}" class="form-control" id="yourPassword1"  required>-->
+                      {{form.password1}}
+                      <div class="invalid-feedback">Please enter your password!</div>
+                    </div>
+
+                    <div class="col-12">
+                      <label class="form-label">Confirm Password</label>
+<!--                      <input type="password" name="password" value={{form.password2}} class="form-control" id="yourPassword2"  required>-->
+                      {{form.password2}}
                       <div class="invalid-feedback">Please enter your password!</div>
                     </div>
 
@@ -76,8 +87,10 @@
                       </div>
                     </div>
                     <div class="col-12">
-                      <button class="btn btn-primary w-100" type="submit">Create Account</button>
+                      <input class="btn login_btn" type="submit" value="Register Account">
+<!--                      <button class="btn btn-primary w-100" type="submit" >Create Account</button>-->
                     </div>
+                    {{form.errors}}
                     <div class="col-12">
                       <p class="small mb-0">Already have an account? <a href="{% url 'Authentication:login_user' %}">Log in</a></p>
                     </div>

@@ -7,21 +7,19 @@ from Authentication.forms import ContactUsForm
 
 
 def register_user_view(request):
-    if request.user.is_authenticated:
-        return redirect("summary")
-    else:
-        form = RegisterUserForm()
-        if request.method == "POST":
-            form = RegisterUserForm(request.POST)
-            if form.is_valid():
-                form.save()
-                user = form.cleaned_data.get("username")
-                messages.success(request, "Account was created for " + user)
 
-                return redirect("Authentication:login_user")
+    form = RegisterUserForm()
+    if request.method == "POST":
+        form = RegisterUserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            user = form.cleaned_data.get("username")
+            messages.success(request, "Account was created for " + user)
 
-        context = {"form": form}
-        return render(request, "Authentication/register_user.html", context)
+            return redirect("Authentication:login_user")
+
+    context = {"form": form}
+    return render(request, "Authentication/register_user.html", context)
 
 
 def login_user_view(request):

@@ -2,6 +2,11 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from .models import Crypto
 from .forms import CryptoForm
+import requests
+import time
+from bs4 import BeautifulSoup
+
+API_KEY = "HBOtOtoU9lxxj6k0T1ybf6i"
 
 
 def sort(myList):
@@ -44,7 +49,9 @@ def crypto_list_view(request, year):
         for item in crypto_objects_list:
             item.percent = (item.total / grand_total) * 100
         crypto_all_years_total_list.append(float(total))
-    print(crypto_all_years_total_list)
+    # url = f'https://fcsapi.com/api-v3/crypto/profile?symbol=btc&access_key={API_KEY}'
+    # response = requests.request("GET", url)
+    # print(response.json())
 
     context = {
         "crypto_objects_list": crypto_objects_list,
