@@ -98,44 +98,28 @@
                 <tr>
                   <th scope="col">INCOME</th>
                 </tr>
-                <tr>
-                  <td scope="row">Job</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                </tr>
-                <tr>
-                  <td scope="row">Rent Received</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                </tr>
+<!--                <td scope="row">Maintenance</td>-->
+                  {% for category_name, data in income_result.items %}
+                    <tr>
+                    <th scope="row">{{category_name}}</th>
+                    {% for months, months_data in data.items %}
+
+                      {% for month_name, month_expense in months_data.items %}
+                        <td>${{month_expense}}</td>
+                      {% endfor %}
+
+                    {% endfor %}
+                    <td>${{data.total}}</td>
+
+                     </tr>
+                  {% endfor %}
+
                 <tr>
                   <thead>
                     <tr style="background-color: #ededed">
-                    <th scope="row">Total</th>
-                    {% for k, v in month_income.items %}
-                    <th>${{v}}</th>
+                    <th scope="row"><i>Total</i></th>
+                    {% for key, value in month_income.items %}
+                    <th>${{value}}</th>
                     {% endfor %}
                     <th></th>
                   </tr>
@@ -160,201 +144,27 @@
                 <tr>
                   <th scope="col">EXPENSES</th>
                 </tr>
-                <tr>
-                  <td scope="row">Maintenance</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                </tr>
-                <tr>
-                  <td scope="row">Rent</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                </tr>
-                <tr>
-                  <td scope="row">Rates</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                </tr>
-                <tr>
-                  <td scope="row">Commission</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                </tr>
-                <tr>
-                  <td scope="row">Accountant</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                </tr>
-                <tr>
-                  <td scope="row">Fees</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                </tr>
-                <tr>
-                  <td scope="row">Sundry Expense</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                </tr>
-                <tr>
-                  <td scope="row">Lawns</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                </tr>
-                <tr>
-                  <td scope="row">Electrical</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                </tr>
-                <tr>
-                  <td scope="row">Plumbing</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                </tr>
-                <tr>
-                  <td scope="row">Paydown</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                </tr>
-                <tr>
-                  <td scope="row">Tsb</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                  <td>$0</td>
-                </tr>
+<!--                <td scope="row">Maintenance</td>-->
+<!--                    Loop 1-->
+                  {% for category_name, data in expenses_result.items %}
+                    <tr>
+                    <th scope="row">{{category_name}}</th>
+<!--                    Loop 2-->
+                    {% for months,  months_data in data.items %}
+<!--                    Loop 3-->
+                      {% for month_name, month_expense in months_data.items %}
+                        <td>${{month_expense}}</td>
+                      {% endfor %}
+
+                    {% endfor %}
+
+                    <td>${{data.total}}</td>
+                    </tr>
+                  {% endfor %}
+
                 <thead>
                   <tr style="background-color: #ededed">
-                    <th scope="row">Total</th>
+                    <th scope="row"><i>Total</i></th>
                     {% for k, v in month_expenses.items %}
                     <th>${{v}}</th>
                     {% endfor %}
