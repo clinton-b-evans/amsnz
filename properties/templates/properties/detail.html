@@ -22,9 +22,11 @@
     ]);
 
     var options = {
-      title: 'Loan to Value',
-      is3D: true,
-      colors: ['#32CD32', '#228B22']
+      // title: 'Loan to Value',
+      // is3D: true,
+      legend: { position: 'top', alignment: 'center' },
+      colors: ['rgb(51, 102, 204)', 'rgb(153, 0, 153)',]
+      // colors: ['#32CD32', '#228B22']
     };
 
     var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
@@ -98,304 +100,321 @@
         </div>
     </div>
 
-    <div class="row mb-3">
-        <div class="col-3 d-flex mb-3">
-            <div><img src="{% static "images/no_picture.png" %}" width='256' height='256'></div>
-            <div id="piechart_3d" style="height: 250px;"></div>
-        </div>     
-        
-        <div>
-            <div class="d-flex">
-                <h5>Street Address: </h5> &nbsp; &nbsp; &nbsp;
-                <span>{{ object.street_address }}</span> 
+    <section class="section profile">
+      <div class="row">
+        <div class="col-xl-3">
+
+          <div class="card">
+            <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+
+              <!-- <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle"> -->
+              <img src="{% static "images/no_picture.png" %}" width='256' height='256'>
+              <!-- <h2>Kevin Anderson</h2> -->
+              <h3>Street Address: <span> {{ object.street_address }}</span> </h3>
+              <h3>Purchase Date: <span>{{ object.purchase_date }}</span> </h3>
+
             </div>
-            <div class="d-flex">
-                <h5>Purchase Date: </h5> &nbsp; &nbsp; &nbsp;
-                <span>{{ object.purchase_date }}</span> 
+          </div>
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Equity vs Loan </h5>
+              <div id="piechart_3d" style="width: auto; height: 18rem;"></div>
             </div>
+          </div>
+
         </div>
-        <!-- <table>
-            <tr>
-                <th>Street Address</th>
-                <td>{{ object.street_address }}</td>
-            </tr>
-            <tr>
-                <th>Purchase Date</th>
-                <td>{{ object.purchase_date }}</td>
-            </tr>
-        </table> -->
-    </div>
 
-    <div class="card">
-        <div class="card-body mt-3">
-          <!-- <h5 class="card-title">Bordered Tabs Justified</h5> -->
+        <div class="col-xl-9">
 
-          <!-- Bordered Tabs Justified -->
-          <ul class="nav nav-tabs nav-tabs-bordered d-flex" id="borderedTabJustified" role="tablist">
-            <li class="nav-item flex-fill" role="presentation">
-              <button class="nav-link w-100 active" id="home-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-home" type="button" role="tab" aria-controls="home" aria-selected="true">Property Information</button>
-            </li>
-            <li class="nav-item flex-fill" role="presentation">
-              <button class="nav-link w-100" id="genInfo-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-genInfo" type="button" role="tab" aria-controls="genInfo" aria-selected="false">General Information</button>
-            </li>
-            <li class="nav-item flex-fill" role="presentation">
-              <button class="nav-link w-100" id="finance-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-finance" type="button" role="tab" aria-controls="finance" aria-selected="false">Financial Information</button>
-            </li>
-            
-            <li class="nav-item flex-fill" role="presentation">
-              <button class="nav-link w-100" id="loan-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-loan" type="button" role="tab" aria-controls="loan" aria-selected="false">Loan Information</button>
-            </li>
-            <li class="nav-item flex-fill" role="presentation">
-              <button class="nav-link w-100" id="income-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-income" type="button" role="tab" aria-controls="income" aria-selected="false">Income</button>
-            </li>
-            <li class="nav-item flex-fill" role="presentation">
-              <button class="nav-link w-100" id="expenses-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-expenses" type="button" role="tab" aria-controls="expanses" aria-selected="false">Expenses</button>
-            </li>
+          <div class="card">
+            <div class="card-body pt-3">
+              <!-- Bordered Tabs -->
+              <ul class="nav nav-tabs nav-tabs-bordered">
 
-            <li class="nav-item flex-fill" role="presentation">
-              <button class="nav-link w-100" id="performance-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-performance" type="button" role="tab" aria-controls="performance" aria-selected="false">Property Performance</button>
-            </li>
-            <li class="nav-item flex-fill" role="presentation">
-              <button class="nav-link w-100" id="investment-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-investment" type="button" role="tab" aria-controls="investment" aria-selected="false">Investment Info</button>
-            </li>
-            <li class="nav-item flex-fill" role="presentation">
-              <button class="nav-link w-100" id="contact-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Property Contacts</button>
-            </li>
+                <li class="nav-item">
+                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#property-info">Property Info</button>
+                </li>
 
-          </ul>
+                <li class="nav-item">
+                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#general-info">General Info</button>
+                </li>
 
-          <div class="tab-content pt-2" id="borderedTabJustifiedContent">
-            <div class="tab-pane fade show active" id="bordered-justified-home" role="tabpanel" aria-labelledby="home-tab">
-              <table class="table table-striped table-hover">
-                <thead>
-                    <tr>
-                        <th colspan="2">Property Information</th>
-                    </tr>
-                </thead>
-                <tr>
-                    <td>Property Type</td>
-                    <td>{{ object.property_type }}</td>
-                </tr>
-                <tr>
-                    <td>Land Size</td>
-                    <td>{{ object.land_size }}</td>
-                </tr>
-                <tr>
-                    <td>Building Size</td>
-                    <td>{{ object.building_size }}</td>
-                </tr>
-                <tr>
-                    <td>Lounge</td>
-                    <td>{{ object.lounge }}</td>
-                </tr>
-                <tr>
-                    <td>Bedrooms</td>
-                    <td>{{ object.bedrooms }}</td>
-                </tr>
-                <tr>
-                    <td>Bathrooms</td>
-                    <td>{{ object.bathrooms }}</td>
-                </tr>
-                <tr>
-                    <td>Parking</td>
-                    <td>{{ object.parking }}</td>
-                </tr>
-                <tr>
-                    <td>Garage Type</td>
-                    <td>{{ object.garage }}</td>
-                </tr>
-              </table>
-            </div>
-            <div class="tab-pane fade" id="bordered-justified-genInfo" role="tabpanel" aria-labelledby="genInfo-tab">
-              <table class="table table-striped table-hover">
-                <thead>
-                    <tr>
-                        <th colspan="2">General Information</th>
-                    </tr>
-                </thead>
-                <tr>
-                    <td>Vacancy Rate:</td>
-                    <td>{{ object.vacancy_rate|floatformat:2 }}%</td>
-                </tr>
-                <tr>
-                    <td>Management fee</td>
-                    <td>{{ object.management_fee|floatformat:2 }}%</td>
-                </tr>
-              </table>
-            </div>
-            <div class="tab-pane fade" id="bordered-justified-finance" role="tabpanel" aria-labelledby="finance-tab">
-              <table class="table table-striped table-hover">
-                <thead>
-                    <tr>
-                        <th colspan="2">Financial Information</th>
-                    </tr>
-                </thead>
-                <tr>
-                    <td>Market Value</td>
-                    <td>${{ object.market_value|floatformat:2}}</td>
-                </tr>
-                <tr>
-                    <td>Purchase Price</td>
-                    <td>${{ object.purchase_price|floatformat:2 }}</td>
-                </tr>
-                <tr>
-                    <td>Deposit</td>
-                    <td>${{ object.deposit }}</td>
-                </tr>
-                <tr>
-                    <td>Equity</td>
-                    <td>${{ equity }}</td>
-                </tr>
-              </table>
-            </div>
+                <li class="nav-item">
+                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#financial-info">Financial Info</button>
+                </li>
 
-            <div class="tab-pane fade" id="bordered-justified-loan" role="tabpanel" aria-labelledby="loan-tab">
-              <table class="table table-striped table-hover">
-                <thead>
-                    <tr>
-                        <th colspan="2">Loan Information</th>
-                    </tr>
-                </thead>
-                <tr>
-                    <td>Loan Amount</td>
-                    <td>${{ object.loan_amount|floatformat:2 }}</td>
-                </tr>
-                <tr>
-                    <td>Term Left</td>
-                    <td>{{ loan_term_left|floatformat:2 }} years</td>
-                </tr>
-                <tr>
-                    <td>Interest Rate</td>
-                    <td>{{ object.interest_rate|floatformat:2 }}%</td>
-                </tr>
-              </table>
-            </div>
-            <div class="tab-pane fade" id="bordered-justified-income" role="tabpanel" aria-labelledby="income-tab">
-              <table class="table table-striped table-hover">
-                <thead>
-                    <tr>
-                        <th colspan="2">Income</th>
-                    </tr>
-                </thead>
-                <tr>
-                    <td>Rent</td>
-                    <td><span id="rentalYieldValue">${{ object.rent|floatformat:2  }}</span></td>
-                </tr> 
-              </table>
-            </div>
-            <div class="tab-pane fade" id="bordered-justified-expenses" role="tabpanel" aria-labelledby="expenses-tab">
-              <table class="table table-striped table-hover">
-                <thead>
-                    <tr>
-                        <th colspan="2">Expenses</th>
-                    </tr>
-                </thead>
-                <tr>
-                    <td>Repayments</td>
-                    <td>${{ object.repayments|floatformat:2 }}</td>
-                </tr>
-                <tr>
-                    <td>Insurance</td>
-                    <td>${{ object.insurance|floatformat:2 }}</td>
-                </tr>
-                <tr>
-                    <td>Management Fee</td>
-                    <td>${{ net_management|floatformat:2 }}</td>
-                </tr>
-                <tr>
-                    <td>Body Corp fee</td>
-                    <td>${{ object.bodycorp_fee|floatformat:2 }}</td>
-                </tr>
-                <tr>
-                    <td>Maintenance</td>
-                    <td>${{ object.maintenance|floatformat:2 }}</td>
-                </tr>
-                <tr>
-                    <td>Rates</td>
-                    <td>${{ object.rates|floatformat:2 }}<br></td>
-                </tr>
-              </table>
-            </div>
+                <li class="nav-item">
+                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#loan-info">Loan</button>
+                </li>
 
-            <div class="tab-pane fade" id="bordered-justified-performance" role="tabpanel" aria-labelledby="performance-tab">
-              <table class="table table-striped table-hover">
-                <thead>
-                    <tr>
-                        <th colspan="2">Property Performance</th>
-                    </tr>
-                </thead>
-                <tr>
-                    <td>Gross Rental Income</td>
-                    <td>${{ object.rent|floatformat:2  }}</td>
-                </tr>
+                <li class="nav-item">
+                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#income">Income</button>
+                </li>
 
-                <tr>
-                    <td>Rent After Vacancy</td>
-                    <td><span id="rentAfterVacancyRateValue">${{ rent_after_vacany_rate|floatformat:2  }}</span></td>
-                </tr>
-                <tr>
-                    <td>Operating Expenses</td>
-                    <td><span id="operatingExpensesValue" >${{ operating_expenses|floatformat:2  }}</span></td>
-                </tr>
-                <tr>
-                    <td>Net Operating Income</td>
-                    <td><span id="netOperatingIncomeValue"> ${{ net_operating_income|floatformat:2  }}</span></td>
-                </tr>
-                <tr>
-                    <td>Mortgage Repayment</td>
-                    <td><span id="mortgageRepaymentValue">${{ mortgage_repayment|floatformat:2 }}</span></td>
-                </tr>
-                <tr>
-                    <td>Net Income</td>
-                    <td><span id="netIncomeValue">${{ net_income|floatformat:2 }}</span></td>
-                </tr>
-              </table>
-            </div>
-            <div class="tab-pane fade" id="bordered-justified-investment" role="tabpanel" aria-labelledby="investment-tab">
-              <table class="table table-striped table-hover">
-                <thead>
-                    <tr>
-                        <th colspan="2">Investment Info</th>
-                    </tr>
-                </thead>
-                <tr>
-                    <td>Gross Yield</td>
-                    <td>{{ gross_yield|floatformat:2 }}%</td>
-                </tr>
-                <tr>
-                    <td>Net Operating Income</td>
-                    <td>{{ net_operating_income_percent|floatformat:2 }}%</td>
-                </tr>
-                <tr>
-                    <td>Loan To Value</td>
-                    <td>{{ loan_to_value|floatformat:2 }}% </td>
-                </tr>
-                <tr>
-                    <td>Cap Rate</td>
-                    <td>{{ cap_rate|floatformat:2 }}% </td>
-                </tr>
-              </table>
-            </div>
-            <div class="tab-pane fade" id="bordered-justified-contact" role="tabpanel" aria-labelledby="contact-tab">
-              <table class="table table-striped table-hover">
-                <thead>
-                    <tr>
-                    <th colspan="2">Property Contacts</th>
-                    </tr>
-                </thead>
-                {% for obj in contact_obj %}
-                <tr>
-                    <td>{{ obj.occupation }}</td>
-                    <td><a href="tel:{{ obj.contact_number }}">{{ obj.first_name }}</a></td>
-                </tr>
-                {% endfor %}
-              </table>
-            </div>
+                <li class="nav-item">
+                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#expense">Expense</button>
+                </li>
 
-          </div><!-- End Bordered Tabs Justified -->
+                <li class="nav-item">
+                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#performance">Performance</button>
+                </li>
+
+                <li class="nav-item">
+                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#investment">Investment</button>
+                </li>
+
+                <li class="nav-item">
+                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#contacts">Property Contacts</button>
+                </li>
+
+              </ul>
+              <div class="tab-content pt-2">
+
+                <div class="tab-pane fade show active profile-overview pt-3" id="property-info">
+
+                  <h5 class="card-title">Property Information</h5>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Property Type:</div>
+                    <div class="col-lg-9 col-md-8">{{ object.property_type }}</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Land Size:</div>
+                    <div class="col-lg-9 col-md-8">{{ object.land_size }}</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Building Size:</div>
+                    <div class="col-lg-9 col-md-8">{{ object.building_size }}</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Lounge:</div>
+                    <div class="col-lg-9 col-md-8">{{ object.lounge }}</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Bedrooms:</div>
+                    <div class="col-lg-9 col-md-8">{{ object.bedrooms }}</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Parking:</div>
+                    <div class="col-lg-9 col-md-8">{{ object.parking }}</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Garage Type:</div>
+                    <div class="col-lg-9 col-md-8">{{ object.garage }}</div>
+                  </div>
+
+                </div>
+
+                <div class="tab-pane fade profile-overview pt-3" id="general-info">
+
+                  <h5 class="card-title">General Information</h5>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Vacancy Rate:</div>
+                    <div class="col-lg-9 col-md-8">{{ object.vacancy_rate|floatformat:2 }}%</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Management fee:</div>
+                    <div class="col-lg-9 col-md-8">{{ object.management_fee|floatformat:2 }}%</div>
+                  </div>
+
+                </div>
+
+                <div class="tab-pane fade profile-overview pt-3" id="financial-info">
+
+                  <h5 class="card-title">Financial Information</h5>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Market Value:</div>
+                    <div class="col-lg-9 col-md-8">${{ object.market_value|floatformat:2}}</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Purchase Price:</div>
+                    <div class="col-lg-9 col-md-8">${{ object.purchase_price|floatformat:2 }}</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Deposit:</div>
+                    <div class="col-lg-9 col-md-8">${{ object.deposit }}</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Equity:</div>
+                    <div class="col-lg-9 col-md-8">${{ equity }}</div>
+                  </div>
+
+                </div>
+
+                <div class="tab-pane fade profile-overview pt-3" id="loan-info">
+
+                  <h5 class="card-title">Loan Information</h5>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Loan Amount:</div>
+                    <div class="col-lg-9 col-md-8">${{ object.loan_amount|floatformat:2 }}</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Term Left:</div>
+                    <div class="col-lg-9 col-md-8">{{ loan_term_left|floatformat:2 }} years</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Interest Rate:</div>
+                    <div class="col-lg-9 col-md-8">{{ object.interest_rate|floatformat:2 }}%</div>
+                  </div>
+
+                </div>
+
+                <div class="tab-pane fade profile-overview pt-3" id="income">
+
+                  <h5 class="card-title">Income</h5>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Rent Amount:</div>
+                    <div class="col-lg-9 col-md-8">${{ object.rent|floatformat:2  }}</div>
+                  </div>
+
+                </div>
+
+                <div class="tab-pane fade profile-overview pt-3" id="expense">
+
+                  <h5 class="card-title">Expense</h5>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Repayments:</div>
+                    <div class="col-lg-9 col-md-8">${{ object.repayments|floatformat:2 }}</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Insurance:</div>
+                    <div class="col-lg-9 col-md-8">${{ object.insurance|floatformat:2 }}</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Management Fee:</div>
+                    <div class="col-lg-9 col-md-8">${{ net_management|floatformat:2 }}</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Body Corp fee:</div>
+                    <div class="col-lg-9 col-md-8">${{ object.bodycorp_fee|floatformat:2 }}</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Maintenance:</div>
+                    <div class="col-lg-9 col-md-8">${{ object.maintenance|floatformat:2 }}</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Rates:</div>
+                    <div class="col-lg-9 col-md-8">${{ object.rates|floatformat:2 }}</div>
+                  </div>
+
+                </div>
+
+                <div class="tab-pane fade profile-overview pt-3" id="performance">
+
+                  <h5 class="card-title">Property Performance</h5>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Gross Rental Income:</div>
+                    <div class="col-lg-9 col-md-8">${{ object.rent|floatformat:2  }}</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Rent After Vacancy:</div>
+                    <div class="col-lg-9 col-md-8">${{ rent_after_vacany_rate|floatformat:2  }}</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Operating Expenses:</div>
+                    <div class="col-lg-9 col-md-8">${{ operating_expenses|floatformat:2  }}</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Net Operating Income:</div>
+                    <div class="col-lg-9 col-md-8">${{ net_operating_income|floatformat:2  }}</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Mortgage Repayment:</div>
+                    <div class="col-lg-9 col-md-8">${{ mortgage_repayment|floatformat:2 }}</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Net Income:</div>
+                    <div class="col-lg-9 col-md-8">${{ net_income|floatformat:2 }}</div>
+                  </div>
+
+                </div>
+
+                <div class="tab-pane fade profile-overview pt-3" id="investment">
+
+                  <h5 class="card-title">Investment Information</h5>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Gross Yield:</div>
+                    <div class="col-lg-9 col-md-8">{{ gross_yield|floatformat:2 }}%</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Net Operating Income:</div>
+                    <div class="col-lg-9 col-md-8">{{ net_operating_income_percent|floatformat:2 }}%</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Loan To Value:</div>
+                    <div class="col-lg-9 col-md-8">{{ loan_to_value|floatformat:2 }}%</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Cap Rate:</div>
+                    <div class="col-lg-9 col-md-8">{{ cap_rate|floatformat:2 }}%</div>
+                  </div>
+
+                </div>
+
+                <div class="tab-pane fade profile-overview pt-3" id="contacts">
+
+                  <h5 class="card-title">Property Contacts</h5>
+
+                  <table class="table table-hover" style="font-size:small">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Occupation</th>
+                        <th>Contact</th>
+                      </tr>
+                    </thead>
+                    {% for obj in contact_obj %}
+                    <tr>
+                      <td>{{ obj.first_name }}</td>
+                      <td>{{ obj.occupation }}</td>
+                      <td><a href="tel:{{ obj.contact_number }}">{{ obj.contact_number }}</a></td>
+                    </tr>
+                    {% endfor %}
+                  </table>
+
+                </div>
+
+              </div><!-- End Bordered Tabs -->
+
+            </div>
+          </div>
 
         </div>
       </div>
+    </section>
 
 
 {% endblock content %}

@@ -198,17 +198,17 @@ function popitup(url) {
       ['Task', 'Hours per Day'],
      ['Income', {{ total_income|stringformat:"i"}}],
       ['Expense', {{ total_expense|stringformat:"i"}}]
-  ]);
+    ]);
 
-  var options = {
-    legend: { position: 'top', alignment: 'center' },
-    colors: ['rgb(51, 102, 204)', 'rgb(153, 0, 153)',]
-  };
+    var options = {
+      legend: { position: 'top', alignment: 'center' },
+      colors: ['rgb(51, 102, 204)', 'rgb(153, 0, 153)',]
+    };
 
-  var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+    var chart = new google.visualization.PieChart(document.getElementById('piechart'));
 
-  chart.draw(data, options);
-}
+    chart.draw(data, options);
+  }
 </script>
 
 <br> 
