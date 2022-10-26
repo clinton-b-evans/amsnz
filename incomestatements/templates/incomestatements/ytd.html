@@ -19,21 +19,6 @@ function popitup(url) {
 
 <script src="{% static 'GoogleChart/Gchart.js' %}"></script>
 
-<!-- <div class="row">
-  <div class="col-lg-3">
-    <select class="form-control mb-3" onchange="location = this.value;">
-      <option selected="" value="" disabled>Select year</option>
-      <option value="../2019">2019</option>
-      <option value="../2020">2020</option>
-      <option value="../2021">2021</option>
-      <option value="../2022">2022</option>
-      <option value="../2023">2023</option>
-      <option value="../2024">2024</option>
-      <option value="../2025">2025</option>
-    </select>
-  </div>
-</div> -->
-
 <div class="dashboard">
   <div class="chart-container" style="position: relative;">
     <div class="row justify-content-around">
@@ -113,19 +98,10 @@ function popitup(url) {
                   <thead>
                     <tr>
                       <th scope="row">Total</th>
-                      <td>$0</td>
-                      <td>$0</td>
-                      <td>$0</td>
-                      <td>$0</td>
-                      <td>$0</td>
-                      <td>$0</td>
-                      <td>$0</td>
-                      <td>$0</td>
-                      <td>$0</td>
-                      <td>$0</td>
-                      <td>$0</td>
-                      <td>$0</td>
-                      <td>$0</td>
+                    {% for k, v in month_income.items %}
+                    <th>${{v}}</th>
+                    {% endfor %}
+                    <th></th>
                     </tr>
                   </thead>
                 <tr>
@@ -346,18 +322,6 @@ function popitup(url) {
                     <th>${{v}}</th>
                     {% endfor %}
                     <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
                   </tr>
                 </thead>
               </tbody>
@@ -395,7 +359,11 @@ function popitup(url) {
     $('.select2').select2()
   })
 </script>
-
+<!--      ['Work', 11],-->
+<!--      ['Eat', 2],-->
+<!--      ['Commute', 2],-->
+<!--      ['Watch TV', 2],-->
+<!--      ['Sleep', 7]-->
 <script type="text/javascript">
   google.charts.load('current', { 'packages': ['corechart'] });
   google.charts.setOnLoadCallback(drawChart);
@@ -404,11 +372,9 @@ function popitup(url) {
 
     var data = google.visualization.arrayToDataTable([
       ['Task', 'Hours per Day'],
-      ['Work', 11],
-      ['Eat', 2],
-      ['Commute', 2],
-      ['Watch TV', 2],
-      ['Sleep', 7]
+      {% for key, value in categories.items %}
+      ['{{key}}', {{value}}],
+      {% endfor %}
     ]);
 
     var options = {
@@ -434,8 +400,8 @@ function popitup(url) {
 
     var data = google.visualization.arrayToDataTable([
       ['Task', 'Hours per Day'],
-      ['Income', 2000],
-      ['Expense', 1500]
+     ['Income', {{ total_income|stringformat:"i"}}],
+      ['Expense', {{ total_expense|stringformat:"i"}}]
   ]);
 
   var options = {
