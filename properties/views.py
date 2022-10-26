@@ -358,7 +358,6 @@ def property_summary_view(request, year, *args, **kwargs):
     Estimate future value of current year goal networth
     """
     current_goal = FutureValue(CurrentYearGoal())
-    # print(CurrentYearGoal())
     property_goal = real_estate_percent * current_goal
     total_rent_after_vacany_rate = 0
 
@@ -460,10 +459,9 @@ def property_summary_view(request, year, *args, **kwargs):
             stocks_total_reits = stocks_total_reits + obj.value
         if obj.asset_class == "Other":
             stocks_total_other = stocks_total_other + obj.value
-
     # Adding retirement's networth current goal and stocks percent
     stocks_goal = stocks_percent * current_goal
-    stocks_total_progress = float(stocks_total_value) / stocks_goal * 100
+    stocks_total_progress = (float(stocks_total_value) / stocks_goal) * 100
     if stocks_total_progress > 0:
         stocks_total_progress = float(stocks_total_value) / stocks_goal * 100
     else:
@@ -472,7 +470,7 @@ def property_summary_view(request, year, *args, **kwargs):
     crypto_goal = crypto_percent * current_goal
 
     # Commodities
-    commod_qs = Commodity.objects.all()
+    commod_qs = Commodity.objects.filter(date__year=year)
     commodities_total_value = 0
     invested_total = 0
     for item in commod_qs:
@@ -492,12 +490,14 @@ def property_summary_view(request, year, *args, **kwargs):
     grand_total = 0
 
     commodities_goal = float(commodities_percent * current_goal)
-
-    if commodities_goal > 0:
-        commodities_progress = float(commodities_total_value) / commodities_goal * 100
+    commodities_progress1 = float(commodities_total_value) / commodities_goal * 100
+    commodities_progress = 0
+    if commodities_goal > 0 and commodities_progress1 > 0:
+        commodities_progress += commodities_progress1
     else:
         commodities_progress = 0
-
+    print('commodities_progress', commodities_progress)
+    print('commod_qs', commod_qs)
     # Crypto
     crypto_qs = Crypto.objects.filter(date__year=year)
     crypto_total_value = 0
@@ -510,6 +510,9 @@ def property_summary_view(request, year, *args, **kwargs):
         crypto_progress = float(crypto_total_value) / crypto_goal * 100
     else:
         crypto_progress = 0
+
+    print('crypto_qs###', crypto_qs)
+    print('crypto_progress###', crypto_progress)
 
     # Personal Balance Sheet
     pba_qs = PersonalBalance.objects.filter(entry_type="Asset", date__year=year)
@@ -668,7 +671,7 @@ def property_summary_view(request, year, *args, **kwargs):
     )
     graph_lib = total_liabilities + total_pb_liabilities
     graph_nw = graph_asset - graph_lib
-
+    print("commodities_total_value", commodities_total_value)
     context = {
         "object_list": qs,
         "year": year,

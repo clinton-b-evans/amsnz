@@ -79,7 +79,7 @@ function popitup(url) {
                   <thead>
                     <tr style="background-color: #ededed">
                     <th scope="row"><i>Total</i></th>
-                    {% for category_name, amount in month_income.items %}
+                    {% for amount in month_income.values %}
                     <th>${{amount}}</th>
                     {% endfor %}
                     <th></th>
@@ -123,8 +123,8 @@ function popitup(url) {
                 <thead>
                   <tr style="background-color: #ededed">
                     <th scope="row"><i>Total</i></th>
-                    {% for k, v in month_expenses.items %}
-                    <th>${{v}}</th>
+                    {% for amount in month_expenses.values %}
+                    <th>${{amount}}</th>
                     {% endfor %}
                     <th></th>
                   </tr>

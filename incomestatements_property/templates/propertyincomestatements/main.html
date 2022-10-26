@@ -111,7 +111,11 @@
           <th style="text-align: left;">Balance:</th>
           <th style="text-align: right;"></th>
           <th style="text-align: right;"></th>
+          {% if total < 0 %}
+          <th style="text-align: right; color:#FF2D00;">${{ total}}</th>
+          {% else %}
           <th style="text-align: right;">${{ total}}</th>
+          {% endif %}
           <th style="text-align: right;"></th>
           <th style="text-align: right;"></th>
         </tr>

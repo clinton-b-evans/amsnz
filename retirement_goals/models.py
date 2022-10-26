@@ -3,7 +3,6 @@ from django.utils.timezone import now
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 
-# Create your models here.
 class RetirementGoal(models.Model):
     start_date = models.DateField(null=True, blank=True, default=now)
     networth_goal = models.DecimalField(
@@ -42,3 +41,6 @@ class RetirementGoal(models.Model):
     stocks_swr = models.DecimalField(
         max_digits=4, decimal_places=2, default=0, verbose_name="Stocks SWR"
     )
+
+    def __str__(self):
+        return str(self.networth_goal)

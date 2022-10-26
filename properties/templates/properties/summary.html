@@ -326,7 +326,7 @@
 
       <h6 class="min-title">The Market</h6>
       <div class="progress mt-3 mb-2">
-        <div class="progress-bar" role="progressbar" style="width: {{ stocks_total_progress|floatformat }}%;" aria-valuenow="{{ stocks_total_progress|floatformat }}" aria-valuemin="0" aria-valuemax="100">{{ stocks_total_progress|floatformat }}%</div>
+        <div class="progress-bar" role="progressbar" style="width: {{ stocks_total_progress|floatformat:2}}%;" aria-valuenow="{{ stocks_total_progress|floatformat:2 }}" aria-valuemin="0" aria-valuemax="100">{{ stocks_total_progress|floatformat:2}}%</div>
       </div>
       <table class="table table-hover mb-4">
         <thead>
@@ -383,7 +383,7 @@
       </table>
       <h6 class="min-title">Commodities</h6>
       <div class="progress mt-3 mb-2">
-        <div class="progress-bar" role="progressbar" style="width: {{ commodities_progress|floatformat }}%;" aria-valuenow="{{ commodities_progress|floatformat }}" aria-valuemin="0" aria-valuemax="100">{{ commodities_progress|floatformat }}%</div>
+        <div class="progress-bar" role="progressbar" style="width: {{ commodities_progress|floatformat:2 }}%;" aria-valuenow="{{ commodities_progress|floatformat:2 }}" aria-valuemin="0" aria-valuemax="100">{{ commodities_progress|floatformat:2}} %</div>
       </div>
       <table class="table table-hover mb-4">
         <thead>
@@ -406,7 +406,7 @@
 
       <h6 class="min-title">Crypto</h6>
       <div class="progress mt-3 mb-2">
-        <div class="progress-bar" role="progressbar" style="width: {{ crypto_progress|floatformat }}%;" aria-valuenow="{{ crypto_progress|floatformat }}" aria-valuemin="0" aria-valuemax="100">{{ crypto_progress|floatformat }}%</div>
+        <div class="progress-bar" role="progressbar" style="width: {{ crypto_progress|floatformat:2 }}%;" aria-valuenow="{{ crypto_progress|floatformat:2 }}" aria-valuemin="0" aria-valuemax="100">{{ crypto_progress|floatformat:2 }} %</div>
       </div>
       <table class="table table-hover">
         <thead>
