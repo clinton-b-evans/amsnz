@@ -149,7 +149,7 @@
               <button class="nav-link w-100" id="income-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-income" type="button" role="tab" aria-controls="income" aria-selected="false">Income</button>
             </li>
             <li class="nav-item flex-fill" role="presentation">
-              <button class="nav-link w-100" id="expanses-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-expanses" type="button" role="tab" aria-controls="expanses" aria-selected="false">Expanses</button>
+              <button class="nav-link w-100" id="expenses-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-expenses" type="button" role="tab" aria-controls="expanses" aria-selected="false">Expenses</button>
             </li>
 
             <li class="nav-item flex-fill" role="presentation">
@@ -165,16 +165,16 @@
           </ul>
 
           <div class="tab-content pt-2" id="borderedTabJustifiedContent">
-            <div class="tab-pane fade show active p-4" id="bordered-justified-home" role="tabpanel" aria-labelledby="home-tab">
+            <div class="tab-pane fade show active" id="bordered-justified-home" role="tabpanel" aria-labelledby="home-tab">
               <table class="table table-striped table-hover">
                 <thead>
                     <tr>
-                        <th colspan="1">Property Information</th>
+                        <th colspan="2">Property Information</th>
                     </tr>
                 </thead>
                 <tr>
                     <td>Property Type</td>
-                    <td id='#'>{{ object.property_type }}</td>
+                    <td>{{ object.property_type }}</td>
                 </tr>
                 <tr>
                     <td>Land Size</td>
@@ -198,11 +198,11 @@
                 </tr>
                 <tr>
                     <td>Parking</td>
-                    <td>{{ object.parking }}<br></td>
+                    <td>{{ object.parking }}</td>
                 </tr>
                 <tr>
                     <td>Garage Type</td>
-                    <td>{{ object.garage }}<br></td>
+                    <td>{{ object.garage }}</td>
                 </tr>
               </table>
             </div>
@@ -283,7 +283,7 @@
                 </tr> 
               </table>
             </div>
-            <div class="tab-pane fade" id="bordered-justified-expances" role="tabpanel" aria-labelledby="expanses-tab">
+            <div class="tab-pane fade" id="bordered-justified-expenses" role="tabpanel" aria-labelledby="expenses-tab">
               <table class="table table-striped table-hover">
                 <thead>
                     <tr>
