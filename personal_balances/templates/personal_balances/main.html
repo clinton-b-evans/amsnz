@@ -48,7 +48,297 @@ function popitup(url) {
   </button>
 </a>
 
-<div class="row">
+<section class="section contact">
+
+  <div class="row gy-4">
+
+    <div class="col-lg-6">
+
+      <div class="row">
+        <div class="col-lg-6 col-md-6">
+          <div class="info-box card">
+            <!-- <i class="bi bi-geo-alt"></i> -->
+            <img src="{% static "images/assets.png" %}" width='80' height='80'>
+            <h3>Assets</h3>
+            <h5>${{ total_asset|floatformat:2 }}</h5>
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-6">
+          <div class="info-box card">
+            <!-- <i class="bi bi-telephone"></i> -->
+            <img src="{% static "images/savings.png" %}" width='80' height='80'>
+            <h3>Savings</h3>
+            <h5>${{ total_savings|floatformat:2 }}</h5>
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-6">
+          <div class="info-box card">
+            <!-- <i class="bi bi-envelope"></i> -->
+            <img src="{% static "images/retirement.png" %}" width='80' height='80'>
+            <h3>Retirement Accounts</h3>
+            <h5>${{ total_retirement_acc|floatformat:2 }}</h5>
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-6">
+          <div class="info-box card">
+            <!-- <i class="bi bi-clock"></i> -->
+            <img src="{% static "images/liabilities.png" %}" width='80' height='80'>
+            <h3>Liabilities</h3>
+            <h5>${{ total_liability|floatformat:2 }}</h5>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col-lg-6">
+
+      <div class="card">
+        <div class="card-body pt-3">
+          <!-- Bordered Tabs -->
+          <ul class="nav nav-tabs nav-tabs-bordered">
+
+            <li class="nav-item">
+              <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Assets</button>
+            </li>
+
+            <li class="nav-item">
+              <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit">Savings</button>
+            </li>
+
+            <li class="nav-item">
+              <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-settings">Retirement Accounts</button>
+            </li>
+
+            <li class="nav-item">
+              <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password">Liabilities</button>
+            </li>
+
+          </ul>
+          <div class="tab-content pt-2">
+
+            <div class="tab-pane fade show active profile-overview" id="profile-overview">
+              <h5 class="card-title">Assets</h5>
+              <table class="table table-hover" style="font-size:small">
+                <thead>
+                  <tr>
+                    <th style="text-align:left">Assets</th>
+                    <th style="text-align:right">Amount</th>
+                    <th style="text-align:right">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for obj in assets %}
+                  <tr>
+                    <td>{{obj.description}}</td>
+                    <td style="text-align:right">${{obj.amount}}</td>
+                    <td style="text-align:right">
+                      <a href="popupex.html" onclick="return popitup('/personal_balances/{{ obj.pk }}/edit')">
+                        <button class="btn btn-success btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Edit">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                          </svg>
+                        </button>
+                      </a>
+                      <a href="popupex.html" onclick="return popitup('/personal_balances/{{ obj.pk }}/delete')">
+                        <button class="btn btn-danger btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Delete">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                          </svg>
+                        </button>
+                      </a>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                  <thead>
+                    <tr>
+                      <th style="text-align:left">Total:</th>
+                      <th style="text-align:right">${{ total_asset|floatformat:2 }}</th>
+                      <th style="text-align:right"></th>
+                    </tr>
+                  </thead>
+                  <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table> 
+
+            </div>
+
+            <div class="tab-pane fade profile-edit" id="profile-edit">
+
+              <h5 class="card-title">Savings</h5>
+              <table class="table table-hover" style="font-size:small">
+                <thead>
+                  <tr>
+                    <th style="text-align:left">Savings</th>
+                    <th style="text-align:right">Amount</th>
+                    <th style="text-align:right">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for obj in savings %}
+                  <tr>
+                    <td>{{obj.description}}</td>
+                    <td style="text-align:right">${{obj.amount}}</td>
+                    <td style="text-align:right">
+                      <a href="popupex.html" onclick="return popitup('/personal_balances/{{ obj.pk }}/edit')">
+                        <button class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                          </svg>
+                        </button>
+                      </a>
+                      <a href="popupex.html" onclick="return popitup('/personal_balances/{{ obj.pk }}/delete')">
+                        <button class="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                          </svg>
+                        </button>
+                      </a>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                  <thead>
+                    <tr>
+                      <th style="text-align:left">Total:</th>
+                      <th style="text-align:right">${{ total_savings|floatformat:2 }}</th>
+                      <th style="text-align:right"></th>
+                    </tr>
+                  </thead>
+                  <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table> 
+
+            </div>
+
+            <div class="tab-pane fade" id="profile-settings">
+
+              <h5 class="card-title">Retirement Accounts</h5>
+              <table class="table table-hover" style="font-size:small">
+                <thead>
+                  <tr>
+                    <th style="text-align:left">Retirement Accounts</th>
+                    <th style="text-align:right">Amount</th>
+                    <th style="text-align:right">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for obj in retirement_acc %}
+                  <tr>
+                    <td>{{obj.description}}</td>
+                    <td style="text-align:right">${{obj.amount}}</td>
+                    <td style="text-align:right">
+                      <a href="popupex.html" onclick="return popitup('/personal_balances/{{ obj.pk }}/edit')">      
+                        <button class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                          </svg>
+                        </button>
+                      </a>
+                      <a href="popupex.html" onclick="return popitup('/personal_balances/{{ obj.pk }}/delete')">
+                        <button class="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                          </svg>
+                        </button>
+                      </a>  
+                    </td>
+                  </tr>
+                  {% endfor %}
+                  <thead>
+                    <tr>
+                      <th style="text-align:left">Total:</th>
+                      <th style="text-align:right">${{ total_retirement_acc|floatformat:2 }}</th>
+                      <th style="text-align:right"></th>
+                    </tr>
+                  </thead>
+                  <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+
+            </div>
+
+            <div class="tab-pane fade" id="profile-change-password">
+              <h5 class="card-title">Liabilities</h5>
+              <table class="table table-hover" style="font-size:small">
+                <thead>
+                  <tr>
+                    <th style="text-align:left">Liabilities</th>
+                    <th style="text-align:right">Amount</th>
+                    <th style="text-align:right">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for obj in liability %}
+                  <tr>
+                    <td>{{obj.description}}</td>
+                    <td style="text-align:right">${{obj.amount}}</td>
+                    <td style="text-align:right">
+                      <a href="popupex.html" onclick="return popitup('/personal_balances/{{ obj.pk }}/edit')">     
+                        <button class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                          </svg>
+                        </button>
+                      </a>
+                      <a href="popupex.html" onclick="return popitup('/personal_balances/{{ obj.pk }}/delete')">
+                        <button class="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                          </svg>
+                        </button>
+                      </a>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                  <thead>
+                    <tr>
+                      <th style="text-align:left">Total:</th>
+                      <th style="text-align:right">${{ total_liability|floatformat:2 }}</th>
+                      <th style="text-align:right"></th>
+                    </tr>
+                  </thead>
+                  <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table> 
+
+            </div>
+
+          </div><!-- End Bordered Tabs -->
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- <div class="row">
   <div class="col-lg-6">
     <div class="card">
       <div class="card-body">
@@ -263,26 +553,8 @@ function popitup(url) {
         </table> 
       </div>
     </div>
-
   </div>
-    
-
-    
-        <!-- <table>
-          <thead>
-            <th style="text-align:left">Networth: &nbsp;</th>
-            <th style="text-align:right">${{ networth }}</th>
-            <th></th>
-          </thead>
-        </table> -->
-      <!-- </div>
-    </div> -->
-
-  </div>
-  <div class="col-4">
-    <div class="col-sm" id="piechart_3d" style="width: 100%; height: 250px;"></div>
-  </div>
-</div>
+</div> -->
 
 <br> 
 
