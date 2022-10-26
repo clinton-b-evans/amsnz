@@ -312,7 +312,6 @@ def year_to_date(request, year):
         "categories": yearly_expenses_categories,
         "years_list": years_list,
         "income_result": income_result,
-        "expenses_result": expenses_result
-
+        "expenses_result": expenses_result,
     }
     return render(request, "incomestatements/ytd.html", context)

@@ -82,7 +82,6 @@
                 <tr>
                   <th scope="col">INCOME</th>
                 </tr>
-                <tr>
 <!--                <td scope="row">Maintenance</td>-->
                   {% for category_name, data in income_result.items %}
                     <tr>
@@ -99,12 +98,10 @@
                      </tr>
                   {% endfor %}
 
-                </tr>
-
                 <tr>
                   <thead>
                     <tr style="background-color: #ededed">
-                    <th scope="row">Total</th>
+                    <th scope="row"><i>Total</i></th>
                     {% for key, value in month_income.items %}
                     <th>${{value}}</th>
                     {% endfor %}
@@ -151,7 +148,7 @@
 
                 <thead>
                   <tr style="background-color: #ededed">
-                    <th scope="row">Total</th>
+                    <th scope="row"><i>Total</i></th>
                     {% for k, v in month_expenses.items %}
                     <th>${{v}}</th>
                     {% endfor %}

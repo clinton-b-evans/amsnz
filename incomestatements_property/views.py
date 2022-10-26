@@ -345,6 +345,6 @@ def year_to_date(request, year):
         "prop_qs": prop_qs,
         "years_list": years_list,
         "expenses_result": expenses_result,
-        "income_result": income_result
+        "income_result": income_result,
     }
     return render(request, "propertyincomestatements/ytd.html", context)
