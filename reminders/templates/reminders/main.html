@@ -3,7 +3,7 @@
 {% load mathfilters %}
 
 {% block title %}
-Reminder List 
+Reminders
 {% endblock title %}
 
 {% block content %}
@@ -40,6 +40,7 @@ function popitup(url) {
         <tr>
           <th style="text-align: left;" scope="col">Reminder</th>
           <th style="text-align: right;" scope="col">Property</th>
+          <th style="text-align: right;" scope="col">Type</th>
           <th style="text-align: right;" scope="col">Due Date</th>
           <th style="text-align: right;" scope="col">Action</th>
         </tr>
@@ -49,6 +50,7 @@ function popitup(url) {
         <tr>
           <td style="text-align: left;">{{ obj.detail }}</td>
           <td style="text-align: right;">{{ obj.property.name }}</td>
+          <td style="text-align: right;">{{ obj.reminder_type }}</td>
           <td style="text-align: right;">{{ obj.due_date }} </td>
           <td style="text-align: right;" style="text-align:right">
             <a href="popupex.html" onclick="return popitup('/reminders/add_reminder/{{ obj.id }}')" style="text-decoration: none;">

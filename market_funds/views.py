@@ -53,8 +53,11 @@ def add_indexfund(request):
         data = response.json()
 
         share_price = 0
-        for item in data:
-            share_price = item["previousClose"]
+        if data:
+            for item in data:
+                share_price = item["previousClose"]
+        else:
+            return HttpResponse(f"{ticker} ticker symbol is not available in stock!")
 
         form = IndexFundForm(request.POST)
         if form.is_valid():

@@ -14,9 +14,9 @@ def home_view(request):
 
 
 def reminder_list_view(request):
-    qs = Reminder.objects.all().order_by("due_date")
+    reminders = Reminder.objects.all().order_by("due_date")
     context = {
-        "object_list": qs,
+        "object_list": reminders,
     }
     return render(request, "reminders/main.html", context)
 
@@ -63,9 +63,6 @@ def delete_reminder(request, pk):
     }
 
     if request.method == "POST":
-        # delete object
         reminder.delete()
-        # after deleting redirect to
-        # home page
         return HttpResponse('<script type="text/javascript">window.close()</script>')
     return render(request, "reminders/delete.html", context)

@@ -1,10 +1,12 @@
+import datetime
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from .models import IncomeStatement, Category
 from .forms import IncomeStatementForm, CategoryForm
+from django.db.models.functions import TruncMonth, ExtractMonth
+from django.db.models import Count, Sum, FloatField
 
 
-# Create your views here.
 def incomestatements_list_view(request):
     qs = IncomeStatement.objects.all()
     total_income = 0
@@ -111,6 +113,11 @@ def update_category(request, pk):
     return render(request, "incomestatements/add.html", context)
 
 
+def sort(myList):
+    myList.sort(reverse=True)
+    return myList
+
+
 def year_to_date(request, year):
     qs = IncomeStatement.objects.filter(date__year=year)
     cat_dict = Category.objects.all()
@@ -119,13 +126,10 @@ def year_to_date(request, year):
         categories[item.name] = 0
     for item in qs:
         cat_qs = Category.objects.get(name=item.category)
-        print(cat_qs.name)
-        print(item.amount)
         if cat_qs.name in categories:
             categories[cat_qs.name] += item.amount
         else:
             print("Here is thing")
-    print(categories)
     total_income = 0
     total_expense = 0
     total = 0
@@ -138,23 +142,78 @@ def year_to_date(request, year):
 
     net_amount = total_income - total_expense
 
-    categories = {x: y for x, y in categories.items() if y != 0}
-    """
-    extracted all Years from Database 
-    """
+    # START EACH YEAR MONTHLY EXPENSES CALCULATIONS
+    expense_qs = qs.filter(category__transaction_type="Expense")
+    props_cat_monthly_expense_total = list(
+        expense_qs.annotate(
+            month=ExtractMonth("date"), total=Sum("amount", output_field=FloatField())
+        ).values("month", "total")
+    )
+    month_expenses = {
+        "January": 0,
+        "February": 0,
+        "March": 0,
+        "April": 0,
+        "May": 0,
+        "June": 0,
+        "July": 0,
+        "August": 0,
+        "September": 0,
+        "October": 0,
+        "November": 0,
+        "December": 0,
+    }
+    for item in props_cat_monthly_expense_total:
+        month = int(item["month"])
+        month = datetime.datetime(int(year), month, 1)
+        month = month.strftime("%B")
+        item["month"] = month
+
+    for item in props_cat_monthly_expense_total:
+        for key in month_expenses.keys():
+            if item["month"] == key:
+                month_expenses[key] += item["total"]
+    #  ### END OF EACH YEAR MONTHLY EXPENSES CALCULATIONS ###
+
+    # START OF EACH YEAR MONTHLY INCOME CALCULATIONS
+    income_qs = qs.filter(category__transaction_type="Income")
+    props_cat_monthly_income_total = list(
+        income_qs.annotate(
+            month=ExtractMonth("date"), total=Sum("amount", output_field=FloatField())
+        ).values("month", "total")
+    )
+    month_income = {
+        "January": 0,
+        "February": 0,
+        "March": 0,
+        "April": 0,
+        "May": 0,
+        "June": 0,
+        "July": 0,
+        "August": 0,
+        "September": 0,
+        "October": 0,
+        "November": 0,
+        "December": 0,
+    }
+    for item in props_cat_monthly_income_total:
+        month = int(item["month"])
+        month = datetime.datetime(int(year), month, 1)
+        month = month.strftime("%B")
+        item["month"] = month
+
+    for item in props_cat_monthly_income_total:
+        for key in month_income.keys():
+            if item["month"] == key:
+                month_income[key] += item["total"]
+    # END OF EACH YEAR MONTHLY INCOME CALCULATIONS
+
+    yearly_expenses_categories = {x: y for x, y in categories.items() if y != 0}
     years = list(IncomeStatement.objects.values_list("date__year").distinct())
     years_list = []
-    for data in years:
-        for item in data:
+    for each in years:
+        for item in each:
             years_list.append(item)
-    """
-    Sort extracted Years List
-    """
-
-    def sort(myList):
-        myList.sort(reverse=True)
-        return myList
-
     years_list = sort(years_list)
     context = {
         "object_list": qs,
@@ -162,7 +221,9 @@ def year_to_date(request, year):
         "total_income": total_income,
         "total_expense": total_expense,
         "total_amount": net_amount,
-        "categories": categories,
+        "month_expenses": month_expenses,
+        "month_income": month_income,
+        "categories": yearly_expenses_categories,
         "years_list": years_list,
     }
     return render(request, "incomestatements/ytd.html", context)

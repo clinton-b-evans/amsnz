@@ -133,20 +133,12 @@ def update_category(request, pk):
     return render(request, "incomestatements/add.html", context)
 
 
-"""
-function to display yearly profit and loss
-"""
+def sort_years_list(myList):
+    myList.sort(reverse=True)
+    return myList
 
 
 def year_to_date(request, year):
-    """
-    extracted all Property Income Statement Years from Database
-    """
-
-    def sort_years_list(myList):
-        myList.sort(reverse=True)
-        return myList
-
     years = PropertyIncomeStatement.objects.values_list("date__year").distinct()
     years_list = []
     for data in years:
@@ -167,7 +159,6 @@ def year_to_date(request, year):
     cat_dict = PropertyCategory.objects.all()
     categories = {}
     categories_total_yearly = {}
-    categories_total_monthly = {}
 
     """
     Display monthly total expenses for that time period
@@ -238,23 +229,7 @@ def year_to_date(request, year):
             if item["month"] == key:
                 month_income[key] += item["total"]
 
-    # Create categories and expenses list
-    for item in cat_dict:
-        categories_total_monthly[item.name] = 0
-        categories_total_yearly[item.name] = 0
-        categories[item.name] = 0
-
-    # GET QUERYSET OF EACH MONTH EXPENSE AND INCOME
-    qs_prop_expense_each_month = []
-    qs_prop_income_each_month = []
-    for key in month_expenses.keys():
-        key = datetime.datetime.strptime(key, "%B").month
-        qs_prop_expense_each_month += list(expense_qs.filter(date__month=key))
-
-    for key in month_expenses.keys():
-        key = datetime.datetime.strptime(key, "%B").month
-        qs_prop_income_each_month += list(income_qs.filter(date__month=key))
-
+    # CATEGORIES EACH MONTH TOTAL EXPENSES
     monthly_data = {
         "January": 0,
         "February": 0,
@@ -272,7 +247,10 @@ def year_to_date(request, year):
     unique_categories_of_expenses = expense_qs.values("propcategory__name").distinct()
     result = {}
     for category in unique_categories_of_expenses:
-        result[f"{list(category.values())[0]}"] = {"months": deepcopy(monthly_data), "total": 0}
+        result[f"{list(category.values())[0]}"] = {
+            "months": deepcopy(monthly_data),
+            "total": 0,
+        }
 
     for month in monthly_data.keys():
         current_month_total_expense = 0
@@ -294,11 +272,12 @@ def year_to_date(request, year):
         )
         print(result)
         print(sum(result[f"{list(category.values())[0]}"]["months"].values()))
+    # END OF CATEGORIES EACH MONTH TOTAL EXPENSES
 
-    # print("qs_property_expense_each_month", qs_prop_expense_each_month)
-    # print("qs_property_income_each_month", qs_prop_income_each_month)
-
-    # Yearly Summation of expenses
+    # Yearly Summation of each category expense
+    for item in cat_dict:
+        categories_total_yearly[item.name] = 0
+        categories[item.name] = 0
     for item in qs:
         cat_qs = PropertyCategory.objects.get(name=item.propcategory)
         if cat_qs.name in categories_total_yearly:
@@ -317,11 +296,7 @@ def year_to_date(request, year):
 
     total = total_income - total_expense
     category_total_yearly = {x: y for x, y in categories_total_yearly.items() if y != 0}
-    category_total_monthly = {
-        x: y for x, y in categories_total_monthly.items() if y != 0
-    }
-    # print('categories_total_yearly--->', categories_total_yearly)
-    # print('categories_total_monthly--->', category_total_monthly)
+
     context = {
         "object_list": qs,
         "year": year,
@@ -329,7 +304,6 @@ def year_to_date(request, year):
         "income": total_income,
         "expense": total_expense,
         "categories_yearly": category_total_yearly,
-        "categories_monthly": category_total_monthly,
         "categories_lists": categories_lists,
         "month_expenses": month_expenses,
         "month_income": month_income,
