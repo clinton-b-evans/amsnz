@@ -332,7 +332,6 @@ def year_to_date(request, year):
 
     total = total_income - total_expense
     category_total_yearly = {x: y for x, y in categories_total_yearly.items() if y != 0}
-
     context = {
         "object_list": qs,
         "year": year,
