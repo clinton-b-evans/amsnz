@@ -1,4 +1,5 @@
 import datetime
+from copy import deepcopy
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from .models import IncomeStatement, Category
@@ -132,7 +133,6 @@ def year_to_date(request, year):
             print("Here is thing")
     total_income = 0
     total_expense = 0
-    total = 0
     for item in qs:
         cat_qs = Category.objects.get(name=item.category)
         if cat_qs.transaction_type == "Income":
@@ -208,6 +208,92 @@ def year_to_date(request, year):
                 month_income[key] += item["total"]
     # END OF EACH YEAR MONTHLY INCOME CALCULATIONS
 
+    # CATEGORIES EACH MONTH TOTAL Income
+    monthly_income_data = {
+        "January": 0,
+        "February": 0,
+        "March": 0,
+        "April": 0,
+        "May": 0,
+        "June": 0,
+        "July": 0,
+        "August": 0,
+        "September": 0,
+        "October": 0,
+        "November": 0,
+        "December": 0,
+    }
+    unique_categories_of_income = income_qs.values("category__name").distinct()
+    income_result = {}
+    for category in unique_categories_of_income:
+        income_result[f"{list(category.values())[0]}"] = {
+            "months": deepcopy(monthly_income_data),
+            "total": 0,
+        }
+
+    for month in monthly_income_data.keys():
+        current_month_total_income = 0
+        month_int = datetime.datetime.strptime(month, "%B").month
+        current_month_income = income_qs.filter(date__month=month_int)
+        # print(month, current_month_income)
+        for income_in_current_month in current_month_income:
+            current_month_total_income += income_in_current_month.amount
+            category_of_income = Category.objects.get(
+                name=income_in_current_month.category
+            )
+            income_result[f"{category_of_income}"]["months"][f"{month}"] = float(
+                current_month_total_income
+            )
+
+    for category in unique_categories_of_income:
+        income_result[f"{list(category.values())[0]}"]["total"] = sum(
+            income_result[f"{list(category.values())[0]}"]["months"].values()
+        )
+    # #### END OF CATEGORIES EACH MONTH TOTAL Income ####
+
+    # START CATEGORIES EACH MONTH TOTAL EXPENSES
+    monthly_expenses_data = {
+        "January": 0,
+        "February": 0,
+        "March": 0,
+        "April": 0,
+        "May": 0,
+        "June": 0,
+        "July": 0,
+        "August": 0,
+        "September": 0,
+        "October": 0,
+        "November": 0,
+        "December": 0,
+    }
+    unique_categories_of_expenses = expense_qs.values("category__name").distinct()
+    expenses_result = {}
+    for category_expense in unique_categories_of_expenses:
+        expenses_result[f"{list(category_expense.values())[0]}"] = {
+            "months": deepcopy(monthly_expenses_data),
+            "total": 0,
+        }
+
+    for month in monthly_expenses_data.keys():
+        current_month_total_expense = 0
+        month_int = datetime.datetime.strptime(month, "%B").month
+        current_month_expenses = expense_qs.filter(date__month=month_int)
+        # print(month, current_month_expenses)
+        for expense_in_current_month in current_month_expenses:
+            current_month_total_expense += expense_in_current_month.amount
+            category_of_expense = Category.objects.get(
+                name=expense_in_current_month.category
+            )
+            expenses_result[f"{category_of_expense}"]["months"][f"{month}"] = float(
+                current_month_total_expense
+            )
+
+    for category_expense in unique_categories_of_expenses:
+        expenses_result[f"{list(category_expense.values())[0]}"]["total"] = sum(
+            expenses_result[f"{list(category_expense.values())[0]}"]["months"].values()
+        )
+    #  #### END OF CATEGORIES EACH MONTH TOTAL EXPENSES ####
+
     yearly_expenses_categories = {x: y for x, y in categories.items() if y != 0}
     years = list(IncomeStatement.objects.values_list("date__year").distinct())
     years_list = []
@@ -225,5 +311,8 @@ def year_to_date(request, year):
         "month_income": month_income,
         "categories": yearly_expenses_categories,
         "years_list": years_list,
+        "income_result": income_result,
+        "expenses_result": expenses_result
+
     }
     return render(request, "incomestatements/ytd.html", context)

@@ -160,9 +160,6 @@ def year_to_date(request, year):
     categories = {}
     categories_total_yearly = {}
 
-    """
-    Display monthly total expenses for that time period
-    """
     expense_qs = qs.filter(propcategory__transaction_type="Expense")
     income_qs = qs.filter(propcategory__transaction_type="Income")
     props_cat_monthly_expense_total = list(
@@ -229,8 +226,51 @@ def year_to_date(request, year):
             if item["month"] == key:
                 month_income[key] += item["total"]
 
-    # CATEGORIES EACH MONTH TOTAL EXPENSES
-    monthly_data = {
+    # CATEGORIES EACH MONTH TOTAL Income
+    monthly_income_data = {
+        "January": 0,
+        "February": 0,
+        "March": 0,
+        "April": 0,
+        "May": 0,
+        "June": 0,
+        "July": 0,
+        "August": 0,
+        "September": 0,
+        "October": 0,
+        "November": 0,
+        "December": 0,
+    }
+    unique_categories_of_income = income_qs.values("propcategory__name").distinct()
+    income_result = {}
+    for category in unique_categories_of_income:
+        income_result[f"{list(category.values())[0]}"] = {
+            "months": deepcopy(monthly_income_data),
+            "total": 0,
+        }
+
+    for month in monthly_income_data.keys():
+        current_month_total_income = 0
+        month_int = datetime.datetime.strptime(month, "%B").month
+        current_month_income = income_qs.filter(date__month=month_int)
+        # print(month, current_month_income)
+        for income_in_current_month in current_month_income:
+            current_month_total_income += income_in_current_month.amount
+            category_of_income = PropertyCategory.objects.get(
+                name=income_in_current_month.propcategory
+            )
+            income_result[f"{category_of_income}"]["months"][f"{month}"] = float(
+                current_month_total_income
+            )
+
+    for category in unique_categories_of_income:
+        income_result[f"{list(category.values())[0]}"]["total"] = sum(
+            income_result[f"{list(category.values())[0]}"]["months"].values()
+        )
+    # #### END OF CATEGORIES EACH MONTH TOTAL INCOME ####
+
+    # START OF CATEGORIES EACH MONTH TOTAL EXPENSES
+    monthly_expenses_data = {
         "January": 0,
         "February": 0,
         "March": 0,
@@ -245,36 +285,34 @@ def year_to_date(request, year):
         "December": 0,
     }
     unique_categories_of_expenses = expense_qs.values("propcategory__name").distinct()
-    result = {}
+    expenses_result = {}
     for category in unique_categories_of_expenses:
-        result[f"{list(category.values())[0]}"] = {
-            "months": deepcopy(monthly_data),
+        expenses_result[f"{list(category.values())[0]}"] = {
+            "months": deepcopy(monthly_expenses_data),
             "total": 0,
         }
 
-    for month in monthly_data.keys():
+    for month in monthly_expenses_data.keys():
         current_month_total_expense = 0
         month_int = datetime.datetime.strptime(month, "%B").month
         current_month_expenses = expense_qs.filter(date__month=month_int)
-        print(month, current_month_expenses)
+        # print(month, current_month_expenses)
         for expense_in_current_month in current_month_expenses:
             current_month_total_expense += expense_in_current_month.amount
             category_of_expense = PropertyCategory.objects.get(
                 name=expense_in_current_month.propcategory
             )
-            result[f"{category_of_expense}"]["months"][f"{month}"] = float(
+            expenses_result[f"{category_of_expense}"]["months"][f"{month}"] = float(
                 current_month_total_expense
             )
 
     for category in unique_categories_of_expenses:
-        result[f"{list(category.values())[0]}"]["total"] = sum(
-            result[f"{list(category.values())[0]}"]["months"].values()
+        expenses_result[f"{list(category.values())[0]}"]["total"] = sum(
+            expenses_result[f"{list(category.values())[0]}"]["months"].values()
         )
-        print(result)
-        print(sum(result[f"{list(category.values())[0]}"]["months"].values()))
-    # END OF CATEGORIES EACH MONTH TOTAL EXPENSES
+    #  #### END OF CATEGORIES EACH MONTH TOTAL EXPENSES ####
 
-    # Yearly Summation of each category expense
+    # Yearly Sum of each category expense
     for item in cat_dict:
         categories_total_yearly[item.name] = 0
         categories[item.name] = 0
@@ -282,8 +320,6 @@ def year_to_date(request, year):
         cat_qs = PropertyCategory.objects.get(name=item.propcategory)
         if cat_qs.name in categories_total_yearly:
             categories_total_yearly[cat_qs.name] += item.amount
-
-    categories_lists = list(categories.keys())
 
     total_income = 0
     total_expense = 0
@@ -304,10 +340,11 @@ def year_to_date(request, year):
         "income": total_income,
         "expense": total_expense,
         "categories_yearly": category_total_yearly,
-        "categories_lists": categories_lists,
         "month_expenses": month_expenses,
         "month_income": month_income,
         "prop_qs": prop_qs,
         "years_list": years_list,
+        "expenses_result": expenses_result,
+        "income_result": income_result
     }
     return render(request, "propertyincomestatements/ytd.html", context)
