@@ -213,6 +213,10 @@ def year_to_date(request, year):
         for key in month_expenses.keys():
             if item["month"] == key:
                 month_expenses[key] += item["total"]
+    total_expense = 0
+    for month, amount in month_expenses.items():
+        total_expense += amount
+    month_expenses.update({"total": total_expense})
 
     # FOR PROPERTY MONTHLY INCOME
     for item in props_cat_monthly_income_total:
@@ -225,6 +229,10 @@ def year_to_date(request, year):
         for key in month_income.keys():
             if item["month"] == key:
                 month_income[key] += item["total"]
+    total_income = 0
+    for month, amount in month_income.items():
+        total_income += amount
+    month_income.update({"total": total_income})
 
     # CATEGORIES EACH MONTH TOTAL Income
     monthly_income_data = {

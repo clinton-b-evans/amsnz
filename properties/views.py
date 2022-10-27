@@ -470,50 +470,48 @@ def property_summary_view(request, year, *args, **kwargs):
     crypto_goal = crypto_percent * current_goal
 
     # Commodities
-    commod_qs = Commodity.objects.filter(date__year=year)
-    commodities_total_value = 0
+    commodities = Commodity.objects.filter(date__year=year)
+    commodities_total_amount = 0
     invested_total = 0
-    for item in commod_qs:
-        item.totalweight = 0
-        item.invested = 0
-        commod_qs2 = Transaction.objects.filter(commodity=item.pk, date__year=year)
-        for items in commod_qs2:
-            if items.transaction_type == "Buy":
-                item.totalweight += items.weight
-                item.invested += items.value
-            if items.transaction_type == "Sell":
-                item.totalweight -= items.weight
-                item.invested -= items.value
-        item.total = item.totalweight * item.spot_price
-        commodities_total_value += item.total
-        invested_total += item.invested
+    for commodity in commodities:
+        commodity.totalweight = 0
+        commodity.invested = 0
+        transactions = Transaction.objects.filter(
+            commodity=commodity.pk, date__year=year
+        )
+        for transaction in transactions:
+            if transaction.transaction_type == "Buy":
+                commodity.totalweight += transaction.weight
+                commodity.invested += transaction.value
+            if transaction.transaction_type == "Sell":
+                commodity.totalweight -= transaction.weight
+                commodity.invested -= transaction.value
+        commodity.total = commodity.totalweight * commodity.spot_price
+        commodities_total_amount += commodity.total
+        invested_total += commodity.invested
     grand_total = 0
 
     commodities_goal = float(commodities_percent * current_goal)
-    commodities_progress1 = float(commodities_total_value) / commodities_goal * 100
-    commodities_progress = 0
+    commodities_progress1 = float(commodities_total_amount) / commodities_goal * 100
+    commod_progress = 0.0
     if commodities_goal > 0 and commodities_progress1 > 0:
-        commodities_progress += commodities_progress1
+        commod_progress += commodities_progress1
     else:
-        commodities_progress = 0
-    print('commodities_progress', commodities_progress)
-    print('commod_qs', commod_qs)
+        commod_progress = 0.0
+
     # Crypto
     crypto_qs = Crypto.objects.filter(date__year=year)
-    crypto_total_value = 0
+    crypto_total_amount = 0
     for item in crypto_qs:
         item.total = item.qty * item.spot_price
-        crypto_total_value += item.total
+        crypto_total_amount += item.total
     crypto_goal = float(crypto_percent * current_goal)
 
     if crypto_goal > 0:
-        crypto_progress = float(crypto_total_value) / crypto_goal * 100
+        crypto_progress = float(crypto_total_amount) / crypto_goal * 100
     else:
         crypto_progress = 0
-
-    print('crypto_qs###', crypto_qs)
-    print('crypto_progress###', crypto_progress)
-
+    print("crypto_progress", crypto_progress)
     # Personal Balance Sheet
     pba_qs = PersonalBalance.objects.filter(entry_type="Asset", date__year=year)
     pbl_qs = PersonalBalance.objects.filter(entry_type="Liability", date__year=year)
@@ -666,12 +664,12 @@ def property_summary_view(request, year, *args, **kwargs):
         + savings_total
         + total_retirement
         + stocks_total_value
-        + commodities_total_value
-        + crypto_total_value
+        + commodities_total_amount
+        + crypto_total_amount
     )
+
     graph_lib = total_liabilities + total_pb_liabilities
     graph_nw = graph_asset - graph_lib
-    print("commodities_total_value", commodities_total_value)
     context = {
         "object_list": qs,
         "year": year,
@@ -707,13 +705,13 @@ def property_summary_view(request, year, *args, **kwargs):
         "stocks_total_diversified": stocks_total_diversified,
         "stocks_total_reits": stocks_total_reits,
         "stocks_total_other": stocks_total_other,
-        "commod_qs": commod_qs,
-        "commodities_total_value": commodities_total_value,
+        "commodities": commodities,
+        "commodities_total_value": commodities_total_amount,
         "crypto_qs": crypto_qs,
-        "crypto_total_value": crypto_total_value,
+        "crypto_total_amount": crypto_total_amount,
         "property_progress": property_progress,
         "crypto_progress": crypto_progress,
-        "commodities_progress": commodities_progress,
+        "commodities_prog": commod_progress,
         "stocks_total_progress": stocks_total_progress,
         # Single year context for assets, liabilities and networth
         "graph_asset": graph_asset,

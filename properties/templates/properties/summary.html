@@ -12,27 +12,27 @@
 <script src="{% static 'GoogleChart/Gchart.js' %}"></script>
 
 <section class="section dashboard">
-  <!-- <div class="row">
-    <div class="col-3">
-      <select class="form-control mb-3" onchange="location = this.value;">
-        <option selected="" value="" disabled>Select year</option>
-        {% for year in years_list%}
-        <option value="../{{year|stringformat:"i"}}"> {{year|stringformat:"i"}}</option>
-        {%endfor%}
-      </select>
-    </div>
-  </div> -->
+    <!-- <div class="row">
+      <div class="col-3">
+        <select class="form-control mb-3" onchange="location = this.value;">
+          <option selected="" value="" disabled>Select year</option>
+          {% for year in years_list%}
+          <option value="../{{year|stringformat:"i"}}"> {{year|stringformat:"i"}}</option>
+          {%endfor%}
+        </select>
+      </div>
+    </div> -->
 
-  <div class="row">
-    <div class="col-lg-8 mb-4">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Networth Timeline</h5>
+    <div class="row">
+        <div class="col-lg-8 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Networth Timeline</h5>
 
-          <!-- Column Chart -->
-          <div id="Chart" style="width: 100%;"></div>
+                    <!-- Column Chart -->
+                    <div id="Chart" style="width: 100%;"></div>
 
-          <script>
+                    <script>
             document.addEventListener("DOMContentLoaded", () => {
               new ApexCharts(document.querySelector("#Chart"), {
                 series: [{
@@ -107,40 +107,41 @@
                 }
               }).render();
             });
-          </script>
 
+                    </script>
+
+                </div>
+            </div>
         </div>
-      </div>
-    </div>  
-    <div class="col-lg-4">
-      <div class="card">
-        <div class="filter">
-          <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-            <li class="dropdown-header text-start">
-              <h6>Filter</h6>
-            </li>
-            {% for year in years_list%}
-            <!-- <option value="../{{year|stringformat:"i"}}"> {{year|stringformat:"i"}}</option> -->
-            <li><a class="dropdown-item" href="../{{year|stringformat:"i"}}">{{year|stringformat:"i"}}</a></li>
-            {%endfor%}
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="filter">
+                    <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                        <li class="dropdown-header text-start">
+                            <h6>Filter</h6>
+                        </li>
+                        {% for year in years_list %}
+                        <!-- <option value="../{{year|stringformat:"i"}}"> {{year|stringformat:"i"}}</option> -->
+                        <li><a class="dropdown-item" href="../{{year|stringformat:"i"}}">{{year|stringformat:"i"}}</a>
+                        </li>
+                        {%endfor%}
 
-            
 
-            <!-- <li><a class="dropdown-item" href="#">Today</a></li>
-            <li><a class="dropdown-item" href="#">This Month</a></li>
-            <li><a class="dropdown-item" href="#">This Year</a></li> -->
-          </ul>
-        </div>
-        
-        <div class="card-body pb-0">
-          <h5 class="card-title">Networth <span>| {{year}}</span></h5>
+                        <!-- <li><a class="dropdown-item" href="#">Today</a></li>
+                        <li><a class="dropdown-item" href="#">This Month</a></li>
+                        <li><a class="dropdown-item" href="#">This Year</a></li> -->
+                    </ul>
+                </div>
 
-          <!-- Pie Chart -->
-          <!-- <div id="pieChart" class="mb-5"></div> -->
-          <div id="pieChart" style="width: 100%;"></div>
+                <div class="card-body pb-0">
+                    <h5 class="card-title">Networth <span>| {{year}}</span></h5>
 
-          <script>
+                    <!-- Pie Chart -->
+                    <!-- <div id="pieChart" class="mb-5"></div> -->
+                    <div id="pieChart" style="width: 100%;"></div>
+
+                    <script>
             document.addEventListener("DOMContentLoaded", () => {
               new ApexCharts(document.querySelector("#pieChart"), {
                 series: [{{graph_asset}}, {{graph_lib}}, {{graph_nw}}],
@@ -164,273 +165,290 @@
                 labels: ['Assets', 'Liabilities', 'Networth']
               }).render();
             });
-          </script>
-          <!-- End Pie Chart -->
+
+
+
+                    </script>
+                    <!-- End Pie Chart -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm" style="font-size:small">
+            <h6 class="min-title">Property Summary</h6>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">Number of Properties</th>
+                    <th style="text-align:right" scope="col">{{ total_properties }}</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr>
+                    <td>Assets</td>
+                    <div class="progress mt-3 mb-2">
+                        <div class="progress-bar" role="progressbar"
+                             style="width: {{ property_progress|floatformat }}%;"
+                             aria-valuenow="{{ property_progress|floatformat }}" aria-valuemin="0" aria-valuemax="100">
+                            {{ property_progress|floatformat }}%
+                        </div>
+                    </div>
+                    <td style="text-align:right">${{ total_assets|floatformat:0 }}</td>
+                </tr>
+                <tr>
+                    <td>Liabilities</td>
+                    <td style="text-align:right">${{ total_liabilities|floatformat:0 }}</td>
+                </tr>
+                <tr>
+                    <td>Net Worth</td>
+                    <td style="text-align:right">${{ total_networth|floatformat:0 }}</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <thead>
+                <tr>
+                    <th scope="col">Income</th>
+                    <th style="text-align:right" scope="col">${{ total_income|floatformat:0 }}</th>
+                </tr>
+                </thead>
+                <tr>
+                    <td>Rental Income</td>
+                    <td style="text-align:right">${{ total_rent|floatformat:0 }}</td>
+                </tr>
+                <tr>
+                    <td>Other Income:</td>
+                    <td style="text-align:right">${{ total_other_income|floatformat:0 }}</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                    <td>
+                </tr>
+                <thead>
+                <tr>
+                    <th scope="col">Expense</th>
+                    <th style="text-align:right" scope="col">${{ total_expenses|floatformat:0 }}</th>
+                </tr>
+                </thead>
+                <tr>
+                    <td>Operating Expenses</td>
+                    <td style="text-align:right">${{ total_operating_expenses|floatformat:0 }}</td>
+                </tr>
+                <tr>
+                    <td>Repayments</td>
+                    <td style="text-align:right">${{ total_repayments|floatformat:0 }}</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <thead>
+                <tr>
+                    <th scope="col">Net Rental Income</th>
+                    <th style="text-align:right" scope="col">${{ total_net_rental_income|floatformat:0 }}</th>
+                </tr>
+                </thead>
+                <tr>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <thead>
+                <tr>
+                    <th scope="col">Risk Assessment</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tr>
+                    <td>Debt to Income Ratio</td>
+                    <td style="text-align:right">{{loan_to_debt_ratio|floatformat:2}}</td>
+                </tr>
+                <tr>
+                    <td>Debt Service Coverage Ratio</td>
+                    <td style="text-align:right">{{ debt_service_coverage_ratio|floatformat:2 }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Break Even Point</td>
+                    <td style="text-align:right">{{ break_even_point|floatformat:2 }}%</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-sm" style="font-size:small">
+            <h6 class="min-title">Personal Summary</h6>
+            <table class="table table-hover mb-4">
+                <thead>
+                <tr>
+                    <th scope="col">Balance Sheet</th>
+                    <th style="text-align:right" scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Assets</td>
+                    <td style="text-align:right">${{ total_pb_assets|floatformat:2 }}</td>
+                </tr>
+                <tr>
+                    <td>Savings</td>
+                    <td style="text-align:right">${{ savings_total|floatformat:2 }}</td>
+                </tr>
+                <tr>
+                    <td>Retirement Accounts</td>
+                    <td style="text-align:right">${{ total_retirement|floatformat:2 }}</td>
+                </tr>
+                <tr>
+                    <td>Liabilities</td>
+                    <td style="text-align:right">${{ total_pb_liabilities|floatformat:2 }}</td>
+                </tr>
+                <tr>
+                    <td>Net Worth</td>
+                    <td style="text-align:right">${{ pb_networth|floatformat:2 }}</td>
+                </tr>
+                </tbody>
+                <thead>
+                <tr>
+                    <th scope="col">Cash Flow</th>
+                    <th style="text-align:right" scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Income</td>
+                    <td style="text-align:right">${{ cf_income_yearly|floatformat:2 }}</td>
+                </tr>
+                <tr>
+                    <td>Expense</td>
+                    <td style="text-align:right">${{ cf_expense_yearly|floatformat:2 }}</td>
+                </tr>
+                <tr>
+                    <td>Cash Flow</td>
+                    <td style="text-align:right">${{ cf_cashflow|floatformat:2 }}</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <h6 class="min-title">The Market</h6>
+            <div class="progress mt-3 mb-2">
+                <div class="progress-bar" role="progressbar" style="width: {{ stocks_total_progress|floatformat:2}}%;"
+                     aria-valuenow="{{ stocks_total_progress|floatformat:2 }}" aria-valuemin="0" aria-valuemax="100">
+                    {{stocks_total_progress|floatformat:2}}%
+                </div>
+            </div>
+            <table class="table table-hover mb-4">
+                <thead>
+                <tr>
+                    <th scope="col">Index Funds / ETF</th>
+                    <th style="text-align:right" scope="col">${{ stocks_total_value|floatformat:2 }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% if stocks_total_equities > 0 %}
+                <tr>
+                    <td>Equities</td>
+                    <td style="text-align:right">${{ stocks_total_equities|floatformat:2 }}</td>
+                </tr>
+                {% endif %}
+                <tr>
+                    {% if stocks_total_bonds > 0 %}
+                <tr>
+                    <td>Bonds</td>
+                    <td style="text-align:right">${{ stocks_total_bonds|floatformat:2 }}</td>
+                </tr>
+                {% endif %}
+                {% if stocks_total_cce > 0 %}
+                <tr>
+                    <td>Cash & Cash Equivalents</td>
+                    <td style="text-align:right">${{ stocks_total_cce|floatformat:2 }}</td>
+                </tr>
+                {% endif %}
+                {% if stocks_total_commodites > 0 %}
+                <tr>
+                    <td>Commodites</td>
+                    <td style="text-align:right">${{ stocks_total_commodites|floatformat:2 }}</td>
+                </tr>
+                {% endif %}
+                {% if stocks_total_diversified > 0 %}
+                <tr>
+                    <td>Diversified</td>
+                    <td style="text-align:right">${{ stocks_total_diversified|floatformat:2 }}</td>
+                </tr>
+                {% endif %}
+                {% if stocks_total_reits > 0 %}
+                <tr>
+                    <td>Reits</td>
+                    <td style="text-align:right">${{ stocks_total_reits|floatformat:2 }}</td>
+                </tr>
+                {% endif %}
+                {% if stocks_total_other > 0 %}
+                <tr>
+                    <td>Other</td>
+                    <td style="text-align:right">${{ stocks_total_other|floatformat:2 }}</td>
+                </tr>
+                {% endif %}
+                </tbody>
+            </table>
+            <h6 class="min-title">Commodities</h6>
+
+            <div class="progress mt-3 mb-2">
+                <div class="progress-bar" role="progressbar"
+                     style="width: {{ commodities_prog|floatformat:1}}%;"
+                     aria-valuenow="{{ commodities_prog|floatformat:1 }}" aria-valuemin="0" aria-valuemax="100">
+                    {{ commodities_prog|floatformat:1 }}%
+                </div>
+            </div>
+            <table class="table table-hover mb-4">
+                <thead>
+                <tr>
+                    <th scope="col">Commodities</th>
+                    <th style="text-align:right" scope="col">${{ commodities_total_value|floatformat:2 }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for commodity in commodities %}
+                    {% if commodity.total > 0 %}
+                    <tr>
+                        <td>{{ commodity.commodity_class }}</td>
+                        <td style="text-align:right"> ${{ commodity.total|floatformat:2 }}</td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+
+            <h6 class="min-title">Crypto</h6>
+            <div class="progress mt-3 mb-2">
+                <div class="progress-bar" role="progressbar" style=" width: {{ crypto_progress|floatformat:2 }}% "
+                     aria-valuenow="{{ crypto_progress|floatformat:2 }}" aria-valuemin="0" aria-valuemax="100">{{crypto_progress|floatformat:2}} %
+                </div>
+            </div>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">Crypto</th>
+                    <th style="text-align:right" scope="col">${{ crypto_total_amount|floatformat:2 }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for obj in crypto_qs %}
+                <tr>
+                    <td>{{ obj.name }}</td>
+                    <td style="text-align:right"> ${{ obj.total|floatformat:2 }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
 
         </div>
-      </div>
     </div>
-  </div>
-
-  <div class="row">
-    <div class="col-sm" style="font-size:small">
-      <h6 class="min-title">Property Summary</h6>
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th scope="col">Number of Properties</th>
-            <th style="text-align:right" scope="col">{{ total_properties }}</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr>
-            <td>Assets</td>
-            <div class="progress mt-3 mb-2">
-              <div class="progress-bar" role="progressbar" style="width: {{ property_progress|floatformat }}%;" aria-valuenow="{{ property_progress|floatformat }}" aria-valuemin="0" aria-valuemax="100">{{ property_progress|floatformat }}%</div>
-            </div>
-            <td style="text-align:right">${{ total_assets|floatformat:0 }} </td>
-          </tr>
-          <tr>
-            <td>Liabilities</td>
-            <td style="text-align:right">${{ total_liabilities|floatformat:0 }} </td>
-          </tr>
-          <tr>
-            <td>Net Worth</td>
-            <td style="text-align:right">${{ total_networth|floatformat:0 }} </td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-          </tr>
-          <thead>
-            <tr>
-              <th scope="col">Income</th>
-              <th style="text-align:right" scope="col">${{ total_income|floatformat:0 }}</th>
-            </tr>
-          </thead>
-          <tr>
-            <td>Rental Income</td>
-            <td style="text-align:right">${{ total_rent|floatformat:0 }}</td>
-          </tr>
-          <tr>
-            <td>Other Income:</td>
-            <td style="text-align:right">${{ total_other_income|floatformat:0 }}</td>
-          </tr>
-          <tr>
-            <td></td>
-            <td><td>
-          </tr>
-          <thead>
-            <tr>
-              <th scope="col">Expense</th>
-              <th style="text-align:right" scope="col">${{ total_expenses|floatformat:0 }}</th>
-            </tr>
-          </thead>
-          <tr>
-            <td>Operating Expenses</td>
-            <td style="text-align:right">${{ total_operating_expenses|floatformat:0 }}</td>
-          </tr>
-          <tr>
-            <td>Repayments</td>
-            <td style="text-align:right">${{ total_repayments|floatformat:0 }}</td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-          </tr>
-          <thead>
-            <tr>
-              <th scope="col">Net Rental Income</th>
-              <th style="text-align:right" scope="col">${{ total_net_rental_income|floatformat:0 }}</th>
-            </tr>
-          </thead>
-          <tr>
-          <td></td>
-          <td></td>
-          </tr>
-          <thead>
-            <tr>
-              <th scope="col">Risk Assessment</th>
-              <th scope="col"></th>
-            </tr>
-          </thead>
-          <tr>
-            <td>Debt to Income Ratio</td>
-            <td style="text-align:right">1:{{ loan_to_debt_ratio|floatformat:2 }} | {{ loan_to_debt_percent|floatformat:2 }}%</td>
-          </tr>
-          <tr>
-            <td>Debt Service Coverage Ratio</td>
-            <td style="text-align:right">1:{{ debt_service_coverage_ratio|floatformat:2 }} | {{ debt_service_coverage_percent|floatformat:2 }}%</td>
-          </tr>
-          <tr>
-            <td>Break Even Point</td>
-            <td style="text-align:right">{{ break_even_point|floatformat:2 }}%</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="col-sm" style="font-size:small">
-      <h6 class="min-title">Personal Summary</h6>
-      <table class="table table-hover mb-4">
-        <thead>
-          <tr>
-            <th scope="col">Balance Sheet</th>
-            <th style="text-align:right" scope="col"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Assets</td>
-            <td style="text-align:right">${{ total_pb_assets|floatformat:2 }} </td>
-          </tr>
-          <tr>
-            <td>Savings</td>
-            <td style="text-align:right">${{ savings_total|floatformat:2 }} </td>
-          </tr>
-          <tr>
-            <td>Retirement Accounts</td>
-            <td style="text-align:right">${{ total_retirement|floatformat:2 }} </td>
-          </tr>
-          <tr>
-            <td>Liabilities</td>
-            <td style="text-align:right">${{ total_pb_liabilities|floatformat:2 }} </td>
-          </tr>
-          <tr>
-            <td>Net Worth</td>
-            <td style="text-align:right">${{ pb_networth|floatformat:2 }} </td>
-          </tr>
-        </tbody>
-        <thead>
-          <tr>
-            <th scope="col">Cash Flow</th>
-            <th style="text-align:right" scope="col"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Income</td>
-            <td style="text-align:right">${{ cf_income_yearly|floatformat:2 }} </td>
-          </tr>
-          <tr>
-            <td>Expense</td>
-            <td style="text-align:right">${{ cf_expense_yearly|floatformat:2 }} </td>
-          </tr>
-          <tr>
-            <td>Cash Flow</td>
-            <td style="text-align:right">${{ cf_cashflow|floatformat:2 }} </td>
-          </tr>
-        </tbody>
-      </table>
-
-      <h6 class="min-title">The Market</h6>
-      <div class="progress mt-3 mb-2">
-        <div class="progress-bar" role="progressbar" style="width: {{ stocks_total_progress|floatformat:2}}%;" aria-valuenow="{{ stocks_total_progress|floatformat:2 }}" aria-valuemin="0" aria-valuemax="100">{{ stocks_total_progress|floatformat:2}}%</div>
-      </div>
-      <table class="table table-hover mb-4">
-        <thead>
-          <tr>
-            <th scope="col">Index Funds / ETF</th>
-            <th style="text-align:right" scope="col">${{ stocks_total_value|floatformat:2 }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% if stocks_total_equities > 0 %}
-          <tr> 
-            <td>Equities</td>
-            <td style="text-align:right">${{ stocks_total_equities|floatformat:2 }} </td>
-          </tr>
-          {% endif %}
-          <tr>
-            {% if stocks_total_bonds > 0 %}
-            <tr>
-              <td>Bonds</td>
-              <td style="text-align:right">${{ stocks_total_bonds|floatformat:2 }} </td>
-            </tr>
-            {% endif %}
-            {% if stocks_total_cce > 0 %}
-            <tr>
-              <td>Cash & Cash Equivalents</td>
-              <td style="text-align:right">${{ stocks_total_cce|floatformat:2 }} </td>
-            </tr>
-            {% endif %}
-            {% if stocks_total_commodites > 0 %}
-            <tr>
-              <td>Commodites</td>
-              <td style="text-align:right">${{ stocks_total_commodites|floatformat:2 }} </td>
-            </tr>
-            {% endif %}
-            {% if stocks_total_diversified > 0 %}
-                <tr>
-              <td>Diversified</td>
-              <td style="text-align:right">${{ stocks_total_diversified|floatformat:2 }} </td>
-            </tr>
-            {% endif %}
-            {% if stocks_total_reits > 0 %}
-            <tr>
-              <td>Reits</td>
-              <td style="text-align:right">${{ stocks_total_reits|floatformat:2 }} </td>
-            </tr>
-            {% endif %}
-            {% if stocks_total_other > 0 %}
-            <tr>
-              <td>Other</td>
-              <td style="text-align:right">${{ stocks_total_other|floatformat:2 }} </td>
-            </tr>
-            {% endif %}
-        </tbody>
-      </table>
-      <h6 class="min-title">Commodities</h6>
-      <div class="progress mt-3 mb-2">
-        <div class="progress-bar" role="progressbar" style="width: {{ commodities_progress|floatformat:2 }}%;" aria-valuenow="{{ commodities_progress|floatformat:2 }}" aria-valuemin="0" aria-valuemax="100">{{ commodities_progress|floatformat:2}} %</div>
-      </div>
-      <table class="table table-hover mb-4">
-        <thead>
-          <tr>
-              <th scope="col">Commodities</th>
-              <th style="text-align:right" scope="col">${{ commodities_total_value|floatformat:2 }}</th>
-            </tr>
-        </thead>
-        <tbody>
-          {% for obj in commod_qs %}
-          {% if obj.total > 0 %}
-          <tr>
-            <td>{{ obj.commodity_class }}</td>
-            <td  style="text-align:right"> ${{ obj.total|floatformat:2 }}</td>
-          </tr>
-          {% endif %}
-          {% endfor %}
-        </tbody>
-      </table>
-
-      <h6 class="min-title">Crypto</h6>
-      <div class="progress mt-3 mb-2">
-        <div class="progress-bar" role="progressbar" style="width: {{ crypto_progress|floatformat:2 }}%;" aria-valuenow="{{ crypto_progress|floatformat:2 }}" aria-valuemin="0" aria-valuemax="100">{{ crypto_progress|floatformat:2 }} %</div>
-      </div>
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th scope="col">Crypto</th>
-            <th style="text-align:right" scope="col">${{ crypto_total_value|floatformat:2 }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for obj in crypto_qs %}
-          <tr>
-            <td>{{ obj.name }}</td>
-            <td style="text-align:right"> ${{ obj.total|floatformat:2 }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-
-    </div>
-  </div>
 </section>
-<br> 
-
-
+<br>
 
 
 {% endblock content %}

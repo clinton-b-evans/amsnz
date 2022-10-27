@@ -282,8 +282,7 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
       <li class="nav-item">
-        <a {% if request.resolver_match.url_name == 'summary' %}
-        class="nav-link"{% else %}class="nav-link collapsed"{% endif %} href="/summary/{% now 'Y' %}/">
+        <a {% if request.resolver_match.url_name == 'summary' %} class="nav-link" {% else %} class="nav-link collapsed" {% endif %} href="/summary/{% now 'Y' %}/">
           <i class="bi bi-grid"></i>
           <span>Summary Dashboard</span>
           <!-- <span data-feather="home">Summary Dashboard</span> -->

@@ -15,181 +15,11 @@
     return false;
   }
 
+
 </script>
 
 <!-- Google Chart -->
 <script src="{% static 'GoogleChart/Gchart.js' %}"></script>
-
-
-<div class="row">
-    <div class="col-lg-3">
-        <select class="form-control" onchange="location = this.value;">
-            <option selected="" value="" disabled>Select year</option>
-            {% for year in years_list%}
-            <option value='../{{year|stringformat:"i"}}'> {{year|stringformat:"i"}}</option>
-            {%endfor%}
-        </select>
-    </div>
-  <!-- <div class="col-lg-3">
-    <select class="form-control" onchange="location = this.value;">
-      <option selected="" value="" disabled>Select year</option>
-      {% for year in years_list%}
-      <option value='../{{year|stringformat:"i"}}'> {{year|stringformat:"i"}}</option>
-      {%endfor%}
-    </select>
-  </div> -->
-
-  <div class="col-lg-4 mb-3">
-    <form class="form-group" action="/propertyincomestatements/yeartodate/{{year}}/" method="get">
-      <div class="row">
-        <div class="col-9 select2-purple mb-2">
-          <select name="properties" id="properties" class="select2" multiple="multiple"
-            data-placeholder="Select properties" data-dropdown-css-class="select2-purple" style="width: 100%;">
-            {% for obj in prop_qs %}
-            <option value="{{ obj.pk }} ">{{ obj.name }}</option>
-            {% endfor %}
-          </select>
-        </div>
-        <div class="col-3">
-          <button class="btn btn-info" type="submit" value="Submit">Filter</button>
-        </div>
-      </div>
-    </form>
-  </div>
-</div>
-
-<div class="dashboard">
-  <div class="chart-container" style="position: relative;">
-    <div class="row justify-content-around">
-
-      <div class="col-lg-9">
-        <div class="card">
-          <div class="filter">
-            <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-              <li class="dropdown-header text-start">
-                <h6>Filter</h6>
-              </li>
-              {% for year in years_list%}
-              <li><a class="dropdown-item" href="../{{year|stringformat:"i"}}">{{year|stringformat:"i"}}</a></li>
-              {%endfor%}
-
-            </ul>
-          </div>
-          <div class="card-body">
-            <h5 class="card-title">Property Profit and Loss <span>| {{year}}</span></h5>
-            <table class="table table-hover" style="font-size:small">
-              <thead>
-                <tr>
-                  <th>YEAR - {{year}}</th>
-                  <th scope="col">Jan</th>
-                  <th scope="col">Feb</th>
-                  <th scope="col">Mar</th>
-                  <th scope="col">Apr</th>
-                  <th scope="col">May</th>
-                  <th scope="col">Jun</th>
-                  <th scope="col">Jul</th>
-                  <th scope="col">Aug</th>
-                  <th scope="col">Sep</th>
-                  <th scope="col">Oct</th>
-                  <th scope="col">Nov</th>
-                  <th scope="col">Dec</th>
-                  <th scope="col">Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th scope="col">INCOME</th>
-                </tr>
-<!--                <td scope="row">Maintenance</td>-->
-                  {% for category_name, data in income_result.items %}
-                    <tr>
-                    <th scope="row">{{category_name}}</th>
-                    {% for months, months_data in data.items %}
-
-                      {% for month_name, month_expense in months_data.items %}
-                        <td>${{month_expense}}</td>
-                      {% endfor %}
-
-                    {% endfor %}
-                    <td>${{data.total}}</td>
-
-                     </tr>
-                  {% endfor %}
-
-                <tr>
-                  <thead>
-                    <tr style="background-color: #ededed">
-                    <th scope="row"><i>Total</i></th>
-                    {% for key, value in month_income.items %}
-                    <th>${{value}}</th>
-                    {% endfor %}
-                    <th></th>
-                  </tr>
-
-                  </thead>
-                <tr>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <th scope="col">EXPENSES</th>
-                </tr>
-<!--                <td scope="row">Maintenance</td>-->
-<!--                    Loop 1-->
-                  {% for category_name, data in expenses_result.items %}
-                    <tr>
-                    <th scope="row">{{category_name}}</th>
-<!--                    Loop 2-->
-                    {% for months,  months_data in data.items %}
-<!--                    Loop 3-->
-                      {% for month_name, month_expense in months_data.items %}
-                        <td>${{month_expense}}</td>
-                      {% endfor %}
-
-                    {% endfor %}
-
-                    <td>${{data.total}}</td>
-                    </tr>
-                  {% endfor %}
-
-                <thead>
-                  <tr style="background-color: #ededed">
-                    <th scope="row"><i>Total</i></th>
-                    {% for k, v in month_expenses.items %}
-                    <th>${{v}}</th>
-                    {% endfor %}
-                    <th></th>
-                  </tr>
-                </thead>
-              </tbody>
-            </table>
-          </div>
-        </div>
-        
-      </div>
-
-      <div class="col-lg-3">
-
-        <div class="card">
-          <div class="card-body pb-0">
-            <h5 class="card-title">All Expenses <span>| {{year}}</span></h5>
-            <div id="donutchart" style="width: auto; height: 20rem;"></div>
-          </div>
-        </div>
->>>>>>> 2ccaaa101189c8383c2e9cea9be4e6208aff529f
 
     <div class="col-lg-4 mb-3">
         <form class="form-group" action="/propertyincomestatements/yeartodate/{{year}}/" method="get">
@@ -209,12 +39,29 @@
             </div>
         </form>
     </div>
+</div>
+
+<div class="dashboard">
     <div class="chart-container" style="position: relative;">
         <div class="row justify-content-around">
 
             <div class="col-lg-9">
                 <div class="card">
-                    <div class="card-body mt-4">
+                    <div class="filter">
+                        <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                            <li class="dropdown-header text-start">
+                                <h6>Filter</h6>
+                            </li>
+                            {% for year in years_list%}
+                            <li><a class="dropdown-item" href="../{{year|stringformat:"
+                                   i"}}">{{year|stringformat:"i"}}</a></li>
+                            {%endfor%}
+
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Property Profit and Loss <span>| {{year}}</span></h5>
                         <table class="table table-hover" style="font-size:small">
                             <thead>
                             <tr>
@@ -238,16 +85,18 @@
                             <tr>
                                 <th scope="col">INCOME</th>
                             </tr>
+                            <!--                <td scope="row">Maintenance</td>-->
                             {% for category_name, data in income_result.items %}
                             <tr>
                                 <th scope="row">{{category_name}}</th>
                                 {% for months, months_data in data.items %}
-                                    {% for month_name, month_expense in months_data.items %}
-                                        <td>${{month_expense}}</td>
-                                    {% endfor %}
+
+                                {% for month_name, month_expense in months_data.items %}
+                                <td>${{month_expense}}</td>
+                                {% endfor %}
 
                                 {% endfor %}
-                                <th>${{data.total}}</th>
+                                <td>${{data.total}}</td>
 
                             </tr>
                             {% endfor %}
@@ -256,8 +105,8 @@
                             <thead>
                             <tr style="background-color: #ededed">
                                 <th scope="row"><i>Total</i></th>
-                                {% for amount in month_income.values %}
-                                <th>${{amount}}</th>
+                                {% for key, value in month_income.items %}
+                                <th>${{value}}</th>
                                 {% endfor %}
                                 <th></th>
                             </tr>
@@ -282,6 +131,7 @@
                             <tr>
                                 <th scope="col">EXPENSES</th>
                             </tr>
+                            <!--                <td scope="row">Maintenance</td>-->
                             <!--                    Loop 1-->
                             {% for category_name, data in expenses_result.items %}
                             <tr>
@@ -295,20 +145,15 @@
 
                                 {% endfor %}
 
-                                <th>${{data.total}}</th>
+                                <td>${{data.total}}</td>
                             </tr>
                             {% endfor %}
 
                             <thead>
                             <tr style="background-color: #ededed">
                                 <th scope="row"><i>Total</i></th>
-                                {% for expense_amount in month_expenses.values %}
-<!--                                {% if expense_amount >= month_income %}-->
-<!--                                <td style="color:#FF2D00;" id=""> ${{expense_amount}}</td>-->
-<!--                                {% else %}-->
-                                <td> ${{expense_amount}}</td>
-<!--                                {% endif %}-->
-
+                                {% for k, v in month_expenses.items %}
+                                <th>${{v}}</th>
                                 {% endfor %}
                                 <th></th>
                             </tr>
@@ -319,6 +164,7 @@
                 </div>
 
             </div>
+
 
             <div class="col-lg-3">
 
@@ -337,24 +183,17 @@
                         <div id="piechart" style="width: auto; height: 20rem;"></div>
                     </div>
                 </div>
-
-                <!-- <div id="piechart" class="shadow" style="width: 100%; height:400px"></div> -->
-
             </div>
 
         </div>
     </div>
-<<<<<<< HEAD
-=======
-  </div>
-</div>
->>>>>>> 2ccaaa101189c8383c2e9cea9be4e6208aff529f
 
     <script>
     $(function () {
       //Initialize Select2 Elements
       $('.select2').select2()
     })
+
 
 
 
@@ -388,6 +227,7 @@
 
 
 
+
     </script>
 
     <script type="text/javascript">
@@ -416,6 +256,7 @@
 
     chart.draw(data, options);
   }
+
 
 
 
