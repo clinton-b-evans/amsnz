@@ -178,6 +178,10 @@ def year_to_date(request, year):
         for key in month_expenses.keys():
             if item["month"] == key:
                 month_expenses[key] += item["total"]
+    total_expense = 0
+    for month, amount in month_expenses.items():
+        total_expense += amount
+    month_expenses.update({"total": total_expense})
     #  ### END OF EACH YEAR MONTHLY EXPENSES CALCULATIONS ###
 
     # START OF EACH YEAR MONTHLY INCOME CALCULATIONS
@@ -211,6 +215,10 @@ def year_to_date(request, year):
         for key in month_income.keys():
             if item["month"] == key:
                 month_income[key] += item["total"]
+    total_income = 0
+    for month, amount in month_income.items():
+        total_income += amount
+    month_income.update({"total": total_income})
     # END OF EACH YEAR MONTHLY INCOME CALCULATIONS
 
     # CATEGORIES EACH MONTH TOTAL Income
