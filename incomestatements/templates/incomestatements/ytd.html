@@ -172,7 +172,7 @@ function popitup(url) {
 
     var data = google.visualization.arrayToDataTable([
       ['Task', 'Hours per Day'],
-      {% for key, value in categories.items %}
+      {% for key, value in categories_expense_yearly.items %}
       ['{{key}}', {{value}}],
       {% endfor %}
     ]);

@@ -16,29 +16,30 @@
   }
 
 
+
 </script>
 
 <!-- Google Chart -->
 <script src="{% static 'GoogleChart/Gchart.js' %}"></script>
 
-    <div class="col-lg-4 mb-3">
-        <form class="form-group" action="/propertyincomestatements/yeartodate/{{year}}/" method="get">
-            <div class="row">
-                <div class="col-9 select2-purple mb-2">
-                    <select name="properties" id="properties" class="select2" multiple="multiple"
-                            data-placeholder="Select properties" data-dropdown-css-class="select2-purple"
-                            style="width: 100%;">
-                        {% for obj in prop_qs %}
-                        <option value="{{ obj.pk }} ">{{ obj.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="col-3">
-                    <button class="btn btn-info" type="submit" value="Submit">Filter</button>
-                </div>
+<div class="col-lg-4 mb-3">
+    <form class="form-group" action="/propertyincomestatements/yeartodate/{{year}}/" method="get">
+        <div class="row">
+            <div class="col-9 select2-purple mb-2">
+                <select name="properties" id="properties" class="select2" multiple="multiple"
+                        data-placeholder="Select properties" data-dropdown-css-class="select2-purple"
+                        style="width: 100%;">
+                    {% for obj in prop_qs %}
+                    <option value="{{ obj.pk }} ">{{ obj.name }}</option>
+                    {% endfor %}
+                </select>
             </div>
-        </form>
-    </div>
+            <div class="col-3">
+                <button class="btn btn-info" type="submit" value="Submit">Filter</button>
+            </div>
+        </div>
+    </form>
+</div>
 </div>
 
 <div class="dashboard">
@@ -193,10 +194,6 @@
       //Initialize Select2 Elements
       $('.select2').select2()
     })
-
-
-
-
     </script>
 
     <script type="text/javascript">
@@ -224,6 +221,7 @@
 
       chart.draw(data, options);
     }
+
 
 
 
@@ -256,6 +254,7 @@
 
     chart.draw(data, options);
   }
+
 
 
 

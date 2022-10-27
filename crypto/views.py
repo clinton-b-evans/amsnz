@@ -1,5 +1,4 @@
 import json
-
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from .models import Crypto
@@ -60,18 +59,7 @@ def crypto_list_view(request, year):
     return render(request, "crypto/main.html", context)
 
 
-# def get_crypto_price(ticker):
-# payload = json.dump({
-#     "name": request.POST.get('name'),
-#     "ticker": request.POST.get('ticker'),
-#     "qty": request.POST.get('qty'),
-#     "spot_price": request.POST.get('spot_price'),
-#     "date": request.POST.get('date'),
-#     })
-
-
 def add_crypto(request):
-
     submitted = False
     if request.method == "POST":
         ticker = request.POST.get("ticker")
@@ -123,9 +111,6 @@ def delete_crypto(request, pk):
     }
 
     if request.method == "POST":
-        # delete object
         crypto.delete()
-        # after deleting redirect to
-        # home page
         return HttpResponse('<script type="text/javascript">window.close()</script>')
     return render(request, "crypto/delete.html", context)

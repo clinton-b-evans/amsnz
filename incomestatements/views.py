@@ -122,15 +122,21 @@ def sort(myList):
 def year_to_date(request, year):
     qs = IncomeStatement.objects.filter(date__year=year)
     cat_dict = Category.objects.all()
-    categories = {}
+    expense_qs = qs.filter(category__transaction_type="Expense")
+
+    categories_expense_yearly = {}
     for item in cat_dict:
-        categories[item.name] = 0
-    for item in qs:
+        categories_expense_yearly[item.name] = 0
+    for item in expense_qs:
         cat_qs = Category.objects.get(name=item.category)
-        if cat_qs.name in categories:
-            categories[cat_qs.name] += item.amount
+        if cat_qs.name in categories_expense_yearly:
+            categories_expense_yearly[cat_qs.name] += item.amount
         else:
             print("Here is thing")
+    categories_expense_yearly = {
+        x: y for x, y in categories_expense_yearly.items() if y != 0
+    }
+
     total_income = 0
     total_expense = 0
     for item in qs:
@@ -143,7 +149,6 @@ def year_to_date(request, year):
     net_amount = total_income - total_expense
 
     # START EACH YEAR MONTHLY EXPENSES CALCULATIONS
-    expense_qs = qs.filter(category__transaction_type="Expense")
     props_cat_monthly_expense_total = list(
         expense_qs.annotate(
             month=ExtractMonth("date"), total=Sum("amount", output_field=FloatField())
@@ -294,7 +299,6 @@ def year_to_date(request, year):
         )
     #  #### END OF CATEGORIES EACH MONTH TOTAL EXPENSES ####
 
-    yearly_expenses_categories = {x: y for x, y in categories.items() if y != 0}
     years = list(IncomeStatement.objects.values_list("date__year").distinct())
     years_list = []
     for each in years:
@@ -309,7 +313,7 @@ def year_to_date(request, year):
         "total_amount": net_amount,
         "month_expenses": month_expenses,
         "month_income": month_income,
-        "categories": yearly_expenses_categories,
+        "categories_expense_yearly": categories_expense_yearly,
         "years_list": years_list,
         "income_result": income_result,
         "expenses_result": expenses_result,

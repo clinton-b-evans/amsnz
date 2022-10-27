@@ -158,7 +158,6 @@ def year_to_date(request, year):
     qs = qs.filter(date__year=year)
     cat_dict = PropertyCategory.objects.all()
     categories = {}
-    categories_total_yearly = {}
 
     expense_qs = qs.filter(propcategory__transaction_type="Expense")
     income_qs = qs.filter(propcategory__transaction_type="Income")
@@ -321,10 +320,11 @@ def year_to_date(request, year):
     #  #### END OF CATEGORIES EACH MONTH TOTAL EXPENSES ####
 
     # Yearly Sum of each category expense
+    categories_total_yearly = {}
     for item in cat_dict:
         categories_total_yearly[item.name] = 0
         categories[item.name] = 0
-    for item in qs:
+    for item in expense_qs:
         cat_qs = PropertyCategory.objects.get(name=item.propcategory)
         if cat_qs.name in categories_total_yearly:
             categories_total_yearly[cat_qs.name] += item.amount
