@@ -4,6 +4,10 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from Authentication.forms import ContactUsForm
+import datetime
+
+today = datetime.date.today()
+year = today.year
 
 
 def register_user_view(request):
@@ -33,7 +37,7 @@ def login_user_view(request):
         if user is not None:
             login(request, user)
             messages.success(request, "Log in Successful")
-            return redirect("properties:list")
+            return redirect(f"/summary/{year}/")
         else:
             messages.info(request, "Username OR password is incorrect")
 

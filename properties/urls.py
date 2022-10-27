@@ -1,8 +1,11 @@
 from django.urls import path
 from django.views.generic import RedirectView
+import datetime
+
+today = datetime.date.today()
+year = today.year
 
 from .views import (
-    home_view,
     property_list_view,
     property_list_monthly,
     property_list_weekly,
@@ -16,6 +19,7 @@ from .views import (
 app_name = "properties"
 
 urlpatterns = [
+    path("", RedirectView.as_view(url=f"summary/{year}/")),
     path("properties/", property_list_view, name="properties_list"),
     path("properties/weekly/", property_list_weekly, name="weekly-list"),
     path("properties/monthly/", property_list_monthly, name="monthly-list"),
