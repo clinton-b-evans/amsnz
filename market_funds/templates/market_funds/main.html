@@ -75,14 +75,13 @@ function popitup(url) {
         <li class="dropdown-header text-start">
           <h6>Filter</h6>
         </li>
-        {% for year in years_list%}
+        {% for year in years_list %}
         <!-- <option value="../{{year|stringformat:"i"}}"> {{year|stringformat:"i"}}</option> -->
-        <li><a class="dropdown-item" href="../{{year|stringformat:"i"}}">{{year|stringformat:"i"}}</a></li>
+          <li>
+            <a class="dropdown-item" href='../{{year|stringformat:"i"}}'>{{year|stringformat:"i"}}</a>
+          </li>
         {%endfor%}
 
-        <!-- <li><a class="dropdown-item" href="#">Today</a></li>
-        <li><a class="dropdown-item" href="#">This Month</a></li>
-        <li><a class="dropdown-item" href="#">This Year</a></li> -->
       </ul>
     </div>
     <div class="card-body">
@@ -100,14 +99,14 @@ function popitup(url) {
           </tr>
         </thead>
         <tbody>
-          {% for obj in index_fund_list_object %}
+          {% for fund in index_fund_list_object %}
           <tr>
-            <td style="text-align:left">{{ obj.name }}</td>
-            <td style="text-align:right">{{ obj.ticker }}</td>
-            <td style="text-align:right">{{ obj.asset_class }} </td>
-            <td style="text-align:right">{{ obj.shares }}</td>
-            <td style="text-align:right">{{ obj.share_price }}</td>
-          <td style="text-align:right">${{ obj.value }} </td>
+            <td style="text-align:left">{{ fund.name }}</td>
+            <td style="text-align:right">{{ fund.ticker }}</td>
+            <td style="text-align:right">{{ fund.asset_class }} </td>
+            <td style="text-align:right">{{ fund.shares }}</td>
+            <td style="text-align:right">{{ fund.share_price }}</td>
+          <td style="text-align:right">${{ fund.value }} </td>
             <td style="text-align:right">
               <a href="popupex.html" onclick="return popitup('/marketfunds/{{ obj.id }}/edit')" style="text-decoration: none;">
                 <button class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit">

@@ -134,7 +134,7 @@ def update_category(request, pk):
 
 
 def sort_years_list(myList):
-    myList.sort(reverse=True)
+    myList.sort()
     return myList
 
 

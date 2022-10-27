@@ -461,9 +461,10 @@ def property_summary_view(request, year, *args, **kwargs):
             stocks_total_other = stocks_total_other + obj.value
     # Adding retirement's networth current goal and stocks percent
     stocks_goal = stocks_percent * current_goal
-    stocks_total_progress = (float(stocks_total_value) / stocks_goal) * 100
-    if stocks_total_progress > 0:
-        stocks_total_progress = float(stocks_total_value) / stocks_goal * 100
+    stocks_total_progress = 0
+    stocks_total_progress1 = float(stocks_total_value / stocks_goal) * 100
+    if stocks_goal > 0 and stocks_total_progress1 > 0:
+        stocks_total_progress += stocks_total_progress1
     else:
         stocks_total_progress = 0
 

@@ -55,7 +55,6 @@ function popitup(url) {
         <div class="card-body">
           <h5 class="card-title">Crypto Timeline</h5>
           <div id="Chart" style="width: 100%;"></div>
-          <!--   -->
         </div>
       </div>
     </div>
@@ -104,13 +103,13 @@ function popitup(url) {
             </tr>
           </thead>
           <tbody>
-            {% for obj in crypto_objects_list %}
+            {% for crypto in crypto_objects_lists %}
             <tr>
-              <td>{{ obj.name }}</td>
-              <td>{{ obj.ticker }}</td>
-              <td>{{ obj.qty }} </td>
-              <td>${{ obj.spot_price }}</td>
-              <td>${{ obj.total }}</td>
+              <td>{{ crypto.name }}</td>
+              <td>{{ crypto.ticker }}</td>
+              <td>{{ crypto.qty }} </td>
+              <td>${{ crypto.spot_price }}</td>
+              <td>${{ crypto.total }}</td>
               <td style="text-align:right">
                 <a href="popupex.html" onclick="return popitup('/crypto/{{ obj.id }}/edit')" style="text-decoration: none;">
                   <button class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit">
@@ -225,8 +224,8 @@ function popitup(url) {
   function drawChart() {
     var data = google.visualization.arrayToDataTable([
       ['Task', 'Hours per Day'],
-      {% for obj in crypto_objects_list %}
-      ['{{ obj.name }}', {{obj.percent|stringformat:".2f"}}],
+      {% for crypto in crypto_objects_lists %}
+        ['{{ crypto.name }}', {{crypto.percent|stringformat:".2f"}}],
       {% endfor %}
     ]);
 

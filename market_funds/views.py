@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from .models import Trade, IndexFund
 import requests
 from .forms import IndexFundForm, TradeForm
@@ -13,9 +13,9 @@ def sort(myList):
 def fund_list_view(request, year):
     index_fund_list_object = IndexFund.objects.filter(date__year=year)
     total_value = 0
-    for obj in index_fund_list_object:
-        obj.value = round(obj.shares * obj.share_price, 2)
-        total_value = total_value + obj.value
+    for fund in index_fund_list_object:
+        fund.value = round(fund.shares * fund.share_price, 2)
+        total_value = total_value + fund.value
 
     years = list(IndexFund.objects.values_list("date__year").distinct())
     years_list = []
@@ -28,12 +28,11 @@ def fund_list_view(request, year):
     index_fund_all_years_total_list = []
     total_value_yearly = 0
     for my_year in years_list:
-        index_fund_list_object = IndexFund.objects.filter(date__year=my_year)
-        for obj in index_fund_list_object:
-            obj.value = round(obj.shares * obj.share_price, 2)
-            total_value_yearly = total_value_yearly + obj.value
+        index_fund_list_objects = IndexFund.objects.filter(date__year=my_year)
+        for fund in index_fund_list_objects:
+            fund.value = round(fund.shares * fund.share_price, 2)
+            total_value_yearly = total_value_yearly + fund.value
         index_fund_all_years_total_list.append(float(total_value_yearly))
-
     context = {
         "index_fund_list_object": index_fund_list_object,
         "total_value": total_value,
@@ -57,7 +56,9 @@ def add_indexfund(request):
             for item in data:
                 share_price = item["previousClose"]
         else:
-            return HttpResponse(f"{ticker} ticker symbol is not available in stock!")
+            return HttpResponse(
+                "No ticker data or an invalid value has been specified, Data not found "
+            )
 
         form = IndexFundForm(request.POST)
         if form.is_valid():

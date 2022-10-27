@@ -1,9 +1,9 @@
-import json
-from django.shortcuts import render
+import requests
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from .models import Crypto
 from .forms import CryptoForm
-import requests
+from django.contrib import messages
 
 CRYPTO_API_KEY = "HBOtOtoU9lxxj6k0T1ybf6i"
 
@@ -13,20 +13,19 @@ def sort(myList):
     return myList
 
 
-# Create your views here.
 def crypto_list_view(request, year):
-    crypto_objects_list = Crypto.objects.filter(date__year=year)
+    crypto_objects_lists = Crypto.objects.filter(date__year=year)
     total = 0
-    for obj in crypto_objects_list:
+    for obj in crypto_objects_lists:
         obj.total = round(obj.qty * obj.spot_price, 2)
         total = total + obj.total
-        grand_total = 0
+    total_amounts = 0
 
-    for item in crypto_objects_list:
-        grand_total += item.total
+    for crypto in crypto_objects_lists:
+        total_amounts += crypto.total
 
-    for item in crypto_objects_list:
-        item.percent = (item.total / grand_total) * 100
+    for crypto_per in crypto_objects_lists:
+        crypto_per.percent = (crypto_per.total / total_amounts) * 100
 
     years = list(Crypto.objects.values_list("date__year").distinct())
     years_list = []
@@ -36,21 +35,23 @@ def crypto_list_view(request, year):
     years_list = sort(years_list)
 
     crypto_all_years_total_list = []
+    # crypto_total = 0
     for my_year in years_list:
-        crypto_objects_list = Crypto.objects.filter(date__year=my_year)
-        total = 0
-        for obj in crypto_objects_list:
+        crypto_objects = Crypto.objects.filter(date__year=my_year)
+        crypto_total = 0
+        for obj in crypto_objects:
             obj.total = round(obj.qty * obj.spot_price, 2)
-            total = total + obj.total
-            grand_total = 0
-        for item in crypto_objects_list:
+            crypto_total = crypto_total + obj.total
+        grand_total = 0
+        for item in crypto_objects:
             grand_total += item.total
-        for item in crypto_objects_list:
+        for item in crypto_objects:
             item.percent = (item.total / grand_total) * 100
-        crypto_all_years_total_list.append(float(total))
-
+        crypto_all_years_total_list.append(float(crypto_total))
+        print("crypto_total", crypto_total)
+    print("all_years_crypto_total", crypto_all_years_total_list)
     context = {
-        "crypto_objects_list": crypto_objects_list,
+        "crypto_objects_lists": crypto_objects_lists,
         "total": total,
         "years_list": years_list,
         "crypto_all_years_total_list": crypto_all_years_total_list,
@@ -68,9 +69,14 @@ def add_crypto(request):
         result = response.json()
 
         spot_price = 0.0
-        for price in result["response"][:1]:
-            spot_price = price["c"]
-        spot_price = float(spot_price)
+        if result["status"]:
+            for price in result["response"][:1]:
+                spot_price = price["c"]
+            spot_price = float(spot_price)
+        else:
+            return HttpResponse(
+                "No ticker data or an invalid value has been specified, Data not found "
+            )
 
         form = CryptoForm(request.POST)
         if form.is_valid():
@@ -80,10 +86,13 @@ def add_crypto(request):
             return HttpResponse(
                 '<script type="text/javascript">window.close()</script>'
             )
-    else:
-        form = CryptoForm
-        if "submitted" in request.GET:
-            submitted = True
+        else:
+            form = CryptoForm
+            if "submitted" in request.GET:
+                submitted = True
+        # else:
+        #     messages.error(request, "This Ticker Spot price is not available!")
+        #     return redirect("crypto:crypto-add")
     form = CryptoForm
     return render(request, "crypto/add.html", {"form": form, "submitted": submitted})
 

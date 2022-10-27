@@ -10,7 +10,15 @@ class DateInput(forms.DateInput):
 class IndexFundForm(ModelForm):
     class Meta:
         model = IndexFund
-        fields = "__all__"
+        fields = (
+            "name",
+            "ticker",
+            "asset_class",
+            "date",
+            "asset_class",
+            "fund_type",
+            "shares",
+        )
 
 
 class TradeForm(ModelForm):

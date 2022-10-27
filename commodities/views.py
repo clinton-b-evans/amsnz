@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from .models import Commodity, Transaction
 from .forms import CommodityForm, TransactionForm
 import requests
+from django.contrib import messages
 
 COMMODITIES_API_KEY = "rhk8fw6wof9m507vu59ja24d1cxq56340g3nnt7u81zz0njwzujpj11c93p1"
 
@@ -14,6 +15,7 @@ def sort(myList):
 
 def commodity_list_view(request, year):
     commodities = Commodity.objects.all()
+    transactions_obj = Transaction.objects.filter(date__year=year)
     invested_total = 0
     for commodity in commodities:
         commodity.totalWeight = 0
@@ -22,6 +24,8 @@ def commodity_list_view(request, year):
             commodity=commodity.pk, date__year=year
         )
         for transaction in transactions:
+            commodity.trans_ob = transaction
+            print("commodity.trans_ob", commodity.trans_ob)
             if transaction.transaction_type == "Buy":
                 commodity.totalWeight += transaction.weight
                 commodity.invested += transaction.value
@@ -75,6 +79,7 @@ def commodity_list_view(request, year):
     context = {
         "year": year,
         "object_list": commodities,
+        "transactions_obj": transactions_obj,
         "grand_total": grand_total,
         "invested_total": invested_total,
         "commodities_invested_all_years_total_list": commodities_invested_all_years_total_list,
@@ -105,7 +110,12 @@ def add_commodity(request):
         response = requests.request("GET", url)
         result = response.json()
 
-        spot_price = 1 / result["data"]["rates"][commodity_class]
+        if result["data"]["success"]:
+            spot_price = 1 / result["data"]["rates"][commodity_class]
+        else:
+            return HttpResponse(
+                "No ticker data or an invalid value has been specified, Data not found "
+            )
 
         form = CommodityForm(request.POST)
         if form.is_valid():

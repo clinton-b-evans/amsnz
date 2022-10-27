@@ -10,4 +10,4 @@ class DateInput(forms.DateInput):
 class CryptoForm(ModelForm):
     class Meta:
         model = Crypto
-        fields = "__all__"
+        fields = ("name", "ticker", "qty", "date")
