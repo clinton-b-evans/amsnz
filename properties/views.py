@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -329,7 +331,8 @@ def property_summary_view(request, year, *args, **kwargs):
     real_estate_percent = float(retirementgoal.real_estate / 100)
     commodities_percent = float(retirementgoal.commodities / 100)
     crypto_percent = float(retirementgoal.crypto / 100)
-    stocks_percent = float(retirementgoal.stocks / 100)
+    stocks_percent = Decimal(retirementgoal.stocks / 100)
+    print("stocks_percent", stocks_percent)
 
     """
     Show assets and liabilities in graph
@@ -460,9 +463,12 @@ def property_summary_view(request, year, *args, **kwargs):
         if obj.asset_class == "Other":
             stocks_total_other = stocks_total_other + obj.value
     # Adding retirement's networth current goal and stocks percent
-    stocks_goal = stocks_percent * current_goal
+    print('stocks_total_value', stocks_total_value)
+    stocks_goal = Decimal(stocks_percent) * Decimal(current_goal)
+    print('stocks_goal', stocks_goal)
     stocks_total_progress = 0
     stocks_total_progress1 = float(stocks_total_value / stocks_goal) * 100
+    print('stocks_total_progress1', stocks_total_progress1)
     if stocks_goal > 0 and stocks_total_progress1 > 0:
         stocks_total_progress += stocks_total_progress1
     else:
