@@ -339,7 +339,15 @@
       <li class="nav-item">
         <a {% if request.resolver_match.url_name == 'commodities_list' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} href="/commodities/{% now 'Y' %}/">
           <i class="bi bi-gem"></i>
-          <span>Commodities</span>
+          <span>Commodity Transactions</span>
+          <!-- <span data-feather="file">Commodities</span> -->
+        </a>
+      </li><!-- End Commodities Page Nav -->
+
+      <li class="nav-item">
+        <a {% if request.resolver_match.url_name == 'commodities_classes' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} href="/commodities-classes">
+          <i class="bi bi-gem"></i>
+          <span>Commodities </span>
           <!-- <span data-feather="file">Commodities</span> -->
         </a>
       </li><!-- End Commodities Page Nav -->

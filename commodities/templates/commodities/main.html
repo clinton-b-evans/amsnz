@@ -28,15 +28,6 @@ function popitup(url) {
   window.onblur= function() {window.onfocus= function () {location.reload(true)}};
 </script>
 
-<a href="popupex.html" onclick="return popitup('/commodities/add')">
-  <button type="button" class="btn btn-secondary btn-sm mb-3">
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-plus" viewBox="0 0 16 16">
-      <path d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>
-      <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
-    </svg>
-    New Commodity
-  </button> 
-</a>
 <a href="popupex.html" onclick="return popitup('/commodities/transaction/add')">
   <button type="button" class="btn btn-secondary btn-sm mb-3">
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-plus" viewBox="0 0 16 16">
@@ -46,16 +37,6 @@ function popitup(url) {
     New Transaction
   </button>
 </a>
-  <!-- <div class="row">
-    <div class="col-9">
-      <select class="form-control mb-3" onchange="location = this.value;">
-        <option selected="" value="" disabled>Select year</option>
-        {% for year in years_list%}
-        <option value="../{{year|stringformat:"i"}}"> {{year|stringformat:"i"}}</option>
-        {%endfor%}
-      </select>
-    </div>
-  </div> -->
 
 <div class="dashboard">
   <div class="row">
@@ -103,6 +84,7 @@ function popitup(url) {
           <thead>
             <tr>
               <th style="text-align:left">Class</th>
+              <th style="text-align:left">Transaction Type</th>
               <th style="text-align:right">Weight</th>
               <th style="text-align:right">Spot Price</th>
               <th style="text-align:right">Total</th>
@@ -116,13 +98,12 @@ function popitup(url) {
             <tr>
 <!--              <td style="text-align:left"><a href='{{obj.pk}}/'>{{ obj.commodity_class }}</a></td>-->
               <td style="text-align:left">{{ obj.commodity_class }}</td>
+              <td style="text-align:left">{{ obj.trans_ob.transaction_type}}</td>
               <td style="text-align:right">{{ obj.totalWeight }}</td>
               <td style="text-align:right">${{ obj.spot_price }} </td>
               <td style="text-align:right">${{ obj.total|floatformat:2 }}</td>
               <td style="text-align:right">${{ obj.invested }}</td>
               <td style="text-align:right">{{ obj.percentage|floatformat:2 }}%</td>
-              <td style="text-align:right">{{ obj.trans_ob.pk|floatformat:2 }}%</td>
-
               <td style="text-align:right">
                 <a href="popupex.html" onclick="return popitup('/commodities/transaction/{{ obj.trans_ob.pk }}/edit')" style="text-decoration: none;">
                   <button class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit">
@@ -148,6 +129,7 @@ function popitup(url) {
                 <th style="text-align:left">Total:</th>
                 <th style="text-align:right"></th>
                 <th style="text-align:right"></th>
+                <th style="text-align:right"></th>
                 <th style="text-align:right">${{ grand_total|floatformat:2 }}</th>
                 <th style="text-align:right">${{ invested_total|floatformat:2 }}</th>
                 <th style="text-align:right"></th>
@@ -160,6 +142,7 @@ function popitup(url) {
     </div>
   </div>
 </div>
+
 
 <script>
   document.addEventListener("DOMContentLoaded", () => {

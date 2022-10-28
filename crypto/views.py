@@ -5,6 +5,7 @@ from .forms import CryptoForm
 import yfinance as yf
 from datetime import date, timedelta
 
+
 def sort(myList):
     myList.sort()
     return myList
