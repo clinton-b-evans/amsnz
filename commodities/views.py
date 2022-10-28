@@ -1,9 +1,8 @@
+import requests
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from .models import Commodity, Transaction
 from .forms import CommodityForm, TransactionForm
-import requests
-from django.contrib import messages
 
 COMMODITIES_API_KEY = "rhk8fw6wof9m507vu59ja24d1cxq56340g3nnt7u81zz0njwzujpj11c93p1"
 
@@ -14,7 +13,7 @@ def sort(myList):
 
 
 def commodity_list_view(request, year):
-    commodities = Commodity.objects.all()
+    commodities = Commodity.objects.filter(date__year=year)
     transactions_obj = Transaction.objects.filter(date__year=year)
     invested_total = 0
     for commodity in commodities:
@@ -25,7 +24,6 @@ def commodity_list_view(request, year):
         )
         for transaction in transactions:
             commodity.trans_ob = transaction
-            print("commodity.trans_ob", commodity.trans_ob)
             if transaction.transaction_type == "Buy":
                 commodity.totalWeight += transaction.weight
                 commodity.invested += transaction.value
@@ -38,7 +36,6 @@ def commodity_list_view(request, year):
 
     for commodity in commodities:
         grand_total += commodity.total
-    print("Grand Total--> ", grand_total)
 
     for commodity in commodities:
         commodity.percentage = (commodity.total / grand_total) * 100
@@ -56,7 +53,7 @@ def commodity_list_view(request, year):
     commodities_invested_all_years_total_list = []
 
     for my_year in years_list:
-        commodities_list = Commodity.objects.all()
+        commodities_list = Commodity.objects.filter(date__year=my_year)
         for item in commodities_list:
             item.totalweight = 0
             item.invested = 0
@@ -84,8 +81,29 @@ def commodity_list_view(request, year):
         "invested_total": invested_total,
         "commodities_invested_all_years_total_list": commodities_invested_all_years_total_list,
         "years_list": years_list,
+        # 'commodity_classes': commodity_classes,
     }
     return render(request, "commodities/main.html", context)
+
+
+def commodities_latest_price_view(request):
+    commodity_classes = Commodity.objects.all()
+
+    for commodity in commodity_classes:
+        url = (
+            f"https://commodities-api.com/api/latest?access_key={COMMODITIES_API_KEY}"
+            f"&base=USD&symbols={commodity.commodity_class}"
+        )
+        response = requests.request("GET", url)
+        result = response.json()
+        last_price = 1 / result["data"]["rates"][commodity.commodity_class]
+        string_price = "{:.4f}".format(last_price)
+        commodity.latest_price = float(string_price)
+
+    context = {
+        "commodity_classes": commodity_classes,
+    }
+    return render(request, "commodities/commodity_classes.html", context)
 
 
 def commodity_detail_view(request, **kwargs):

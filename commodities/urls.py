@@ -8,9 +8,11 @@ from .views import (
     add_transaction,
     update_transaction,
     delete_transaction,
+    commodities_latest_price_view,
 )
 
 app_name = "commodities"
+
 
 urlpatterns = [
     path("commodities/<str:year>/", commodity_list_view, name="commodities_list"),
@@ -28,5 +30,10 @@ urlpatterns = [
         "commodities/transaction/<str:pk>/delete/",
         delete_transaction,
         name="delete-transaction",
+    ),
+    path(
+        "commodities-classes/",
+        commodities_latest_price_view,
+        name="commodities_classes",
     ),
 ]
