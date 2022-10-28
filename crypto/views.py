@@ -1,14 +1,9 @@
-import requests
-from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render
+from django.http import HttpResponse
 from .models import Crypto
 from .forms import CryptoForm
-from django.contrib import messages
 import yfinance as yf
 from datetime import date, timedelta
-
-CRYPTO_API_KEY = "HBOtOtoU9lxxj6k0T1ybf6i"
-
 
 def sort(myList):
     myList.sort()

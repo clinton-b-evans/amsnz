@@ -1,10 +1,9 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Trade, IndexFund
-import requests
 from .forms import IndexFundForm, TradeForm
 import yfinance as yf
-from datetime import date, timedelta
+from datetime import date
 
 
 def sort(myList):

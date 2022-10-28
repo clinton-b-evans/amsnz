@@ -260,7 +260,6 @@ def year_to_date(request, year):
         current_month_total_income = 0
         month_int = datetime.datetime.strptime(month, "%B").month
         current_month_income = income_qs.filter(date__month=month_int)
-        # print(month, current_month_income)
         for income_in_current_month in current_month_income:
             current_month_total_income += income_in_current_month.amount
             category_of_income = PropertyCategory.objects.get(

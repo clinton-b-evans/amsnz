@@ -17,9 +17,7 @@ def register_user_view(request):
         form = RegisterUserForm(request.POST)
         if form.is_valid():
             form.save()
-            user = form.cleaned_data.get("username")
-            # messages.success(request, "Account was created for " + user)
-
+            # user = form.cleaned_data.get("username")
             return redirect("Authentication:login_user")
 
     context = {"form": form}
@@ -36,7 +34,6 @@ def login_user_view(request):
 
         if user is not None:
             login(request, user)
-            # messages.success(request, "Log in Successful")
             return redirect(f"/summary/{year}/")
         else:
             messages.info(request, "Username OR password is incorrect")
@@ -47,7 +44,6 @@ def login_user_view(request):
 
 def logout_user_view(request):
     logout(request)
-    # messages.info(request, "You have successfully logged out.")
     return redirect("Authentication:login_user")
 
 
@@ -57,10 +53,7 @@ def contact_us_view(request):
         form = ContactUsForm(request.POST)
         if form.is_valid():
             form.save()
-            name = form.cleaned_data.get("name")
-            messages.success(
-                request, " Feedback submitted by " + name + "is successful"
-            )
+            # name = form.cleaned_data.get("name")
             return redirect("Authentication:login_user")
     context = {"contact_form": form}
     return render(request, "Authentication/contact_us.html", context)
