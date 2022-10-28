@@ -54,7 +54,7 @@ class Transaction(models.Model):
     weight = models.DecimalField(
         blank=True, default=0.0, max_digits=8, decimal_places=2
     )
-    value = models.DecimalField(blank=True, default=0.0, max_digits=8, decimal_places=2)
+    value = models.DecimalField(blank=True, default=0.0, max_digits=8, decimal_places=4)
     date = models.DateField(null=True, blank=True, default=now)
 
     def __str__(self):

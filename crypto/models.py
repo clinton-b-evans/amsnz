@@ -8,7 +8,7 @@ class Crypto(models.Model):
     ticker = models.CharField(max_length=6, null=True, blank=True)
     qty = models.DecimalField(max_digits=12, decimal_places=4, blank=True, default=0.00)
     spot_price = models.DecimalField(
-        max_digits=12, decimal_places=2, blank=True, default=0.00
+        max_digits=12, decimal_places=4, blank=True, default=0.0
     )
     date = models.DateField(null=True, blank=True, default=now)
 

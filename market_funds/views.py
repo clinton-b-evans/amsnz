@@ -3,6 +3,8 @@ from django.http import HttpResponse
 from .models import Trade, IndexFund
 import requests
 from .forms import IndexFundForm, TradeForm
+import yfinance as yf
+from datetime import date, timedelta
 
 
 def sort(myList):
@@ -44,21 +46,22 @@ def fund_list_view(request, year):
 
 
 def add_indexfund(request):
+
+    today = date.today().isoformat()
     submitted = False
     if request.method == "POST":
         ticker = request.POST.get("ticker")
-        url = f"https://eodhistoricaldata.com/api/search/{ticker}?api_token=6357d454b955c1.81464373&limit=1"
-        response = requests.get(url)
-        data = response.json()
-
+        yf_data = yf.Ticker(ticker)
+        yf_data = yf_data.history(today, interval="60m")
         share_price = 0
-        if data:
-            for item in data:
-                share_price = item["previousClose"]
-        else:
+        if yf_data["Close"].empty:
             return HttpResponse(
-                "No ticker data or an invalid value has been specified, Data not found "
+                f"-{ticker} No data found, symbol/Ticker may be de-listed!. Kindly try again with correct Ticker."
             )
+        else:
+            last_price = yf_data["Close"][0]
+            string_price = "{:.4f}".format(last_price)
+            share_price += float(string_price)
 
         form = IndexFundForm(request.POST)
         if form.is_valid():

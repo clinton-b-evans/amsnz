@@ -45,7 +45,11 @@
                     <h5 class="card-title text-center pb-0 fs-4">Create an Account</h5>
                     <p class="text-center small">Enter your personal details to create account</p>
                   </div>
-
+                    {% if form.errors%}
+                  <div class="alert">
+                    <strong> {{form.errors}}</strong>
+                  </div>
+                    {% endif %}
                   <form method="POST" action="" class="row g-3 needs-validation" novalidate>
                         {% csrf_token %}
                     <div class="col-12">
@@ -54,7 +58,6 @@
                       {{form.username}}
                       <div class="invalid-feedback">Please, enter your UserName!</div>
                     </div>
-
                     <div class="col-12">
                       <label class="form-label">Email</label>
                       <div class="input-group has-validation">
@@ -87,10 +90,9 @@
                       </div>
                     </div>
                     <div class="col-12">
-                      <input class="btn login_btn" type="submit" value="Register Account">
-<!--                      <button class="btn btn-primary w-100" type="submit" >Create Account</button>-->
+<!--                      <input class="btn login_btn" type="submit" value="Register Account">-->
+                      <button class="btn btn-primary w-100" type="submit" >Create Account</button>
                     </div>
-                    {{form.errors}}
                     <div class="col-12">
                       <p class="small mb-0">Already have an account? <a href="{% url 'Authentication:login_user' %}">Log in</a></p>
                     </div>

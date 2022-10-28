@@ -109,9 +109,11 @@ def add_commodity(request):
         url = f"https://commodities-api.com/api/latest?access_key=rhk8fw6wof9m507vu59ja24d1cxq56340g3nnt7u81zz0njwzujpj11c93p1&base=USD&symbols={commodity_class}"
         response = requests.request("GET", url)
         result = response.json()
-
+        spot_price = 0
         if result["data"]["success"]:
-            spot_price = 1 / result["data"]["rates"][commodity_class]
+            last_price = 1 / result["data"]["rates"][commodity_class]
+            string_price = "{:.4f}".format(last_price)
+            spot_price += float(string_price)
         else:
             return HttpResponse(
                 "No ticker data or an invalid value has been specified, Data not found "

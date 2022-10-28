@@ -463,12 +463,12 @@ def property_summary_view(request, year, *args, **kwargs):
         if obj.asset_class == "Other":
             stocks_total_other = stocks_total_other + obj.value
     # Adding retirement's networth current goal and stocks percent
-    print('stocks_total_value', stocks_total_value)
+    print("stocks_total_value", stocks_total_value)
     stocks_goal = Decimal(stocks_percent) * Decimal(current_goal)
-    print('stocks_goal', stocks_goal)
+    print("stocks_goal", stocks_goal)
     stocks_total_progress = 0
     stocks_total_progress1 = float(stocks_total_value / stocks_goal) * 100
-    print('stocks_total_progress1', stocks_total_progress1)
+    print("stocks_total_progress1", stocks_total_progress1)
     if stocks_goal > 0 and stocks_total_progress1 > 0:
         stocks_total_progress += stocks_total_progress1
     else:

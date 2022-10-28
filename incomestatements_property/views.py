@@ -248,8 +248,8 @@ def year_to_date(request, year):
         "November": 0,
         "December": 0,
     }
-    unique_categories_of_income = income_qs.values("propcategory__name").distinct()
     income_result = {}
+    unique_categories_of_income = income_qs.values("propcategory__name").distinct()
     for category in unique_categories_of_income:
         income_result[f"{list(category.values())[0]}"] = {
             "months": deepcopy(monthly_income_data),
@@ -274,6 +274,7 @@ def year_to_date(request, year):
         income_result[f"{list(category.values())[0]}"]["total"] = sum(
             income_result[f"{list(category.values())[0]}"]["months"].values()
         )
+    print("income_result", income_result)
     # #### END OF CATEGORIES EACH MONTH TOTAL INCOME ####
 
     # START OF CATEGORIES EACH MONTH TOTAL EXPENSES

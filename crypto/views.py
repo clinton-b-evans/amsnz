@@ -4,6 +4,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from .models import Crypto
 from .forms import CryptoForm
 from django.contrib import messages
+import yfinance as yf
+from datetime import date, timedelta
 
 CRYPTO_API_KEY = "HBOtOtoU9lxxj6k0T1ybf6i"
 
@@ -40,7 +42,7 @@ def crypto_list_view(request, year):
         crypto_objects = Crypto.objects.filter(date__year=my_year)
         crypto_total = 0
         for obj in crypto_objects:
-            obj.total = round(obj.qty * obj.spot_price, 2)
+            obj.total = round(obj.qty * obj.spot_price, 3)
             crypto_total = crypto_total + obj.total
         grand_total = 0
         for item in crypto_objects:
@@ -61,22 +63,25 @@ def crypto_list_view(request, year):
 
 
 def add_crypto(request):
+    today = date.today().isoformat()
+
     submitted = False
     if request.method == "POST":
-        ticker = request.POST.get("ticker")
-        url = f"https://fcsapi.com/api-v3/crypto/latest?symbol={ticker}/usd&access_key=HBOtOtoU9lxxj6k0T1ybf6i"
-        response = requests.request("GET", url)
-        result = response.json()
+        ticker_input = request.POST.get("ticker")
+        ticker = ticker_input + "-USD"
 
+        yf_data = yf.Ticker(ticker)
+        yf_data = yf_data.history(today, interval="60m")
         spot_price = 0.0
-        if result["status"]:
-            for price in result["response"][:1]:
-                spot_price = price["c"]
-            spot_price = float(spot_price)
-        else:
+
+        if yf_data["Close"].empty:
             return HttpResponse(
-                "No ticker data or an invalid value has been specified, Data not found "
+                f"-{ticker_input} No data found, symbol/Ticker may be de-listed!. Kindly try again with correct Ticker."
             )
+        else:
+            last_price = yf_data["Close"][0]
+            string_price = "{:.4f}".format(last_price)
+            spot_price += float(string_price)
 
         form = CryptoForm(request.POST)
         if form.is_valid():

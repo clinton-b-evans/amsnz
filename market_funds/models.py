@@ -30,7 +30,7 @@ class IndexFund(models.Model):
         max_digits=12, decimal_places=4, blank=True, default=0.00
     )
     share_price = models.DecimalField(
-        max_digits=12, decimal_places=2, blank=True, default=0.00
+        max_digits=12, decimal_places=4, blank=True, default=0.00
     )
 
     def __str__(self):
