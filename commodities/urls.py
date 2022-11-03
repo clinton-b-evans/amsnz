@@ -9,6 +9,7 @@ from .views import (
     update_transaction,
     delete_transaction,
     commodities_latest_price_view,
+    get_commodities
 )
 
 app_name = "commodities"
@@ -35,5 +36,10 @@ urlpatterns = [
         "commodities-classes/",
         commodities_latest_price_view,
         name="commodities_classes",
+    ),
+    path(
+        "get_commodities/",
+        get_commodities,
+        name="get_commodities",
     ),
 ]

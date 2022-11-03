@@ -1,8 +1,14 @@
 import requests
 from django.shortcuts import render
 from django.http import HttpResponse
+from yahooquery import Ticker
+from yfinance import ticker
+
 from .models import Commodity, Transaction
 from .forms import CommodityForm, TransactionForm
+from datetime import date
+import yfinance as yf
+from concurrent.futures import ThreadPoolExecutor
 
 COMMODITIES_API_KEY = "rhk8fw6wof9m507vu59ja24d1cxq56340g3nnt7u81zz0njwzujpj11c93p1"
 
@@ -11,6 +17,46 @@ def sort(myList):
     myList.sort()
     return myList
 
+def get_commodities():
+    commodities_list = [
+        'ROKU',
+        'QCOM',
+        'GOLD',
+        'HOOD',
+        'ETSY',
+        'SU',
+        'LUMN',
+        'REGN',
+        'CI',
+        'MAR',
+        'APD',
+        'SQQQ',
+        'FTNT',
+        'BKNG',
+        'EBAY',
+        'MRNA',
+        'RUN',
+        'GBPUSD=X',
+        'NQ=F',
+        'COMS',
+        'NFLX',
+        'HUBS',
+        'EURUSD=X',
+        'ARKK',
+        'MATIC-USD',
+        'DDOG',
+        'SPY',
+        'NETC.CO',
+        'TQQQ',
+        'BT-A.L',
+    ]
+    all_symbols = " ".join(commodities_list)
+    myInfo = Ticker(all_symbols)
+    data = myInfo.price
+    result = dict.fromkeys(data.keys())
+    for key, value in data.items():
+        result[key] = value['regularMarketPrice']
+    return result
 
 def commodity_list_view(request, year):
     commodities = Commodity.objects.filter(date__year=year)
@@ -72,6 +118,17 @@ def commodity_list_view(request, year):
         commodities_invested_all_years_total_list.append(
             float(invested_total_year_wise)
         )
+    arr =[]
+
+        # if commodity['regularMarketPrice'].empty:
+        #     print(
+        #         f"- No data found, symbol/Ticker may be de-listed!. Kindly try again with correct Ticker."
+        #     )
+        # else:
+        #     data = {
+        #         "spot_price": commodity['regularMarketPrice'],
+        #     }
+        #     arr.append(data)
 
     context = {
         "year": year,
@@ -81,6 +138,7 @@ def commodity_list_view(request, year):
         "invested_total": invested_total,
         "commodities_invested_all_years_total_list": commodities_invested_all_years_total_list,
         "years_list": years_list,
+        "commodities_list": get_commodities(),
         # 'commodity_classes': commodity_classes,
     }
     return render(request, "commodities/main.html", context)
@@ -96,9 +154,10 @@ def commodities_latest_price_view(request):
         )
         response = requests.request("GET", url)
         result = response.json()
-        last_price = 1 / result["data"]["rates"][commodity.commodity_class]
-        string_price = "{:.4f}".format(last_price)
-        commodity.latest_price = float(string_price)
+        print(result, 'success')
+        # last_price = 1 / result["data"]["rates"][commodity.commodity_class]
+        # string_price = "{:.4f}".format(last_price)
+        # commodity.latest_price = float(string_price)
 
     context = {
         "commodity_classes": commodity_classes,
