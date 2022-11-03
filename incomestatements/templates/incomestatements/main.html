@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load bootstrap %}
 {% load static  %}
 {% load mathfilters %}
 
@@ -38,9 +39,41 @@ function popitup(url) {
   </a>
 </div>
 
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#basicModal">
+  Basic Modal
+</button>
+<div class="modal fade" id="basicModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <!-- <h2>Record Property Income / Expense</h2>
+<form action="" method=POST> 
+    {% csrf_token %}
+    {{ form|bootstrap }}
+    <input type="submit" value="Save"></button>
+</form> -->
+        <h5 class="modal-title">Record Property Income / Expense</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="" method=POST> 
+          {% csrf_token %}
+          {{ form|bootstrap }}
+          <!-- <input type="submit" value="Save"></button> -->
+        </form>
+      </div>
+      <div class="modal-footer">
+        <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+        <button type="submit" class="btn btn-dashboard">Save</button>
+        <!-- <input type="submit" value="Save"></button> -->
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="card">
-  <div class="card-body mt-4">
-    <table class="table table-hover" style="font-size:small">
+  <div class="card-body mt-4" style="overflow-x:auto;">
+    <table class="table table-hover table-responsive" style="font-size:small">
       <thead>
         <tr>
           <th>Name</th>
