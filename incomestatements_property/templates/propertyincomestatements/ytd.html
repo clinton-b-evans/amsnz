@@ -40,7 +40,7 @@
         </div>
     </form>
 </div>
-</div>
+
 
 <div class="dashboard">
     <div class="chart-container" style="position: relative;">
@@ -61,7 +61,7 @@
 
                         </ul>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body" style="overflow-x:auto;">
                         <h5 class="card-title">Property Profit and Loss <span>| {{year}}</span></h5>
                         <table class="table table-hover" style="font-size:small">
                             <thead>
@@ -188,15 +188,16 @@
 
         </div>
     </div>
+</div>
 
-    <script>
+<script>
     $(function () {
       //Initialize Select2 Elements
       $('.select2').select2()
     })
-    </script>
+</script>
 
-    <script type="text/javascript">
+<script type="text/javascript">
     google.charts.load('current', { 'packages': ['corechart'] });
     google.charts.setOnLoadCallback(drawChart);
 
@@ -221,14 +222,9 @@
 
       chart.draw(data, options);
     }
+</script>
 
-
-
-
-
-    </script>
-
-    <script type="text/javascript">
+<script type="text/javascript">
     google.charts.load('current', { 'packages': ['corechart'] });
     google.charts.setOnLoadCallback(drawChart);
 
@@ -254,10 +250,5 @@
 
     chart.draw(data, options);
   }
-
-
-
-
-
-    </script>
-    {% endblock content %}
+</script>
+{% endblock content %}

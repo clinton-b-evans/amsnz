@@ -142,32 +142,29 @@
                     <div id="pieChart" style="width: 100%;"></div>
 
                     <script>
-            document.addEventListener("DOMContentLoaded", () => {
-              new ApexCharts(document.querySelector("#pieChart"), {
-                series: [{{graph_asset}}, {{graph_lib}}, {{graph_nw}}],
-                chart: {
-                  height: 380,
-                  type: 'pie',
-                  toolbar: {
-                    show: true
-                  }
-                },
-                title: {
-                  text: 'Networth Tracker {{year}}',
-                  align: 'center',
-                  // offsetX: 110
-                },
-                legend: {
-                  position: 'top'
-                  // horizontalAlign: 'center',
-                  // offsetX: 40
-                },
-                labels: ['Assets', 'Liabilities', 'Networth']
-              }).render();
-            });
-
-
-
+                        document.addEventListener("DOMContentLoaded", () => {
+                        new ApexCharts(document.querySelector("#pieChart"), {
+                            series: [{{graph_asset}}, {{graph_lib}}, {{graph_nw}}],
+                            chart: {
+                            height: 380,
+                            type: 'pie',
+                            toolbar: {
+                                show: true
+                            }
+                            },
+                            title: {
+                            text: 'Networth Tracker {{year}}',
+                            align: 'center',
+                            // offsetX: 110
+                            },
+                            legend: {
+                            position: 'top'
+                            // horizontalAlign: 'center',
+                            // offsetX: 40
+                            },
+                            labels: ['Assets', 'Liabilities', 'Networth']
+                        }).render();
+                        });
                     </script>
                     <!-- End Pie Chart -->
 

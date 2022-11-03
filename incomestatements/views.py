@@ -9,24 +9,33 @@ from django.db.models import Count, Sum, FloatField
 
 
 def incomestatements_list_view(request):
-    qs = IncomeStatement.objects.all()
-    total_income = 0
-    total_expense = 0
-    total = 0
-    for item in qs:
-        cat_qs = Category.objects.get(name=item.category)
-        if cat_qs.transaction_type == "Income":
-            total_income += item.amount
-        else:
-            total_expense += item.amount
+    if request.method == "POST":
+        form = IncomeStatementForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return render(request, "incomestatements/main.html")
+    else:
+        qs = IncomeStatement.objects.all()
+        total_income = 0
+        total_expense = 0
+        total = 0
+        for item in qs:
+            cat_qs = Category.objects.get(name=item.category)
+            if cat_qs.transaction_type == "Income":
+                total_income += item.amount
+            else:
+                total_expense += item.amount
 
-    total = total_income - total_expense
+        total = total_income - total_expense
 
-    context = {
-        "object_list": qs,
-        "total": total,
-    }
-    return render(request, "incomestatements/main.html", context)
+        
+        form = IncomeStatementForm()
+        context = {
+            "object_list": qs,
+            "total": total,
+            "form": form,
+        }
+        return render(request, "incomestatements/main.html", context)
 
 
 def add_incomestatements(request):
