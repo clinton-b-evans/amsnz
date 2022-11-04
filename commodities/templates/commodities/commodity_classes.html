@@ -59,7 +59,7 @@ function popitup(url) {
     </button>
 </a>
 <div class="row">
-    <div class="col-lg-8">
+    <div class="col-lg-12">
         <div class="card">
             <div class="card-body mt-4">
                 <table class="table table-hover" style="font-size:small">
@@ -87,7 +87,7 @@ function popitup(url) {
                         <td style="text-align:right">${{ obj.totalInvestment|floatformat:2 }}</td>
                         <td style="text-align:right">${{ obj.spotPrice }}</td>
                         <td style="text-align:right">${{ obj.currentMarketValue|floatformat:2 }}</td>
-                        <td style="text-align:right">{{ obj.profit_loss_percentage|floatformat:2 }}%</td>
+                        <td style="text-align:right"><small class="text-{% if obj.status == 'profit' %}success{% else %}danger{% endif %} me-2"> &nbsp;<i class="fas fa-{% if obj.status == 'profit' %}arrow-up{% else %}arrow-down{% endif %} me-1"></i>{{ obj.profit_loss_percentage|floatformat:2 }}% </small></td>
                         <td style="text-align:right">
                             <a href="popupex.html"
                                onclick="return popitup('/commodities/transaction/{{ obj.trans_ob.pk }}/edit')"
@@ -120,7 +120,7 @@ function popitup(url) {
                         </td>
                     </tr>
                     {% endfor %}
-                    <thead>
+                    <!-- <thead>
                     <tr>
                         <th style="text-align:left">Total:</th>
                         <th style="text-align:right"></th>
@@ -131,7 +131,7 @@ function popitup(url) {
                         <th style="text-align:right"></th>
                         <th style="text-align:right"></th>
                     </tr>
-                    </thead>
+                    </thead> -->
                     </tbody>
                 </table>
             </div>

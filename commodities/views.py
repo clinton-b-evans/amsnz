@@ -157,6 +157,11 @@ def commodity_transactions(request, year):
         totalInvestment = float(transaction.weight) * float(transaction.value)
         spotPrice = commodity_prices[transaction.commodity.commodity_class]
         currentMarketValue = float(transaction.weight) * spotPrice
+        status = 'no-gain'
+        if (currentMarketValue - totalInvestment) > 0 :
+            status = 'profit' 
+        elif (currentMarketValue - totalInvestment) < 0: 
+            status = 'loss'
         transactions_table.append({
             "commodity": transaction.commodity,
             "transaction_type": transaction.transaction_type,
@@ -166,7 +171,8 @@ def commodity_transactions(request, year):
             "totalInvestment": totalInvestment,
             "spotPrice": spotPrice,
             "currentMarketValue": currentMarketValue,
-            "profit_loss_percentage": ((currentMarketValue - totalInvestment) / totalInvestment) * 100
+            "profit_loss_percentage": ((currentMarketValue - totalInvestment) / totalInvestment) * 100,
+            "status": status
         })
 
     context = {
