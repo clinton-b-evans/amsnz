@@ -70,9 +70,7 @@ function popitup(url) {
                         <th style="text-align:right">Weight</th>
                         <th style="text-align:right">Purchased Price</th>
                         <th style="text-align:right">Total Investment</th>
-                        <th style="text-align:right">Spot Price</th>
-                        <th style="text-align:right">Current Market Value</th>
-                        <th style="text-align:right">Profit/Loss %</th>
+                        <th style="text-align:right">Date</th>
                         <th style="text-align:right">Action</th>
                     </tr>
                     </thead>
@@ -85,9 +83,7 @@ function popitup(url) {
                         <td style="text-align:right">{{ obj.weight }}</td>
                         <td style="text-align:right">${{ obj.purchasedValue|floatformat:2 }}</td>
                         <td style="text-align:right">${{ obj.totalInvestment|floatformat:2 }}</td>
-                        <td style="text-align:right">${{ obj.spotPrice }}</td>
-                        <td style="text-align:right">${{ obj.currentMarketValue|floatformat:2 }}</td>
-                        <td style="text-align:right"><small class="text-{% if obj.status == 'profit' %}success{% else %}danger{% endif %} me-2"> &nbsp;<i class="fas fa-{% if obj.status == 'profit' %}arrow-up{% else %}arrow-down{% endif %} me-1"></i>{{ obj.profit_loss_percentage|floatformat:2 }}% </small></td>
+                        <td style="text-align:right">{{ obj.date }}</td>
                         <td style="text-align:right">
                             <a href="popupex.html"
                                onclick="return popitup('/commodities/transaction/{{ obj.trans_ob.pk }}/edit')"
