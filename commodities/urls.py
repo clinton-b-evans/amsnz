@@ -8,7 +8,7 @@ from .views import (
     add_transaction,
     update_transaction,
     delete_transaction,
-    commodities_latest_price_view,
+    commodity_transactions,
     get_commodities
 )
 
@@ -34,7 +34,7 @@ urlpatterns = [
     ),
     path(
         "commodities-classes/<str:year>/",
-        commodities_latest_price_view,
+        commodity_transactions,
         name="commodities_classes",
     ),
     path(
