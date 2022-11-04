@@ -30,7 +30,7 @@ function popitup(url) {
   </button>
 </a>
 
-<div class="card">
+<!-- <div class="card">
   <div class="card-body mt-4" style="overflow-x:auto;">
     <table class="table table-hover" style="font-size:small">
       <thead>
@@ -74,6 +74,48 @@ function popitup(url) {
     </table> 
   </div>
 
+</div> -->
+
+
+<div class="row">
+  {% for obj in object_list %}
+  <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch flex-column">
+    <div class="card contact-card d-flex flex-fill">
+      <div class="card-header contact-card-header text-muted border-bottom-0">
+        {{ obj.occupation }}
+      </div>
+      <div class="card-body contact-card-body pt-0">
+        <div class="row">
+          <div class="col-7">
+            <h2 class="lead"><b>{{ obj.first_name }} {{ obj.last_name }} </b></h2>
+            <p class="text-muted"><small><b>Company: </b> {{ obj.company_name }}</small> </p>
+            <ul class="ms-4 mb-0 fa-ul text-muted text-start">
+              <li class="small text-start"><small><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> <b>Properties:</b> {% for property in obj.properties.all %} {{property}} {% if not forloop.last %} / {% endif %}{% endfor %} </small></li>
+              <li class="small text-start"><small><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> <b>Phone #:</b> <a href="tel:{{ obj.contact_number }}">{{ obj.contact_number }}</a></small></li>
+            </ul>
+          </div>
+          <div class="col-5 text-center">
+            <!-- <img src="../../dist/img/user2-160x160.jpg" alt="user-avatar" class="img-circle img-fluid"> -->
+            <img src="{% static "images/contact-avatar.png" %}" class="img-fluid" width= '120' height='120'>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer contact-card-footer">
+        <div class="text-end">
+          <a href="tel:{{ obj.contact_number }}" class="btn btn-sm bg-success text-white">
+            <i class="fas fa-phone"></i> Call
+          </a>
+          <a href="popupex.html" onclick="return popitup('/contacts/{{ obj.id }}/edit')" class="btn btn-sm bg-primary text-white">
+            <i class="fas fa-edit"></i> Edit
+          </a>
+          <a href="popupex.html" onclick="return popitup('/contacts/{{ obj.pk }}/delete')" class="btn btn-sm bg-danger text-white">
+            <i class="fas fa-trash"></i> Delete
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
 </div>
 
 {% endblock content %}

@@ -62,7 +62,7 @@ function popitup(url) {
                 <tr>
                   <th scope="col">INCOME</th>
                 </tr>
-<!--                <td scope="row">Maintenance</td>-->
+                  <!-- <td scope="row">Maintenance</td>-->
                   {% for category_name, data in income_result.items %}
                   <tr>
                     <th scope="row">{{category_name}}</th>
@@ -104,13 +104,13 @@ function popitup(url) {
                 <tr>
                   <th scope="col">EXPENSES</th>
                 </tr>
-<!--                    Loop 1-->
+                  <!-- Loop 1-->
                   {% for category_name, data in expenses_result.items %}
                     <tr>
                     <th scope="row">{{category_name}}</th>
-<!--                    Loop 2-->
+                      <!-- Loop 2-->
                       {% for months,  months_data in data.items %}
-  <!--                    Loop 3-->
+                        <!--Loop 3-->
                         {% for month_name, month_expense in months_data.items %}
                           <td>${{month_expense}}</td>
                         {% endfor %}
