@@ -1,5 +1,4 @@
 import requests
-from django.db.models import Sum
 from django.shortcuts import render
 from django.http import HttpResponse
 from yahooquery import Ticker
@@ -150,11 +149,29 @@ def commodity_list_view(request, year):
 
 
 def commodity_transactions(request, year):
-    transactions = Transaction.objects.filter(date__year=year).annotate(score=Sum('value'))
+    transactions = Transaction.objects.filter(date__year=year)
+
+    transactions_table = []
+    commodity_prices = get_commodities()
+    for transaction in transactions:
+        totalInvestment = float(transaction.weight) * float(transaction.value)
+        spotPrice = commodity_prices[transaction.commodity.commodity_class]
+        currentMarketValue = float(transaction.weight) * spotPrice
+        transactions_table.append({
+            "commodity": transaction.commodity,
+            "transaction_type": transaction.transaction_type,
+            "weight": transaction.weight,
+            "purchasedValue": transaction.value,
+            "date": transaction.date,
+            "totalInvestment": totalInvestment,
+            "spotPrice": spotPrice,
+            "currentMarketValue": currentMarketValue,
+            "profit_loss_percentage": ((currentMarketValue - totalInvestment) / totalInvestment) * 100
+        })
 
     context = {
         "year": year,
-        "object_list": transactions,
+        "transactions": transactions_table,
     }
     return render(request, "commodities/commodity_classes.html", context)
 

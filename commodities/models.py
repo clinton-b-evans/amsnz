@@ -2,27 +2,36 @@ from django.db import models
 from django.utils.timezone import now
 
 COMMODITY_CLASS_CHOICES = (
-    ("RICE", "RICE"),
-    ("WHEAT", "WHEAT"),
-    ("SUGAR", "SUGAR"),
-    ("CORN", "CORN"),
-    ("WTIOIL", "WTIOIL"),
-    ("BRENTOIL", "BRENTOIL"),
-    ("SOYBEAN", "SOYBEAN"),
-    ("COFFEE", "COFFEE"),
-    ("XAU", "XAU"),
-    ("XAG", "XAG"),
-    ("XPD", "XPD"),
-    ("XPT", "XPT"),
-    ("XRH", "XRH"),
-    ("RUBBER", "RUBBER"),
-    ("ETHANOL", "ETHANOL"),
-    ("CPO", "CPO"),
-    ("NG", "NG"),
-    ("LUMBER", "LUMBER"),
-    ("COTTON", "COTTON"),
-    ("ROBUSTA", "ROBUSTA"),
-    ("COCOA", "COCOA"),
+        ("ROKU", "ROKU"),
+        ("GOLD", "GOLD"),
+        ("QCOM", "QCOM"),
+        ("HOOD", "HOOD"),
+        ("ETSY", "ETSY"),
+        ("SU", "SU"),
+        ("LUMN", "LUMN"),
+        ("REGN", "REGN"),
+        ("CI", "CI"),
+        ("MAR", "MAR"),
+        ("APD", "APD"),
+        ("SQQQ", "SQQQ"),
+        ("FTNT", "FTNT"),
+        ("BKNG", "BKNG"),
+        ("EBAY", "EBAY"),
+        ("MRNA", "MRNA"),
+        ("RUN", "RUN"),
+        ("GBPUSD=X", "GBPUSD=X"),
+        ("NQ=F", "NQ=F"),
+        ("COMS", "COMS"),
+        ("NFLX", "NFLX"),
+        ("HUBS", "HUBS"),
+        ("EURUSD=X", "EURUSD=X"),
+        ("ARKK", "ARKK"),
+        ("MATIC-USD", "MATIC-USD"),
+        ("DDOG", "DDOG"),
+        ("SPY", "SPY"),
+        ("NETC.CO", "NETC.CO"),
+        ("TQQQ", "TQQQ"),
+        ("BT-A.L", "BT-A.L"),
 )
 
 
@@ -47,7 +56,7 @@ class Transaction(models.Model):
         ("Buy", "Buy"),
         ("Sell", "Sell"),
     )
-    commodity = models.ForeignKey(Commodity(), on_delete=models.CASCADE)
+    commodity = models.ForeignKey(Commodity, on_delete=models.CASCADE)
     transaction_type = models.CharField(
         choices=TRANSACTION_TYPE_SOURCES, max_length=100, null=False, blank=False
     )
