@@ -65,7 +65,7 @@ function popitup(url) {
                 <table class="table table-hover" style="font-size:small">
                     <thead>
                     <tr>
-                        <th style="text-align:left">Class</th>
+                        <th style="text-align:left">Commodity</th>
                         <th style="text-align:left">Transaction Type</th>
                         <th style="text-align:right">Weight</th>
                         <th style="text-align:right">Spot Price</th>
@@ -79,10 +79,10 @@ function popitup(url) {
                     {% for obj in object_list %}
                     <tr>
                         <!--              <td style="text-align:left"><a href='{{obj.pk}}/'>{{ obj.commodity_class }}</a></td>-->
-                        <td style="text-align:left">{{ obj.commodity_class }}</td>
-                        <td style="text-align:left">{{ obj.trans_ob.transaction_type}}</td>
-                        <td style="text-align:right">{{ obj.totalWeight }}</td>
-                        <td style="text-align:right">${{ obj.spot_price }}</td>
+                        <td style="text-align:left">{{ obj.commodity }}</td>
+                        <td style="text-align:left">{{ obj.transaction_type}}</td>
+                        <td style="text-align:right">{{ obj.weight }}</td>
+                        <td style="text-align:right">${{ obj.value }}</td>
                         <td style="text-align:right">${{ obj.total|floatformat:2 }}</td>
                         <td style="text-align:right">${{ obj.invested }}</td>
                         <td style="text-align:right">{{ obj.percentage|floatformat:2 }}%</td>
@@ -130,29 +130,6 @@ function popitup(url) {
                         <th style="text-align:right"></th>
                     </tr>
                     </thead>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-4">
-        <div class="card">
-            <div class="card-body mt-4">
-                <table class="table table-hover" style="font-size:small">
-                    <thead>
-                    <tr>
-                        <th style="text-align:left">Name</th>
-                        <th style="text-align:left">Spot Price</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for key,value in commodities_list.items%}
-                    <tr>
-                        <!--              <td style="text-align:left"><a href='{{obj.pk}}/'>{{ obj.commodity_class }}</a></td>-->
-                        <td style="text-align:left">{{ key }}</td>
-                        <td style="text-align:left">{{value}}</td>
-                    </tr>
-                    {% endfor %}
                     </tbody>
                 </table>
             </div>
