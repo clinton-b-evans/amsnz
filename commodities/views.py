@@ -143,6 +143,7 @@ def commodity_list_view(request, year):
         "invested_total": invested_total,
         "commodities_invested_all_years_total_list": commodities_invested_all_years_total_list,
         "commodity_classes": commodity_classes,
+        "commodities_list": get_commodities(),
     }
     return render(request, "commodities/main.html", context)
 

@@ -37,6 +37,27 @@ function popitup(url) {
 
 
 </script>
+<a href="popupex.html" onclick="return popitup('/commodities/transaction/add')">
+    <button class="btn btn-dashboard mb-3" type="button">
+        <svg class="bi bi-calendar-plus me-1" fill="currentColor" height="16" viewBox="0 0 16 16"
+             width="16" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>
+            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+        </svg>
+        New Transaction
+    </button>
+</a>
+<a href="popupex.html" onclick="return popitup('/commodities/add')">
+
+    <button class="btn btn-dashboard mb-3" type="button">
+        <svg class="bi bi-calendar-plus me-1" fill="currentColor" height="16" viewBox="0 0 16 16"
+             width="16" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>
+            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+        </svg>
+        New Commodity
+    </button>
+</a>
 <div class="row">
     <div class="col-lg-8">
         <div class="card">
@@ -130,12 +151,6 @@ function popitup(url) {
                         <!--              <td style="text-align:left"><a href='{{obj.pk}}/'>{{ obj.commodity_class }}</a></td>-->
                         <td style="text-align:left">{{ key }}</td>
                         <td style="text-align:left">{{value}}</td>
-                        <td style="text-align:right">
-                            <button class="btn btn-outline-info" data-bs-target="#staticBackdrop" data-bs-toggle="modal"
-                                    onclick="ModelFunction('{{data.ticker}}')" type="button">
-                                buy
-                            </button>
-                        </td>
                     </tr>
                     {% endfor %}
                     </tbody>
@@ -144,37 +159,6 @@ function popitup(url) {
         </div>
     </div>
 </div>
-<div aria-hidden="true" aria-labelledby="staticBackdropLabel" class="modal fade" data-bs-backdrop="static"
-     data-bs-keyboard="false"
-     id="staticBackdrop" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel">Buy Commodity</h5>
-                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
-            </div>
-            <div class="modal-body">
-                <form action="" method=POST>
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        <label class="form-label" for="Commodity">Commodity:</label>
-                        <input aria-describedby="emailHelp" class="form-control" id="Commodity" type="text">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="Weight">Weight:</label>
-                        <input class="form-control" id="Weight" type="text">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="Value">Value:</label>
-                        <input class="form-control" id="Value" type="number">
-                    </div>
-                    <button class="btn btn-primary" type="submit">Submit</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
 
 {% endblock content %}
 
