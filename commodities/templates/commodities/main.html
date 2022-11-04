@@ -191,9 +191,14 @@ function popitup(url) {
   document.addEventListener("DOMContentLoaded", () => {
     new ApexCharts(document.querySelector("#Chart"), {
       series: [ {
-        name: 'Commodities All Years Progress',
+        name: 'Buy',
         type: 'column',
-        data: {{commodities_invested_all_years_total_list}}
+        data: {{purchased_data}}
+      },
+      {
+        name: 'Sell',
+        type: 'column',
+        data: {{sold_data}}
       }],
       chart: {
         height: 315,
@@ -265,8 +270,8 @@ function popitup(url) {
   function drawChart() {
 var data = google.visualization.arrayToDataTable([
       ['Task', 'Hours per Day'],
-      {% for obj in object_list %}
-      ['{{ obj.commodity_class }}', {{obj.percentage|stringformat:".2f"}}],
+      {% for obj in pie_chart_date %}
+      ['{{ obj.commodity }}', {{obj.percentage|stringformat:".2f"}}],
       {% endfor %}
     ]);
 

@@ -58,7 +58,20 @@ def get_commodities():
     for key, value in data.items():
         result[key] = value['regularMarketPrice']
     return result
-
+def compute_pie_chart_transaction_types(transactions, total):
+    commodities = transactions.values_list("commodity").distinct()
+    pie_chart_data = []
+    for commodity in commodities:
+        commodity_transactions = transactions.filter(commodity=commodity[0])
+        invested = 0
+        for commodity_transaction in commodity_transactions:
+            invested += float(commodity_transaction.value) * float(commodity_transaction.weight)
+        percentage = (invested/total)*100
+        pie_chart_data.append({
+            "commodity": commodity[0],
+            "percentage": percentage
+        })
+    return pie_chart_data
 
 def commodity_list_view(request, year):
     transactions = Transaction.objects.filter(date__year=year, transaction_type='Buy')
@@ -69,6 +82,19 @@ def commodity_list_view(request, year):
             years_list.append(item)
     commodity_prices = get_commodities()
     years_list = sort(years_list)
+    purchased_data = []
+    selling_data = []
+    for curr_year in years_list:
+        bought = 0
+        sell = 0
+        yearly_transactions = Transaction.objects.filter(date__year=curr_year)
+        for curr_transaction in yearly_transactions:
+            if curr_transaction.transaction_type == 'Buy':
+                bought += curr_transaction.weight * curr_transaction.value
+            else:
+                sell += curr_transaction.weight * curr_transaction.value
+        purchased_data.append(float(bought))
+        selling_data.append(float(sell))
     transactions_table = []
     totalInvestmentSum = 0
     currentMarketValueSum = 0
@@ -80,8 +106,8 @@ def commodity_list_view(request, year):
         currentMarketValueSum += currentMarketValue
         status = 'no-gain'
         if (currentMarketValue - totalInvestment) > 0 :
-            status = 'profit' 
-        elif (currentMarketValue - totalInvestment) < 0: 
+            status = 'profit'
+        elif (currentMarketValue - totalInvestment) < 0:
             status = 'loss'
         transactions_table.append({
             "commodity": transaction.commodity,
@@ -95,18 +121,18 @@ def commodity_list_view(request, year):
             "profit_loss_percentage": ((currentMarketValue - totalInvestment) / totalInvestment) * 100,
             "status": status
         })
-    commodity_classes = Commodity.objects.all()
-    print(commodity_classes)
 
     context = {
         "year": year,
         "years_list": years_list,
-        "object_list": commodity_classes,
         "transactions": transactions_table,
-        "commodity_classes": commodity_classes,
-        "commodities_list": get_commodities(),
+        "commodities_list": commodity_prices,
         "totalInvestmentSum": totalInvestmentSum,
         "currentMarketValueSum": currentMarketValueSum,
+        "purchased_data": purchased_data,
+        "sold_data": selling_data,
+        "pie_chart_date": compute_pie_chart_transaction_types(transactions, totalInvestmentSum)
+
     }
     return render(request, "commodities/main.html", context)
 
