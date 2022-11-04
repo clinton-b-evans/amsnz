@@ -33,7 +33,7 @@ urlpatterns = [
         name="delete-transaction",
     ),
     path(
-        "commodities-classes/",
+        "commodities-classes/<str:year>/",
         commodities_latest_price_view,
         name="commodities_classes",
     ),

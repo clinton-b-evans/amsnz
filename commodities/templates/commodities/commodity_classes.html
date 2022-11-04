@@ -3,57 +3,178 @@
 {% load mathfilters %}
 
 {% block title %}
-<div class="title">Commodities</div>
+<div class="title">Transactions <span> | {{year}}</span></div>
 {% endblock title %}
 
 {% block content %}
+
+<script src="{% static 'apexcharts/apexcharts.min.js' %}"></script>
+
+<!-- Google Chart -->
+<script src="{% static 'GoogleChart/Gchart.js' %}"></script>
+<!-- <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> -->
+
 <script language="javascript" type="text/javascript">
-console.log('{{title}}','log')
+<!--
 function popitup(url) {
     newwindow=window.open(url,'{{title}}','height=510,width=384');
     if (window.focus) {newwindow.focus()}
     return false;
 }
+// -->
+
+
+
+
+
 </script>
 
-<a href="popupex.html" onclick="return popitup('/commodities/add')">
-  <button type="button" class="btn btn-secondary btn-sm mb-3">
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-plus" viewBox="0 0 16 16">
-      <path d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>
-      <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
-    </svg>
-    New Commodity
-  </button>
-</a>
+<script>
+  window.onblur= function() {window.onfocus= function () {location.reload(true)}};
 
+
+
+
+
+</script>
 <div class="row">
-  <div class="col-lg-12">
-    <div class="card">
-      <div class="card-body mt-4">
-        <table class="table table-hover" style="font-size:small">
-            <thead>
-            <tr>
-            <th> Class Name</th>
-            <th> Purchased Price</th>
-            <th> Latest Price</th>
-            <th> Date</th>
-            </tr>
-            </thead>
-
-            <tbody>
-            {%for class in commodity_classes%}
-              <tr>
-                <td style="text-align:left">{{ class.commodity_class}}</td>
-                <td style="text-align:left">${{ class.spot_price}}</td>
-                <td style="text-align:left">${{ class.latest_price}}</td>
-                <td style="text-align:left">{{ class.date}}</td>
-              </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-      </div>
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-body mt-4">
+                <table class="table table-hover" style="font-size:small">
+                    <thead>
+                    <tr>
+                        <th style="text-align:left">Class</th>
+                        <th style="text-align:left">Transaction Type</th>
+                        <th style="text-align:right">Weight</th>
+                        <th style="text-align:right">Spot Price</th>
+                        <th style="text-align:right">Total</th>
+                        <th style="text-align:right">Invested</th>
+                        <th style="text-align:right">Percent</th>
+                        <th style="text-align:right">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for obj in object_list %}
+                    <tr>
+                        <!--              <td style="text-align:left"><a href='{{obj.pk}}/'>{{ obj.commodity_class }}</a></td>-->
+                        <td style="text-align:left">{{ obj.commodity_class }}</td>
+                        <td style="text-align:left">{{ obj.trans_ob.transaction_type}}</td>
+                        <td style="text-align:right">{{ obj.totalWeight }}</td>
+                        <td style="text-align:right">${{ obj.spot_price }}</td>
+                        <td style="text-align:right">${{ obj.total|floatformat:2 }}</td>
+                        <td style="text-align:right">${{ obj.invested }}</td>
+                        <td style="text-align:right">{{ obj.percentage|floatformat:2 }}%</td>
+                        <td style="text-align:right">
+                            <a href="popupex.html"
+                               onclick="return popitup('/commodities/transaction/{{ obj.trans_ob.pk }}/edit')"
+                               style="text-decoration: none;">
+                                <button class="btn btn-success btn-sm rounded-0" data-placement="top"
+                                        data-toggle="tooltip"
+                                        title="Edit" type="button">
+                                    <svg class="bi bi-pencil-square" fill="currentColor" height="16" viewBox="0 0 16 16"
+                                         width="16" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                        <path d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"
+                                              fill-rule="evenodd"/>
+                                    </svg>
+                                </button>
+                            </a>
+                            <a href="popupex.html"
+                               onclick="return popitup('/commodities/transaction/{{ obj.trans_ob.pk }}/delete')"
+                               style="text-decoration: none;">
+                                <button class="btn btn-danger btn-sm rounded-0" data-placement="top"
+                                        data-toggle="tooltip"
+                                        title="Delete" type="button">
+                                    <svg class="bi bi-trash" fill="currentColor" height="16" viewBox="0 0 16 16"
+                                         width="16" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
+                                              fill-rule="evenodd"/>
+                                    </svg>
+                                </button>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    <thead>
+                    <tr>
+                        <th style="text-align:left">Total:</th>
+                        <th style="text-align:right"></th>
+                        <th style="text-align:right"></th>
+                        <th style="text-align:right"></th>
+                        <th style="text-align:right">${{ grand_total|floatformat:2 }}</th>
+                        <th style="text-align:right">${{ invested_total|floatformat:2 }}</th>
+                        <th style="text-align:right"></th>
+                        <th style="text-align:right"></th>
+                    </tr>
+                    </thead>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-  </div>
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-body mt-4">
+                <table class="table table-hover" style="font-size:small">
+                    <thead>
+                    <tr>
+                        <th style="text-align:left">Name</th>
+                        <th style="text-align:left">Spot Price</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for key,value in commodities_list.items%}
+                    <tr>
+                        <!--              <td style="text-align:left"><a href='{{obj.pk}}/'>{{ obj.commodity_class }}</a></td>-->
+                        <td style="text-align:left">{{ key }}</td>
+                        <td style="text-align:left">{{value}}</td>
+                        <td style="text-align:right">
+                            <button class="btn btn-outline-info" data-bs-target="#staticBackdrop" data-bs-toggle="modal"
+                                    onclick="ModelFunction('{{data.ticker}}')" type="button">
+                                buy
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
+<div aria-hidden="true" aria-labelledby="staticBackdropLabel" class="modal fade" data-bs-backdrop="static"
+     data-bs-keyboard="false"
+     id="staticBackdrop" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Buy Commodity</h5>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" method=POST>
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label" for="Commodity">Commodity:</label>
+                        <input aria-describedby="emailHelp" class="form-control" id="Commodity" type="text">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="Weight">Weight:</label>
+                        <input class="form-control" id="Weight" type="text">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="Value">Value:</label>
+                        <input class="form-control" id="Value" type="number">
+                    </div>
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 {% endblock content %}
 
