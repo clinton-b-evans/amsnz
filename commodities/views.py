@@ -70,10 +70,14 @@ def commodity_list_view(request, year):
     commodity_prices = get_commodities()
     years_list = sort(years_list)
     transactions_table = []
+    totalInvestmentSum = 0
+    currentMarketValueSum = 0
     for transaction in transactions:
         totalInvestment = float(transaction.weight) * float(transaction.value)
+        totalInvestmentSum += totalInvestment
         spotPrice = commodity_prices[transaction.commodity.commodity_class]
         currentMarketValue = float(transaction.weight) * spotPrice
+        currentMarketValueSum += currentMarketValue
         status = 'no-gain'
         if (currentMarketValue - totalInvestment) > 0 :
             status = 'profit' 
@@ -101,6 +105,8 @@ def commodity_list_view(request, year):
         "transactions": transactions_table,
         "commodity_classes": commodity_classes,
         "commodities_list": get_commodities(),
+        "totalInvestmentSum": totalInvestmentSum,
+        "currentMarketValueSum": currentMarketValueSum,
     }
     return render(request, "commodities/main.html", context)
 

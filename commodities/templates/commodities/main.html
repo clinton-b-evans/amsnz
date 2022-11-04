@@ -84,7 +84,8 @@ function popitup(url) {
                     <thead>
                     <tr>
                         <th style="text-align:left">Commodity</th>
-                        <th style="text-align:left">Transaction Type</th>
+                        <th style="text-align:left">Type</th>
+                        <th style="text-align:left">Date</th>
                         <th style="text-align:right">Weight</th>
                         <th style="text-align:right">Purchased Price</th>
                         <th style="text-align:right">Total Investment</th>
@@ -100,6 +101,7 @@ function popitup(url) {
                         <!--              <td style="text-align:left"><a href='{{obj.pk}}/'>{{ obj.commodity_class }}</a></td>-->
                         <td style="text-align:left">{{ obj.commodity }}</td>
                         <td style="text-align:left">{{ obj.transaction_type}}</td>
+                        <td style="text-align:left">{{ obj.date}}</td>
                         <td style="text-align:right">{{ obj.weight }}</td>
                         <td style="text-align:right">${{ obj.purchasedValue|floatformat:2 }}</td>
                         <td style="text-align:right">${{ obj.totalInvestment|floatformat:2 }}</td>
@@ -144,9 +146,10 @@ function popitup(url) {
                         <th style="text-align:right"></th>
                         <th style="text-align:right"></th>
                         <th style="text-align:right"></th>
-                        <th style="text-align:right">${{ grand_total|floatformat:2 }}</th>
-                        <th style="text-align:right">${{ invested_total|floatformat:2 }}</th>
                         <th style="text-align:right"></th>
+                        <th style="text-align:right">${{ totalInvestmentSum|floatformat:2 }}</th>
+                        <th style="text-align:right"></th>
+                        <th style="text-align:right">${{ currentMarketValueSum|floatformat:2 }}</th>
                         <th style="text-align:right"></th>
                     </tr>
                     </thead>
