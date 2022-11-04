@@ -75,7 +75,7 @@ def commodity_list_view(request, year):
     for transaction in transactions:
         totalInvestment = float(transaction.weight) * float(transaction.value)
         totalInvestmentSum += totalInvestment
-        spotPrice = commodity_prices[transaction.commodity.commodity_class]
+        spotPrice = commodity_prices[transaction.commodity]
         currentMarketValue = float(transaction.weight) * spotPrice
         currentMarketValueSum += currentMarketValue
         status = 'no-gain'
