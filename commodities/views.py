@@ -149,7 +149,7 @@ def commodity_list_view(request, year):
 
 
 def commodity_transactions(request, year):
-    transactions = Transaction.objects.filter(date__year=year).annotate(score=Sum('value'))
+    transactions = Transaction.objects.filter(date__year=year)
 
     transactions_table = []
     commodity_prices = get_commodities()
