@@ -56,7 +56,8 @@ class Transaction(models.Model):
         ("Buy", "Buy"),
         ("Sell", "Sell"),
     )
-    commodity = models.ForeignKey(Commodity, on_delete=models.CASCADE)
+    commodity = models.CharField(
+        max_length=50, choices=COMMODITY_CLASS_CHOICES)
     transaction_type = models.CharField(
         choices=TRANSACTION_TYPE_SOURCES, max_length=100, null=False, blank=False
     )
