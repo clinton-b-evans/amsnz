@@ -93,8 +93,11 @@ def generate_bar_graph_series_data(transactions, commodity_prices):
     return investments, assetsGains, commodities
 
 
-def commodity_list_view(request, year):
-    transactions = Transaction.objects.filter(date__year=year, transaction_type='Buy')
+def commodity_list_view(request, year=''):
+    if year == '':
+        transactions = Transaction.objects.filter(transaction_type='Buy')
+    else:
+        transactions = Transaction.objects.filter(date__year=year, transaction_type='Buy')
     years = list(Transaction.objects.values_list("date__year").distinct())
     years_list = []
     for each in years:
@@ -108,25 +111,34 @@ def commodity_list_view(request, year):
     transactions_table = []
     totalInvestmentSum = 0
     currentMarketValueSum = 0
-    for transaction in transactions:
-        totalInvestment = float(transaction.weight) * float(transaction.value)
-        totalInvestmentSum += totalInvestment
-        spotPrice = commodity_prices[transaction.commodity]
-        currentMarketValue = float(transaction.weight) * spotPrice
-        currentMarketValueSum += currentMarketValue
+
+    for commodity in usedCommodities:
+        commodity_transactions = transactions.filter(commodity=commodity)
+        cumulativeWeight = 0
+        cumulativeInvestment = 0
+        cumulativeMarketValue = 0
+        spotPrice = commodity_prices[commodity]
+        for transaction in commodity_transactions:
+            cumulativeWeight += transaction.weight
+            totalInvestment = float(transaction.weight) * float(transaction.value)
+            cumulativeInvestment += totalInvestment
+            totalInvestmentSum += totalInvestment
+            currentMarketValue = float(transaction.weight) * spotPrice
+            currentMarketValueSum += currentMarketValue
+            cumulativeMarketValue += currentMarketValue
         status = 'no-gain'
-        if (currentMarketValue - totalInvestment) > 0 :
+        if (cumulativeMarketValue - cumulativeInvestment) > 0 :
             status = 'profit'
-        elif (currentMarketValue - totalInvestment) < 0:
+        elif (cumulativeMarketValue - cumulativeInvestment) < 0:
             status = 'loss'
         transactions_table.append({
-            "commodity": transaction.commodity,
-            "weight": transaction.weight,
-            "date": transaction.date,
-            "totalInvestment": totalInvestment,
+            "commodity": commodity,
+            "weight": cumulativeWeight,
+            "date": transactions.first().date,
+            "totalInvestment": cumulativeInvestment,
             "spotPrice": spotPrice,
-            "currentMarketValue": currentMarketValue,
-            "profit_loss_percentage": ((currentMarketValue - totalInvestment) / totalInvestment) * 100,
+            "currentMarketValue": cumulativeMarketValue,
+            "profit_loss_percentage": ((cumulativeMarketValue - cumulativeInvestment) / cumulativeInvestment) * 100,
             "status": status
         })
 
@@ -146,8 +158,11 @@ def commodity_list_view(request, year):
     return render(request, "commodities/main.html", context)
 
 
-def commodity_transactions(request, year):
-    transactions = Transaction.objects.filter(date__year=year)
+def commodity_transactions(request, year=''):
+    if year == '':
+        transactions = Transaction.objects.all()
+    else:
+        transactions = Transaction.objects.filter(date__year=year)
 
     transactions_table = []
     for transaction in transactions:
