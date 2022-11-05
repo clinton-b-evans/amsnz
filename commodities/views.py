@@ -134,7 +134,6 @@ def commodity_list_view(request, year=''):
         transactions_table.append({
             "commodity": commodity,
             "weight": cumulativeWeight,
-            "date": transactions.first().date,
             "totalInvestment": cumulativeInvestment,
             "spotPrice": spotPrice,
             "currentMarketValue": cumulativeMarketValue,

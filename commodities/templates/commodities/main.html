@@ -84,7 +84,6 @@ function popitup(url) {
                     <thead>
                     <tr>
                         <th style="text-align:left">Commodity</th>
-                        <th style="text-align:left">Date</th>
                         <th style="text-align:right">Weight</th>
                         <th style="text-align:right">Total Investment</th>
                         <th style="text-align:right">Spot Price</th>
@@ -98,7 +97,6 @@ function popitup(url) {
                     <tr>
                         <!--              <td style="text-align:left"><a href='{{obj.pk}}/'>{{ obj.commodity_class }}</a></td>-->
                         <td style="text-align:left">{{ obj.commodity }}</td>
-                        <td style="text-align:left">{{ obj.date}}</td>
                         <td style="text-align:right">{{ obj.weight }}</td>
                         <td style="text-align:right">${{ obj.totalInvestment|floatformat:2 }}</td>
                         <td style="text-align:right">${{ obj.spotPrice }}</td>
@@ -139,7 +137,6 @@ function popitup(url) {
                     <thead>
                     <tr>
                         <th style="text-align:left">Total:</th>
-                        <th style="text-align:right"></th>
                         <th style="text-align:right"></th>
                         <th style="text-align:right">${{ totalInvestmentSum|floatformat:2 }}</th>
                         <th style="text-align:right"></th>
