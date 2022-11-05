@@ -41,7 +41,6 @@ COMMODITY_CLASS_CHOICES = (
     ('SB=F', 'SB=F'),
 )
 
-
 class Commodity(models.Model):
     commodity_class = models.CharField(
         max_length=50, choices=COMMODITY_CLASS_CHOICES, unique=True
