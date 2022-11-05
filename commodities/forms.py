@@ -10,7 +10,7 @@ class DateInput(forms.DateInput):
 class CommodityForm(ModelForm):
     class Meta:
         model = Commodity
-        fields = ("commodity_class", "date")
+        fields = ("commodity_class", "weight")
 
 
 class TransactionForm(ModelForm):

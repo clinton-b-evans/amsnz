@@ -13,10 +13,12 @@ class Commodity(models.Model):
     commodity_class = models.CharField(
         max_length=50, choices=COMMODITY_CLASS_CHOICES, unique=True
     )
-    spot_price = models.DecimalField(
+    weight = models.DecimalField(
         blank=True, default=0.0, max_digits=8, decimal_places=2
     )
-    date = models.DateField(null=True, blank=True, default=now)
+    investment = models.DecimalField(
+        blank=True, default=0.0, max_digits=8, decimal_places=2
+    )
 
     def __str__(self):
         return f"{self.commodity_class}"
@@ -30,8 +32,7 @@ class Transaction(models.Model):
         ("Buy", "Buy"),
         ("Sell", "Sell"),
     )
-    commodity = models.CharField(
-        max_length=50, choices=COMMODITY_CLASS_CHOICES)
+    commodity = models.ForeignKey(Commodity, on_delete=models.CASCADE, blank=False, null=False)
     transaction_type = models.CharField(
         choices=TRANSACTION_TYPE_SOURCES, max_length=100, null=False, blank=False
     )
