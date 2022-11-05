@@ -69,9 +69,9 @@ def generate_bar_graph_series_data(transactions, commodity_prices):
 
 def commodity_list_view(request, year=''):
     if year == '':
-        transactions = Transaction.objects.filter(transaction_type='Buy')
+        transactions = Transaction.objects.filter(transaction_type='Buy').order_by('date')
     else:
-        transactions = Transaction.objects.filter(date__year=year, transaction_type='Buy')
+        transactions = Transaction.objects.filter(date__year=year, transaction_type='Buy').order_by('date')
     years = list(Transaction.objects.values_list("date__year").distinct())
     years_list = []
     for each in years:
@@ -133,9 +133,9 @@ def commodity_list_view(request, year=''):
 
 def commodity_transactions(request, year=''):
     if year == '':
-        transactions = Transaction.objects.all()
+        transactions = Transaction.objects.all().order_by('date')
     else:
-        transactions = Transaction.objects.filter(date__year=year)
+        transactions = Transaction.objects.filter(date__year=year).order_by('date')
 
     transactions_table = []
     for transaction in transactions:
