@@ -20,48 +20,13 @@ def sort(myList):
 
 def get_commodities():
     commodities_list = [
-    'ES=F',
-    'YM=F',
-    'NQ=F',
-    'RTY=F',
-    'ZB=F',
-    'ZN=F',
-    'ZF=F',
-    'ZT=F',
-    'GC=F',
-    'MGC=F',
-    'SI=F',
-    'SIL=F',
-    'PL=F',
-    'HG=F',
-    'PA=F',
-    'CL=F',
-    'HO=F',
-    'NG=F',
-    'RB=F',
-    'BZ=F',
-    'B0=F',
-    'ZC=F',
-    'ZO=F',
-    'KE=F',
-    'ZR=F',
-    'ZM=F',
-    'ZL=F',
-    'ZS=F',
-    'GF=F',
-    'HE=F',
-    'LE=F',
-    'CC=F',
-    'KC=F',
-    'CT=F',
-    'LBS=F',
-    'OJ=F',
-    'SB=F',
+        'GC=F',
+        'SI=F',
+        'PL=F',
+        "PA=F"
 ]
     all_symbols = " ".join(commodities_list)
     myInfo = Ticker(all_symbols)
-    summary = myInfo.summary_detail
-    asset_profile = myInfo.asset_profile
     data = myInfo.price
     result = dict.fromkeys(data.keys())
     for key, value in data.items():

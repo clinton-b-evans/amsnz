@@ -2,44 +2,12 @@ from django.db import models
 from django.utils.timezone import now
 
 COMMODITY_CLASS_CHOICES = (
-    ('ES=F', 'ES=F'),
-    ('YM=F', 'YM=F'),
-    ('NQ=F', 'NQ=F'),
-    ('RTY=F', 'RTY=F'),
-    ('ZB=F', 'ZB=F'),
-    ('ZN=F', 'ZN=F'),
-    ('ZF=F', 'ZF=F'),
-    ('ZT=F', 'ZT=F'),
     ('GC=F', 'GC=F'),
-    ('MGC=F', 'MGC=F'),
     ('SI=F', 'SI=F'),
-    ('SIL=F', 'SIL=F'),
     ('PL=F', 'PL=F'),
-    ('HG=F', 'HG=F'),
-    ('PA=F', 'PA=F'),
-    ('CL=F', 'CL=F'),
-    ('HO=F', 'HO=F'),
-    ('NG=F', 'NG=F'),
-    ('RB=F', 'RB=F'),
-    ('BZ=F', 'BZ=F'),
-    ('B0=F', 'B0=F'),
-    ('ZC=F', 'ZC=F'),
-    ('ZO=F', 'ZO=F'),
-    ('KE=F', 'KE=F'),
-    ('ZR=F', 'ZR=F'),
-    ('ZM=F', 'ZM=F'),
-    ('ZL=F', 'ZL=F'),
-    ('ZS=F', 'ZS=F'),
-    ('GF=F', 'GF=F'),
-    ('HE=F', 'HE=F'),
-    ('LE=F', 'LE=F'),
-    ('CC=F', 'CC=F'),
-    ('KC=F', 'KC=F'),
-    ('CT=F', 'CT=F'),
-    ('LBS=F', 'LBS=F'),
-    ('OJ=F', 'OJ=F'),
-    ('SB=F', 'SB=F'),
+    ("PA=F", "PA=F")
 )
+
 
 class Commodity(models.Model):
     commodity_class = models.CharField(
