@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 import requests
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -32,100 +34,66 @@ def get_commodities():
     for key, value in data.items():
         result[key] = value['regularMarketPrice']
     return result
-def compute_pie_chart_transaction_types(transactions, total):
-    commodities = transactions.values_list("commodity").distinct()
+def compute_pie_chart_transaction_types(commodities, total_invested):
     pie_chart_data = []
     for commodity in commodities:
-        commodity_transactions = transactions.filter(commodity=commodity[0])
-        invested = 0
-        for commodity_transaction in commodity_transactions:
-            invested += float(commodity_transaction.value) * float(commodity_transaction.weight)
-        percentage = (invested/total)*100
+        percentage = (commodity.investment/total_invested) * 100
         pie_chart_data.append({
-            "commodity": commodity[0],
+            "commodity": commodity.commodity_class,
             "percentage": percentage
         })
     return pie_chart_data
 
-def generate_bar_graph_series_data(transactions, commodity_prices):
-    commodities = list(transactions.values_list("commodity", flat=True).distinct())
+def generate_bar_graph_series_data(commodities, commodity_prices):
     investments = []
     assetsGains = []
     for commodity in commodities:
-        commodity_transactions = transactions.filter(commodity=commodity)
-        totalInvestmentSum = 0
-        currentMarketValueSum = 0
-        for transaction in commodity_transactions:
-            spotPrice = commodity_prices[transaction.commodity]
-            totalInvestment = float(transaction.weight) * float(transaction.value)
-            totalInvestmentSum += totalInvestment
-            currentMarketValue = float(transaction.weight) * spotPrice
-            currentMarketValueSum += currentMarketValue
-        assetsGains.append(0 if currentMarketValueSum < totalInvestmentSum else float(currentMarketValueSum - totalInvestmentSum))
-        investments.append(float(totalInvestmentSum))
+        spotPrice = commodity_prices[commodity.commodity_class]
+        currentMarketValue = float(commodity.weight) * spotPrice
+        assetsGains.append(0 if float(currentMarketValue) < float(commodity.investment) else float(currentMarketValue) - float(commodity.investment))
+        investments.append(float(commodity.investment))
 
-    return investments, assetsGains, commodities
+    return investments, assetsGains
 
 
-def commodity_list_view(request, year=''):
-    if year == '':
-        transactions = Transaction.objects.filter(transaction_type='Buy').order_by('date')
-    else:
-        transactions = Transaction.objects.filter(date__year=year, transaction_type='Buy').order_by('date')
-    years = list(Transaction.objects.values_list("date__year").distinct())
-    years_list = []
-    for each in years:
-        for item in each:
-            years_list.append(item)
+def commodity_list_view(request):
+    commodities = Commodity.objects.exclude(weight=0)
     commodity_prices = get_commodities()
-    years_list = sort(years_list)
-
-    investments, assetsGains, usedCommodities = generate_bar_graph_series_data(transactions, commodity_prices)
+    investments, assetsGains = generate_bar_graph_series_data(commodities, commodity_prices)
 
     transactions_table = []
-    totalInvestmentSum = 0
-    currentMarketValueSum = 0
+    totalInvestment = 0
+    totalMarketValue = 0
 
-    for commodity in usedCommodities:
-        commodity_transactions = transactions.filter(commodity=commodity)
-        cumulativeWeight = 0
-        cumulativeInvestment = 0
-        cumulativeMarketValue = 0
-        spotPrice = commodity_prices[commodity]
-        for transaction in commodity_transactions:
-            cumulativeWeight += transaction.weight
-            totalInvestment = float(transaction.weight) * float(transaction.value)
-            cumulativeInvestment += totalInvestment
-            totalInvestmentSum += totalInvestment
-            currentMarketValue = float(transaction.weight) * spotPrice
-            currentMarketValueSum += currentMarketValue
-            cumulativeMarketValue += currentMarketValue
+    for commodity in commodities:
+        spotPrice = commodity_prices[commodity.commodity_class]
+        totalInvestment += commodity.investment
+        currentMarketValue = float(commodity.weight) * spotPrice
+        totalMarketValue += currentMarketValue
         status = 'no-gain'
-        if (cumulativeMarketValue - cumulativeInvestment) > 0 :
+        if (float(currentMarketValue) - float(commodity.investment)) > 0 :
             status = 'profit'
-        elif (cumulativeMarketValue - cumulativeInvestment) < 0:
+        elif (float(currentMarketValue) - float(commodity.investment)) < 0:
             status = 'loss'
         transactions_table.append({
             "commodity": commodity,
-            "weight": cumulativeWeight,
-            "totalInvestment": cumulativeInvestment,
+            "weight": commodity.weight,
+            "totalInvestment": commodity.investment,
             "spotPrice": spotPrice,
-            "currentMarketValue": cumulativeMarketValue,
-            "profit_loss_percentage": ((cumulativeMarketValue - cumulativeInvestment) / cumulativeInvestment) * 100,
+            "currentMarketValue": currentMarketValue,
+            "profit_loss_percentage": ((float(currentMarketValue) - float(commodity.investment)) / float(commodity.investment)) * 100 if commodity.investment > 0 else 'N/A',
             "status": status
         })
 
     context = {
-        "year": year,
-        "years_list": years_list,
         "transactions": transactions_table,
         "commodities_list": commodity_prices,
-        "totalInvestmentSum": totalInvestmentSum,
-        "currentMarketValueSum": currentMarketValueSum,
-        "usedCommodities": usedCommodities,
+        "totalInvestmentSum": totalInvestment,
+        "currentMarketValueSum": totalMarketValue,
+        "usedCommodities": commodities.values_list('commodity_class', flat=True).distinct(),
         "investments": investments,
         "assetsGains": assetsGains,
-        "pie_chart_date": compute_pie_chart_transaction_types(transactions, totalInvestmentSum)
+        "pie_chart_date": compute_pie_chart_transaction_types(commodities, totalInvestment)
 
     }
     return render(request, "commodities/main.html", context)
@@ -240,6 +208,17 @@ def add_transaction(request, **kwargs):
         form = TransactionForm(request.POST)
         if form.is_valid():
             form.save()
+            if form.data["transaction_type"] == 'Buy':
+                form.instance.commodity.weight += Decimal(form.data["weight"])
+                form.instance.commodity.investment += Decimal(form.data["weight"]) * Decimal(form.data["value"])
+                form.instance.commodity.save()
+            else:
+                form.instance.commodity.weight -= Decimal(form.data["weight"])
+                if form.instance.commodity.investment - Decimal(form.data["weight"]) * Decimal(form.data["value"]) < 0:
+                    form.instance.commodity.investment = Decimal(0.0)
+                else:
+                    form.instance.commodity.investment -= Decimal(form.data["weight"]) * Decimal(form.data["value"])
+                form.instance.commodity.save()
             return HttpResponse(
                 '<script type="text/javascript">window.close()</script>'
             )
