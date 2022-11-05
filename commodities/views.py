@@ -121,9 +121,7 @@ def commodity_list_view(request, year):
             status = 'loss'
         transactions_table.append({
             "commodity": transaction.commodity,
-            "transaction_type": transaction.transaction_type,
             "weight": transaction.weight,
-            "purchasedValue": transaction.value,
             "date": transaction.date,
             "totalInvestment": totalInvestment,
             "spotPrice": spotPrice,

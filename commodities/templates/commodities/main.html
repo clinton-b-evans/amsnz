@@ -100,10 +100,8 @@ function popitup(url) {
                     <tr>
                         <!--              <td style="text-align:left"><a href='{{obj.pk}}/'>{{ obj.commodity_class }}</a></td>-->
                         <td style="text-align:left">{{ obj.commodity }}</td>
-                        <td style="text-align:left">{{ obj.transaction_type}}</td>
                         <td style="text-align:left">{{ obj.date}}</td>
                         <td style="text-align:right">{{ obj.weight }}</td>
-                        <td style="text-align:right">${{ obj.purchasedValue|floatformat:2 }}</td>
                         <td style="text-align:right">${{ obj.totalInvestment|floatformat:2 }}</td>
                         <td style="text-align:right">${{ obj.spotPrice }}</td>
                         <td style="text-align:right">${{ obj.currentMarketValue|floatformat:2 }}</td>
