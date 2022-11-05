@@ -58,6 +58,39 @@ def get_commodities():
     for key, value in data.items():
         result[key] = value['regularMarketPrice']
     return result
+def compute_pie_chart_transaction_types(transactions, total):
+    commodities = transactions.values_list("commodity").distinct()
+    pie_chart_data = []
+    for commodity in commodities:
+        commodity_transactions = transactions.filter(commodity=commodity[0])
+        invested = 0
+        for commodity_transaction in commodity_transactions:
+            invested += float(commodity_transaction.value) * float(commodity_transaction.weight)
+        percentage = (invested/total)*100
+        pie_chart_data.append({
+            "commodity": commodity[0],
+            "percentage": percentage
+        })
+    return pie_chart_data
+
+def generate_bar_graph_series_data(transactions, commodity_prices):
+    commodities = list(transactions.values_list("commodity", flat=True).distinct())
+    investments = []
+    assetsGains = []
+    for commodity in commodities:
+        commodity_transactions = transactions.filter(commodity=commodity)
+        totalInvestmentSum = 0
+        currentMarketValueSum = 0
+        for transaction in commodity_transactions:
+            spotPrice = commodity_prices[transaction.commodity]
+            totalInvestment = float(transaction.weight) * float(transaction.value)
+            totalInvestmentSum += totalInvestment
+            currentMarketValue = float(transaction.weight) * spotPrice
+            currentMarketValueSum += currentMarketValue
+        assetsGains.append(0 if currentMarketValueSum < totalInvestmentSum else float(currentMarketValueSum - totalInvestmentSum))
+        investments.append(float(totalInvestmentSum))
+
+    return investments, assetsGains, commodities
 
 
 def commodity_list_view(request, year):
@@ -69,6 +102,9 @@ def commodity_list_view(request, year):
             years_list.append(item)
     commodity_prices = get_commodities()
     years_list = sort(years_list)
+
+    investments, assetsGains, usedCommodities = generate_bar_graph_series_data(transactions, commodity_prices)
+
     transactions_table = []
     totalInvestmentSum = 0
     currentMarketValueSum = 0
@@ -80,14 +116,12 @@ def commodity_list_view(request, year):
         currentMarketValueSum += currentMarketValue
         status = 'no-gain'
         if (currentMarketValue - totalInvestment) > 0 :
-            status = 'profit' 
-        elif (currentMarketValue - totalInvestment) < 0: 
+            status = 'profit'
+        elif (currentMarketValue - totalInvestment) < 0:
             status = 'loss'
         transactions_table.append({
             "commodity": transaction.commodity,
-            "transaction_type": transaction.transaction_type,
             "weight": transaction.weight,
-            "purchasedValue": transaction.value,
             "date": transaction.date,
             "totalInvestment": totalInvestment,
             "spotPrice": spotPrice,
@@ -95,18 +129,19 @@ def commodity_list_view(request, year):
             "profit_loss_percentage": ((currentMarketValue - totalInvestment) / totalInvestment) * 100,
             "status": status
         })
-    commodity_classes = Commodity.objects.all()
-    print(commodity_classes)
 
     context = {
         "year": year,
         "years_list": years_list,
-        "object_list": commodity_classes,
         "transactions": transactions_table,
-        "commodity_classes": commodity_classes,
-        "commodities_list": get_commodities(),
+        "commodities_list": commodity_prices,
         "totalInvestmentSum": totalInvestmentSum,
         "currentMarketValueSum": currentMarketValueSum,
+        "usedCommodities": usedCommodities,
+        "investments": investments,
+        "assetsGains": assetsGains,
+        "pie_chart_date": compute_pie_chart_transaction_types(transactions, totalInvestmentSum)
+
     }
     return render(request, "commodities/main.html", context)
 
