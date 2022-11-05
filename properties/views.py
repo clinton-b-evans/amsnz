@@ -477,29 +477,30 @@ def property_summary_view(request, year, *args, **kwargs):
     crypto_goal = crypto_percent * current_goal
 
     # Commodities
-    commodities = Commodity.objects.filter(date__year=year)
-    commodities_total_amount = 0
-    invested_total = 0
-    for commodity in commodities:
-        commodity.totalweight = 0
-        commodity.invested = 0
-        transactions = Transaction.objects.filter(
-            commodity=commodity.pk, date__year=year
-        )
-        for transaction in transactions:
-            if transaction.transaction_type == "Buy":
-                commodity.totalweight += transaction.weight
-                commodity.invested += transaction.value
-            if transaction.transaction_type == "Sell":
-                commodity.totalweight -= transaction.weight
-                commodity.invested -= transaction.value
-        commodity.total = commodity.totalweight * commodity.spot_price
-        commodities_total_amount += commodity.total
-        invested_total += commodity.invested
+    commodities = Commodity.objects.all()
+    # commodities_total_amount = 0
+    # invested_total = 0
+    # for commodity in commodities:
+    #     commodity.totalweight = 0
+    #     commodity.invested = 0
+    #     transactions = Transaction.objects.filter(
+    #         commodity=commodity.pk, date__year=year
+    #     )
+    #     for transaction in transactions:
+    #         if transaction.transaction_type == "Buy":
+    #             commodity.totalweight += transaction.weight
+    #             commodity.invested += transaction.value
+    #         if transaction.transaction_type == "Sell":
+    #             commodity.totalweight -= transaction.weight
+    #             commodity.invested -= transaction.value
+    #     commodity.total = commodity.totalweight * commodity.spot_price
+    #     commodities_total_amount += commodity.total
+    #     invested_total += commodity.invested
     grand_total = 0
 
     commodities_goal = float(commodities_percent * current_goal)
-    commodities_progress1 = float(commodities_total_amount) / commodities_goal * 100
+    # commodities_progress1 = float(commodities_total_amount) / commodities_goal * 100
+    commodities_progress1 = float(20000) / commodities_goal * 100
     commod_progress = 0.0
     if commodities_goal > 0 and commodities_progress1 > 0:
         commod_progress += commodities_progress1
@@ -632,20 +633,20 @@ def property_summary_view(request, year, *args, **kwargs):
             obj.value = round(obj.shares * obj.share_price, 2)
             stocks_total_value = stocks_total_value + obj.value
 
-        commod_qs = Commodity.objects.all()
-        commodities_total_value = 0
-        for item in commod_qs:
-            item.totalweight = 0
-            yearwise_commod_qs2 = Transaction.objects.filter(
-                commodity=item.pk, date__year=my_year
-            )
-            for items in yearwise_commod_qs2:
-                if items.transaction_type == "Buy":
-                    item.totalweight += items.weight
-                if items.transaction_type == "Sell":
-                    item.totalweight -= items.weight
-            item.total = item.totalweight * item.spot_price
-            commodities_total_value += item.total
+        # commod_qs = Commodity.objects.all()
+        # commodities_total_value = 0
+        # for item in commod_qs:
+        #     item.totalweight = 0
+        #     yearwise_commod_qs2 = Transaction.objects.filter(
+        #         commodity=item.pk, date__year=my_year
+        #     )
+        #     for items in yearwise_commod_qs2:
+        #         if items.transaction_type == "Buy":
+        #             item.totalweight += items.weight
+        #         if items.transaction_type == "Sell":
+        #             item.totalweight -= items.weight
+        #     item.total = item.totalweight * item.spot_price
+        #     commodities_total_value += item.total
 
         yearwise_graph_asset = (
             yearwise_props_assets
@@ -654,7 +655,7 @@ def property_summary_view(request, year, *args, **kwargs):
             + yearwise_pb_qs_retirement
             + crypto_total_value
             + stocks_total_value
-            + commodities_total_value
+            + 10000
         )
         yearwise_graph_lib = yearwise_props_liabilities + yearwise_pb_liabilities
         yearwise_networth = yearwise_graph_asset - yearwise_graph_lib
@@ -671,7 +672,7 @@ def property_summary_view(request, year, *args, **kwargs):
         + savings_total
         + total_retirement
         + stocks_total_value
-        + commodities_total_amount
+        + 2000
         + crypto_total_amount
     )
 
@@ -713,7 +714,7 @@ def property_summary_view(request, year, *args, **kwargs):
         "stocks_total_reits": stocks_total_reits,
         "stocks_total_other": stocks_total_other,
         "commodities": commodities,
-        "commodities_total_value": commodities_total_amount,
+        "commodities_total_value": 200,
         "crypto_qs": crypto_qs,
         "crypto_total_amount": crypto_total_amount,
         "property_progress": property_progress,
