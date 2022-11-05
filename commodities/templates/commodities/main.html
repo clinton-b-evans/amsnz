@@ -84,10 +84,8 @@ function popitup(url) {
                     <thead>
                     <tr>
                         <th style="text-align:left">Commodity</th>
-                        <th style="text-align:left">Type</th>
                         <th style="text-align:left">Date</th>
                         <th style="text-align:right">Weight</th>
-                        <th style="text-align:right">Purchased Price</th>
                         <th style="text-align:right">Total Investment</th>
                         <th style="text-align:right">Spot Price</th>
                         <th style="text-align:right">Current Market Value</th>
@@ -208,15 +206,6 @@ var options = {
             enabled: true
           }
         },
-<<<<<<< HEAD
-      },
-      legend: {
-        horizontalAlign: 'center',
-        // offsetX: 40
-      }
-    }).render();
-  });
-=======
         responsive: [{
           breakpoint: 480,
           options: {
@@ -230,7 +219,7 @@ var options = {
         plotOptions: {
           bar: {
             horizontal: false,
-            borderRadius: 10,
+            borderRadius: 0,
             dataLabels: {
               total: {
                 enabled: true,
@@ -261,10 +250,6 @@ var options = {
         var chart = new ApexCharts(document.querySelector("#Chart"), options);
         chart.render();
 
-
-
-
->>>>>>> 1d183ad87108de7d23d8f25c50fa45dd84910232
 </script>
 
 <script type="text/javascript">
