@@ -188,76 +188,71 @@ function popitup(url) {
     }
 </script>
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    new ApexCharts(document.querySelector("#Chart"), {
-      series: [ {
-        name: 'Buy',
-        type: 'column',
-        data: {{purchased_data}}
-      },
-      {
-        name: 'Sell',
-        type: 'column',
-        data: {{sold_data}}
-      }],
-      chart: {
-        height: 315,
-        type: 'line',
-        stacked: false
-      },
-      dataLabels: {
-        enabled: false
-      },
-      stroke: {
-        width: [1, 1, 4]
-      },
-      title: {
-        text: 'Commodities Tracker Timeline',
-        align: 'center',
-        // offsetX: 110
-      },
-      xaxis: {
-        categories: {{years_list}},
-      },
-      yaxis: [
-        {
-          axisTicks: {
-            show: true,
-          },
-          axisBorder: {
-            show: true,
-            color: '#008FFB'
-          },
-          labels: {
-            style: {
-              colors: '#008FFB',
+var options = {
+        series: [
+            {
+            'name': 'Invested',
+            'data': {{investments}}
+            },
+            {
+            'name': 'Gain',
+            'data': {{assetsGains}}
             }
+        ],
+          chart: {
+          type: 'bar',
+          height: 350,
+          stacked: true,
+          toolbar: {
+            show: true
           },
-          title: {
-            text: "Total Commodities",
-            style: {
-              color: '#008FFB',
-            }
-          },
-          tooltip: {
+          zoom: {
             enabled: true
           }
-        }
-      ],
-      tooltip: {
-        fixed: {
-          enabled: true,
-          position: 'topLeft', // topRight, topLeft, bottomRight, bottomLeft
-          offsetY: 30,
-          offsetX: 60
         },
-      },
-      legend: {
-        horizontalAlign: 'center',
-        // offsetX: 40
-      }
-    }).render();
-  });
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            legend: {
+              position: 'bottom',
+              offsetX: -10,
+              offsetY: 0
+            }
+          }
+        }],
+        plotOptions: {
+          bar: {
+            horizontal: false,
+            borderRadius: 10,
+            dataLabels: {
+              total: {
+                enabled: true,
+                style: {
+                  fontSize: '13px',
+                  fontWeight: 900
+                }
+              }
+            }
+          },
+        },
+        xaxis: {
+          categories: [
+              {% for value in usedCommodities %}
+                "{{value}}",
+              {% endfor %}
+          ],
+        },
+        legend: {
+          position: 'right',
+          offsetY: 40
+        },
+        fill: {
+          opacity: 1
+        }
+        };
+
+        var chart = new ApexCharts(document.querySelector("#Chart"), options);
+        chart.render();
 
 
 

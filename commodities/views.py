@@ -73,6 +73,26 @@ def compute_pie_chart_transaction_types(transactions, total):
         })
     return pie_chart_data
 
+def generate_bar_graph_series_data(transactions, commodity_prices):
+    commodities = list(transactions.values_list("commodity", flat=True).distinct())
+    investments = []
+    assetsGains = []
+    for commodity in commodities:
+        commodity_transactions = transactions.filter(commodity=commodity)
+        totalInvestmentSum = 0
+        currentMarketValueSum = 0
+        for transaction in commodity_transactions:
+            spotPrice = commodity_prices[transaction.commodity]
+            totalInvestment = float(transaction.weight) * float(transaction.value)
+            totalInvestmentSum += totalInvestment
+            currentMarketValue = float(transaction.weight) * spotPrice
+            currentMarketValueSum += currentMarketValue
+        assetsGains.append(0 if currentMarketValueSum < totalInvestmentSum else float(currentMarketValueSum - totalInvestmentSum))
+        investments.append(float(totalInvestmentSum))
+
+    return investments, assetsGains, commodities
+
+
 def commodity_list_view(request, year):
     transactions = Transaction.objects.filter(date__year=year, transaction_type='Buy')
     years = list(Transaction.objects.values_list("date__year").distinct())
@@ -82,19 +102,9 @@ def commodity_list_view(request, year):
             years_list.append(item)
     commodity_prices = get_commodities()
     years_list = sort(years_list)
-    purchased_data = []
-    selling_data = []
-    for curr_year in years_list:
-        bought = 0
-        sell = 0
-        yearly_transactions = Transaction.objects.filter(date__year=curr_year)
-        for curr_transaction in yearly_transactions:
-            if curr_transaction.transaction_type == 'Buy':
-                bought += curr_transaction.weight * curr_transaction.value
-            else:
-                sell += curr_transaction.weight * curr_transaction.value
-        purchased_data.append(float(bought))
-        selling_data.append(float(sell))
+
+    investments, assetsGains, usedCommodities = generate_bar_graph_series_data(transactions, commodity_prices)
+
     transactions_table = []
     totalInvestmentSum = 0
     currentMarketValueSum = 0
@@ -129,8 +139,9 @@ def commodity_list_view(request, year):
         "commodities_list": commodity_prices,
         "totalInvestmentSum": totalInvestmentSum,
         "currentMarketValueSum": currentMarketValueSum,
-        "purchased_data": purchased_data,
-        "sold_data": selling_data,
+        "usedCommodities": usedCommodities,
+        "investments": investments,
+        "assetsGains": assetsGains,
         "pie_chart_date": compute_pie_chart_transaction_types(transactions, totalInvestmentSum)
 
     }
