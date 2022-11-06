@@ -1189,3 +1189,23 @@ h1, h2, h3, h4, h5, h6 {
 									   color-stop(0.72, rgb(73,125,189)),
 									   color-stop(0.86, rgb(28,58,148)));
 }
+
+.form-control:focus {
+  color: #212529;
+  background-color: #fff;
+  border-color: #86b7fe;
+  outline: 0;
+  box-shadow: none !important;
+}
+
+.form-select:focus {
+  border-color: #86b7fe;
+  outline: 0;
+  box-shadow: none !important;
+}
+
+.btn-group-sm>.btn, .btn-sm {
+  padding: 0rem 0.5rem !important;
+  font-size: .875rem;
+  border-radius: 0.2rem;
+}
