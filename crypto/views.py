@@ -8,10 +8,10 @@ from .models import Crypto, CryptoTransaction
 from .forms import CryptoForm, TransactionForm
 import yfinance as yf
 from datetime import date, timedelta
-def compute_pie_chart_transaction_types(cryptos, total_invested):
+def compute_pie_chart_transaction_types(cryptos, totalMarketValue, crypto_prices):
     pie_chart_data = []
     for crypto in cryptos:
-        percentage = (crypto.investment/total_invested) * 100
+        percentage = ((float(crypto.quantity) * float(crypto_prices[crypto.ticker]))/totalMarketValue) * 100
         pie_chart_data.append({
             "name": crypto.name,
             "percentage": percentage
@@ -77,7 +77,7 @@ def crypto_list_view(request):
         "usedCrypto": cryptos.values_list('name', flat=True).distinct(),
         "investments": investments,
         "assetsGains": assetsGains,
-        "pie_chart_date": compute_pie_chart_transaction_types(cryptos, totalInvestment)
+        "pie_chart_date": compute_pie_chart_transaction_types(cryptos, totalMarketValue, crypto_prices)
 
     }
     return render(request, "crypto/main.html", context)
@@ -210,6 +210,18 @@ def update_transaction(request, pk):
     if request.method == "POST":
         form = TransactionForm(request.POST, instance=transaction)
         if form.is_valid():
+            if 'transaction_type' in form.changed_data:
+                if form.data["transaction_type"] == 'Buy':
+                    form.instance.coin.quantity += Decimal(form.data["quantity"])
+                    form.instance.coin.investment += Decimal(form.data["quantity"]) * Decimal(form.data["spot_price"])
+                    form.instance.coin.save()
+                else:
+                    form.instance.coin.quantity -= Decimal(form.data["quantity"])
+                    if form.instance.coin.investment - Decimal(form.data["quantity"]) * Decimal(form.data["spot_price"]) < 0:
+                        form.instance.coin.investment = Decimal(0.0)
+                    else:
+                        form.instance.coin.investment -= Decimal(form.data["quantity"]) * Decimal(form.data["spot_price"])
+                    form.instance.coin.save()
             form.save()
             return HttpResponse(
                 '<script type="text/javascript">window.close()</script>'
