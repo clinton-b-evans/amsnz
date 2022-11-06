@@ -274,10 +274,10 @@
       </li> -->
 
       <li class="nav-item">
-        <a {% if request.resolver_match.url_name in 'Index_fund_list,property_year-to-date' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} data-bs-target="#stock-nav" data-bs-toggle="collapse" href="#">
+        <a {% if request.resolver_match.url_name in 'Index_fund_list' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} data-bs-target="#stock-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-graph-up-arrow"></i><span>Stocks</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
-        <ul id="stock-nav" {% if request.resolver_match.url_name in 'Index_fund_list,property_year-to-date' %}class="nav-content collapse show active"{% else %}class="nav-content collapse"{% endif %} data-bs-parent="#sidebar-nav">
+        <ul id="stock-nav" {% if request.resolver_match.url_name in 'Index_fund_list' %}class="nav-content collapse show active"{% else %}class="nav-content collapse"{% endif %} data-bs-parent="#sidebar-nav">
           <li class="nav-item">
             <a {% if request.resolver_match.url_name == 'Index_fund_list' %}class="nav-link active"{% else %}class="nav-link collapsed"{% endif %} href="/marketfunds/{% now 'Y' %}/">
               <i class="bi bi-circle"></i>
@@ -294,17 +294,17 @@
       </li><!-- End Stocks Nav -->
 
       <li class="nav-item">
-        <a {% if request.resolver_match.url_name in 'commodities_list,commodities_classes' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} data-bs-target="#commodities-nav" data-bs-toggle="collapse" href="#">
+        <a {% if request.resolver_match.url_name in 'commodities_list_all,commodities_transactions' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} data-bs-target="#commodities-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-gem"></i><span>Commodities</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
-        <ul id="commodities-nav" {% if request.resolver_match.url_name in 'commodities_list,commodities_classes' %}class="nav-content collapse show active"{% else %}class="nav-content collapse"{% endif %} data-bs-parent="#sidebar-nav">
+        <ul id="commodities-nav" {% if request.resolver_match.url_name in 'commodities_list_all,commodities_transactions' %}class="nav-content collapse show active"{% else %}class="nav-content collapse"{% endif %} data-bs-parent="#sidebar-nav">
           <li class="nav-item">
-            <a {% if request.resolver_match.url_name == 'commodities_list' %}class="nav-link active"{% else %}class="nav-link collapsed"{% endif %} href="/commodities/">
+            <a {% if request.resolver_match.url_name == 'commodities_list_all' %}class="nav-link active"{% else %}class="nav-link collapsed"{% endif %} href="/commodities/">
               <i class="bi bi-circle"></i></i><span>Commodity Portfolio</span>
             </a>
           </li>
           <li class="nav-item">
-            <a {% if request.resolver_match.url_name == 'commodities_classes' %}class="nav-link active"{% else %}class="nav-link collapsed"{% endif %} href="/commodities-classes/">
+            <a {% if request.resolver_match.url_name == 'commodities_transactions' %}class="nav-link active"{% else %}class="nav-link collapsed"{% endif %} href="/commodities-classes/">
               <i class="bi bi-circle"></i>
               <span>Commodity Transactions</span>
             </a>
@@ -313,10 +313,10 @@
       </li><!-- End Commodity Nav -->
 
       <li class="nav-item">
-        <a {% if request.resolver_match.url_name in 'crypto-list,/crypto/transactions' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} data-bs-target="#crypto-nav" data-bs-toggle="collapse" href="#">
+        <a {% if request.resolver_match.url_name in 'crypto-list,/crypto-transactions' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} data-bs-target="#crypto-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-currency-bitcoin"></i><span>Crypto</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
-        <ul id="crypto-nav" {% if request.resolver_match.url_name in 'crypto-list,/crypto/transactions' %}class="nav-content collapse show active"{% else %}class="nav-content collapse"{% endif %} data-bs-parent="#sidebar-nav">
+        <ul id="crypto-nav" {% if request.resolver_match.url_name in 'crypto-list,/crypto-transactions' %}class="nav-content collapse show active"{% else %}class="nav-content collapse"{% endif %} data-bs-parent="#sidebar-nav">
           <li class="nav-item">
             <a {% if request.resolver_match.url_name == 'crypto-list' %}class="nav-link active"{% else %}class="nav-link collapsed"{% endif %} href="/crypto/">
               <i class="bi bi-circle"></i>
@@ -324,7 +324,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a {% if request.resolver_match.url_name == '/crypto/transactions' %} class="nav-link active" {% else %}class="nav-link collapsed" {% endif %} href="/crypto/transactions">
+            <a {% if request.resolver_match.url_name == 'crypto-transactions' %} class="nav-link active" {% else %}class="nav-link collapsed" {% endif %} href="/crypto/transactions">
               <i class="bi bi-circle"></i>
               <span>Crypto Transactions</span>
             </a>
