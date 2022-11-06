@@ -1,62 +1,107 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Crypto
+from yahooquery import Ticker
+
+from .models import Crypto, CryptoTransaction
 from .forms import CryptoForm
 import yfinance as yf
 from datetime import date, timedelta
+def compute_pie_chart_transaction_types(cryptos, total_invested):
+    pie_chart_data = []
+    for crypto in cryptos:
+        percentage = (crypto.investment/total_invested) * 100
+        pie_chart_data.append({
+            "name": crypto.name,
+            "percentage": percentage
+        })
+    return pie_chart_data
 
+def generate_bar_graph_series_data(cryptos, crypto_prices):
+    investments = []
+    assetsGains = []
+    for crypto in cryptos:
+        spotPrice = crypto_prices[crypto.ticker]
+        currentMarketValue = float(crypto.quantity) * spotPrice
+        assetsGains.append(0 if float(currentMarketValue) < float(crypto.investment) else float(currentMarketValue) - float(crypto.investment))
+        investments.append(float(crypto.investment))
 
-def sort(myList):
-    myList.sort()
-    return myList
+    return investments, assetsGains
 
+def get_crypto_price_data(tickers):
+    all_symbols = " ".join(tickers)
+    myInfo = Ticker(all_symbols)
+    data = myInfo.price
+    result = dict.fromkeys(data.keys())
+    for key, value in data.items():
+        result[key] = value['regularMarketPrice']
+    return result
 
-def crypto_list_view(request, year):
-    crypto_objects_lists = Crypto.objects.filter(date__year=year)
-    total = 0
-    for obj in crypto_objects_lists:
-        obj.total = round(obj.quantity * obj.spot_price, 2)
-        total = total + obj.total
-    total_amounts = 0
+def crypto_list_view(request):
+    cryptos = Crypto.objects.exclude(quantity=0)
+    used_cryptos_ticker = cryptos.values_list('ticker', flat=True).distinct()
+    crypto_prices = get_crypto_price_data(used_cryptos_ticker)
+    investments, assetsGains = generate_bar_graph_series_data(cryptos, crypto_prices)
 
-    for crypto in crypto_objects_lists:
-        total_amounts += crypto.total
+    transactions_table = []
+    totalInvestment = 0
+    totalMarketValue = 0
 
-    for crypto_per in crypto_objects_lists:
-        crypto_per.percent = (crypto_per.total / total_amounts) * 100
+    for crypto in cryptos:
+        spotPrice = crypto_prices[crypto.ticker]
+        totalInvestment += crypto.investment
+        currentMarketValue = float(crypto.quantity) * spotPrice
+        totalMarketValue += currentMarketValue
+        status = 'no-gain'
+        if (float(currentMarketValue) - float(crypto.investment)) > 0 :
+            status = 'profit'
+        elif (float(currentMarketValue) - float(crypto.investment)) < 0:
+            status = 'loss'
+        transactions_table.append({
+            "name": crypto.name,
+            "ticker": crypto.ticker,
+            "quantity": crypto.quantity,
+            "totalInvestment": crypto.investment,
+            "spotPrice": spotPrice,
+            "currentMarketValue": currentMarketValue,
+            "profit_loss_percentage": ((float(currentMarketValue) - float(crypto.investment)) / float(crypto.investment)) * 100 if crypto.investment > 0 else 'N/A',
+            "status": status
+        })
 
-    years = list(Crypto.objects.values_list("date__year").distinct())
-    years_list = []
-    for each in years:
-        for item in each:
-            years_list.append(item)
-    years_list = sort(years_list)
-
-    crypto_all_years_total_list = []
-    # crypto_total = 0
-    for my_year in years_list:
-        crypto_objects = Crypto.objects.filter(date__year=my_year)
-        crypto_total = 0
-        for obj in crypto_objects:
-            obj.total = round(obj.quantity * obj.spot_price, 3)
-            crypto_total = crypto_total + obj.total
-        grand_total = 0
-        for item in crypto_objects:
-            grand_total += item.total
-        for item in crypto_objects:
-            item.percent = (item.total / grand_total) * 100
-        crypto_all_years_total_list.append(float(crypto_total))
-        print("crypto_total", crypto_total)
-    print("all_years_crypto_total", crypto_all_years_total_list)
     context = {
-        "crypto_objects_lists": crypto_objects_lists,
-        "total": total,
-        "years_list": years_list,
-        "crypto_all_years_total_list": crypto_all_years_total_list,
-        "year": year,
+        "transactions": transactions_table,
+        "crypto_prices": crypto_prices,
+        "totalInvestment": totalInvestment,
+        "totalMarketValue": totalMarketValue,
+        "usedCrypto": cryptos.values_list('name', flat=True).distinct(),
+        "investments": investments,
+        "assetsGains": assetsGains,
+        "pie_chart_date": compute_pie_chart_transaction_types(cryptos, totalInvestment)
+
     }
     return render(request, "crypto/main.html", context)
+def crypto_transactions(request, year=''):
+    if year == '':
+        transactions = CryptoTransaction.objects.all().order_by('date')
+    else:
+        transactions = CryptoTransaction.objects.filter(date__year=year).order_by('date')
 
+    transactions_table = []
+    for transaction in transactions:
+        totalInvestment = float(transaction.quantity) * float(transaction.spot_price)
+        transactions_table.append({
+            "crypto_name": transaction.coin,
+            "transaction_type": transaction.transaction_type,
+            "quantity": transaction.quantity,
+            "purchasedValue": transaction.spot_price,
+            "date": transaction.date,
+            "totalInvestment": totalInvestment,
+        })
+
+    context = {
+        "year": year,
+        "transactions": transactions_table,
+    }
+    return render(request, "transactions/transactions.html", context)
 
 def add_crypto(request):
     today = date.today().isoformat()
