@@ -92,7 +92,7 @@ function popitup(url) {
 </div>
 
 <div class="row">
-    <div class="col-lg-8">
+    <div class="col-lg-12">
         <div class="card">
             <div class="card-body mt-4">
                 <table class="table table-hover" style="font-size:small">
@@ -128,29 +128,6 @@ function popitup(url) {
                         <th style="text-align:right"></th>
                     </tr>
                     </thead>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-4">
-        <div class="card">
-            <div class="card-body style-7 mt-4">
-                <table class="table table-hover" style="font-size:small">
-                    <thead>
-                    <tr>
-                        <th style="text-align:left">Name</th>
-                        <th style="text-align:left">Spot Price</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for key,value in commodities_list.items%}
-                    <tr>
-                        <!--              <td style="text-align:left"><a href='{{obj.pk}}/'>{{ obj.commodity_class }}</a></td>-->
-                        <td style="text-align:left">{{ key }}</td>
-                        <td style="text-align:left">{{value}}</td>
-                    </tr>
-                    {% endfor %}
                     </tbody>
                 </table>
             </div>
