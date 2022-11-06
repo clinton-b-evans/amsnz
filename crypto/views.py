@@ -1,9 +1,11 @@
+from decimal import Decimal
+
 from django.shortcuts import render
 from django.http import HttpResponse
 from yahooquery import Ticker
 
 from .models import Crypto, CryptoTransaction
-from .forms import CryptoForm
+from .forms import CryptoForm, TransactionForm
 import yfinance as yf
 from datetime import date, timedelta
 def compute_pie_chart_transaction_types(cryptos, total_invested):
@@ -170,3 +172,72 @@ def delete_crypto(request, pk):
         crypto.delete()
         return HttpResponse('<script type="text/javascript">window.close()</script>')
     return render(request, "crypto/delete.html", context)
+
+def add_transaction(request, **kwargs):
+    submitted = False
+    if request.method == "POST":
+        form = TransactionForm(request.POST)
+        if form.is_valid():
+            form.save()
+            if form.data["transaction_type"] == 'Buy':
+                form.instance.coin.quantity += Decimal(form.data["quantity"])
+                form.instance.coin.investment += Decimal(form.data["quantity"]) * Decimal(form.data["spot_price"])
+                form.instance.coin.save()
+            else:
+                form.instance.coin.quantity -= Decimal(form.data["quantity"])
+                if form.instance.coin.investment - Decimal(form.data["quantity"]) * Decimal(form.data["spot_price"]) < 0:
+                    form.instance.coin.investment = Decimal(0.0)
+                else:
+                    form.instance.coin.investment -= Decimal(form.data["quantity"]) * Decimal(form.data["spot_price"])
+                form.instance.coin.save()
+            return HttpResponse(
+                '<script type="text/javascript">window.close()</script>'
+            )
+    else:
+        form = TransactionForm
+        if "submitted" in request.GET:
+            submitted = True
+    form = TransactionForm
+    return render(
+        request, "transactions/add.html", {"form": form, "submitted": submitted}
+    )
+
+
+def update_transaction(request, pk):
+    transaction = CryptoTransaction.objects.get(id=pk)
+    form = TransactionForm(instance=transaction)
+
+    if request.method == "POST":
+        form = TransactionForm(request.POST, instance=transaction)
+        if form.is_valid():
+            form.save()
+            return HttpResponse(
+                '<script type="text/javascript">window.close()</script>'
+            )
+    context = {"form": form}
+    return render(request, "transactions/add.html", context)
+
+
+def delete_transaction(request, pk):
+    transaction = CryptoTransaction.objects.get(id=pk)
+    qs = CryptoTransaction.objects.get(id=pk)
+    context = {
+        "object": qs,
+    }
+
+    if request.method == "POST":
+        # delete object
+        if transaction.transaction_type == 'Buy':
+            transaction.coin.quantity -= transaction.quantity
+            transaction.coin.investment -= Decimal(transaction.quantity) * Decimal(transaction.spot_price)
+            transaction.coin.save()
+        else:
+            transaction.coin.quantity += transaction.quantity
+            transaction.coin.investment += Decimal(transaction.quantity) * Decimal(transaction.spot_price)
+            transaction.coin.save()
+        transaction.delete()
+        # after deleting redirect to
+        # home page
+        return HttpResponse('<script type="text/javascript">window.close()</script>')
+
+    return render(request, "transactions/delete.html", context)
