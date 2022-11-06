@@ -3,8 +3,8 @@
     <form method="POST">
         <!-- Security token by Django -->
         {% csrf_token %}
-        <h2>You are about to delete this Commodity</h2>
-        <p>Are you sure you want to delete {{ object.commodity_class  }}?</p>
+        <h2>You are about to delete this Transaction</h2>
+        <p>Are you sure you want to delete {{ object.coin.name  }}?</p>
         <p>This action cannot be undone.</p>
         <p>All transctions for this fund will be lost</p>
         <input type="submit" value="Delete" />
