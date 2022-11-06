@@ -104,7 +104,7 @@ def crypto_transactions(request, year=''):
         "year": year,
         "transactions": transactions_table,
     }
-    return render(request, "transactions/transactions.html", context)
+    return render(request, "cryptoTransactions/transactions.html", context)
 
 def add_crypto(request):
     today = date.today().isoformat()
@@ -199,7 +199,7 @@ def add_transaction(request, **kwargs):
             submitted = True
     form = TransactionForm
     return render(
-        request, "transactions/add.html", {"form": form, "submitted": submitted}
+        request, "cryptoTransactions/add.html", {"form": form, "submitted": submitted}
     )
 
 
@@ -215,7 +215,7 @@ def update_transaction(request, pk):
                 '<script type="text/javascript">window.close()</script>'
             )
     context = {"form": form}
-    return render(request, "transactions/add.html", context)
+    return render(request, "cryptoTransactions/add.html", context)
 
 
 def delete_transaction(request, pk):
@@ -240,4 +240,4 @@ def delete_transaction(request, pk):
         # home page
         return HttpResponse('<script type="text/javascript">window.close()</script>')
 
-    return render(request, "transactions/delete.html", context)
+    return render(request, "cryptoTransactions/delete.html", context)
