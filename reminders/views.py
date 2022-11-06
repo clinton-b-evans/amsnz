@@ -1,9 +1,12 @@
+import json
+
+from django.core import serializers
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from properties.models import Property
 from reminders.models import Reminder
 from django.db.models import Sum
-from datetime import date
+from datetime import date, datetime
 from .forms import ReminderForm
 
 # Create your views here.
@@ -66,3 +69,22 @@ def delete_reminder(request, pk):
         reminder.delete()
         return HttpResponse('<script type="text/javascript">window.close()</script>')
     return render(request, "reminders/delete.html", context)
+
+
+def get_reminders(request):
+    reminders = Reminder.objects.filter(due_date__gte=date.today())
+    for reminder in reminders:
+        if reminder.reminder_type == "oneoff":
+
+            pass
+        elif reminder.reminder_type == "weekly":
+            pass
+        elif reminder.reminder_type == "bi-weekly":
+            pass
+        elif reminder.reminder_type == "monthly":
+            pass
+        elif reminder.reminder_type == "yearly":
+            pass
+        elif reminder.reminder_type == "quarterly":
+            pass
+    return HttpResponse(serializers.serialize('json', reminders), content_type="application/json")
