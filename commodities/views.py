@@ -26,7 +26,7 @@ def get_commodities():
         'SI=F',
         'PL=F',
         "PA=F"
-]
+    ]
     all_symbols = " ".join(commodities_list)
     myInfo = Ticker(all_symbols)
     data = myInfo.price

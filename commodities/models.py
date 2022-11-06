@@ -8,20 +8,30 @@ COMMODITY_CLASS_CHOICES = (
     ("PA=F", "PA=F")
 )
 
+COMMODITY_NAME_CHOICES = (
+    ('Gold', 'Gold'),
+    ('Silver', 'Silver'),
+    ('Platinum', 'Platinum'),
+    ("Palladium", "Palladium")
+)
+
 
 class Commodity(models.Model):
+    name = models.CharField(
+        max_length=50, choices=COMMODITY_NAME_CHOICES, unique=True
+    )
     commodity_class = models.CharField(
         max_length=50, choices=COMMODITY_CLASS_CHOICES, unique=True
     )
     weight = models.DecimalField(
-        blank=True, default=0.0, max_digits=8, decimal_places=2
+        null=False, blank=False, default=0.0, max_digits=8, decimal_places=2
     )
     investment = models.DecimalField(
-        blank=True, default=0.0, max_digits=8, decimal_places=2
+        null=False, blank=False, default=0.0, max_digits=8, decimal_places=2
     )
 
     def __str__(self):
-        return f"{self.commodity_class}"
+        return f"{self.name}"
 
     class Meta:
         verbose_name_plural = "commodities"
