@@ -508,11 +508,11 @@ def property_summary_view(request, year, *args, **kwargs):
         commod_progress = 0.0
 
     # Crypto
-    crypto_qs = Crypto.objects.filter(date__year=year)
+    crypto_qs = Crypto.objects.filter()
     crypto_total_amount = 0
-    for item in crypto_qs:
-        item.total = item.quantity * item.spot_price
-        crypto_total_amount += item.total
+    # for item in crypto_qs:
+    #     item.total = item.quantity * item.spot_price
+    #     crypto_total_amount += item.total
     crypto_goal = float(crypto_percent * current_goal)
 
     if crypto_goal > 0:
@@ -621,11 +621,11 @@ def property_summary_view(request, year, *args, **kwargs):
             "amount__sum"
         )
 
-        yearwise_crypto_qs = Crypto.objects.filter(date__year=my_year)
+        yearwise_crypto_qs = Crypto.objects.filter()
         crypto_total_value = 0
-        for item in yearwise_crypto_qs:
-            item.total = item.quantity * item.spot_price
-            crypto_total_value += item.total
+        # for item in yearwise_crypto_qs:
+        #     item.total = item.quantity * item.spot_price
+        #     crypto_total_value += item.total
 
         yearwise_stocks_qs = IndexFund.objects.filter(date__year=my_year)
         stocks_total_value = 0

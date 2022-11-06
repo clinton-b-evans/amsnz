@@ -89,6 +89,7 @@ def crypto_transactions(request, year=''):
     for transaction in transactions:
         totalInvestment = float(transaction.quantity) * float(transaction.spot_price)
         transactions_table.append({
+            "id": transaction.id,
             "crypto_name": transaction.coin,
             "transaction_type": transaction.transaction_type,
             "quantity": transaction.quantity,
