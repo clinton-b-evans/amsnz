@@ -109,6 +109,7 @@ def commodity_transactions(request, year=''):
     for transaction in transactions:
         totalInvestment = float(transaction.weight) * float(transaction.value)
         transactions_table.append({
+            "id":transaction.id,
             "commodity": transaction.commodity,
             "transaction_type": transaction.transaction_type,
             "weight": transaction.weight,
