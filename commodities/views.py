@@ -39,7 +39,7 @@ def compute_pie_chart_transaction_types(commodities, total_invested):
     for commodity in commodities:
         percentage = (commodity.investment/total_invested) * 100
         pie_chart_data.append({
-            "commodity": commodity.commodity_class,
+            "commodity": commodity.name,
             "percentage": percentage
         })
     return pie_chart_data
@@ -90,7 +90,7 @@ def commodity_list_view(request):
         "commodities_list": commodity_prices,
         "totalInvestmentSum": totalInvestment,
         "currentMarketValueSum": totalMarketValue,
-        "usedCommodities": commodities.values_list('commodity_class', flat=True).distinct(),
+        "usedCommodities": commodities.values_list('name', flat=True).distinct(),
         "investments": investments,
         "assetsGains": assetsGains,
         "pie_chart_date": compute_pie_chart_transaction_types(commodities, totalInvestment)
