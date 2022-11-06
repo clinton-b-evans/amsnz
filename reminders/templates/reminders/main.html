@@ -7,6 +7,11 @@ Reminders
 {% endblock title %}
 
 {% block content %}
+
+<!-- Data Table -->
+<link rel="stylesheet" type="text/css" href="{% static 'DataTables/datatables.min.css' %}">  
+<script type="text/javascript" charset="utf8" src="{% static 'DataTables/datatables.min.js' %}"></script>
+
 <script language="javascript" type="text/javascript">
 <!--
 function popitup(url) {
@@ -35,7 +40,7 @@ function popitup(url) {
 
 <div class="card">
   <div class="card-body mt-4" style="overflow-x:auto;">
-    <table class="table table-hover table-responsive" style="font-size:small">
+    <table id="reminder" class="table table-striped table-hover table-responsive" style="font-size:small">
       <thead>
         <tr>
           <th style="text-align: left;" scope="col">Reminder</th>
@@ -78,5 +83,11 @@ function popitup(url) {
   </div>
 
 </div>
+
+<script>
+  $(document).ready( function () {
+    $('#reminder').DataTable();
+  });
+</script>
 
 {% endblock content %}

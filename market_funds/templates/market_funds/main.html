@@ -3,10 +3,17 @@
 {% load mathfilters %}
 
 {% block title %}
-<div class="title">Stock Portfolio <span> | {{year}}</span></div>
+<div class="title">Stock Portfolio
+   <span> | {{year}}</span>
+  </div>
 {% endblock title %}
 
 {% block content %}
+
+<!-- Data Table -->
+<link rel="stylesheet" type="text/css" href="{% static 'DataTables/datatables.min.css' %}">  
+<script type="text/javascript" charset="utf8" src="{% static 'DataTables/datatables.min.js' %}"></script>
+
 <script src="{% static 'apexcharts/apexcharts.min.js' %}"></script>
 <script language="javascript" type="text/javascript">
 <!--
@@ -86,7 +93,7 @@ function popitup(url) {
     </div>
     <div class="card-body" style="overflow-x:auto;">
       <h5 class="card-title">Stock Summary <span> | {{year}}</span></h5>
-      <table class="table table-hover" style="font-size:small">
+      <table id="stock-portfolio" class="table table-striped table-hover" style="font-size:small">
         <thead>
           <tr>
             <th style="text-align:left">Fund</th>
@@ -215,5 +222,10 @@ function popitup(url) {
   });
 </script>
 
+<script>
+  $(document).ready( function () {
+    $('#stock-portfolio').DataTable();
+  });
+</script>
 
 {% endblock content %}

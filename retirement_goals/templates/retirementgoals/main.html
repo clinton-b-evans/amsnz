@@ -6,6 +6,11 @@
 {% endblock title %}
 
 {% block content %}
+
+<!-- Data Table -->
+<link rel="stylesheet" type="text/css" href="{% static 'DataTables/datatables.min.css' %}">  
+<script type="text/javascript" charset="utf8" src="{% static 'DataTables/datatables.min.js' %}"></script>
+
 <!-- Google Chart -->
 <script src="{% static 'GoogleChart/Gchart.js' %}"></script>
 <!-- <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> -->
@@ -130,7 +135,7 @@
 
 <div class="card">
   <div class="card-body mt-4" style="overflow-x:auto;">
-    <table class="table table-striped table-responsive table-hover" style="font-size:small">
+    <table id="financial_plan" class="table table-striped table-responsive table-hover" style="font-size:small">
       <thead>
         <tr>
           <th>Year</th>
@@ -317,4 +322,11 @@
     chart.draw(data, options);
   }
 </script>
+
+<script>
+  $(document).ready( function () {
+    $('#financial_plan').DataTable();
+  });
+</script>
+
 {% endblock content %}
