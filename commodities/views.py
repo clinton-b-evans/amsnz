@@ -34,10 +34,10 @@ def get_commodities():
     for key, value in data.items():
         result[key] = value['regularMarketPrice']
     return result
-def compute_pie_chart_transaction_types(commodities, total_invested):
+def compute_pie_chart_transaction_types(commodities, totalMarketValue, commodity_prices):
     pie_chart_data = []
     for commodity in commodities:
-        percentage = (commodity.investment/total_invested) * 100
+        percentage = ((float(commodity.weight) * float(commodity_prices[commodity.commodity_class]))/totalMarketValue) * 100
         pie_chart_data.append({
             "commodity": commodity.name,
             "percentage": percentage
@@ -93,7 +93,7 @@ def commodity_list_view(request):
         "usedCommodities": commodities.values_list('name', flat=True).distinct(),
         "investments": investments,
         "assetsGains": assetsGains,
-        "pie_chart_date": compute_pie_chart_transaction_types(commodities, totalInvestment)
+        "pie_chart_date": compute_pie_chart_transaction_types(commodities, totalMarketValue, commodity_prices)
 
     }
     return render(request, "commodities/main.html", context)
