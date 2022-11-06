@@ -357,13 +357,19 @@
       </li><!-- End Commodities Page Nav -->
 
       <li class="nav-item">
-        <a {% if request.resolver_match.url_name == 'crypto-list' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} href="/crypto/{% now 'Y' %}/">
+        <a {% if request.resolver_match.url_name == 'crypto-list' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} href="/crypto/">
           <i class="bi bi-currency-bitcoin"></i>
           <span>Crypto</span>
           <!-- <span data-feather="file">Crypto</span> -->
         </a>
       </li><!-- End Crypto Page Nav -->
-
+      <li class="nav-item">
+        <a {% if request.resolver_match.url_name == '/crypto/transactions' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} href="/crypto/transactions">
+          <i class="bi bi-currency-bitcoin"></i>
+          <span>Crypto Transactions</span>
+          <!-- <span data-feather="file">Crypto</span> -->
+        </a>
+      </li>
       <li class="nav-heading">Personal</li>
 
       <li class="nav-item">

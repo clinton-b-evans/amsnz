@@ -11,7 +11,7 @@ class Crypto(models.Model):
     quantity = models.DecimalField(
         null=False, blank=False, default=0.0, max_digits=8, decimal_places=2
     )
-    total_investment = models.DecimalField(
+    investment = models.DecimalField(
         null=False, blank=False, default=0.0, max_digits=8, decimal_places=2
     )
     def __str__(self):

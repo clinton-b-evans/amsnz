@@ -96,38 +96,23 @@ function popitup(url) {
             <tr>
               <th>Coin</th>
               <th>Ticker</th>
-              <th>Qty</th>
+              <th>Quantity</th>
+              <th>Total Investment</th>
               <th>Spot Price</th>
-              <th>Total</th>
-              <th style="text-align:right">Action</th>
+              <th>Current Market Value</th>
+              <th>Profit/Loss %</th>
             </tr>
           </thead>
           <tbody>
-            {% for crypto in crypto_objects_lists %}
+            {% for crypto in transactions %}
             <tr>
               <td>{{ crypto.name }}</td>
               <td>{{ crypto.ticker }}</td>
               <td>{{ crypto.quantity }} </td>
-              <td>${{ crypto.spot_price }}</td>
-              <td>${{ crypto.total }}</td>
-              <td style="text-align:right">
-                <a href="popupex.html" onclick="return popitup('/crypto/{{ crypto.id }}/edit')" style="text-decoration: none;">
-                  <button class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                      <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                      <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-                    </svg>
-                  </button>
-                </a>
-                <a href="popupex.html" onclick="return popitup('/crypto/{{ crypto.pk }}/delete')" style="text-decoration: none;">
-                  <button class="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                      <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                      <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                    </svg>
-                  </button>
-                </a>
-              </td>
+              <td>{{ crypto.totalInvestment|floatformat:2 }} </td>
+              <td>${{ crypto.spotPrice }}</td>
+              <td>${{ crypto.currentMarketValue|floatformat:2 }}</td>
+              <td><small class="text-{% if crypto.status == 'profit' %}success{% else %}danger{% endif %} me-2"> &nbsp;<i class="fas fa-{% if crypto.status == 'profit' %}arrow-up{% else %}arrow-down{% endif %} me-1"></i>{{ crypto.profit_loss_percentage|floatformat:2 }}% </small></td>
             </tr>
             {% endfor %}
             <thead>
@@ -135,8 +120,9 @@ function popitup(url) {
                 <th>Total:</th>
                 <td></td>
                 <td></td>
+                <td><strong>${{ totalInvestment|floatformat:2 }}</strong> </td>
                 <td></td>
-                <td><strong>${{ total }}</strong> </td>
+                <td><strong>${{ totalMarketValue|floatformat:2 }}</strong> </td>
                 <td></td>
               </tr>
             </thead>
@@ -153,92 +139,90 @@ function popitup(url) {
 <br> 
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    new ApexCharts(document.querySelector("#Chart"), {
-      series: [ {
-        name: 'Crypto All Years Progress',
-        type: 'column',
-        data: {{crypto_all_years_total_list}}
-      }],
-      chart: {
-        height: 315,
-        type: 'line',
-        stacked: false
-      },
-      dataLabels: {
-        enabled: false
-      },
-      stroke: {
-        width: [1, 1, 4]
-      },
-      title: {
-        text: 'Crypto Tracker Timeline',
-        align: 'center',
-        // offsetX: 110
-      },
-      xaxis: {
-        categories: {{years_list}},
-      },
-      yaxis: [{
-        axisTicks: {
-          show: true,
-        },
-        axisBorder: {
-          show: true,
-          color: '#008FFB'
-        },
-        labels: {
-          style: {
-            colors: '#008FFB',
+  var options = {
+        series: [
+            {
+            'name': 'Invested',
+            'data': {{investments}}
+            },
+            {
+            'name': 'Gain',
+            'data': {{assetsGains}}
+            }
+        ],
+          chart: {
+          type: 'bar',
+          height: 300,
+          stacked: true,
+          toolbar: {
+            show: true
+          },
+          zoom: {
+            enabled: true
           }
         },
-        title: {
-          text: "Total Crypto",
-          style: {
-            color: '#008FFB',
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            legend: {
+              position: 'bottom',
+              offsetX: -10,
+              offsetY: 0
+            }
           }
+        }],
+        plotOptions: {
+          bar: {
+            horizontal: false,
+            borderRadius: 0,
+            dataLabels: {
+              total: {
+                enabled: true,
+                style: {
+                  fontSize: '13px',
+                  fontWeight: 900
+                }
+              }
+            }
+          },
         },
-        tooltip: {
-          enabled: true
+        xaxis: {
+          categories: [
+              {% for value in usedCrypto %}
+                "{{value}}",
+              {% endfor %}
+          ],
+        },
+        legend: {
+          position: 'right',
+          offsetY: 40
+        },
+        fill: {
+          opacity: 1
         }
-      }],
-      tooltip: {
-        fixed: {
-          enabled: true,
-          position: 'topLeft', // topRight, topLeft, bottomRight, bottomLeft
-          offsetY: 30,
-          offsetX: 60
-        },
-      },
-      legend: {
-        horizontalAlign: 'center',
-        // offsetX: 40
-      }
-      }).render();
-  });
+        };
+
+        var chart = new ApexCharts(document.querySelector("#Chart"), options);
+        chart.render();
+
+        google.charts.load("current", {packages:["corechart"]});
+        google.charts.setOnLoadCallback(drawChart);
+        function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Task', 'Hours per Day'],
+          {% for obj in pie_chart_date %}
+          ['{{ obj.name }}', {{obj.percentage|stringformat:".2f"}}],
+          {% endfor %}
+        ]);
+
+        var options = {
+          // is3D: true,
+          legend: {position: 'top', alignment: 'center'},
+          colors: ['Gold', 'Silver', 'Green', 'Red']
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+        chart.draw(data, options);
+        }
 </script>
-
-<script type="text/javascript">
-  google.charts.load("current", {packages:["corechart"]});
-  google.charts.setOnLoadCallback(drawChart);
-  function drawChart() {
-    var data = google.visualization.arrayToDataTable([
-      ['Task', 'Hours per Day'],
-      {% for crypto in crypto_objects_lists %}
-        ['{{ crypto.name }}', {{crypto.percent|stringformat:".2f"}}],
-      {% endfor %}
-    ]);
-
-    var options = {
-      // is3D: true,
-      legend: {position: 'top', alignment: 'center'},
-      colors: ['Gold', 'Silver', 'Green', 'Red', 'Navy', 'Aqua',]
-    };
-
-    var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
-    chart.draw(data, options);
-  }
-</script>
-
-
 {% endblock content %}
