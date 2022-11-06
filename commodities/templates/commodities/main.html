@@ -35,21 +35,13 @@ function popitup(url) {
     return false;
 }
 // -->
-
-
-
-
-
 </script>
 
 <script>
   window.onblur= function() {window.onfocus= function () {location.reload(true)}};
-
-
-
-
-
 </script>
+
+
 <div class="dashboard">
     <div class="row">
         <div class="col-8">
@@ -95,7 +87,7 @@ function popitup(url) {
     <div class="col-lg-8">
         <div class="card">
             <div class="card-body mt-4">
-                <table class="table table-hover" style="font-size:small">
+                <table id="" class="table table-hover" style="font-size:small">
                     <thead>
                     <tr>
                         <th style="text-align:left">Commodity</th>
@@ -251,5 +243,11 @@ var data = google.visualization.arrayToDataTable([
     var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
     chart.draw(data, options);
   }
+</script>
+
+<script>
+  $(document).ready( function () {
+    $('#table_id').DataTable();
+  });
 </script>
 {% endblock content %}
