@@ -257,6 +257,14 @@ def delete_transaction(request, pk):
 
     if request.method == "POST":
         # delete object
+        if transaction.transaction_type == 'Buy':
+            transaction.commodity.weight -= transaction.weight
+            transaction.commodity.investment -= Decimal(transaction.weight) * Decimal(transaction.value)
+            transaction.commodity.save()
+        else:
+            transaction.commodity.weight += transaction.weight
+            transaction.commodity.investment += Decimal(transaction.weight) * Decimal(transaction.value)
+            transaction.commodity.save()
         transaction.delete()
         # after deleting redirect to
         # home page
