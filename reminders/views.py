@@ -73,10 +73,16 @@ def delete_reminder(request, pk):
 
 def get_reminders(request):
     reminders = Reminder.objects.filter(due_date__gte=date.today())
+    reminder_list = []
     for reminder in reminders:
         if reminder.reminder_type == "oneoff":
-
-            pass
+            if reminder.due_date == date.today():
+                reminder_list.append({
+                    "detail": reminder.detail,
+                    "reminder_type": reminder.reminder_type,
+                    "property": reminder.property.name,
+                }
+                )
         elif reminder.reminder_type == "weekly":
             pass
         elif reminder.reminder_type == "bi-weekly":
