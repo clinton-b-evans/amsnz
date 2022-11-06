@@ -15,7 +15,7 @@ def crypto_list_view(request, year):
     crypto_objects_lists = Crypto.objects.filter(date__year=year)
     total = 0
     for obj in crypto_objects_lists:
-        obj.total = round(obj.qty * obj.spot_price, 2)
+        obj.total = round(obj.quantity * obj.spot_price, 2)
         total = total + obj.total
     total_amounts = 0
 
@@ -38,7 +38,7 @@ def crypto_list_view(request, year):
         crypto_objects = Crypto.objects.filter(date__year=my_year)
         crypto_total = 0
         for obj in crypto_objects:
-            obj.total = round(obj.qty * obj.spot_price, 3)
+            obj.total = round(obj.quantity * obj.spot_price, 3)
             crypto_total = crypto_total + obj.total
         grand_total = 0
         for item in crypto_objects:

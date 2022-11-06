@@ -511,7 +511,7 @@ def property_summary_view(request, year, *args, **kwargs):
     crypto_qs = Crypto.objects.filter(date__year=year)
     crypto_total_amount = 0
     for item in crypto_qs:
-        item.total = item.qty * item.spot_price
+        item.total = item.quantity * item.spot_price
         crypto_total_amount += item.total
     crypto_goal = float(crypto_percent * current_goal)
 
@@ -624,7 +624,7 @@ def property_summary_view(request, year, *args, **kwargs):
         yearwise_crypto_qs = Crypto.objects.filter(date__year=my_year)
         crypto_total_value = 0
         for item in yearwise_crypto_qs:
-            item.total = item.qty * item.spot_price
+            item.total = item.quantity * item.spot_price
             crypto_total_value += item.total
 
         yearwise_stocks_qs = IndexFund.objects.filter(date__year=my_year)
