@@ -3,7 +3,20 @@
 {% load mathfilters %}
 
 {% block title %}
-<div class="title">Commodities <span> | {{year}}</span></div>
+<div class="title">Commodities 
+  <!-- <span class="filter position-absolute" style="right: 2rem;">
+      <a class="icon btn btn-dashboard" data-bs-toggle="dropdown" href="#" type="button">View By <i class="bi bi-grid"></i></a>
+      <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+          <li class="dropdown-header text-start">
+              <h6>Filter</h6>
+          </li>
+          <li><a class="dropdown-item" href="{% url 'commodities:commodities_list_all' %}">All years</a></li>
+          {% for year in years_list%}
+          <li><a class="dropdown-item" href="{% url 'commodities:commodities_list' year %}">{{year|stringformat:"i"}}</a></li>
+          {%endfor%}
+      </ul>
+  </span> -->
+</div>
 {% endblock title %}
 
 {% block content %}
@@ -68,7 +81,9 @@ function popitup(url) {
                     </ul>
                 </div>
                 <div class="card-body pb-0">
-                    <h5 class="card-title">Commodities <span>| {{year}}</span></h5>
+                    <h5 class="card-title">Commodities 
+                      <!-- <span>| {{year}}</span> -->
+                    </h5>
                     <div id="piechart_3d" style="width: auto; height: 350px;"></div>
                 </div>
             </div>
