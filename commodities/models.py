@@ -8,18 +8,30 @@ COMMODITY_CLASS_CHOICES = (
     ("PA=F", "PA=F")
 )
 
+COMMODITY_NAME_CHOICES = (
+    ('Gold', 'Gold'),
+    ('Silver', 'Silver'),
+    ('Platinum', 'Platinum'),
+    ("Palladium", "Palladium")
+)
+
 
 class Commodity(models.Model):
+    name = models.CharField(
+        max_length=50, choices=COMMODITY_NAME_CHOICES, unique=True
+    )
     commodity_class = models.CharField(
         max_length=50, choices=COMMODITY_CLASS_CHOICES, unique=True
     )
-    spot_price = models.DecimalField(
-        blank=True, default=0.0, max_digits=8, decimal_places=2
+    weight = models.DecimalField(
+        null=False, blank=False, default=0.0, max_digits=8, decimal_places=2
     )
-    date = models.DateField(null=True, blank=True, default=now)
+    investment = models.DecimalField(
+        null=False, blank=False, default=0.0, max_digits=8, decimal_places=2
+    )
 
     def __str__(self):
-        return f"{self.commodity_class}"
+        return f"{self.name}"
 
     class Meta:
         verbose_name_plural = "commodities"
@@ -30,8 +42,7 @@ class Transaction(models.Model):
         ("Buy", "Buy"),
         ("Sell", "Sell"),
     )
-    commodity = models.CharField(
-        max_length=50, choices=COMMODITY_CLASS_CHOICES)
+    commodity = models.ForeignKey(Commodity, on_delete=models.CASCADE, blank=False, null=False)
     transaction_type = models.CharField(
         choices=TRANSACTION_TYPE_SOURCES, max_length=100, null=False, blank=False
     )
