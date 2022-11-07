@@ -411,7 +411,8 @@ def property_summary_view(request, year, *args, **kwargs):
     # total_networth = total_assets - total_liabilities
     total_networth = 10000
 
-    total_expenses = total_operating_expenses + total_repayments
+    # total_expenses = total_operating_expenses + total_repayments
+    total_expenses = 2000
 
     total_net_rental_income = total_income - total_expenses
     property_progress = total_networth / property_goal * 100
