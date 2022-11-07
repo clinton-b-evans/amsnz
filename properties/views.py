@@ -408,7 +408,7 @@ def property_summary_view(request, year, *args, **kwargs):
         total_other_income = 0
     total_rent = total_rent_after_vacany_rate
     total_income = total_rent + total_other_income
-    total_networth = float(total_assets - total_liabilities)
+    total_networth = float(total_assets) - float(total_liabilities)
 
     total_expenses = total_operating_expenses + total_repayments
 
