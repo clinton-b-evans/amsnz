@@ -3,7 +3,7 @@
 {% load mathfilters %}
 
 {% block title %}
-<div class="title">Transactions 
+<div class="title">Transactions
     <!-- <span> | {{year}}</span> -->
 </div>
 {% endblock title %}
@@ -39,7 +39,7 @@ function popitup(url) {
 
 
 </script>
-<a href="popupex.html" onclick="return popitup('/crypto/transaction/add')">
+<a href="popupex.html" onclick="return popitup('/commodities/transaction/add')">
     <button class="btn btn-dashboard mb-3" type="button">
         <svg class="bi bi-calendar-plus me-1" fill="currentColor" height="16" viewBox="0 0 16 16"
              width="16" xmlns="http://www.w3.org/2000/svg">
@@ -69,15 +69,15 @@ function popitup(url) {
                     {% for obj in transactions %}
                     <tr>
                         <!--              <td style="text-align:left"><a href='{{obj.pk}}/'>{{ obj.commodity_class }}</a></td>-->
-                        <td style="text-align:left">{{ obj.crypto_name }}</td>
+                        <td style="text-align:left">{{ obj.commodity }}</td>
                         <td style="text-align:left">{{ obj.transaction_type}}</td>
-                        <td style="text-align:right">{{ obj.quantity }}</td>
+                        <td style="text-align:right">{{ obj.weight }}</td>
                         <td style="text-align:right">${{ obj.purchasedValue|floatformat:2 }}</td>
                         <td style="text-align:right">${{ obj.totalInvestment|floatformat:2 }}</td>
                         <td style="text-align:right">{{ obj.date }}</td>
                         <td style="text-align:right">
                             <a href="popupex.html"
-                               onclick="return popitup('/crypto/transaction/{{ obj.id }}/edit')"
+                               onclick="return popitup('/stock/transaction/{{ obj.trans_ob.pk }}/edit')"
                                style="text-decoration: none;">
                                 <button class="btn btn-success btn-sm rounded-0" data-placement="top"
                                         data-toggle="tooltip"
@@ -91,7 +91,7 @@ function popitup(url) {
                                 </button>
                             </a>
                             <a href="popupex.html"
-                               onclick="return popitup('/crypto/transaction/{{ obj.id }}/delete')"
+                               onclick="return popitup('/stock/transaction/{{ obj.trans_ob.pk }}/delete')"
                                style="text-decoration: none;">
                                 <button class="btn btn-danger btn-sm rounded-0" data-placement="top"
                                         data-toggle="tooltip"
@@ -107,6 +107,18 @@ function popitup(url) {
                         </td>
                     </tr>
                     {% endfor %}
+                    <!-- <thead>
+                    <tr>
+                        <th style="text-align:left">Total:</th>
+                        <th style="text-align:right"></th>
+                        <th style="text-align:right"></th>
+                        <th style="text-align:right"></th>
+                        <th style="text-align:right">${{ grand_total|floatformat:2 }}</th>
+                        <th style="text-align:right">${{ invested_total|floatformat:2 }}</th>
+                        <th style="text-align:right"></th>
+                        <th style="text-align:right"></th>
+                    </tr>
+                    </thead> -->
                     </tbody>
                 </table>
             </div>

@@ -2,7 +2,7 @@ from decimal import Decimal
 
 from django.core.exceptions import ValidationError
 from django.forms import ModelForm
-from .models import Commodity, Transaction
+from .models import Stock, StockTransaction
 from django import forms
 
 
@@ -10,26 +10,23 @@ class DateInput(forms.DateInput):
     input_type = "date"
 
 
-class CommodityForm(ModelForm):
+class StockForm(ModelForm):
     class Meta:
-        model = Commodity
-        fields = ("commodity_class", "weight")
-
-
+        model = Stock
+        fields = ("name", "ticker", "quantity")
 class TransactionForm(ModelForm):
     class Meta:
-        model = Transaction
+        model = StockTransaction
         fields = "__all__"
         widgets = {
             "date": DateInput(),
         }
 
-    def clean_weight(self):
+    def clean_quantity(self):
         transaction_type = self.data['transaction_type']
-        commodity = self.cleaned_data['commodity']
-        weight = self.cleaned_data['weight']
+        stock = self.cleaned_data['stock']
+        quantity = self.cleaned_data['quantity']
         if transaction_type == 'Sell':
-            if commodity.weight - float(weight) < 0:
-                raise ValidationError("You don't have sufficient weight")
-        return weight
-
+            if stock.quantity - float(quantity) < 0:
+                raise ValidationError("You don't have sufficient quantity")
+        return quantity

@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+{% load static %}
+{% load mathfilters %}
+
+{% block title %}
+<div class="title">Stock Portfolio <span> | {{year}}</span></div>
+{% endblock title %}
+
+{% block content %}
+<script src="{% static 'apexcharts/apexcharts.min.js' %}"></script>
+
+<!-- Google Chart -->
+<script src="{% static 'GoogleChart/Gchart.js' %}"></script>
+<!-- <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> -->
+
+<script language="javascript" type="text/javascript">
+<!--
+function popitup(url) {
+    newwindow=window.open(url,'{{title}}','height=510,width=384');
+    if (window.focus) {newwindow.focus()}
+    return false;
+}
+// -->
+</script>
+
+<script>
+  window.onblur= function() {window.onfocus= function () {location.reload(true)}};
+</script>
+
+  <!-- <div class="row">
+    <div class="col-9">
+      <select class="form-control mb-3" onchange="location = this.value;">
+        <option selected="" value="" disabled>Select year</option>
+        {% for year in years_list%}
+        <option value="../{{year|stringformat:"i"}}"> {{year|stringformat:"i"}}</option>
+        {%endfor%}
+      </select>
+    </div>
+  </div> -->
+
+<div class="dashboard">
+  <div class="row">
+
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Stock Timeline</h5>
+          <div id="Chart" style="width: 100%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">  
+      <div class="card">
+        <div class="filter">
+          <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+            <li class="dropdown-header text-start">
+              <h6>Filter</h6>
+            </li>
+            {% for year in years_list%}
+            <!-- <option value="../{{year|stringformat:"i"}}"> {{year|stringformat:"i"}}</option> -->
+            <li><a class="dropdown-item" href="../{{year|stringformat:"i"}}">{{year|stringformat:"i"}}</a></li>
+            {%endfor%}
+
+            <!-- <li><a class="dropdown-item" href="#">Today</a></li>
+            <li><a class="dropdown-item" href="#">This Month</a></li>
+            <li><a class="dropdown-item" href="#">This Year</a></li> -->
+          </ul>
+        </div>
+        <div class="card-body pb-0">
+          <h5 class="card-title">Stock <span>| {{year}}</span></h5>
+          <div id="piechart_3d" style="width: auto; min-height: 350px;"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="row"> 
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-body mt-4" style="overflow-x:auto;">
+        <table class="table table-hover table-responsive" style="font-size:small">
+          <thead>
+            <tr>
+              <th>stock</th>
+              <th>Ticker</th>
+              <th>Quantity</th>
+              <th>Total Investment</th>
+              <th>Spot Price</th>
+              <th>Current Market Value</th>
+              <th>Profit/Loss %</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for stock in transactions %}
+            <tr>
+              <td>{{ stock.name }}</td>
+              <td>{{ stock.ticker }}</td>
+              <td>{{ stock.quantity }} </td>
+              <td>{{ stock.totalInvestment|floatformat:2 }} </td>
+              <td>${{ stock.spotPrice }}</td>
+              <td>${{ stock.currentMarketValue|floatformat:2 }}</td>
+              <td><small class="text-{% if stock.status == 'profit' %}success{% else %}danger{% endif %} me-2"> &nbsp;<i class="fas fa-{% if stock.status == 'profit' %}arrow-up{% else %}arrow-down{% endif %} me-1"></i>{{ stock.profit_loss_percentage|floatformat:2 }}% </small></td>
+            </tr>
+            {% endfor %}
+            <thead>
+              <tr>
+                <th>Total:</th>
+                <td></td>
+                <td></td>
+                <td><strong>${{ totalInvestment|floatformat:2 }}</strong> </td>
+                <td></td>
+                <td><strong>${{ totalMarketValue|floatformat:2 }}</strong> </td>
+                <td></td>
+              </tr>
+            </thead>
+        
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<br> 
+
+<script>
+console.log({{investments}},{{assetsGains}},"39")
+  var options = {
+        series: [
+            {
+            'name': 'Invested',
+            'data': {{investments}}
+            },
+            {
+            'name': 'Gain',
+            'data': {{assetsGains}}
+            }
+        ],
+          chart: {
+          type: 'bar',
+          height: 300,
+          stacked: true,
+          toolbar: {
+            show: true
+          },
+          zoom: {
+            enabled: true
+          }
+        },
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            legend: {
+              position: 'bottom',
+              offsetX: -10,
+              offsetY: 0
+            }
+          }
+        }],
+        plotOptions: {
+          bar: {
+            horizontal: false,
+            borderRadius: 0,
+            dataLabels: {
+              total: {
+                enabled: true,
+                style: {
+                  fontSize: '13px',
+                  fontWeight: 900
+                }
+              }
+            }
+          },
+        },
+        xaxis: {
+          categories: [
+              {% for value in usedStock %}
+                "{{value|floatformat:2}}",
+              {% endfor %}
+          ],
+        },
+        legend: {
+          position: 'right',
+          offsetY: 40
+        },
+        fill: {
+          opacity: 1
+        }
+        };
+
+        var chart = new ApexCharts(document.querySelector("#Chart"), options);
+        chart.render();
+
+        google.charts.load("current", {packages:["corechart"]});
+        google.charts.setOnLoadCallback(drawChart);
+        function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Task', 'Hours per Day'],
+          {% for obj in pie_chart_date %}
+          ['{{ obj.name }}', {{obj.percentage|stringformat:".2f"}}],
+          {% endfor %}
+        ]);
+
+        var options = {
+          // is3D: true,
+          legend: {position: 'top', alignment: 'center'},
+          colors: ['Gold', 'Silver', 'Green', 'Red']
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+        chart.draw(data, options);
+        }
+</script>
+{% endblock content %}

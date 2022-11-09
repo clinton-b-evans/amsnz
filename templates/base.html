@@ -311,7 +311,25 @@
           </li>
         </ul>
       </li><!-- End Commodity Nav -->
-
+      <li class="nav-item">
+        <a {% if request.resolver_match.url_name in 'stock-list,/stock-transactions' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} data-bs-target="#stocks-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-currency-bitcoin"></i><span>Stock</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="stocks-nav" {% if request.resolver_match.url_name in 'crypto-list,/crypto-transactions' %}class="nav-content collapse show active"{% else %}class="nav-content collapse"{% endif %} data-bs-parent="#sidebar-nav">
+          <li class="nav-item">
+            <a {% if request.resolver_match.url_name == 'stock-list' %}class="nav-link active"{% else %}class="nav-link collapsed"{% endif %} href="/stock/">
+              <i class="bi bi-circle"></i>
+              <span>Stock Portfolio</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a {% if request.resolver_match.url_name == 'stock-transactions' %} class="nav-link active" {% else %}class="nav-link collapsed" {% endif %} href="/stock/transactions">
+              <i class="bi bi-circle"></i>
+              <span>Stock Transactions</span>
+            </a>
+          </li>
+        </ul>
+      </li>
       <li class="nav-item">
         <a {% if request.resolver_match.url_name in 'crypto-list,/crypto-transactions' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} data-bs-target="#crypto-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-currency-bitcoin"></i><span>Crypto</span><i class="bi bi-chevron-down ms-auto"></i>

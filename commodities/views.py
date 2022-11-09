@@ -210,15 +210,15 @@ def add_transaction(request, **kwargs):
         if form.is_valid():
             form.save()
             if form.data["transaction_type"] == 'Buy':
-                form.instance.commodity.weight += Decimal(form.data["weight"])
-                form.instance.commodity.investment += Decimal(form.data["weight"]) * Decimal(form.data["value"])
+                form.instance.commodity.weight += float(form.data["weight"])
+                form.instance.commodity.investment += float(form.data["weight"]) * float(form.data["value"])
                 form.instance.commodity.save()
             else:
-                form.instance.commodity.weight -= Decimal(form.data["weight"])
-                if form.instance.commodity.investment - Decimal(form.data["weight"]) * Decimal(form.data["value"]) < 0:
-                    form.instance.commodity.investment = Decimal(0.0)
+                form.instance.commodity.weight -= float(form.data["weight"])
+                if form.instance.commodity.investment - float(form.data["weight"]) * float(form.data["value"]) < 0:
+                    form.instance.commodity.investment = float(0.0)
                 else:
-                    form.instance.commodity.investment -= Decimal(form.data["weight"]) * Decimal(form.data["value"])
+                    form.instance.commodity.investment -= float(form.data["weight"]) * float(form.data["value"])
                 form.instance.commodity.save()
             return HttpResponse(
                 '<script type="text/javascript">window.close()</script>'
@@ -259,11 +259,11 @@ def delete_transaction(request, pk):
         # delete object
         if transaction.transaction_type == 'Buy':
             transaction.commodity.weight -= transaction.weight
-            transaction.commodity.investment -= Decimal(transaction.weight) * Decimal(transaction.value)
+            transaction.commodity.investment -= float(transaction.weight) * float(transaction.value)
             transaction.commodity.save()
         else:
             transaction.commodity.weight += transaction.weight
-            transaction.commodity.investment += Decimal(transaction.weight) * Decimal(transaction.value)
+            transaction.commodity.investment += float(transaction.weight) * float(transaction.value)
             transaction.commodity.save()
         transaction.delete()
         # after deleting redirect to

@@ -23,11 +23,11 @@ class Commodity(models.Model):
     commodity_class = models.CharField(
         max_length=50, choices=COMMODITY_CLASS_CHOICES, unique=True
     )
-    weight = models.DecimalField(
-        null=False, blank=False, default=0.0, max_digits=8, decimal_places=2
+    weight = models.FloatField(
+        null=False, blank=False, default=0.0,
     )
-    investment = models.DecimalField(
-        null=False, blank=False, default=0.0, max_digits=8, decimal_places=2
+    investment = models.FloatField(
+        null=False, blank=False, default=0.0,
     )
 
     def __str__(self):
@@ -46,10 +46,10 @@ class Transaction(models.Model):
     transaction_type = models.CharField(
         choices=TRANSACTION_TYPE_SOURCES, max_length=100, null=False, blank=False
     )
-    weight = models.DecimalField(
-        blank=True, default=0.0, max_digits=8, decimal_places=2
+    weight = models.FloatField(
+        blank=True, default=0.0,
     )
-    value = models.DecimalField(blank=True, default=0.0, max_digits=8, decimal_places=4)
+    value = models.FloatField(blank=True, default=0.0, )
     date = models.DateField(null=True, blank=True, default=now)
 
     def __str__(self):

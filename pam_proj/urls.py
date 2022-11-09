@@ -22,6 +22,12 @@ urlpatterns = [
             "incomestatements_property.urls", namespace="property-incomestatements"
         ),
     ),
+    path(
+        "",
+        include(
+            "stock_portfolios.urls", namespace="stock_portfolios"
+        ),
+    ),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -180,15 +180,15 @@ def add_transaction(request, **kwargs):
         if form.is_valid():
             form.save()
             if form.data["transaction_type"] == 'Buy':
-                form.instance.coin.quantity += Decimal(form.data["quantity"])
-                form.instance.coin.investment += Decimal(form.data["quantity"]) * Decimal(form.data["spot_price"])
+                form.instance.coin.quantity += float(form.data["quantity"])
+                form.instance.coin.investment += float(form.data["quantity"]) * float(form.data["spot_price"])
                 form.instance.coin.save()
             else:
-                form.instance.coin.quantity -= Decimal(form.data["quantity"])
-                if form.instance.coin.investment - Decimal(form.data["quantity"]) * Decimal(form.data["spot_price"]) < 0:
-                    form.instance.coin.investment = Decimal(0.0)
+                form.instance.coin.quantity -= float(form.data["quantity"])
+                if form.instance.coin.investment - float(form.data["quantity"]) * float(form.data["spot_price"]) < 0:
+                    form.instance.coin.investment = float(0.0)
                 else:
-                    form.instance.coin.investment -= Decimal(form.data["quantity"]) * Decimal(form.data["spot_price"])
+                    form.instance.coin.investment -= float(form.data["quantity"]) * float(form.data["spot_price"])
                 form.instance.coin.save()
             return HttpResponse(
                 '<script type="text/javascript">window.close()</script>'
@@ -212,15 +212,15 @@ def update_transaction(request, pk):
         if form.is_valid():
             if 'transaction_type' in form.changed_data:
                 if form.data["transaction_type"] == 'Buy':
-                    form.instance.coin.quantity += Decimal(form.data["quantity"])
-                    form.instance.coin.investment += Decimal(form.data["quantity"]) * Decimal(form.data["spot_price"])
+                    form.instance.coin.quantity += float(form.data["quantity"])
+                    form.instance.coin.investment += float(form.data["quantity"]) * float(form.data["spot_price"])
                     form.instance.coin.save()
                 else:
-                    form.instance.coin.quantity -= Decimal(form.data["quantity"])
-                    if form.instance.coin.investment - Decimal(form.data["quantity"]) * Decimal(form.data["spot_price"]) < 0:
-                        form.instance.coin.investment = Decimal(0.0)
+                    form.instance.coin.quantity -= float(form.data["quantity"])
+                    if form.instance.coin.investment - float(form.data["quantity"]) * float(form.data["spot_price"]) < 0:
+                        form.instance.coin.investment = float(0.0)
                     else:
-                        form.instance.coin.investment -= Decimal(form.data["quantity"]) * Decimal(form.data["spot_price"])
+                        form.instance.coin.investment -= float(form.data["quantity"]) * float(form.data["spot_price"])
                     form.instance.coin.save()
             form.save()
             return HttpResponse(
@@ -241,11 +241,11 @@ def delete_transaction(request, pk):
         # delete object
         if transaction.transaction_type == 'Buy':
             transaction.coin.quantity -= transaction.quantity
-            transaction.coin.investment -= Decimal(transaction.quantity) * Decimal(transaction.spot_price)
+            transaction.coin.investment -= float(transaction.quantity) * float(transaction.spot_price)
             transaction.coin.save()
         else:
             transaction.coin.quantity += transaction.quantity
-            transaction.coin.investment += Decimal(transaction.quantity) * Decimal(transaction.spot_price)
+            transaction.coin.investment += float(transaction.quantity) * float(transaction.spot_price)
             transaction.coin.save()
         transaction.delete()
         # after deleting redirect to

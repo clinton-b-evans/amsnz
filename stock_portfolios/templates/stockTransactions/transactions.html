@@ -39,7 +39,7 @@ function popitup(url) {
 
 
 </script>
-<a href="popupex.html" onclick="return popitup('/crypto/transaction/add')">
+<a href="popupex.html" onclick="return popitup('/stock/transaction/add')">
     <button class="btn btn-dashboard mb-3" type="button">
         <svg class="bi bi-calendar-plus me-1" fill="currentColor" height="16" viewBox="0 0 16 16"
              width="16" xmlns="http://www.w3.org/2000/svg">
@@ -56,9 +56,9 @@ function popitup(url) {
                 <table class="table table-hover" style="font-size:small">
                     <thead>
                     <tr>
-                        <th style="text-align:left">Commodity</th>
+                        <th style="text-align:left">Ticker</th>
                         <th style="text-align:left">Transaction Type</th>
-                        <th style="text-align:right">Weight</th>
+                        <th style="text-align:right">Quantity</th>
                         <th style="text-align:right">Purchased Price</th>
                         <th style="text-align:right">Total Investment</th>
                         <th style="text-align:right">Date</th>
@@ -69,7 +69,7 @@ function popitup(url) {
                     {% for obj in transactions %}
                     <tr>
                         <!--              <td style="text-align:left"><a href='{{obj.pk}}/'>{{ obj.commodity_class }}</a></td>-->
-                        <td style="text-align:left">{{ obj.crypto_name }}</td>
+                        <td style="text-align:left">{{ obj.stock_name }}</td>
                         <td style="text-align:left">{{ obj.transaction_type}}</td>
                         <td style="text-align:right">{{ obj.quantity }}</td>
                         <td style="text-align:right">${{ obj.purchasedValue|floatformat:2 }}</td>
@@ -77,7 +77,7 @@ function popitup(url) {
                         <td style="text-align:right">{{ obj.date }}</td>
                         <td style="text-align:right">
                             <a href="popupex.html"
-                               onclick="return popitup('/crypto/transaction/{{ obj.id }}/edit')"
+                               onclick="return popitup('/stock/transaction/{{ obj.id }}/edit')"
                                style="text-decoration: none;">
                                 <button class="btn btn-success btn-sm rounded-0" data-placement="top"
                                         data-toggle="tooltip"
@@ -91,7 +91,7 @@ function popitup(url) {
                                 </button>
                             </a>
                             <a href="popupex.html"
-                               onclick="return popitup('/crypto/transaction/{{ obj.id }}/delete')"
+                               onclick="return popitup('/stock/transaction/{{ obj.id }}/delete')"
                                style="text-decoration: none;">
                                 <button class="btn btn-danger btn-sm rounded-0" data-placement="top"
                                         data-toggle="tooltip"

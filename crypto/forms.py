@@ -27,6 +27,6 @@ class TransactionForm(ModelForm):
         coin = self.cleaned_data['coin']
         quantity = self.cleaned_data['quantity']
         if transaction_type == 'Sell':
-            if coin.quantity - Decimal(quantity) < 0:
+            if coin.quantity - float(quantity) < 0:
                 raise ValidationError("You don't have sufficient quantity")
         return quantity
