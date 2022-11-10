@@ -210,18 +210,61 @@ def update_transaction(request, pk):
     if request.method == "POST":
         form = TransactionForm(request.POST, instance=transaction)
         if form.is_valid():
-            if 'transaction_type' in form.changed_data:
-                if form.data["transaction_type"] == 'Buy':
-                    form.instance.coin.quantity += float(form.data["quantity"])
-                    form.instance.coin.investment += float(form.data["quantity"]) * float(form.data["spot_price"])
-                    form.instance.coin.save()
-                else:
-                    form.instance.coin.quantity -= float(form.data["quantity"])
-                    if form.instance.coin.investment - float(form.data["quantity"]) * float(form.data["spot_price"]) < 0:
-                        form.instance.coin.investment = float(0.0)
+            if form.data["transaction_type"] == 'Buy':
+                if form.cleaned_data["spot_price"]:
+                    if form.cleaned_data["quantity"]:
+                        form.instance.coin.quantity -= float(form.initial["quantity"])
+                        form.instance.coin.quantity += float(form.cleaned_data["quantity"])
+                        form.instance.coin.investment -= float(form.initial["quantity"]) * float(
+                            form.initial["spot_price"])
+                        form.instance.coin.investment += float(form.cleaned_data["quantity"]) * float(
+                            form.cleaned_data["spot_price"])
+                        form.instance.coin.save()
                     else:
-                        form.instance.coin.investment -= float(form.data["quantity"]) * float(form.data["spot_price"])
+                        form.instance.coin.investment -= float(form.initial["quantity"]) * float(
+                            form.initial["spot_price"])
+                        form.instance.coin.investment += float(form.initial["quantity"]) * float(
+                            form.cleaned_data["spot_price"])
+                        form.instance.coin.save()
+
+                if form.cleaned_data["quantity"] and not form.cleaned_data["spot_price"]:
+                    form.instance.coin.quantity -= float(form.initial["quantity"])
+                    form.instance.coin.quantity += float(form.cleaned_data["quantity"])
+                    form.instance.coin.investment -= float(form.initial["quantity"]) * float(
+                        form.initial["spot_price"])
+                    form.instance.coin.investment += float(form.cleaned_data["quantity"]) * float(
+                        form.initial["spot_price"])
                     form.instance.coin.save()
+                if form.cleaned_data["date"]:
+                    form.instance.coin.date = form.cleaned_data["date"]
+
+            else:
+                if form.initial["spot_price"]:
+                    if form.cleaned_data["quantity"]:
+                        form.instance.coin.quantity -= float(form.initial["quantity"])
+                        form.instance.coin.quantity += float(form.cleaned_data["quantity"])
+                        form.instance.coin.investment += float(form.initial["quantity"]) * float(
+                            form.initial["spot_price"])
+                        form.instance.coin.investment -= float(form.cleaned_data["quantity"]) * float(
+                            form.cleaned_data["spot_price"])
+                    else:
+                        form.instance.coin.investment += float(form.initial["quantity"]) * float(
+                            form.initial["spot_price"])
+                        form.instance.coin.investment -= float(form.initial["quantity"]) * float(
+                            form.cleaned_data["spot_price"])
+
+                    form.instance.coin.save()
+
+                if form.cleaned_data["quantity"] and not form.cleaned_data["spot_price"]:
+                    form.instance.coin.quantity -= float(form.initial["quantity"])
+                    form.instance.coin.quantity += float(form.cleaned_data["quantity"])
+                    form.instance.coin.investment += float(form.initial["quantity"]) * float(
+                        form.initial["spot_price"])
+                    form.instance.coin.investment -= float(form.cleaned_data["quantity"]) * float(
+                        form.initial["spot_price"])
+                    form.instance.coin.save()
+                if form.cleaned_data["date"]:
+                    form.instance.coin.date = form.cleaned_data["date"]
             form.save()
             return HttpResponse(
                 '<script type="text/javascript">window.close()</script>'

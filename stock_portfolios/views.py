@@ -89,6 +89,46 @@ def stock_list_view(request):
     return render(request, "stock/main.html", context)
 
 
+def add_stock(request):
+    today = date.today().isoformat()
+
+    submitted = False
+    if request.method == "POST":
+        ticker_input = request.POST.get("ticker")
+        ticker = ticker_input + "-USD"
+
+        yf_data = yf.Ticker(ticker)
+        yf_data = yf_data.history(today, interval="60m")
+        spot_price = 0.0
+
+        if yf_data["Close"].empty:
+            return HttpResponse(
+                f"-{ticker_input} No data found, symbol/Ticker may be de-listed!. Kindly try again with correct Ticker."
+            )
+        else:
+            last_price = yf_data["Close"][0]
+            string_price = "{:.4f}".format(last_price)
+            spot_price += float(string_price)
+
+        form = StockForm(request.POST)
+        if form.is_valid():
+            form = form.save(commit=False)
+            form.spot_price = spot_price
+            form.save()
+            return HttpResponse(
+                '<script type="text/javascript">window.close()</script>'
+            )
+        else:
+            form = StockForm
+            if "submitted" in request.GET:
+                submitted = True
+        # else:
+        #     messages.error(request, "This Ticker Spot price is not available!")
+        #     return redirect("crypto:crypto-add")
+    form = StockForm
+    return render(request, "stock/add.html", {"form": form, "submitted": submitted})
+
+
 def stock_transactions(request, year=''):
     if year == '':
         transactions = StockTransaction.objects.all().order_by('date')
@@ -152,24 +192,69 @@ def update_transaction(request, pk):
     if request.method == "POST":
         form = TransactionForm(request.POST, instance=transaction)
         if form.is_valid():
-            if 'transaction_type' in form.changed_data:
-                if form.data["transaction_type"] == 'Buy':
-                    form.instance.stock.quantity += float(form.data["quantity"])
-                    form.instance.stock.investment += float(form.data["quantity"]) * float(form.data["spot_price"])
-                    form.instance.stock.save()
-                else:
-                    form.instance.stock.quantity -= float(form.data["quantity"])
-                    if form.instance.stock.investment - float(form.data["quantity"]) * float(form.data["spot_price"]) < 0:
-                        form.instance.stock.investment = 0.0
+            if form.data["transaction_type"] == 'Buy':
+                if form.cleaned_data["spot_price"]:
+                    if form.cleaned_data["quantity"]:
+                        form.instance.stock.quantity -= float(form.initial["quantity"])
+                        form.instance.stock.quantity += float(form.cleaned_data["quantity"])
+                        form.instance.stock.investment -= float(form.initial["quantity"]) * float(
+                            form.initial["spot_price"])
+                        form.instance.stock.investment += float(form.cleaned_data["quantity"]) * float(
+                            form.cleaned_data["spot_price"])
+                        form.instance.stock.save()
                     else:
-                        form.instance.stock.investment -= float(form.data["quantity"]) * float(form.data["spot_price"])
+                        form.instance.stock.investment -= float(form.initial["quantity"]) * float(
+                            form.initial["spot_price"])
+                        form.instance.stock.investment += float(form.initial["quantity"]) * float(
+                            form.cleaned_data["spot_price"])
+                        form.instance.stock.save()
+
+                if form.cleaned_data["quantity"] and not form.cleaned_data["spot_price"]:
+                    form.instance.stock.quantity -= float(form.initial["quantity"])
+                    form.instance.stock.quantity += float(form.cleaned_data["quantity"])
+                    form.instance.stock.investment -= float(form.initial["quantity"]) * float(
+                        form.initial["spot_price"])
+                    form.instance.stock.investment += float(form.cleaned_data["quantity"]) * float(
+                        form.initial["spot_price"])
                     form.instance.stock.save()
-            form.save()
-            return HttpResponse(
-                '<script type="text/javascript">window.close()</script>'
-            )
+                if form.cleaned_data["date"]:
+                    form.instance.stock.date = form.cleaned_data["date"]
+
+            else:
+                if form.initial["spot_price"]:
+                    if form.cleaned_data["quantity"]:
+                        form.instance.stock.quantity -= float(form.initial["quantity"])
+                        form.instance.stock.quantity += float(form.cleaned_data["quantity"])
+                        form.instance.stock.investment += float(form.initial["quantity"]) * float(
+                            form.initial["spot_price"])
+                        form.instance.stock.investment -= float(form.cleaned_data["quantity"]) * float(
+                            form.cleaned_data["spot_price"])
+                    else:
+                        form.instance.stock.investment += float(form.initial["quantity"]) * float(
+                            form.initial["spot_price"])
+                        form.instance.stock.investment -= float(form.initial["quantity"]) * float(
+                            form.cleaned_data["spot_price"])
+
+                    form.instance.stock.save()
+
+                if form.cleaned_data["quantity"] and not form.cleaned_data["spot_price"]:
+                    form.instance.stock.quantity -= float(form.initial["quantity"])
+                    form.instance.stock.quantity += float(form.cleaned_data["quantity"])
+                    form.instance.stock.investment += float(form.initial["quantity"]) * float(
+                        form.initial["spot_price"])
+                    form.instance.stock.investment -= float(form.cleaned_data["quantity"]) * float(
+                        form.initial["spot_price"])
+                    form.instance.stock.save()
+                if form.cleaned_data["date"]:
+                    form.instance.stock.date = form.cleaned_data["date"]
+        form.save()
+        return HttpResponse(
+            '<script type="text/javascript">window.close()</script>'
+        )
     context = {"form": form}
     return render(request, "stockTransactions/add.html", context)
+
+
 
 
 def delete_transaction(request, pk):

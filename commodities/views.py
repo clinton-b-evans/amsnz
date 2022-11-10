@@ -240,7 +240,51 @@ def update_transaction(request, pk):
     if request.method == "POST":
         form = TransactionForm(request.POST, instance=transaction)
         if form.is_valid():
+            if form.data["transaction_type"] == 'Buy':
+                if form.cleaned_data["value"]:
+                    if form.cleaned_data["weight"]:
+                        form.instance.commodity.weight -= float(form.initial["weight"])
+                        form.instance.commodity.weight += float(form.cleaned_data["weight"])
+                        form.instance.commodity.investment -= float(form.initial["weight"]) * float(form.initial["value"])
+                        form.instance.commodity.investment += float(form.cleaned_data["weight"]) * float(form.cleaned_data["value"])
+                        form.instance.commodity.save()
+                    else:
+                        form.instance.commodity.investment -= float(form.initial["weight"]) * float(form.initial["value"])
+                        form.instance.commodity.investment += float(form.initial["weight"]) * float(form.cleaned_data["value"])
+                        form.instance.commodity.save()
+
+                if form.cleaned_data["weight"] and not form.cleaned_data["value"]:
+                    form.instance.commodity.weight -= float(form.initial["weight"])
+                    form.instance.commodity.weight += float(form.cleaned_data["weight"])
+                    form.instance.commodity.investment -= float(form.initial["weight"]) * float(form.initial["value"])
+                    form.instance.commodity.investment += float(form.cleaned_data["weight"]) * float(form.initial["value"])
+                    form.instance.commodity.save()
+                if form.cleaned_data["date"]:
+                    form.instance.commodity.date = form.cleaned_data["date"]
+
+            else:
+                if form.initial["value"]:
+                    if form.cleaned_data["weight"]:
+                        form.instance.commodity.weight -= float(form.initial["weight"])
+                        form.instance.commodity.weight += float(form.cleaned_data["weight"])
+                        form.instance.commodity.investment += float(form.initial["weight"]) * float(form.initial["value"])
+                        form.instance.commodity.investment -= float(form.cleaned_data["weight"]) * float(form.cleaned_data["value"])
+                    else:
+                        form.instance.commodity.investment += float(form.initial["weight"]) * float(form.initial["value"])
+                        form.instance.commodity.investment -= float(form.initial["weight"]) * float(form.cleaned_data["value"])
+
+                    form.instance.commodity.save()
+
+                if form.cleaned_data["weight"] and not form.cleaned_data["value"]:
+                    form.instance.commodity.weight -= float(form.initial["weight"])
+                    form.instance.commodity.weight += float(form.cleaned_data["weight"])
+                    form.instance.commodity.investment += float(form.initial["weight"]) * float(form.initial["value"])
+                    form.instance.commodity.investment -= float(form.cleaned_data["weight"]) * float(form.initial["value"])
+                    form.instance.commodity.save()
+                if form.cleaned_data["date"]:
+                    form.instance.commodity.date = form.cleaned_data["date"]
             form.save()
+
             return HttpResponse(
                 '<script type="text/javascript">window.close()</script>'
             )
