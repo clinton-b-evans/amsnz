@@ -322,6 +322,10 @@ def year_to_date(request, year):
         for item in each:
             years_list.append(item)
     years_list = sort(years_list)
+    net_income = []
+    for key, value in month_expenses.items():
+        net_income.append(month_income[key]-month_expenses[key])
+    print(net_income,'net_income')
     context = {
         "object_list": qs,
         "year": year,
@@ -334,5 +338,6 @@ def year_to_date(request, year):
         "years_list": years_list,
         "income_result": income_result,
         "expenses_result": expenses_result,
+        "net_income": net_income,
     }
     return render(request, "incomestatements/ytd.html", context)

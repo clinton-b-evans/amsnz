@@ -129,6 +129,36 @@ function popitup(url) {
                     <th></th>
                   </tr>
                 </thead>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <th scope="col">Net Income</th>
+                </tr>
+                  <!-- Loop 1-->
+
+                <thead>
+                  <tr style="background-color: #ededed">
+                    <th scope="row"><i>Total</i></th>
+                    {% for amount in net_income %}
+                    <th>${{amount}}</th>
+                    {% endfor %}
+                    <th></th>
+                  </tr>
+                </thead>
               </tbody>
             </table>
           </div>
@@ -211,7 +241,7 @@ function popitup(url) {
   }
 </script>
 
-<br> 
+<br>
 
 
 {% endblock content %}
