@@ -2,6 +2,12 @@ from django.db import models
 from django.utils.timezone import now
 
 
+class CrudUser(models.Model):
+    name = models.CharField(max_length=30, blank=True)
+    address = models.CharField(max_length=100, blank=True)
+    age = models.IntegerField(blank=True, null=True)
+
+
 class Crypto(models.Model):
     name = models.CharField(
         max_length=50, unique=True
@@ -25,9 +31,9 @@ class CryptoTransaction(models.Model):
         ("Buy", "Buy"),
         ("Sell", "Sell"),
     )
-    coin = models.ForeignKey(Crypto, on_delete=models.CASCADE, blank=False, null=False)
+    coin = models.ForeignKey(Crypto, on_delete=models.CASCADE, null=True, blank=True)
     transaction_type = models.CharField(
-        choices=TRANSACTION_TYPE_SOURCES, max_length=100, null=False, blank=False
+        choices=TRANSACTION_TYPE_SOURCES, max_length=100, null=True, blank=True
     )
     quantity = models.FloatField(
         blank=False, default=0.0,

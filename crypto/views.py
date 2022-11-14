@@ -1,22 +1,72 @@
+import json
 from decimal import Decimal
 
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+from django.views.generic import ListView
 from yahooquery import Ticker
 
-from .models import Crypto, CryptoTransaction
+from .models import Crypto, CryptoTransaction, CrudUser
 from .forms import CryptoForm, TransactionForm
 import yfinance as yf
 from datetime import date, timedelta
+
+
+def crudview(request):
+    model = CrudUser.objects.all().values()
+    context = {'username': 'qadeer', 'users': model}
+    return render(request, "cryptoTransactions/crud.html", context)
+
+
+def get(request):
+    name1 = request.GET.get('name', None)
+    address1 = request.GET.get('address', None)
+    age1 = request.GET.get('age', None)
+
+    obj = CrudUser.objects.create(
+        name=name1,
+        address=address1,
+        age=age1
+    )
+
+    user = {'id': obj.id, 'name': obj.name, 'address': obj.address, 'age': obj.age}
+
+    data = {
+        'user': user
+    }
+    return JsonResponse(data)
+
+
+def update(request):
+    id1 = request.GET.get('id', None)
+    name1 = request.GET.get('name', None)
+    address1 = request.GET.get('address', None)
+    age1 = request.GET.get('age', None)
+
+    obj = CrudUser.objects.get(id=id1)
+    obj.name = name1
+    obj.address = address1
+    obj.age = age1
+    obj.save()
+
+    user = {'id': obj.id, 'name': obj.name, 'address': obj.address, 'age': obj.age}
+
+    data = {
+        'user': user
+    }
+    return JsonResponse(data)
+
+
 def compute_pie_chart_transaction_types(cryptos, totalMarketValue, crypto_prices):
     pie_chart_data = []
     for crypto in cryptos:
-        percentage = ((float(crypto.quantity) * float(crypto_prices[crypto.ticker]))/totalMarketValue) * 100
+        percentage = ((float(crypto.quantity) * float(crypto_prices[crypto.ticker])) / totalMarketValue) * 100
         pie_chart_data.append({
             "name": crypto.name,
             "percentage": percentage
         })
     return pie_chart_data
+
 
 def generate_bar_graph_series_data(cryptos, crypto_prices):
     investments = []
@@ -24,19 +74,25 @@ def generate_bar_graph_series_data(cryptos, crypto_prices):
     for crypto in cryptos:
         spotPrice = crypto_prices[crypto.ticker]
         currentMarketValue = float(crypto.quantity) * spotPrice
-        assetsGains.append(0 if float(currentMarketValue) < float(crypto.investment) else float(currentMarketValue) - float(crypto.investment))
+        assetsGains.append(
+            0 if float(currentMarketValue) < float(crypto.investment) else float(currentMarketValue) - float(
+                crypto.investment))
         investments.append(float(crypto.investment))
 
     return investments, assetsGains
+
 
 def get_crypto_price_data(tickers):
     all_symbols = " ".join(tickers)
     myInfo = Ticker(all_symbols)
     data = myInfo.price
     result = dict.fromkeys(data.keys())
+    print(data, 'data')
     for key, value in data.items():
         result[key] = value['regularMarketPrice']
+        print(result, 'result')
     return result
+
 
 def crypto_list_view(request):
     cryptos = Crypto.objects.exclude(quantity=0)
@@ -54,7 +110,7 @@ def crypto_list_view(request):
         currentMarketValue = float(crypto.quantity) * spotPrice
         totalMarketValue += currentMarketValue
         status = 'no-gain'
-        if (float(currentMarketValue) - float(crypto.investment)) > 0 :
+        if (float(currentMarketValue) - float(crypto.investment)) > 0:
             status = 'profit'
         elif (float(currentMarketValue) - float(crypto.investment)) < 0:
             status = 'loss'
@@ -65,7 +121,8 @@ def crypto_list_view(request):
             "totalInvestment": crypto.investment,
             "spotPrice": spotPrice,
             "currentMarketValue": currentMarketValue,
-            "profit_loss_percentage": ((float(currentMarketValue) - float(crypto.investment)) / float(crypto.investment)) * 100 if crypto.investment > 0 else 'N/A',
+            "profit_loss_percentage": ((float(currentMarketValue) - float(crypto.investment)) / float(
+                crypto.investment)) * 100 if crypto.investment > 0 else 'N/A',
             "status": status
         })
 
@@ -81,7 +138,10 @@ def crypto_list_view(request):
 
     }
     return render(request, "crypto/main.html", context)
+
+
 def crypto_transactions(request, year=''):
+    crypto_coin = Crypto.objects.all().values()
     if year == '':
         transactions = CryptoTransaction.objects.all().order_by('date')
     else:
@@ -99,12 +159,14 @@ def crypto_transactions(request, year=''):
             "date": transaction.date,
             "totalInvestment": totalInvestment,
         })
-
     context = {
         "year": year,
         "transactions": transactions_table,
+        "form": TransactionForm,
+        "crypto": crypto_coin
     }
     return render(request, "cryptoTransactions/transactions.html", context)
+
 
 def add_crypto(request):
     today = date.today().isoformat()
@@ -173,8 +235,50 @@ def delete_crypto(request, pk):
         return HttpResponse('<script type="text/javascript">window.close()</script>')
     return render(request, "crypto/delete.html", context)
 
-def add_transaction(request, **kwargs):
-    submitted = False
+
+def addTransaction(request):
+    if request.method == "POST":
+        # getting body data from request
+        transactionData = json.loads(request.body)
+        # getting models
+        crypto = Crypto.objects.get(name=transactionData['coin'])
+        # saving data to crypto model
+        # when transactions_type is buy
+        if transactionData["transaction_type"] == 'Buy':
+            crypto.quantity += float(transactionData["quantity"])
+            crypto.investment += float(transactionData["quantity"]) * float(transactionData["spot_price"])
+            crypto.save()
+        # when transactions_type is sell
+        else:
+            crypto.quantity -= float(transactionData["quantity"])
+            if crypto.investment - float(transactionData["quantity"]) * float(transactionData["spot_price"]) < 0:
+                crypto.investment = float(0.0)
+            else:
+                crypto.investment -= float(transactionData["quantity"]) * float(transactionData["spot_price"])
+            crypto.save()
+        obj = CryptoTransaction.objects.create(
+            coin=Crypto.objects.get(name=transactionData["coin"]),
+            transaction_type=transactionData['transaction_type'],
+            quantity=transactionData['quantity'],
+            spot_price=transactionData['spot_price'],
+            date=transactionData['date'],
+        )
+        user = {
+            'id': obj.id,
+            'coin': transactionData['coin'],
+            'spot_price': obj.spot_price,
+            'transaction_type': obj.transaction_type,
+            'quantity': obj.quantity,
+            'date': obj.date
+        }
+        data = {
+            'user': user
+        }
+        print(data, 'data')
+        return JsonResponse(data)
+
+
+def add_transaction(request):
     if request.method == "POST":
         form = TransactionForm(request.POST)
         if form.is_valid():
@@ -193,14 +297,93 @@ def add_transaction(request, **kwargs):
             return HttpResponse(
                 '<script type="text/javascript">window.close()</script>'
             )
+        return True
     else:
-        form = TransactionForm
-        if "submitted" in request.GET:
-            submitted = True
-    form = TransactionForm
-    return render(
-        request, "cryptoTransactions/add.html", {"form": form, "submitted": submitted}
-    )
+        return False
+
+
+def edit_transaction(request):
+    if request.method == "POST":
+        # getting body data from request
+        data = json.loads(request.body)
+        # setting the id
+        pk = data['transactionId']
+        # getting models
+        transaction = CryptoTransaction.objects.get(id=pk)
+        crypto = Crypto.objects.get(name=data['coin'])
+        print(crypto.investment, 'crypto')
+        # setting values to variables
+        spot_price = data['spot_price']
+        quantity = data['quantity']
+        # saving data to crypto model
+        # when transactions_type is buy
+        if transaction.transaction_type == 'Buy':
+            # if spot_price changed
+            if data["spot_price"] != transaction.spot_price:
+                # if quantity changed
+                if data["quantity"] != transaction.quantity:
+                    crypto.quantity -= float(transaction.quantity)
+                    crypto.quantity += float(data["quantity"])
+                    crypto.investment -= float(transaction.quantity) * float(
+                        transaction.spot_price)
+                    crypto.investment += float(data["quantity"]) * float(
+                        data["spot_price"])
+                    crypto.save()
+                else:
+                    crypto.investment -= float(transaction.quantity) * float(
+                        transaction.spot_price)
+                    crypto.investment += float(transaction.quantity) * float(
+                        data["spot_price"])
+                    crypto.save()
+            # if quantity changed and spotPrice didn't change
+            if data["quantity"] != transaction.quantity and data["spot_price"] == transaction.spot_price:
+                crypto.quantity -= float(transaction.quantity)
+                crypto.quantity += float(data["quantity"])
+                crypto.investment -= float(transaction.quantity) * float(
+                    transaction.spot_price)
+                crypto.investment += float(data["quantity"]) * float(
+                    transaction.spot_price)
+                crypto.save()
+        # when transactions_type is sell
+        else:
+            # if spot_price changed
+            if data["spot_price"] != transaction.spot_price:
+                # if quantity changed
+                if data["quantity"] != transaction.quantity:
+                    crypto.quantity -= float(transaction.quantity)
+                    crypto.quantity += float(data["quantity"])
+                    crypto.investment += float(transaction.quantity) * float(
+                        transaction.spot_price)
+                    crypto.investment -= float(data["quantity"]) * float(
+                        data["spot_price"])
+                else:
+                    crypto.investment += float(transaction.quantity) * float(
+                        transaction.spot_price)
+                    crypto.investment -= float(transaction.quantity) * float(
+                        data["spot_price"])
+                crypto.save()
+            # if quantity changed and spotPrice didn't change
+            if data["quantity"] != transaction.quantity and data["spot_price"] == transaction.spot_price:
+                crypto.quantity -= float(transaction.quantity)
+                crypto.quantity += float(data["quantity"])
+                crypto.investment += float(transaction.quantity) * float(
+                    transaction.spot_price)
+                crypto.investment -= float(data["quantity"]) * float(
+                    transaction.spot_price)
+                crypto.save()
+        # saving data to transaction model
+        transaction.spot_price = spot_price
+        transaction.quantity = quantity
+        transaction.save()
+
+        user = {'id': transaction.id, 'transaction_type': transaction.transaction_type,
+                'quantity': transaction.quantity,
+                'spot_price': transaction.spot_price}
+
+        data = {
+            'user': user
+        }
+        return JsonResponse(data)
 
 
 def update_transaction(request, pk):
@@ -272,6 +455,25 @@ def update_transaction(request, pk):
     context = {"form": form}
     return render(request, "cryptoTransactions/add.html", context)
 
+
+def deleteTransaction(request):
+    id1 = request.GET.get('id', None)
+    transaction = CryptoTransaction.objects.get(id=id1)
+    if transaction.transaction_type == 'Buy':
+        transaction.coin.quantity -= transaction.quantity
+        transaction.coin.investment -= float(transaction.quantity) * float(transaction.spot_price)
+        transaction.coin.save()
+        print('buy')
+    else:
+        transaction.coin.quantity += transaction.quantity
+        transaction.coin.investment += float(transaction.quantity) * float(transaction.spot_price)
+        transaction.coin.save()
+        print('sell')
+    CryptoTransaction.objects.get(id=id1).delete()
+    data = {
+        'deleted': True
+    }
+    return JsonResponse(data)
 
 def delete_transaction(request, pk):
     transaction = CryptoTransaction.objects.get(id=pk)

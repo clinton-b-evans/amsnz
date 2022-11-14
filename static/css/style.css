@@ -1117,7 +1117,7 @@ h1, h2, h3, h4, h5, h6 {
   border: none !important;
 }
 
-.btn-danger {
+.btn-danger-1 {
   color: #dc3545 !important;
   background-color: transparent !important;
   border: none !important;
@@ -1208,4 +1208,8 @@ h1, h2, h3, h4, h5, h6 {
   padding: 0rem 0.5rem !important;
   font-size: .875rem;
   border-radius: 0.2rem;
+}
+
+.deleteForm{
+   text-align: left;
 }

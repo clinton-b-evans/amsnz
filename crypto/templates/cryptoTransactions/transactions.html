@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% load static %}
 {% load mathfilters %}
-
+{% load bootstrap %}
 {% block title %}
-<div class="title">Transactions 
+<div class="title">Transactions
     <!-- <span> | {{year}}</span> -->
 </div>
 {% endblock title %}
@@ -29,6 +29,8 @@ function popitup(url) {
 
 
 
+
+
 </script>
 
 <script>
@@ -38,22 +40,71 @@ function popitup(url) {
 
 
 
+
+
 </script>
-<a href="popupex.html" onclick="return popitup('/crypto/transaction/add')">
-    <button class="btn btn-dashboard mb-3" type="button">
-        <svg class="bi bi-calendar-plus me-1" fill="currentColor" height="16" viewBox="0 0 16 16"
+<!--<a href="popupex.html" onclick="return popitup('/crypto/transaction/add')">-->
+<!--    <button class="btn btn-dashboard mb-3" type="button">-->
+<!--        <svg class="bi bi-calendar-plus me-1" fill="currentColor" height="16" viewBox="0 0 16 16"-->
+<!--             width="16" xmlns="http://www.w3.org/2000/svg">-->
+<!--            <path d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>-->
+<!--            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>-->
+<!--        </svg>-->
+<!--        New Transaction-->
+<!--    </button>-->
+<!--</a>-->
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-dashboard mb-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    <svg class="bi bi-calendar-plus me-1" fill="currentColor" height="16" viewBox="0 0 16 16"
              width="16" xmlns="http://www.w3.org/2000/svg">
             <path d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>
             <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
         </svg>
-        New Transaction
-    </button>
-</a>
+  New Transaction
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="addTransaction">
+            <div class="mb-3">
+                <label class="form-label">Bitcoins</label>
+                <select class="form-select" name="coin" id="coin" aria-label="Default select example">
+                    <option selected>------</option>
+                    {% for coins in crypto %}
+                    <option value="{{coins.name}}">{{coins.name}}</option>
+                    {% endfor %}
+                </select>
+                <label class="form-label">Transaction Type</label>
+                <select class="form-select" name="transaction_type" id="transaction_type" aria-label="Default select example">
+                    <option selected>------</option>
+                    <option value="Buy">Buy</option>
+                    <option value="Sell">Sell</option>
+                </select>
+                <label class="form-label">Quantity</label>
+                <input class="form-control" name="quantity" value=0.0 id="quantity" type="number">
+                <label class="form-label">Spot Price</label>
+                <input class="form-control" name="spot_price" value=0.0 id="spot_price" type="number">
+                <label class="form-label">Date</label>
+                <input class="form-control" name="date" id="date" type="date">
+            </div>
+            <button class="btn btn-primary form-control" type="button" onclick="addTransaction()">ADD</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="row">
     <div class="col-lg-12">
         <div class="card">
             <div class="card-body mt-4" style="overflow-x:auto;">
-                <table class="table table-hover" style="font-size:small">
+                <table class="table table-hover" style="font-size:small" id="transactionTable">
                     <thead>
                     <tr>
                         <th style="text-align:left">Commodity</th>
@@ -67,43 +118,131 @@ function popitup(url) {
                     </thead>
                     <tbody>
                     {% for obj in transactions %}
-                    <tr>
+                    <tr id="user-{{obj.id}}">
                         <!--              <td style="text-align:left"><a href='{{obj.pk}}/'>{{ obj.commodity_class }}</a></td>-->
-                        <td style="text-align:left">{{ obj.crypto_name }}</td>
-                        <td style="text-align:left">{{ obj.transaction_type}}</td>
-                        <td style="text-align:right">{{ obj.quantity }}</td>
-                        <td style="text-align:right">${{ obj.purchasedValue|floatformat:2 }}</td>
-                        <td style="text-align:right">${{ obj.totalInvestment|floatformat:2 }}</td>
-                        <td style="text-align:right">{{ obj.date }}</td>
+                        <td class="name userData" name="name" style="text-align:left">{{ obj.crypto_name }}</td>
+                        <td class="transaction_type userData" name="transaction_type" style="text-align:left">{{ obj.transaction_type}}</td>
+                        <td class="quantity userData" name="quantity" style="text-align:right">{{ obj.quantity }}</td>
+                        <td class="purchased_value userData" name="purchased_value" style="text-align:right">${{ obj.purchasedValue|floatformat:2 }}</td>
+                        <td class="investment userData" name="investment" style="text-align:right">${{ obj.totalInvestment|floatformat:2 }}</td>
+                        <td class="date userData" name="date" style="text-align:right">{{ obj.date }}</td>
                         <td style="text-align:right">
-                            <a href="popupex.html"
-                               onclick="return popitup('/crypto/transaction/{{ obj.id }}/edit')"
-                               style="text-decoration: none;">
-                                <button class="btn btn-success btn-sm rounded-0" data-placement="top"
-                                        data-toggle="tooltip"
-                                        title="Edit" type="button">
-                                    <svg class="bi bi-pencil-square" fill="currentColor" height="16" viewBox="0 0 16 16"
-                                         width="16" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                                        <path d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"
-                                              fill-rule="evenodd"/>
-                                    </svg>
-                                </button>
-                            </a>
-                            <a href="popupex.html"
-                               onclick="return popitup('/crypto/transaction/{{ obj.id }}/delete')"
-                               style="text-decoration: none;">
-                                <button class="btn btn-danger btn-sm rounded-0" data-placement="top"
-                                        data-toggle="tooltip"
-                                        title="Delete" type="button">
-                                    <svg class="bi bi-trash" fill="currentColor" height="16" viewBox="0 0 16 16"
+<!--                            <a href="popupex.html"-->
+<!--                               onclick="return popitup('/crypto/transaction/{{ obj.id }}/edit')"-->
+<!--                               style="text-decoration: none;">-->
+<!--                                <button class="btn btn-success btn-sm rounded-0" data-placement="top"-->
+<!--                                        data-toggle="tooltip"-->
+<!--                                        title="Edit" type="button">-->
+<!--                                    <svg class="bi bi-pencil-square" fill="currentColor" height="16" viewBox="0 0 16 16"-->
+<!--                                         width="16" xmlns="http://www.w3.org/2000/svg">-->
+<!--                                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>-->
+<!--                                        <path d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"-->
+<!--                                              fill-rule="evenodd"/>-->
+<!--                                    </svg>-->
+<!--                                </button>-->
+<!--                            </a>-->
+                            <!--                            <a-->
+                            <!--                                    onclick="EditTransaction({{obj.id}})"-->
+                            <!--                                    style="text-decoration: none;">-->
+                            <button class="btn btn-success btn-sm rounded-0" data-bs-target="#basicModal{{obj.id}}"
+                                    data-bs-toggle="modal" data-placement="top"
+                                    title="Edit" type="button">
+                                <svg class="bi bi-pencil-square" fill="currentColor" height="16" viewBox="0 0 16 16"
+                                     width="16" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                    <path d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"
+                                          fill-rule="evenodd"/>
+                                </svg>
+                            </button>
+                            <!--                            </a>-->
+                            <div class="modal fade" id=basicModal{{obj.id}} tabindex="-1">
+                                <div class="modal-dialog">
+                                    <form action="" method=POST>
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Edit Transaction</h5>
+                                                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"
+                                                        type="button"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form>
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="coin{{obj.id}}">Coin</label>
+                                                        <input aria-describedby="emailHelp" class="form-control" id="coin{{obj.id}}"
+                                                               type="text" value="{{obj.crypto_name}}" disabled>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label"
+                                                               for="transaction_type{{obj.id}}">Transaction Type</label>
+                                                        <input class="form-control" id="transaction_type{{obj.id}}"
+                                                               type="text" value="{{ obj.transaction_type}}" disabled>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label"
+                                                               for="quantity{{obj.id}}">Quantity</label>
+                                                        <input class="form-control" id="quantity{{obj.id}}"
+                                                               type="number" value="{{ obj.quantity }}">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label"
+                                                               for="spot_price{{obj.id}}">Spot Price</label>
+                                                        <input class="form-control" id="spot_price{{obj.id}}"
+                                                               type="number" value="{{ obj.purchasedValue|floatformat:2 }}">
+                                                    </div>
+                                                    <button class="btn btn-primary" type="button" onclick="EditTransaction({{obj.id}})">Submit</button>
+                                                </form>
+                                            </div>
+<!--                                            <div class="modal-footer">-->
+<!--                                                <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">-->
+<!--                                                    Close-->
+<!--                                                </button>-->
+<!--                                                <button class="btn btn-dashboard" type="submit">Save</button>-->
+<!--                                            </div>-->
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+<!--                            <a href="popupex.html"-->
+<!--                               onclick="return popitup('/crypto/transaction/{{ obj.id }}/delete')"-->
+<!--                               style="text-decoration: none;">-->
+<!--                                <button class="btn btn-danger btn-sm rounded-0" data-placement="top"-->
+<!--                                        data-toggle="tooltip"-->
+<!--                                        title="Delete" type="button">-->
+<!--                                    <svg class="bi bi-trash" fill="currentColor" height="16" viewBox="0 0 16 16"-->
+<!--                                         width="16" xmlns="http://www.w3.org/2000/svg">-->
+<!--                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>-->
+<!--                                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"-->
+<!--                                              fill-rule="evenodd"/>-->
+<!--                                    </svg>-->
+<!--                                </button>-->
+<!--                            </a>-->
+                            <button type="button" class="btn btn-danger-1 btn-sm rounded-0" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                              <svg class="bi bi-trash" fill="currentColor" height="16" viewBox="0 0 16 16"
                                          width="16" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
                                         <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
                                               fill-rule="evenodd"/>
                                     </svg>
-                                </button>
-                            </a>
+                            </button>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="deleteModalLabel">Modal title</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                      <div class="modal-body deleteForm">
+                                        <h2 class="">You are about to delete this Transaction</h2>
+                                        <p>Are you sure you want to delete {{ obj.crypto_name  }}?</p>
+                                        <p>This action cannot be undone.</p>
+                                        <p>All transctions for this fund will be lost</p>
+                                          <button class="btn btn-danger form-control" type="button" onclick="deleteTransaction({{obj.id}})">Delete</button>
+                                      </div>
+                                </div>
+                              </div>
+                            </div>
                         </td>
                     </tr>
                     {% endfor %}
@@ -113,6 +252,218 @@ function popitup(url) {
         </div>
     </div>
 </div>
+<script>
+    function addTransaction() {
+        var coin = document.getElementById('coin').value;
+        var transaction_type = document.getElementById(`transaction_type`).value;
+        var quantity = document.getElementById('quantity').value;
+        var spot_price = document.getElementById('spot_price').value;
+        var date = document.getElementById('date').value;
+        if (coin && transaction_type && quantity && spot_price && date) {
+            // Create Ajax Call
+            $(document).ready(function () {
+            let body={
+                'coin': coin,
+                'transaction_type': transaction_type,
+                'quantity': quantity,
+                'spot_price': spot_price,
+                'date': date,
+            }
+            $.ajax({
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                type: 'POST',
+                url: '{% url "crypto:addTransaction" %}',
+                headers: {//<==
+                    "X-CSRFTOKEN": "{{ csrf_token }}"//<==
+                },
+                data: JSON.stringify(body),
+                success: function(data) {
+                //Success code
+                    console.log(data,'data')
+                    if (data.user) {
+                        appendToTransactionTable(data.user);
+                        $(`#exampleModal`).modal('hide');
+                    }
+                },
+                failure: function (response) {
+                    $('#result').html(response);
+                }
+            });
+        });
+        } else
+        {
+            alert("All fields must have a valid value.");
+        }
+        $('form#addTransaction').trigger("reset");
+        return false;
+    }
+    function appendToTransactionTable(user) {
+            console.log("spot_price",user.id,user.spot_price)
+            id=user.id;
+          $("#transactionTable > tbody:last-child").append(`
+                <tr id="user-${user.id}">
+                    <td class="name userData" name="name" style="text-align:left">${user.coin}</td>
+                    <td class="transaction_type userData" name="transaction_type" style="text-align:left">${user.transaction_type}</td>
+                    <td class="quantity userData" name="quantity" style="text-align:right">${user.quantity}</td>
+                    <td class="purchased_value userData" name="purchased_value" style="text-align:right">$${user.spot_price}</td>
+                    <td class="investment userData" name="investment" style="text-align:right">$${(user.quantity*user.spot_price).toFixed(2)}</td>
+                    <td class="date userData" name="date" style="text-align:right">${user.date}</td>
+                    <td style="text-align:right">
+                            <button class="btn btn-success btn-sm rounded-0" data-bs-target="#basicModal${user.id}"
+                                    data-bs-toggle="modal" data-placement="top"
+                                    title="Edit" type="button">
+                                <svg class="bi bi-pencil-square" fill="currentColor" height="16" viewBox="0 0 16 16"
+                                     width="16" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                    <path d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"
+                                          fill-rule="evenodd"/>
+                                </svg>
+                            </button>
+                            <div class="modal fade" id=basicModal${user.id} tabindex="-1">
+                                <div class="modal-dialog">
+                                    <form action="" method=POST>
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Edit Transaction</h5>
+                                                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"
+                                                        type="button"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form>
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="coin${user.id}">Coin</label>
+                                                        <input aria-describedby="emailHelp" class="form-control" id="coin${user.id}"
+                                                               type="text" value="${user.coin}">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label"
+                                                               for="transaction_type${user.id}">Transaction Type</label>
+                                                        <input class="form-control" id="transaction_type${user.id}"
+                                                               type="text" value="${user.transaction_type}">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label"
+                                                               for="quantity${user.id}">Quantity</label>
+                                                        <input class="form-control" id="quantity${user.id}"
+                                                               type="number" value="${user.quantity}">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label"
+                                                               for="spot_price${user.id}">Spot Price</label>
+                                                        <input class="form-control" id="spot_price${user.id}"
+                                                               type="number" value="${user.spot_price}">
+                                                    </div>
+                                                    <button class="btn btn-primary" type="button" onclick="EditTransaction(user.id)">Submit</button>
+                                                </form>
+                                            </div>
+                                       </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-danger-1 btn-sm rounded-0" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                              <svg class="bi bi-trash" fill="currentColor" height="16" viewBox="0 0 16 16"
+                                         width="16" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
+                                              fill-rule="evenodd"/>
+                                    </svg>
+                            </button>
 
+                            <!-- Modal -->
+                            <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="deleteModalLabel">Modal title</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                      <div class="modal-body deleteForm">
+                                        <h2 class="">You are about to delete this Transaction</h2>
+                                        <p>Are you sure you want to delete ${user.coin}?</p>
+                                        <p>This action cannot be undone.</p>
+                                        <p>All transctions for this fund will be lost</p>
+                                          <button class="btn btn-danger form-control" type="button" onclick="deleteTransaction(${id})">Delete</button>
+                                      </div>
+                                </div>
+                              </div>
+                            </div>
+                        </td>
+                    </tr>
+            `);
+    }
+    function EditTransaction(id){
+        console.log("edit_transaction",id);
+        var coin = document.getElementById(`coin${id}`).value;
+        var transaction_type = document.getElementById(`transaction_type${id}`).value;
+        var quantity = document.getElementById(`quantity${id}`).value;
+        var spot_price = document.getElementById(`spot_price${id}`).value;
+        $(document).ready(function () {
+            let body={
+                transactionId: id,
+                coin: coin,
+                transaction_type: transaction_type,
+                quantity: quantity,
+                spot_price: spot_price,
+            }
+            $.ajax({
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                type: 'POST',
+                url: '{% url 'crypto:crypto-edit' %}',
+                headers: {//<==
+                    "X-CSRFTOKEN": "{{ csrf_token }}"//<==
+                },
+                data: JSON.stringify(body),
+                success: function(data) {
+                //Success code
+                    $(`#basicModal${data.user.id}`).modal('hide');
+                    if (data.user) {
+                        updateToTransactionTabel(data.user);
+                    }
+                },
+                failure: function (response) {
+                    $('#result').html(response);
+                }
+            });
+        });
+    }
+    function updateToTransactionTabel(user){
+    $("#transactionTable #user-" + user.id).children(".userData").each(function() {
+        var attr = $(this).attr("name");
+        console.log(attr);
+        if (attr == "name") {
+          $(this).text(user.name);
+        } else if (attr == "transaction_type") {
+          $(this).text(user.transaction_type);
+        } else if (attr == "purchased_value") {
+          $(this).text(user.spot_price);
+        }else if (attr == "investment") {
+          $(this).text(`$${(user.spot_price*user.quantity).toFixed(2)}`);
+        } else if (attr =="quantity"){
+          $(this).text(user.quantity);
+        }
+      });
+    }
+    function deleteTransaction(id) {
+        $.ajax({
+            url: '{% url "crypto:deleteTransaction" %}',
+            data: {
+                'id': id,
+            },
+            dataType: 'json',
+            success: function (data) {
+                console.log(data,'delete');
+                if (data.deleted) {
+                    console.log(data,'delete');
+                  $(`#deleteModal`).modal('hide');
+                  $("#transactionTable #user-" + id).remove();
+                  console.log(data,'delete');
+                }
+            }
+        });
+    }
+
+</script>
 {% endblock content %}
 

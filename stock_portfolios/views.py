@@ -1,5 +1,7 @@
+import json
+
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from yahooquery import Ticker
 
 from .models import Stock, StockTransaction
@@ -130,6 +132,7 @@ def add_stock(request):
 
 
 def stock_transactions(request, year=''):
+    stock = Stock.objects.all().values()
     if year == '':
         transactions = StockTransaction.objects.all().order_by('date')
     else:
@@ -151,9 +154,153 @@ def stock_transactions(request, year=''):
     context = {
         "year": year,
         "transactions": transactions_table,
+        "stock": stock
     }
     return render(request, "stockTransactions/transactions.html", context)
 
+
+def addTransaction(request):
+    if request.method == "POST":
+        # getting body data from request
+        transactionData = json.loads(request.body)
+        # getting models
+        stock = Stock.objects.get(name=transactionData['stock'])
+        # saving data to crypto model
+        # when transactions_type is buy
+        if transactionData["transaction_type"] == 'Buy':
+            stock.quantity += float(transactionData["quantity"])
+            stock.investment += float(transactionData["quantity"]) * float(transactionData["spot_price"])
+            stock.save()
+        # when transactions_type is sell
+        else:
+            stock.quantity -= float(transactionData["quantity"])
+            if stock.investment - float(transactionData["quantity"]) * float(transactionData["spot_price"]) < 0:
+                stock.investment = float(0.0)
+            else:
+                stock.investment -= float(transactionData["quantity"]) * float(transactionData["spot_price"])
+            stock.save()
+        obj = StockTransaction.objects.create(
+            stock=Stock.objects.get(name=transactionData["stock"]),
+            transaction_type=transactionData['transaction_type'],
+            quantity=transactionData['quantity'],
+            spot_price=transactionData['spot_price'],
+            date=transactionData['date'],
+        )
+        user = {
+            'id': obj.id,
+            'stock': transactionData['stock'],
+            'spot_price': obj.spot_price,
+            'transaction_type': obj.transaction_type,
+            'quantity': obj.quantity,
+            'date': obj.date
+        }
+        data = {
+            'user': user
+        }
+        print(data, 'data')
+        return JsonResponse(data)
+
+def edit_transaction(request):
+    if request.method == "POST":
+        # getting body data from request
+        data = json.loads(request.body)
+        # setting the id
+        pk = data['transactionId']
+        # getting models
+        transaction = StockTransaction.objects.get(id=pk)
+        stock = Stock.objects.get(name=data['stock'])
+        # setting values to variables
+        spot_price = data['spot_price']
+        quantity = data['quantity']
+        # saving data to crypto model
+        # when transactions_type is buy
+        if transaction.transaction_type == 'Buy':
+            # if spot_price changed
+            if data["spot_price"] != transaction.spot_price:
+                # if quantity changed
+                if data["quantity"] != transaction.quantity:
+                    stock.quantity -= float(transaction.quantity)
+                    stock.quantity += float(data["quantity"])
+                    stock.investment -= float(transaction.quantity) * float(
+                        transaction.spot_price)
+                    stock.investment += float(data["quantity"]) * float(
+                        data["spot_price"])
+                    stock.save()
+                else:
+                    stock.investment -= float(transaction.quantity) * float(
+                        transaction.spot_price)
+                    stock.investment += float(transaction.quantity) * float(
+                        data["spot_price"])
+                    stock.save()
+            # if quantity changed and spotPrice didn't change
+            if data["quantity"] != transaction.quantity and data["spot_price"] == transaction.spot_price:
+                stock.quantity -= float(transaction.quantity)
+                stock.quantity += float(data["quantity"])
+                stock.investment -= float(transaction.quantity) * float(
+                    transaction.spot_price)
+                stock.investment += float(data["quantity"]) * float(
+                    transaction.spot_price)
+                stock.save()
+        # when transactions_type is sell
+        else:
+            # if spot_price changed
+            if data["spot_price"] != transaction.spot_price:
+                # if quantity changed
+                if data["quantity"] != transaction.quantity:
+                    stock.quantity -= float(transaction.quantity)
+                    stock.quantity += float(data["quantity"])
+                    stock.investment += float(transaction.quantity) * float(
+                        transaction.spot_price)
+                    stock.investment -= float(data["quantity"]) * float(
+                        data["spot_price"])
+                else:
+                    stock.investment += float(transaction.quantity) * float(
+                        transaction.spot_price)
+                    stock.investment -= float(transaction.quantity) * float(
+                        data["spot_price"])
+                stock.save()
+            # if quantity changed and spotPrice didn't change
+            if data["quantity"] != transaction.quantity and data["spot_price"] == transaction.spot_price:
+                stock.quantity -= float(transaction.quantity)
+                stock.quantity += float(data["quantity"])
+                stock.investment += float(transaction.quantity) * float(
+                    transaction.spot_price)
+                stock.investment -= float(data["quantity"]) * float(
+                    transaction.spot_price)
+                stock.save()
+        # saving data to transaction model
+        transaction.spot_price = spot_price
+        transaction.quantity = quantity
+        transaction.save()
+
+        user = {'id': transaction.id, 'transaction_type': transaction.transaction_type,
+                'quantity': transaction.quantity,
+                'spot_price': transaction.spot_price}
+
+        data = {
+            'user': user
+        }
+        return JsonResponse(data)
+
+
+def deleteTransaction(request):
+    id1 = request.GET.get('id', None)
+    transaction = StockTransaction.objects.get(id=id1)
+    if transaction.transaction_type == 'Buy':
+        transaction.stock.quantity -= transaction.quantity
+        transaction.stock.investment -= float(transaction.quantity) * float(transaction.spot_price)
+        transaction.stock.save()
+        print('buy')
+    else:
+        transaction.stock.quantity += transaction.quantity
+        transaction.stock.investment += float(transaction.quantity) * float(transaction.spot_price)
+        transaction.stock.save()
+        print('sell')
+    StockTransaction.objects.get(id=id1).delete()
+    data = {
+        'deleted': True
+    }
+    return JsonResponse(data)
 
 def add_transaction(request, **kwargs):
     submitted = False
