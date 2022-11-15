@@ -1,4 +1,6 @@
 import datetime
+
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.db.models.functions import TruncMonth, ExtractMonth
@@ -13,6 +15,7 @@ from .forms import PropertyIncomeStatementForm, PropertyCategoryForm
 from copy import deepcopy
 
 
+@login_required(login_url='/login/')
 def incomestatement_property_list_view(request):
     property_list = request.GET.getlist("properties")
 

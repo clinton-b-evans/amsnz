@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Trade, IndexFund
@@ -11,6 +12,7 @@ def sort(myList):
     return myList
 
 
+@login_required(login_url='/login/')
 def fund_list_view(request, year):
     index_fund_list_object = IndexFund.objects.filter(date__year=year)
     total_value = 0
@@ -45,7 +47,6 @@ def fund_list_view(request, year):
 
 
 def add_indexfund(request):
-
     today = date.today().isoformat()
     submitted = False
     if request.method == "POST":
@@ -128,6 +129,7 @@ def add_trade(request):
     return render(request, "trades/add.html", {"form": form, "submitted": submitted})
 
 
+@login_required(login_url='/login/')
 def indexfund_detail_view(request, **kwargs):
     pk = kwargs.get("pk")
     obj = IndexFund.objects.get(pk=pk)

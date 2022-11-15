@@ -1,9 +1,12 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from .models import CashFlow
 from .forms import CashFlowForm
 from django.http import HttpResponse, HttpResponseRedirect
 
+
 # Create your views here.
+@login_required(login_url='/login/')
 def cash_flow_list_view(request):
     selected = "Monthly"
     qs_income = CashFlow.objects.filter(entry_type="Income")
@@ -53,6 +56,7 @@ def cash_flow_list_view(request):
     return render(request, "cash_flows/main.html", context)
 
 
+@login_required(login_url='/login/')
 def cash_flow_weekly_view(request):
     selected = "Weekly"
     qs_income = CashFlow.objects.filter(entry_type="Income")
@@ -102,6 +106,7 @@ def cash_flow_weekly_view(request):
     return render(request, "cash_flows/main.html", context)
 
 
+@login_required(login_url='/login/')
 def cash_flow_yearly_view(request):
     selected = "Yearly"
     qs_income = CashFlow.objects.filter(entry_type="Income")

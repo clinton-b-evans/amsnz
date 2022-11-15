@@ -19,10 +19,10 @@ COMMODITY_NAME_CHOICES = (
 
 class Commodity(models.Model):
     name = models.CharField(
-        max_length=50, choices=COMMODITY_NAME_CHOICES, unique=True
+        max_length=50, choices=COMMODITY_NAME_CHOICES,
     )
     commodity_class = models.CharField(
-        max_length=50, choices=COMMODITY_CLASS_CHOICES, unique=True
+        max_length=50, choices=COMMODITY_CLASS_CHOICES,
     )
     weight = models.FloatField(
         null=False, blank=False, default=0.0,
@@ -31,6 +31,9 @@ class Commodity(models.Model):
         null=False, blank=False, default=0.0,
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
+
+    class Meta:
+        unique_together = ('user', 'commodity_class', 'name')
 
     def __str__(self):
         return f"{self.name}"
@@ -54,5 +57,6 @@ class Transaction(models.Model):
     value = models.FloatField(blank=True, default=0.0, )
     date = models.DateField(null=True, blank=True, default=now)
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
+
     def __str__(self):
         return f"{self.commodity} - {self.transaction_type}"

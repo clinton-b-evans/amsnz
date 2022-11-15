@@ -32,6 +32,7 @@ def home_view(request):
     return render(request, "properties/home.html", {})
 
 
+@login_required(login_url='/login/')
 def property_list_view(request):
     selected = "Yearly"
     qs = Property.objects.all()
@@ -225,6 +226,7 @@ def property_list_monthly(request):
     return render(request, "properties/main.html", context)
 
 
+@login_required(login_url='/login/')
 def property_detail_view(request, **kwargs):
     pk = kwargs.get("pk")
 

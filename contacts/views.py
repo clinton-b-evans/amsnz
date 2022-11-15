@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from .models import Contact
@@ -9,6 +10,7 @@ def home_view(request):
     return render(request, "contacts/home.html", {})
 
 
+@login_required(login_url='/login/')
 def contact_list_view(request):
     qs = Contact.objects.all()
     print(qs)

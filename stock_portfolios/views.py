@@ -1,5 +1,6 @@
 import json
 
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from yahooquery import Ticker
@@ -45,8 +46,9 @@ def get_stock_price_data(tickers):
     return result
 
 
+@login_required(login_url='/login/')
 def stock_list_view(request):
-    stocks = Stock.objects.exclude(quantity=0,user=request.user)
+    stocks = Stock.objects.exclude(quantity=0, user=request.user)
     used_stocks_ticker = stocks.values_list('ticker', flat=True).distinct()
     stock_prices = get_stock_price_data(used_stocks_ticker)
     investments, assetsGains = generate_bar_graph_series_data(stocks, stock_prices)
@@ -95,7 +97,7 @@ def add_stock(request):
     if request.method == "POST":
         # getting body data from request
         stockData = json.loads(request.body)
-        print(stockData,'stock data')
+        print(stockData, 'stock data')
         obj = Stock.objects.create(
             name=stockData['stock'],
             ticker=stockData['ticker'],
@@ -150,13 +152,13 @@ def add_stock(request):
 #     form = StockForm
 #     return render(request, "stock/add.html", {"form": form, "submitted": submitted})
 
-
+@login_required(login_url='/login/')
 def stock_transactions(request, year=''):
     stock = Stock.objects.filter(user=request.user).values()
     if year == '':
         transactions = StockTransaction.objects.filter(user=request.user).order_by('date')
     else:
-        transactions = StockTransaction.objects.filter(date__year=year,user=request.user).order_by('date')
+        transactions = StockTransaction.objects.filter(date__year=year, user=request.user).order_by('date')
 
     transactions_table = []
     for transaction in transactions:
@@ -184,7 +186,7 @@ def add_transaction(request):
         # getting body data from request
         transactionData = json.loads(request.body)
         # getting models
-        stock = Stock.objects.get(name=transactionData['stock'],user=request.user)
+        stock = Stock.objects.get(name=transactionData['stock'], user=request.user)
         # saving data to crypto model
         # when transactions_type is buy
         if transactionData["transaction_type"] == 'Buy':
@@ -200,7 +202,7 @@ def add_transaction(request):
                 stock.investment -= float(transactionData["quantity"]) * float(transactionData["spot_price"])
             stock.save()
         obj = StockTransaction.objects.create(
-            stock=Stock.objects.get(name=transactionData["stock"],user=request.user),
+            stock=Stock.objects.get(name=transactionData["stock"], user=request.user),
             transaction_type=transactionData['transaction_type'],
             quantity=transactionData['quantity'],
             spot_price=transactionData['spot_price'],
@@ -230,7 +232,7 @@ def edit_transaction(request):
         pk = data['transactionId']
         # getting models
         transaction = StockTransaction.objects.get(id=pk, user=request.user)
-        stock = Stock.objects.get(name=data['stock'],user=request.user)
+        stock = Stock.objects.get(name=data['stock'], user=request.user)
         # setting values to variables
         spot_price = data['spot_price']
         quantity = data['quantity']
@@ -318,12 +320,11 @@ def delete_transaction(request):
         transaction.stock.investment += float(transaction.quantity) * float(transaction.spot_price)
         transaction.stock.save()
         print('sell')
-    StockTransaction.objects.get(id=id1,user=request.user).delete()
+    StockTransaction.objects.get(id=id1, user=request.user).delete()
     data = {
         'deleted': True
     }
     return JsonResponse(data)
-
 
 # def add_transaction(request, **kwargs):
 #     submitted = False

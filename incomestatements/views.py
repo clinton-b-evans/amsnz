@@ -1,5 +1,7 @@
 import datetime
 from copy import deepcopy
+
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from .models import IncomeStatement, Category
@@ -8,6 +10,7 @@ from django.db.models.functions import TruncMonth, ExtractMonth
 from django.db.models import Count, Sum, FloatField
 
 
+@login_required(login_url='/login/')
 def incomestatements_list_view(request):
     if request.method == "POST":
         form = IncomeStatementForm(request.POST)
@@ -28,7 +31,6 @@ def incomestatements_list_view(request):
 
         total = total_income - total_expense
 
-        
         form = IncomeStatementForm()
         context = {
             "object_list": qs,
@@ -324,8 +326,8 @@ def year_to_date(request, year):
     years_list = sort(years_list)
     net_income = []
     for key, value in month_expenses.items():
-        net_income.append(month_income[key]-month_expenses[key])
-    print(net_income,'net_income')
+        net_income.append(month_income[key] - month_expenses[key])
+    print(net_income, 'net_income')
     context = {
         "object_list": qs,
         "year": year,

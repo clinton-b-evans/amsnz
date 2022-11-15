@@ -11,10 +11,10 @@ class CrudUser(models.Model):
 
 class Crypto(models.Model):
     name = models.CharField(
-        max_length=50, unique=True
+        max_length=50,
     )
     ticker = models.CharField(
-        max_length=50, unique=True
+        max_length=50,
     )
     quantity = models.FloatField(
         null=False, blank=False, default=0.0,
@@ -23,6 +23,10 @@ class Crypto(models.Model):
         null=False, blank=False, default=0.0,
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
+
+    class Meta:
+        unique_together = ('user', 'ticker', 'name')
+
     def __str__(self):
         return f"{self.name}"
 
@@ -44,5 +48,6 @@ class CryptoTransaction(models.Model):
     )
     date = models.DateField(null=True, blank=True, default=now)
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
+
     def __str__(self):
         return f"{self.coin} - {self.transaction_type}"

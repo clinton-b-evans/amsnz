@@ -4,10 +4,10 @@ from django.utils.timezone import now
 
 class Stock(models.Model):
     name = models.CharField(
-        max_length=50, unique=True
+        max_length=50,
     )
     ticker = models.CharField(
-        max_length=50, unique=True
+        max_length=50,
     )
     quantity = models.FloatField(
         null=False, blank=False, default=0.0,
@@ -16,6 +16,10 @@ class Stock(models.Model):
         null=False, blank=False, default=0.0,
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
+
+    class Meta:
+        unique_together = ('user', 'ticker', 'name')
+
     def __str__(self):
         return f"{self.name}"
 class StockTransaction(models.Model):

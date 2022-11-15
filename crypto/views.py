@@ -1,6 +1,7 @@
 import json
 from decimal import Decimal
 
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.views.generic import ListView
@@ -94,6 +95,7 @@ def get_crypto_price_data(tickers):
     return result
 
 
+@login_required(login_url='/login/')
 def crypto_list_view(request):
     cryptos = Crypto.objects.filter(user=request.user).exclude(quantity=0)
     used_cryptos_ticker = cryptos.values_list('ticker', flat=True).distinct()
@@ -140,6 +142,7 @@ def crypto_list_view(request):
     return render(request, "crypto/main.html", context)
 
 
+@login_required(login_url='/login/')
 def crypto_transactions(request, year=''):
     crypto_coin = Crypto.objects.filter(user=request.user).values()
     if year == '':
@@ -209,7 +212,7 @@ def crypto_transactions(request, year=''):
 
 
 def update_crypto(request, pk):
-    crypto = Crypto.objects.get(id=pk,user=request.user)
+    crypto = Crypto.objects.get(id=pk, user=request.user)
     form = CryptoForm(instance=crypto)
 
     if request.method == "POST":
@@ -260,7 +263,7 @@ def add_transaction(request):
         # getting body data from request
         transactionData = json.loads(request.body)
         # getting models
-        crypto = Crypto.objects.get(name=transactionData['coin'],user=request.user)
+        crypto = Crypto.objects.get(name=transactionData['coin'], user=request.user)
         # saving data to crypto model
         # when transactions_type is buy
         if transactionData["transaction_type"] == 'Buy':
@@ -494,7 +497,6 @@ def delete_transaction(request):
         'deleted': True
     }
     return JsonResponse(data)
-
 
 # def delete_transaction(request, pk):
 #     transaction = CryptoTransaction.objects.get(id=pk)

@@ -1,9 +1,11 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from .models import PersonalBalance
 from .forms import PersonalBalanceForm
 from django.http import HttpResponse, HttpResponseRedirect
 
 
+@login_required(login_url='/login/')
 def personal_balance_list_view(request):
     selected = "Yearly"
 
