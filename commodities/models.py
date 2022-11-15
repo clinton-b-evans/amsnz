@@ -34,12 +34,11 @@ class Commodity(models.Model):
 
     class Meta:
         unique_together = ('user', 'commodity_class', 'name')
+        verbose_name_plural = "commodities"
 
     def __str__(self):
         return f"{self.name}"
 
-    class Meta:
-        verbose_name_plural = "commodities"
 
 
 class Transaction(models.Model):
