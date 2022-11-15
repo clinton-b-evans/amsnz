@@ -9,7 +9,7 @@ from .views import (
     add_transaction,
     update_transaction,
     delete_transaction,
-    edit_transaction, crudview, get, update, addTransaction, deleteTransaction, addCrypto
+    edit_transaction, crudview, get, update,
 )
 
 app_name = "crypto"
@@ -23,14 +23,14 @@ urlpatterns = [
     path("crypto/", crypto_list_view, name="crypto-list"),
     path("crypto/transactions", crypto_transactions, name="crypto-transactions"),
     path("crypto/transaction/add/", add_transaction, name="crypto-transaction-add"),
-    path("crypto/addTransaction/", addTransaction, name="addTransaction"),
-    path('crypto/deleteTransaction/',  deleteTransaction, name='deleteTransaction'),
+    path("crypto/addTransaction/", add_transaction, name="addTransaction"),
+    path('crypto/deleteTransaction/',  delete_transaction, name='deleteTransaction'),
     path("crypto/add", add_crypto, name="crypto-add"),
     path("crypto/<str:pk>/edit", update_crypto, name="update-crypto"),
     path('crypto/crud/', crudview, name='crud_ajax'),
     path('ajax/crud/create/', get, name='crud_ajax_create'),
     path('ajax/crud/update/',  update, name='crud_ajax_update'),
-    path('crypto/addCrypto', addCrypto, name='addCrypto'),
+    path('crypto/addCrypto', add_crypto, name='addCrypto'),
     path("crypto/<str:pk>/delete", delete_crypto, name="delete-crypto"),
     path(
         "crypto/edit",

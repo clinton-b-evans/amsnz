@@ -168,44 +168,44 @@ def crypto_transactions(request, year=''):
     return render(request, "cryptoTransactions/transactions.html", context)
 
 
-def add_crypto(request):
-    today = date.today().isoformat()
-
-    submitted = False
-    if request.method == "POST":
-        ticker_input = request.POST.get("ticker")
-        ticker = ticker_input + "-USD"
-
-        yf_data = yf.Ticker(ticker)
-        yf_data = yf_data.history(today, interval="60m")
-        spot_price = 0.0
-
-        if yf_data["Close"].empty:
-            return HttpResponse(
-                f"-{ticker_input} No data found, symbol/Ticker may be de-listed!. Kindly try again with correct Ticker."
-            )
-        else:
-            last_price = yf_data["Close"][0]
-            string_price = "{:.4f}".format(last_price)
-            spot_price += float(string_price)
-
-        form = CryptoForm(request.POST)
-        if form.is_valid():
-            form = form.save(commit=False)
-            form.spot_price = spot_price
-            form.save()
-            return HttpResponse(
-                '<script type="text/javascript">window.close()</script>'
-            )
-        else:
-            form = CryptoForm
-            if "submitted" in request.GET:
-                submitted = True
-        # else:
-        #     messages.error(request, "This Ticker Spot price is not available!")
-        #     return redirect("crypto:crypto-add")
-    form = CryptoForm
-    return render(request, "crypto/add.html", {"form": form, "submitted": submitted})
+# def add_crypto(request):
+#     today = date.today().isoformat()
+#
+#     submitted = False
+#     if request.method == "POST":
+#         ticker_input = request.POST.get("ticker")
+#         ticker = ticker_input + "-USD"
+#
+#         yf_data = yf.Ticker(ticker)
+#         yf_data = yf_data.history(today, interval="60m")
+#         spot_price = 0.0
+#
+#         if yf_data["Close"].empty:
+#             return HttpResponse(
+#                 f"-{ticker_input} No data found, symbol/Ticker may be de-listed!. Kindly try again with correct Ticker."
+#             )
+#         else:
+#             last_price = yf_data["Close"][0]
+#             string_price = "{:.4f}".format(last_price)
+#             spot_price += float(string_price)
+#
+#         form = CryptoForm(request.POST)
+#         if form.is_valid():
+#             form = form.save(commit=False)
+#             form.spot_price = spot_price
+#             form.save()
+#             return HttpResponse(
+#                 '<script type="text/javascript">window.close()</script>'
+#             )
+#         else:
+#             form = CryptoForm
+#             if "submitted" in request.GET:
+#                 submitted = True
+#         # else:
+#         #     messages.error(request, "This Ticker Spot price is not available!")
+#         #     return redirect("crypto:crypto-add")
+#     form = CryptoForm
+#     return render(request, "crypto/add.html", {"form": form, "submitted": submitted})
 
 
 def update_crypto(request, pk):
@@ -236,7 +236,7 @@ def delete_crypto(request, pk):
     return render(request, "crypto/delete.html", context)
 
 
-def addCrypto(request):
+def add_crypto(request):
     if request.method == "POST":
         # getting body data from request
         cryptoData = json.loads(request.body)
@@ -254,7 +254,7 @@ def addCrypto(request):
         return JsonResponse(data)
 
 
-def addTransaction(request):
+def add_transaction(request):
     if request.method == "POST":
         # getting body data from request
         transactionData = json.loads(request.body)
@@ -296,28 +296,28 @@ def addTransaction(request):
         return JsonResponse(data)
 
 
-def add_transaction(request):
-    if request.method == "POST":
-        form = TransactionForm(request.POST)
-        if form.is_valid():
-            form.save()
-            if form.data["transaction_type"] == 'Buy':
-                form.instance.coin.quantity += float(form.data["quantity"])
-                form.instance.coin.investment += float(form.data["quantity"]) * float(form.data["spot_price"])
-                form.instance.coin.save()
-            else:
-                form.instance.coin.quantity -= float(form.data["quantity"])
-                if form.instance.coin.investment - float(form.data["quantity"]) * float(form.data["spot_price"]) < 0:
-                    form.instance.coin.investment = float(0.0)
-                else:
-                    form.instance.coin.investment -= float(form.data["quantity"]) * float(form.data["spot_price"])
-                form.instance.coin.save()
-            return HttpResponse(
-                '<script type="text/javascript">window.close()</script>'
-            )
-        return True
-    else:
-        return False
+# def add_transaction(request):
+#     if request.method == "POST":
+#         form = TransactionForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             if form.data["transaction_type"] == 'Buy':
+#                 form.instance.coin.quantity += float(form.data["quantity"])
+#                 form.instance.coin.investment += float(form.data["quantity"]) * float(form.data["spot_price"])
+#                 form.instance.coin.save()
+#             else:
+#                 form.instance.coin.quantity -= float(form.data["quantity"])
+#                 if form.instance.coin.investment - float(form.data["quantity"]) * float(form.data["spot_price"]) < 0:
+#                     form.instance.coin.investment = float(0.0)
+#                 else:
+#                     form.instance.coin.investment -= float(form.data["quantity"]) * float(form.data["spot_price"])
+#                 form.instance.coin.save()
+#             return HttpResponse(
+#                 '<script type="text/javascript">window.close()</script>'
+#             )
+#         return True
+#     else:
+#         return False
 
 
 def edit_transaction(request):
@@ -474,7 +474,7 @@ def update_transaction(request, pk):
     return render(request, "cryptoTransactions/add.html", context)
 
 
-def deleteTransaction(request):
+def delete_transaction(request):
     id1 = request.GET.get('id', None)
     transaction = CryptoTransaction.objects.get(id=id1)
     if transaction.transaction_type == 'Buy':
@@ -494,26 +494,26 @@ def deleteTransaction(request):
     return JsonResponse(data)
 
 
-def delete_transaction(request, pk):
-    transaction = CryptoTransaction.objects.get(id=pk)
-    qs = CryptoTransaction.objects.get(id=pk)
-    context = {
-        "object": qs,
-    }
-
-    if request.method == "POST":
-        # delete object
-        if transaction.transaction_type == 'Buy':
-            transaction.coin.quantity -= transaction.quantity
-            transaction.coin.investment -= float(transaction.quantity) * float(transaction.spot_price)
-            transaction.coin.save()
-        else:
-            transaction.coin.quantity += transaction.quantity
-            transaction.coin.investment += float(transaction.quantity) * float(transaction.spot_price)
-            transaction.coin.save()
-        transaction.delete()
-        # after deleting redirect to
-        # home page
-        return HttpResponse('<script type="text/javascript">window.close()</script>')
-
-    return render(request, "cryptoTransactions/delete.html", context)
+# def delete_transaction(request, pk):
+#     transaction = CryptoTransaction.objects.get(id=pk)
+#     qs = CryptoTransaction.objects.get(id=pk)
+#     context = {
+#         "object": qs,
+#     }
+#
+#     if request.method == "POST":
+#         # delete object
+#         if transaction.transaction_type == 'Buy':
+#             transaction.coin.quantity -= transaction.quantity
+#             transaction.coin.investment -= float(transaction.quantity) * float(transaction.spot_price)
+#             transaction.coin.save()
+#         else:
+#             transaction.coin.quantity += transaction.quantity
+#             transaction.coin.investment += float(transaction.quantity) * float(transaction.spot_price)
+#             transaction.coin.save()
+#         transaction.delete()
+#         # after deleting redirect to
+#         # home page
+#         return HttpResponse('<script type="text/javascript">window.close()</script>')
+#
+#     return render(request, "cryptoTransactions/delete.html", context)
