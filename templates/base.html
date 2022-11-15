@@ -273,25 +273,25 @@
         </a>
       </li> -->
 
-      <li class="nav-item">
-        <a {% if request.resolver_match.url_name in 'Index_fund_list' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} data-bs-target="#stock-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-graph-up-arrow"></i><span>Stocks</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-        <ul id="stock-nav" {% if request.resolver_match.url_name in 'Index_fund_list' %}class="nav-content collapse show active"{% else %}class="nav-content collapse"{% endif %} data-bs-parent="#sidebar-nav">
-          <li class="nav-item">
-            <a {% if request.resolver_match.url_name == 'Index_fund_list' %}class="nav-link active"{% else %}class="nav-link collapsed"{% endif %} href="/marketfunds/{% now 'Y' %}/">
-              <i class="bi bi-circle"></i>
-              <span>Stock Porfolio</span>
-            </a>
-          </li>
-          <!-- <li class="nav-item">
-            <a {% if request.resolver_match.url_name == 'property-incomestatement-list' %} class="nav-link active" {% else %}class="nav-link collapsed" {% endif %} href="/propertyincomestatements">
-              <i class="bi bi-circle"></i>
-              <span>Income Statements</span>
-            </a>
-          </li> -->
-        </ul>
-      </li><!-- End Stocks Nav -->
+<!--      <li class="nav-item">-->
+<!--        <a {% if request.resolver_match.url_name in 'Index_fund_list' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} data-bs-target="#stock-nav" data-bs-toggle="collapse" href="#">-->
+<!--          <i class="bi bi-graph-up-arrow"></i><span>Stocks</span><i class="bi bi-chevron-down ms-auto"></i>-->
+<!--        </a>-->
+<!--        <ul id="stock-nav" {% if request.resolver_match.url_name in 'Index_fund_list' %}class="nav-content collapse show active"{% else %}class="nav-content collapse"{% endif %} data-bs-parent="#sidebar-nav">-->
+<!--          <li class="nav-item">-->
+<!--            <a {% if request.resolver_match.url_name == 'Index_fund_list' %}class="nav-link active"{% else %}class="nav-link collapsed"{% endif %} href="/marketfunds/{% now 'Y' %}/">-->
+<!--              <i class="bi bi-circle"></i>-->
+<!--              <span>Stock Porfolio</span>-->
+<!--            </a>-->
+<!--          </li>-->
+<!--          &lt;!&ndash; <li class="nav-item">-->
+<!--            <a {% if request.resolver_match.url_name == 'property-incomestatement-list' %} class="nav-link active" {% else %}class="nav-link collapsed" {% endif %} href="/propertyincomestatements">-->
+<!--              <i class="bi bi-circle"></i>-->
+<!--              <span>Income Statements</span>-->
+<!--            </a>-->
+<!--          </li> &ndash;&gt;-->
+<!--        </ul>-->
+<!--      </li>&lt;!&ndash; End Stocks Nav &ndash;&gt;-->
 
       <li class="nav-item">
         <a {% if request.resolver_match.url_name in 'commodities_list_all,commodities_transactions' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} data-bs-target="#commodities-nav" data-bs-toggle="collapse" href="#">
@@ -313,7 +313,7 @@
       </li><!-- End Commodity Nav -->
       <li class="nav-item">
         <a {% if request.resolver_match.url_name in 'stock-list,/stock-transactions' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} data-bs-target="#stocks-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-currency-bitcoin"></i><span>Stock</span><i class="bi bi-chevron-down ms-auto"></i>
+          <i class="bi bi-graph-up-arrow"></i><span>Stocks</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="stocks-nav" {% if request.resolver_match.url_name in 'crypto-list,/crypto-transactions' %}class="nav-content collapse show active"{% else %}class="nav-content collapse"{% endif %} data-bs-parent="#sidebar-nav">
           <li class="nav-item">

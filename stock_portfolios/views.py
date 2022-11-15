@@ -91,6 +91,25 @@ def stock_list_view(request):
     return render(request, "stock/main.html", context)
 
 
+def addStock(request):
+    if request.method == "POST":
+        # getting body data from request
+        stockData = json.loads(request.body)
+        print(stockData,'stock data')
+        obj = Stock.objects.create(
+            name=stockData['stock'],
+            ticker=stockData['ticker'],
+            quantity=stockData['quantity']
+        )
+
+        user = {'id': obj.id, 'ticker': obj.ticker, 'quantity': obj.quantity, 'name': obj.name}
+
+        data = {
+            'user': user
+        }
+        return JsonResponse(data)
+
+
 def add_stock(request):
     today = date.today().isoformat()
 
@@ -200,6 +219,7 @@ def addTransaction(request):
         print(data, 'data')
         return JsonResponse(data)
 
+
 def edit_transaction(request):
     if request.method == "POST":
         # getting body data from request
@@ -302,6 +322,7 @@ def deleteTransaction(request):
     }
     return JsonResponse(data)
 
+
 def add_transaction(request, **kwargs):
     submitted = False
     if request.method == "POST":
@@ -400,8 +421,6 @@ def update_transaction(request, pk):
         )
     context = {"form": form}
     return render(request, "stockTransactions/add.html", context)
-
-
 
 
 def delete_transaction(request, pk):

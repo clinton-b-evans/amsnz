@@ -26,16 +26,39 @@ function popitup(url) {
 <script>
   window.onblur= function() {window.onfocus= function () {location.reload(true)}};
 </script>
+<button type="button" class="btn btn-dashboard mb-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    <svg class="bi bi-calendar-plus me-1" fill="currentColor" height="16" viewBox="0 0 16 16"
+             width="16" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>
+            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+        </svg>
+  New Coin
+</button>
 
-<a href="popupex.html" onclick="return popitup('/crypto/add')">
-  <button type="button" class="btn btn-dashboard mb-3">
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-plus me-1" viewBox="0 0 16 16">
-      <path d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>
-      <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
-    </svg>
-    New Coin
-  </button>
-</a>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Stock</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="addStock">
+            <div class="mb-3">
+                <label class="form-label">Name</label>
+                <input class="form-control" type="text" value="" name="name" id="coin">
+                <label class="form-label">Ticker</label>
+                <input class="form-control" type="text" value="" name="ticker" id="ticker">
+                <label class="form-label">Quantity</label>
+                <input class="form-control" name="quantity" value=0.0 id="quantity" type="number">
+            </div>
+            <button class="btn btn-primary form-control" type="button" onclick="addCrypto()">ADD</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
   <!-- <div class="row">
     <div class="col-9">
       <select class="form-control mb-3" onchange="location = this.value;">
@@ -224,5 +247,48 @@ function popitup(url) {
         var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
         chart.draw(data, options);
         }
+</script>
+<script>
+  function addCrypto() {
+        var coin = document.getElementById('coin').value;
+        var ticker = document.getElementById(`ticker`).value;
+        var quantity = document.getElementById('quantity').value;
+        if (coin && ticker && quantity) {
+            // Create Ajax Call
+            $(document).ready(function () {
+            let body={
+                'coin': coin,
+                'ticker': ticker,
+                'quantity': quantity,
+            }
+            $.ajax({
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                type: 'POST',
+                url: '{% url "crypto:addCrypto" %}',
+                headers: {//<==
+                    "X-CSRFTOKEN": "{{ csrf_token }}"//<==
+                },
+                data: JSON.stringify(body),
+                success: function(data) {
+                //Success code
+                    console.log(data,'data')
+                    if (data.user) {
+                        $(`#exampleModal`).modal('hide');
+                        alert(`${data?.user?.name} has been successfully added to Coins`)
+                    }
+                },
+                failure: function (response) {
+                    $('#result').html(response);
+                }
+            });
+        });
+        } else
+        {
+            alert("All fields must have a valid value.");
+        }
+        $('form#addTransaction').trigger("reset");
+        return false;
+    }
 </script>
 {% endblock content %}

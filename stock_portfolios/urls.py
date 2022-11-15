@@ -4,7 +4,7 @@ from .views import (
     stock_transactions,
     add_transaction,
     update_transaction,
-    delete_transaction, add_stock, addTransaction, edit_transaction, deleteTransaction,
+    delete_transaction, add_stock, addTransaction, edit_transaction, deleteTransaction, addStock,
 )
 
 app_name = "stock"
@@ -16,6 +16,7 @@ urlpatterns = [
     path("stock/add", add_stock, name="stock-add"),
     path("stock/addTransaction/", addTransaction, name="addTransaction"),
     path('stock/deleteTransaction/',  deleteTransaction, name='deleteTransaction'),
+    path('stock/addStock/', addStock, name="addStock"),
     path(
         "stock/transaction/<str:pk>/edit",
         update_transaction,

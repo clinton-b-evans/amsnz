@@ -236,6 +236,24 @@ def delete_crypto(request, pk):
     return render(request, "crypto/delete.html", context)
 
 
+def addCrypto(request):
+    if request.method == "POST":
+        # getting body data from request
+        cryptoData = json.loads(request.body)
+        obj = Crypto.objects.create(
+            name=cryptoData['coin'],
+            ticker=cryptoData['ticker'],
+            quantity=cryptoData['quantity']
+        )
+
+        user = {'id': obj.id, 'ticker': obj.ticker, 'quantity': obj.quantity, 'name': obj.name}
+
+        data = {
+            'user': user
+        }
+        return JsonResponse(data)
+
+
 def addTransaction(request):
     if request.method == "POST":
         # getting body data from request
@@ -474,6 +492,7 @@ def deleteTransaction(request):
         'deleted': True
     }
     return JsonResponse(data)
+
 
 def delete_transaction(request, pk):
     transaction = CryptoTransaction.objects.get(id=pk)
