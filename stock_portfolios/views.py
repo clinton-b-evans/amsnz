@@ -48,7 +48,7 @@ def get_stock_price_data(tickers):
 
 @login_required(login_url='/login/')
 def stock_list_view(request):
-    stocks = Stock.objects.exclude(quantity=0, user=request.user)
+    stocks = Stock.objects.filter(user=request.user).exclude(quantity=0)
     used_stocks_ticker = stocks.values_list('ticker', flat=True).distinct()
     stock_prices = get_stock_price_data(used_stocks_ticker)
     investments, assetsGains = generate_bar_graph_series_data(stocks, stock_prices)
