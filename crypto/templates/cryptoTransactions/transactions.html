@@ -5,6 +5,18 @@
 {% block title %}
 <div class="title">Transactions
     <!-- <span> | {{year}}</span> -->
+    <span class="filter position-absolute" style="right: 2rem;">
+        <a class="icon btn btn-dashboard" data-bs-toggle="dropdown" href="#" type="button">View By <i class="bi bi-grid"></i></a>
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+            <li class="dropdown-header text-start">
+                <h6>Filter</h6>
+            </li>
+            <li><a class="dropdown-item" href="{% url 'commodities:commodities_list_all' %}">All years</a></li>
+            {% for year in years_list%}
+            <li><a class="dropdown-item" href="{% url 'commodities:commodities_list' year %}">{{year|stringformat:"i"}}</a></li>
+            {%endfor%}
+        </ul>
+    </span>
 </div>
 {% endblock title %}
 
