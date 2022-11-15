@@ -42,11 +42,11 @@ def property_list_view(request):
         obj.rent_after_vacany_rate = obj.rent - (obj.rent * (obj.vacancy_rate / 100))
         obj.net_management = obj.rent_after_vacany_rate * (obj.management_fee / 100)
         obj.operating_cost = (
-            obj.net_management
-            + obj.insurance
-            + obj.maintenance
-            + obj.rates
-            + obj.bodycorp_fee
+                obj.net_management
+                + obj.insurance
+                + obj.maintenance
+                + obj.rates
+                + obj.bodycorp_fee
         )
         total_operating_costs += obj.operating_cost
         obj.net_operating_income = obj.rent_after_vacany_rate - obj.operating_cost
@@ -103,11 +103,11 @@ def property_list_weekly(request):
         obj.rent_after_vacany_rate = obj.rent - (obj.rent * (obj.vacancy_rate / 100))
         obj.net_management = obj.rent_after_vacany_rate * (obj.management_fee / 100)
         obj.operating_cost = (
-            obj.net_management
-            + obj.insurance
-            + obj.maintenance
-            + obj.rates
-            + obj.bodycorp_fee
+                obj.net_management
+                + obj.insurance
+                + obj.maintenance
+                + obj.rates
+                + obj.bodycorp_fee
         )
         obj.operating_cost = obj.operating_cost / 52
         obj.net_operating_income = obj.rent_after_vacany_rate - obj.operating_cost * 52
@@ -169,11 +169,11 @@ def property_list_monthly(request):
         obj.rent_after_vacany_rate = obj.rent - (obj.rent * (obj.vacancy_rate / 100))
         obj.net_management = obj.rent_after_vacany_rate * (obj.management_fee / 100)
         obj.operating_cost = (
-            obj.net_management
-            + obj.insurance
-            + obj.maintenance
-            + obj.rates
-            + obj.bodycorp_fee
+                obj.net_management
+                + obj.insurance
+                + obj.maintenance
+                + obj.rates
+                + obj.bodycorp_fee
         )
         obj.operating_cost = obj.operating_cost / 12
         obj.net_operating_income = obj.rent_after_vacany_rate - obj.operating_cost * 12
@@ -238,10 +238,10 @@ def property_detail_view(request, **kwargs):
     nper_repayment = float(obj.repayments / 12)
     nper_loan_ammount = float(obj.loan_amount)
     loan_term_left = (
-        np.round(
-            npf.nper(nper_interest / 12, nper_repayment * -1, nper_loan_ammount), 5
-        )
-        / 12
+            np.round(
+                npf.nper(nper_interest / 12, nper_repayment * -1, nper_loan_ammount), 5
+            )
+            / 12
     )
 
     equity = obj.market_value - obj.loan_amount
@@ -255,7 +255,7 @@ def property_detail_view(request, **kwargs):
     net_management = rent_after_vacany_rate * (obj.management_fee / 100)
 
     operating_expenses = (
-        obj.insurance + net_management + obj.maintenance + obj.rates + obj.bodycorp_fee
+            obj.insurance + net_management + obj.maintenance + obj.rates + obj.bodycorp_fee
     )
     operating_expenses_monthly = operating_expenses / 12
     operating_expenses_weekly = operating_expenses / 52
@@ -316,8 +316,8 @@ def sort(myList):
     return myList
 
 
+@login_required(login_url='/login/')
 def property_summary_view(request, year, *args, **kwargs):
-
     """
     Get Property objects for selected year
     """
@@ -371,11 +371,11 @@ def property_summary_view(request, year, *args, **kwargs):
         obj.rent_after_vacany_rate = obj.rent - (obj.rent * (obj.vacancy_rate / 100))
         obj.net_management = obj.rent_after_vacany_rate * (obj.management_fee / 100)
         obj.operating_cost = (
-            obj.net_management
-            + obj.insurance
-            + obj.maintenance
-            + obj.rates
-            + obj.bodycorp_fee
+                obj.net_management
+                + obj.insurance
+                + obj.maintenance
+                + obj.rates
+                + obj.bodycorp_fee
         )
         total_operating_expenses += obj.operating_cost
         total_rent_after_vacany_rate += obj.rent_after_vacany_rate
@@ -421,11 +421,11 @@ def property_summary_view(request, year, *args, **kwargs):
     loan_to_debt_percent = (total_repayments / total_income) * 100
 
     debt_service_coverage_ratio = (
-        total_income - total_operating_expenses
-    ) / total_repayments
+                                          total_income - total_operating_expenses
+                                  ) / total_repayments
     debt_service_coverage_percent = (
-        total_repayments / (total_income - total_operating_expenses)
-    ) * 100
+                                            total_repayments / (total_income - total_operating_expenses)
+                                    ) * 100
 
     break_even_point = (total_expenses / total_income) * 100
 
@@ -544,7 +544,7 @@ def property_summary_view(request, year, *args, **kwargs):
         total_retirement = total_retirement + item.amount
 
     pb_networth = (
-        total_pb_assets + savings_total + total_retirement - total_pb_liabilities
+            total_pb_assets + savings_total + total_retirement - total_pb_liabilities
     )
     cf_income_yearly = 0
     cf_expense_yearly = 0
@@ -651,13 +651,13 @@ def property_summary_view(request, year, *args, **kwargs):
         #     commodities_total_value += item.total
 
         yearwise_graph_asset = (
-            yearwise_props_assets
-            + yearwise_pb_assets
-            + yearwise_pb_save
-            + yearwise_pb_qs_retirement
-            + crypto_total_value
-            + stocks_total_value
-            + 10000
+                yearwise_props_assets
+                + yearwise_pb_assets
+                + yearwise_pb_save
+                + yearwise_pb_qs_retirement
+                + crypto_total_value
+                + stocks_total_value
+                + 10000
         )
         yearwise_graph_lib = yearwise_props_liabilities + yearwise_pb_liabilities
         yearwise_networth = yearwise_graph_asset - yearwise_graph_lib
@@ -669,13 +669,13 @@ def property_summary_view(request, year, *args, **kwargs):
         Single selected Year graph assets, liabilities and networth.
         """
     graph_asset = (
-        total_assets
-        + total_pb_assets
-        + savings_total
-        + total_retirement
-        + stocks_total_value
-        + 2000
-        + crypto_total_amount
+            total_assets
+            + total_pb_assets
+            + savings_total
+            + total_retirement
+            + stocks_total_value
+            + 2000
+            + crypto_total_amount
     )
 
     graph_lib = total_liabilities + total_pb_liabilities

@@ -2,9 +2,14 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-
+from user import views as user_view
+from django.contrib.auth import views as auth
 urlpatterns = [
     path("admin/", admin.site.urls),
+    # path('', include('user.urls')),
+    # path('login/', user_view.Login, name ='login'),
+    # path('logout/', auth.LogoutView.as_view(template_name ='index.html'), name ='logout'),
+    # path('register/', user_view.register, name ='register'),
     path("", include("properties.urls", namespace="properties")),
     path("", include("Authentication.urls", namespace="Authentication")),
     path("", include("reminders.urls", namespace="reminders")),

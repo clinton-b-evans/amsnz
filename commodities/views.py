@@ -64,7 +64,7 @@ def generate_bar_graph_series_data(commodities, commodity_prices):
 
 
 def commodity_list_view(request):
-    commodities = Commodity.objects.exclude(weight=0)
+    commodities = Commodity.objects.filter(user=request.user).exclude(weight=0)
     commodity_prices = get_commodities()
     investments, assetsGains = generate_bar_graph_series_data(commodities, commodity_prices)
 
@@ -108,11 +108,11 @@ def commodity_list_view(request):
 
 
 def commodity_transactions(request, year=''):
-    commodity = Commodity.objects.all().values()
+    commodity = Commodity.objects.filter(user=request.user).values()
     if year == '':
-        transactions = Transaction.objects.all().order_by('date')
+        transactions = Transaction.objects.filter(user=request.user).order_by('date')
     else:
-        transactions = Transaction.objects.filter(date__year=year).order_by('date')
+        transactions = Transaction.objects.filter(date__year=year, user=request.user).order_by('date')
 
     transactions_table = []
     for transaction in transactions:
@@ -140,7 +140,7 @@ def addTransaction(request):
         # getting body data from request
         transactionData = json.loads(request.body)
         # getting models
-        commodity = Commodity.objects.get(name=transactionData['commodity'])
+        commodity = Commodity.objects.get(name=transactionData['commodity'],user=request.user)
         # saving data to crypto model
         # when transactions_type is buy
         if transactionData["transaction_type"] == 'Buy':
@@ -156,11 +156,12 @@ def addTransaction(request):
                 commodity.investment -= float(transactionData["weight"]) * float(transactionData["value"])
             commodity.save()
         obj = Transaction.objects.create(
-            commodity=Commodity.objects.get(name=transactionData["commodity"]),
+            commodity=Commodity.objects.get(name=transactionData["commodity"],user=request.user),
             transaction_type=transactionData['transaction_type'],
             weight=transactionData['weight'],
             value=transactionData['value'],
             date=transactionData['date'],
+            user=request.user
         )
         user = {
             'id': obj.id,
@@ -184,8 +185,8 @@ def edit_transaction(request):
         # setting the id
         pk = data['transactionId']
         # getting models
-        transaction = Transaction.objects.get(id=pk)
-        commodity = Commodity.objects.get(name=data['commodity'])
+        transaction = Transaction.objects.get(id=pk, user=request.user)
+        commodity = Commodity.objects.get(name=data['commodity'],user=request.user)
         print(commodity.investment, 'crypto')
         # setting values to variables
         value = data['value']
@@ -263,8 +264,8 @@ def edit_transaction(request):
 
 def commodity_detail_view(request, **kwargs):
     pk = kwargs.get("pk")
-    obj = Commodity.objects.get(pk=int(pk))
-    transactions = Transaction.objects.filter(commodity=obj)
+    obj = Commodity.objects.get(pk=int(pk),user=request.user)
+    transactions = Transaction.objects.filter(commodity=obj, user=request.user)
     name = obj.commodity_class
 
     context = {
@@ -311,7 +312,7 @@ def add_commodity(request):
 
 
 def update_commodity(request, pk):
-    commodity = Commodity.objects.get(id=pk)
+    commodity = Commodity.objects.get(id=pk, user=request.user)
     form = CommodityForm(instance=commodity)
 
     if request.method == "POST":
@@ -326,8 +327,8 @@ def update_commodity(request, pk):
 
 
 def delete_commodity(request, pk):
-    commodity = Commodity.objects.filter(id=pk)
-    qs = Commodity.objects.get(id=pk)
+    commodity = Commodity.objects.filter(id=pk,user=request.user)
+    qs = Commodity.objects.get(id=pk,user=request.user)
     context = {
         "object": qs,
     }
@@ -370,7 +371,7 @@ def add_transaction(request, **kwargs):
 
 
 def update_transaction(request, pk):
-    transaction = Transaction.objects.get(id=pk)
+    transaction = Transaction.objects.get(id=pk, user=request.user)
     form = TransactionForm(instance=transaction)
 
     if request.method == "POST":
@@ -440,7 +441,7 @@ def update_transaction(request, pk):
 
 def deleteTransaction(request):
     id1 = request.GET.get('id', None)
-    transaction = Transaction.objects.get(id=id1)
+    transaction = Transaction.objects.get(id=id1,user=request.user)
     if transaction.transaction_type == 'Buy':
         transaction.commodity.weight -= transaction.weight
         transaction.commodity.investment -= float(transaction.weight) * float(transaction.value)
@@ -459,8 +460,8 @@ def deleteTransaction(request):
 
 
 def delete_transaction(request, pk):
-    transaction = Transaction.objects.get(id=pk)
-    qs = Transaction.objects.get(id=pk)
+    transaction = Transaction.objects.get(id=pk,user=request.user)
+    qs = Transaction.objects.get(id=pk,user=request.user)
     context = {
         "object": qs,
     }

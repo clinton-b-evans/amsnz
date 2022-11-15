@@ -95,7 +95,7 @@ def get_crypto_price_data(tickers):
 
 
 def crypto_list_view(request):
-    cryptos = Crypto.objects.exclude(quantity=0)
+    cryptos = Crypto.objects.filter(user=request.user).exclude(quantity=0)
     used_cryptos_ticker = cryptos.values_list('ticker', flat=True).distinct()
     crypto_prices = get_crypto_price_data(used_cryptos_ticker)
     investments, assetsGains = generate_bar_graph_series_data(cryptos, crypto_prices)
@@ -141,11 +141,11 @@ def crypto_list_view(request):
 
 
 def crypto_transactions(request, year=''):
-    crypto_coin = Crypto.objects.all().values()
+    crypto_coin = Crypto.objects.filter(user=request.user).values()
     if year == '':
-        transactions = CryptoTransaction.objects.all().order_by('date')
+        transactions = CryptoTransaction.objects.filter(user=request.user).order_by('date')
     else:
-        transactions = CryptoTransaction.objects.filter(date__year=year).order_by('date')
+        transactions = CryptoTransaction.objects.filter(date__year=year, user=request.user).order_by('date')
 
     transactions_table = []
     for transaction in transactions:
@@ -209,7 +209,7 @@ def crypto_transactions(request, year=''):
 
 
 def update_crypto(request, pk):
-    crypto = Crypto.objects.get(id=pk)
+    crypto = Crypto.objects.get(id=pk,user=request.user)
     form = CryptoForm(instance=crypto)
 
     if request.method == "POST":
@@ -224,8 +224,8 @@ def update_crypto(request, pk):
 
 
 def delete_crypto(request, pk):
-    crypto = Crypto.objects.get(id=pk)
-    qs = Crypto.objects.get(id=pk)
+    crypto = Crypto.objects.get(id=pk, user=request.user)
+    qs = Crypto.objects.get(id=pk, user=request.user)
     context = {
         "object": qs,
     }
@@ -243,7 +243,8 @@ def add_crypto(request):
         obj = Crypto.objects.create(
             name=cryptoData['coin'],
             ticker=cryptoData['ticker'],
-            quantity=cryptoData['quantity']
+            quantity=cryptoData['quantity'],
+            user=request.user
         )
 
         user = {'id': obj.id, 'ticker': obj.ticker, 'quantity': obj.quantity, 'name': obj.name}
@@ -259,7 +260,7 @@ def add_transaction(request):
         # getting body data from request
         transactionData = json.loads(request.body)
         # getting models
-        crypto = Crypto.objects.get(name=transactionData['coin'])
+        crypto = Crypto.objects.get(name=transactionData['coin'],user=request.user)
         # saving data to crypto model
         # when transactions_type is buy
         if transactionData["transaction_type"] == 'Buy':
@@ -280,6 +281,7 @@ def add_transaction(request):
             quantity=transactionData['quantity'],
             spot_price=transactionData['spot_price'],
             date=transactionData['date'],
+            user=request.user
         )
         user = {
             'id': obj.id,
@@ -327,8 +329,8 @@ def edit_transaction(request):
         # setting the id
         pk = data['transactionId']
         # getting models
-        transaction = CryptoTransaction.objects.get(id=pk)
-        crypto = Crypto.objects.get(name=data['coin'])
+        transaction = CryptoTransaction.objects.get(id=pk, user=request.user)
+        crypto = Crypto.objects.get(name=data['coin'], user=request.user)
         print(crypto.investment, 'crypto')
         # setting values to variables
         spot_price = data['spot_price']
@@ -405,7 +407,7 @@ def edit_transaction(request):
 
 
 def update_transaction(request, pk):
-    transaction = CryptoTransaction.objects.get(id=pk)
+    transaction = CryptoTransaction.objects.get(id=pk, user=request.user)
     form = TransactionForm(instance=transaction)
 
     if request.method == "POST":
@@ -476,7 +478,7 @@ def update_transaction(request, pk):
 
 def delete_transaction(request):
     id1 = request.GET.get('id', None)
-    transaction = CryptoTransaction.objects.get(id=id1)
+    transaction = CryptoTransaction.objects.get(id=id1, user=request.user)
     if transaction.transaction_type == 'Buy':
         transaction.coin.quantity -= transaction.quantity
         transaction.coin.investment -= float(transaction.quantity) * float(transaction.spot_price)
@@ -487,7 +489,7 @@ def delete_transaction(request):
         transaction.coin.investment += float(transaction.quantity) * float(transaction.spot_price)
         transaction.coin.save()
         print('sell')
-    CryptoTransaction.objects.get(id=id1).delete()
+    CryptoTransaction.objects.get(id=id1, user=request.user).delete()
     data = {
         'deleted': True
     }

@@ -35,9 +35,10 @@ INSTALLED_APPS = [
     "crispy_forms",
     "bootstrapform",
     "stock_portfolios",
+    "user.apps.UserConfig",
 ]
 
-CRISPY_TEMPLATE_PACK = "bootstrap"
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -118,7 +119,6 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 USE_THOUSAND_SEPARATOR = True
-
 
 JAZZMIN_SETTINGS = {
     "site_title": "ABC Company",

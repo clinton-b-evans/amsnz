@@ -46,7 +46,7 @@ def get_stock_price_data(tickers):
 
 
 def stock_list_view(request):
-    stocks = Stock.objects.exclude(quantity=0)
+    stocks = Stock.objects.exclude(quantity=0,user=request.user)
     used_stocks_ticker = stocks.values_list('ticker', flat=True).distinct()
     stock_prices = get_stock_price_data(used_stocks_ticker)
     investments, assetsGains = generate_bar_graph_series_data(stocks, stock_prices)
@@ -99,7 +99,8 @@ def add_stock(request):
         obj = Stock.objects.create(
             name=stockData['stock'],
             ticker=stockData['ticker'],
-            quantity=stockData['quantity']
+            quantity=stockData['quantity'],
+            user=request.user
         )
 
         user = {'id': obj.id, 'ticker': obj.ticker, 'quantity': obj.quantity, 'name': obj.name}
@@ -151,11 +152,11 @@ def add_stock(request):
 
 
 def stock_transactions(request, year=''):
-    stock = Stock.objects.all().values()
+    stock = Stock.objects.filter(user=request.user).values()
     if year == '':
-        transactions = StockTransaction.objects.all().order_by('date')
+        transactions = StockTransaction.objects.filter(user=request.user).order_by('date')
     else:
-        transactions = StockTransaction.objects.filter(date__year=year).order_by('date')
+        transactions = StockTransaction.objects.filter(date__year=year,user=request.user).order_by('date')
 
     transactions_table = []
     for transaction in transactions:
@@ -183,7 +184,7 @@ def add_transaction(request):
         # getting body data from request
         transactionData = json.loads(request.body)
         # getting models
-        stock = Stock.objects.get(name=transactionData['stock'])
+        stock = Stock.objects.get(name=transactionData['stock'],user=request.user)
         # saving data to crypto model
         # when transactions_type is buy
         if transactionData["transaction_type"] == 'Buy':
@@ -199,11 +200,12 @@ def add_transaction(request):
                 stock.investment -= float(transactionData["quantity"]) * float(transactionData["spot_price"])
             stock.save()
         obj = StockTransaction.objects.create(
-            stock=Stock.objects.get(name=transactionData["stock"]),
+            stock=Stock.objects.get(name=transactionData["stock"],user=request.user),
             transaction_type=transactionData['transaction_type'],
             quantity=transactionData['quantity'],
             spot_price=transactionData['spot_price'],
             date=transactionData['date'],
+            user=request.user
         )
         user = {
             'id': obj.id,
@@ -227,8 +229,8 @@ def edit_transaction(request):
         # setting the id
         pk = data['transactionId']
         # getting models
-        transaction = StockTransaction.objects.get(id=pk)
-        stock = Stock.objects.get(name=data['stock'])
+        transaction = StockTransaction.objects.get(id=pk, user=request.user)
+        stock = Stock.objects.get(name=data['stock'],user=request.user)
         # setting values to variables
         spot_price = data['spot_price']
         quantity = data['quantity']
@@ -305,7 +307,7 @@ def edit_transaction(request):
 
 def delete_transaction(request):
     id1 = request.GET.get('id', None)
-    transaction = StockTransaction.objects.get(id=id1)
+    transaction = StockTransaction.objects.get(id=id1, user=request.user)
     if transaction.transaction_type == 'Buy':
         transaction.stock.quantity -= transaction.quantity
         transaction.stock.investment -= float(transaction.quantity) * float(transaction.spot_price)
@@ -316,7 +318,7 @@ def delete_transaction(request):
         transaction.stock.investment += float(transaction.quantity) * float(transaction.spot_price)
         transaction.stock.save()
         print('sell')
-    StockTransaction.objects.get(id=id1).delete()
+    StockTransaction.objects.get(id=id1,user=request.user).delete()
     data = {
         'deleted': True
     }
