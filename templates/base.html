@@ -292,12 +292,12 @@
 <!--      </li>&lt;!&ndash; End Stocks Nav &ndash;&gt;-->
 
       <li class="nav-item">
-        <a {% if request.resolver_match.url_name in 'commodities_list_all,commodities_transactions' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} data-bs-target="#commodities-nav" data-bs-toggle="collapse" href="#">
+        <a {% if request.resolver_match.url_name in 'commodities_list,commodities_transactions' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} data-bs-target="#commodities-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-gem"></i><span>Commodities</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
-        <ul id="commodities-nav" {% if request.resolver_match.url_name in 'commodities_list_all,commodities_transactions' %}class="nav-content collapse show active"{% else %}class="nav-content collapse"{% endif %} data-bs-parent="#sidebar-nav">
+        <ul id="commodities-nav" {% if request.resolver_match.url_name in 'commodities_list,commodities_transactions' %}class="nav-content collapse show active"{% else %}class="nav-content collapse"{% endif %} data-bs-parent="#sidebar-nav">
           <li class="nav-item">
-            <a {% if request.resolver_match.url_name == 'commodities_list_all' %}class="nav-link active"{% else %}class="nav-link collapsed"{% endif %} href="/commodities/">
+            <a {% if request.resolver_match.url_name == 'commodities_list' %}class="nav-link active"{% else %}class="nav-link collapsed"{% endif %} href="/commodities/">
               <i class="bi bi-circle"></i></i><span>Commodity Portfolio</span>
             </a>
           </li>
