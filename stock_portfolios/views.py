@@ -196,12 +196,18 @@ def add_transaction(request):
             stock.save()
         # when transactions_type is sell
         else:
-            stock.quantity -= float(transactionData["quantity"])
-            if stock.investment - float(transactionData["quantity"]) * float(transactionData["spot_price"]) < 0:
-                stock.investment = float(0.0)
+            if stock.quantity - float(transactionData["quantity"]) > -1:
+                stock.quantity -= float(transactionData["quantity"])
+                if stock.investment - float(transactionData["quantity"]) * float(transactionData["spot_price"]) < 0:
+                    stock.investment = float(0.0)
+                else:
+                    stock.investment -= float(transactionData["quantity"]) * float(transactionData["spot_price"])
+                stock.save()
             else:
-                stock.investment -= float(transactionData["quantity"]) * float(transactionData["spot_price"])
-            stock.save()
+                data={
+                    "quantity": "error"
+                }
+                return JsonResponse(data)
         obj = StockTransaction.objects.create(
             stock=Stock.objects.get(name=transactionData["stock"], user=request.user),
             transaction_type=transactionData['transaction_type'],
