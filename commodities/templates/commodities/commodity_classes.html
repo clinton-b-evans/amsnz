@@ -86,7 +86,7 @@ function popitup(url) {
                 <label class="form-label">Value</label>
                 <input class="form-control" name="value" value=0.0 id="value" type="number">
                 <label class="form-label">Date</label>
-                <input class="form-control" name="date" id="date" type="date">
+                <input class="form-control" name="date" id="date" type="text" value="{% now "Y-m-j" %}" disabled>
             </div>
             <button class="btn btn-primary form-control" type="button" onclick="addTransaction()">ADD</button>
         </form>
@@ -251,6 +251,7 @@ function popitup(url) {
 </div>
 
 <script>
+    console.log("{% now "j-m-Y" %}","uasd")
     $(document).ready( function () {
       $('#commodity_transaction').DataTable();
     });
@@ -357,7 +358,7 @@ function popitup(url) {
                                                     <input class="form-control" id="value${user.id}"
                                                            type="number" value="${user.value}">
                                                 </div>
-                                                <button class="btn btn-primary" type="button" onclick="EditTransaction(user.id)">Submit</button>
+                                                <button class="btn btn-primary" type="button" onclick="EditTransaction(${user.id})">Submit</button>
                                             </form>
                                         </div>
                                    </div>
