@@ -17,7 +17,7 @@ app_name = "commodities"
 
 
 urlpatterns = [
-    path("commodities/", commodity_list_view, name="commodities_list_all"),
+    path("commodities/<str:year>/", commodity_list_view, name="commodities_list_all"),
     # path("commodities/<str:year>/", commodity_list_view, name="commodities_list"),
     path("commodities/add", add_commodity, name="add"),
     path("commodities/transaction/add/", add_transaction, name="transaction-add"),
@@ -36,11 +36,11 @@ urlpatterns = [
         name="commodity-edit",
     ),
     path("commodities/<str:pk>/delete/", delete_commodity, name="delete"),
-    path(
-        "commodities/transaction/<str:pk>/delete/",
-        delete_transaction,
-        name="delete-transaction",
-    ),
+    # path(
+    #     "commodities/transaction/<str:pk>/delete/",
+    #     delete_transaction,
+    #     name="delete-transaction",
+    # ),
     path(
         "commodities-classes/",
         commodity_transactions,
