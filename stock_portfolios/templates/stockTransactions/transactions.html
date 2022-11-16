@@ -99,7 +99,7 @@ function popitup(url) {
                 <label class="form-label">Spot Price</label>
                 <input class="form-control" name="spot_price" value=0.0 id="spot_price" type="number">
                 <label class="form-label">Date</label>
-                <input class="form-control" name="date" id="date" type="date">
+                <input class="form-control" name="date" id="date" type="text" value="{% now "Y-m-j" %}" disabled>
             </div>
             <button class="btn btn-primary form-control" type="button" onclick="addTransaction()">ADD</button>
         </form>
@@ -358,7 +358,7 @@ function popitup(url) {
                                                         <input class="form-control" id="spot_price${user.id}"
                                                                type="number" value="${user.spot_price}">
                                                     </div>
-                                                    <button class="btn btn-primary" type="button" onclick="EditTransaction(user.id)">Submit</button>
+                                                    <button class="btn btn-primary" type="button" onclick="EditTransaction(${user.id})">Submit</button>
                                                 </form>
                                             </div>
                                        </div>
