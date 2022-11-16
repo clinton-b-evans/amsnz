@@ -10,7 +10,7 @@
           <li class="dropdown-header text-start">
               <h6>Filter</h6>
           </li>
-          <li><a class="dropdown-item" href="{% url 'commodities:commodities_list_all' %}">All years</a></li>
+          <li><a class="dropdown-item" href="{% url 'commodities:commodities_list_all' 2022 %}">All years</a></li>
           {% for year in years_list%}
           <li><a class="dropdown-item" href="{% url 'commodities:commodities_list' year %}">{{year|stringformat:"i"}}</a></li>
           {%endfor%}

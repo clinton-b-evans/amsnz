@@ -154,10 +154,11 @@ def add_stock(request):
 
 @login_required(login_url='/login/')
 def stock_transactions(request, year=''):
-    stock = Stock.objects.filter(user=request.user).values()
     if year == '':
+        stock = Stock.objects.filter(user=request.user).values()
         transactions = StockTransaction.objects.filter(user=request.user).order_by('date')
     else:
+        stock = Stock.objects.filter(user=request.user, year=year).values()
         transactions = StockTransaction.objects.filter(date__year=year, user=request.user).order_by('date')
 
     transactions_table = []
