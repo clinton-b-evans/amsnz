@@ -327,7 +327,7 @@ def property_summary_view(request, year, *args, **kwargs):
     """
     Get Property objects for selected year
     """
-    qs = Property.objects.filter(user=request.user).filter(purchase_date__year=year)
+    qs = Property.objects.filter(purchase_date__year=year, user=request.user)
 
     """
     Get retirement goals objects for selected year
