@@ -382,5 +382,6 @@ def year_to_date(request, year):
         "net_income": net_income,
         "income_budget_percentage": (float(total_income) / float(total_income_budget)) * 100,
         "expense_budget_percentage": (float(total_expense) / float(total_expense_budget)) * 100,
+        "total_budget_percentage": ((float(total_income) / float(total_income_budget)) * 100)-((float(total_expense) / float(total_expense_budget)) * 100)
     }
     return render(request, "incomestatements/ytd.html", context)
