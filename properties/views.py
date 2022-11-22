@@ -327,7 +327,7 @@ def property_summary_view(request, year, *args, **kwargs):
     """
     Get Property objects for selected year
     """
-    qs = Property.objects.filter(purchase_date__year=year)
+    qs = Property.objects.all().filter(purchase_date__year=year)
 
     """
     Get retirement goals objects for selected year
@@ -412,7 +412,6 @@ def property_summary_view(request, year, *args, **kwargs):
 
     if total_other_income == None:
         total_other_income = 0
-
     total_rent = total_rent_after_vacany_rate
     total_income = total_rent + total_other_income
     # total_networth = total_assets - total_liabilities
@@ -423,10 +422,9 @@ def property_summary_view(request, year, *args, **kwargs):
 
     total_net_rental_income = total_income - total_expenses
     property_progress = total_networth / property_goal * 100
-    print (total_repayments,"asdf")
-    if total_income and total_repayments:
-        loan_to_debt_ratio = total_income / total_repayments
-        loan_to_debt_percent = (total_repayments / total_income) * 100
+
+    loan_to_debt_ratio = total_income / total_repayments
+    loan_to_debt_percent = (total_repayments / total_income) * 100
 
     debt_service_coverage_ratio = (
                                           total_income - total_operating_expenses
@@ -606,7 +604,7 @@ def property_summary_view(request, year, *args, **kwargs):
     Get all years records from apps
     """
     for my_year in years_list:
-        props_qs = Property.objects.filter(purchase_date__year=my_year, user=request.user)
+        props_qs = Property.objects.filter(purchase_date__year=my_year)
         yearwise_props_assets = props_qs.aggregate(Sum("market_value")).get(
             "market_value__sum"
         )
