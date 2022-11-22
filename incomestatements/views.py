@@ -362,8 +362,8 @@ def year_to_date(request, year):
     net_income = []
     for key, value in month_expenses.items():
         net_income.append(month_income[key] - month_expenses[key])
-    print(total_expense, 'total_expense')
-    print(total_expense_budget, 'total_expense_budget')
+    print(total_expense, 'total_expense_print')
+    print(total_expense_budget, 'total_expense_budget_print')
     context = {
         "object_list": qs,
         "year": year,
