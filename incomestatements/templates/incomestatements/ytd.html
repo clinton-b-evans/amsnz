@@ -99,7 +99,7 @@ function popitup(url) {
                     <td>${{data.Budget}}</td>
                     <td>
                       <div class="progress">
-                          <div class="progress-bar bg-info" role="progressbar" style="width: {{data.percentage}}%" aria-valuenow="{{data.percentage}}" aria-valuemin="0" aria-valuemax="100">{{data.percentage}}%</div>
+                          <div class="progress-bar bg-info" role="progressbar" style="width: {{data.percentage|stringformat:"i"}}%" aria-valuenow="{{data.percentage|stringformat:"i"}}" aria-valuemin="0" aria-valuemax="100">{{data.percentage|stringformat:"i"}}%</div>
                         </div>
                     </td>
                   </tr>
@@ -113,7 +113,7 @@ function popitup(url) {
                     <th>${{amount}}</th>
                     {% endfor %}
                     <th><div class="progress">
-                      <div class="progress-bar bg-success" role="progressbar" style="width: {{income_budget_percentage}}%" aria-valuenow="{{income_budget_percentage}}" aria-valuemin="0" aria-valuemax="100">{{income_budget_percentage}}%</div>
+                      <div class="progress-bar bg-success" role="progressbar" style="width: {{income_budget_percentage|stringformat:"i"}}%" aria-valuenow="{{income_budget_percentage|stringformat:"i"}}" aria-valuemin="0" aria-valuemax="100">{{income_budget_percentage|stringformat:"i"}}%</div>
                     </div></th>
                     </tr>
                   </thead>
@@ -153,7 +153,7 @@ function popitup(url) {
                       <td>${{data.Budget}}</td>
                       <td>
                       <div class="progress">
-                          <div class="progress-bar bg-warning" role="progressbar" style="width: {{data.percentage}}%" aria-valuenow="{{data.percentage}}%" aria-valuemin="0" aria-valuemax="100">{{data.percentage}}%</div>
+                          <div class="progress-bar bg-warning" role="progressbar" style="width: {{data.percentage|stringformat:"i"}}%" aria-valuenow="{{data.percentage|stringformat:"i"}}%" aria-valuemin="0" aria-valuemax="100">{{data.percentage|stringformat:"i"}}%</div>
                         </div>
                     </td>
                     </tr>
@@ -166,7 +166,7 @@ function popitup(url) {
                     {% endfor %}
                     <th>
                       <div class="progress">
-  <div class="progress-bar bg-success" role="progressbar" style="width: {{expense_budget_percentage}}%" aria-valuenow="{{expense_budget_percentage}}" aria-valuemin="0" aria-valuemax="100">{{expense_budget_percentage}}%</div>
+  <div class="progress-bar bg-success" role="progressbar" style="width: {{expense_budget_percentage|stringformat:"i"}}%" aria-valuenow="{{expense_budget_percentage|stringformat:"i"}}" aria-valuemin="0" aria-valuemax="100">{{expense_budget_percentage|stringformat:"i"}}%</div>
 </div>
                     </th>
                   </tr>
