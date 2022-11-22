@@ -288,10 +288,10 @@ def year_to_date(request, year):
         income_result[f"{list(category.values())[0]}"]["Budget"] = Category.objects.get(
             name=category['category__name']).budget
         total_income_budget += Category.objects.get(name=category['category__name']).budget
-        category_total=income_result[f"{list(category.values())[0]}"]["total"]
-        category_budget=income_result[f"{list(category.values())[0]}"]["Budget"]
-        percentage= float(category_total)/float(category_budget)* 100
-        income_result[f"{list(category.values())[0]}"]["percentage"]=percentage
+        category_total = income_result[f"{list(category.values())[0]}"]["total"]
+        category_budget = income_result[f"{list(category.values())[0]}"]["Budget"]
+        percentage = float(category_total) / float(category_budget) * 100
+        income_result[f"{list(category.values())[0]}"]["percentage"] = percentage
         print(percentage, 'percentage')
     # #### END OF CATEGORIES EACH MONTH TOTAL Income ####
 
@@ -364,6 +364,9 @@ def year_to_date(request, year):
         net_income.append(month_income[key] - month_expenses[key])
     print(total_expense, 'total_expense_print')
     print(total_expense_budget, 'total_expense_budget_print')
+    net_total = month_income["total"] - month_expenses["total"]
+    net_Budget = month_income["Budget"] - month_expenses["Budget"]
+    print(net_total, net_Budget)
     context = {
         "object_list": qs,
         "year": year,
@@ -382,6 +385,6 @@ def year_to_date(request, year):
         "net_income": net_income,
         "income_budget_percentage": (float(total_income) / float(total_income_budget)) * 100,
         "expense_budget_percentage": (float(total_expense) / float(total_expense_budget)) * 100,
-        "total_budget_percentage": ((float(total_income) / float(total_income_budget)) * 100)-((float(total_expense) / float(total_expense_budget)) * 100)
+        "total_budget_percentage": (float(net_total) / float(net_Budget)) * 100
     }
     return render(request, "incomestatements/ytd.html", context)
