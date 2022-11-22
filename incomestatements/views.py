@@ -333,18 +333,18 @@ def year_to_date(request, year):
                 expenses_result[f"{category_of_expense}"]["months"][f"{month}"] = float(
                     current_month_total_expense
                 )
-    total_expanse_budget = 0
+    total_expense_budget = 0
     for category_expense in unique_categories_of_expenses:
         expenses_result[f"{list(category_expense.values())[0]}"]["total"] = sum(
             expenses_result[f"{list(category_expense.values())[0]}"]["months"].values()
         )
         expenses_result[f"{list(category_expense.values())[0]}"]["Budget"] = Category.objects.get(
             name=category['category__name']).budget
-        total_expanse_budget += Category.objects.get(name=category['category__name']).budget
+        total_expense_budget += Category.objects.get(name=category['category__name']).budget
         category_total = expenses_result[f"{list(category_expense.values())[0]}"]["total"]
         category_budget = expenses_result[f"{list(category_expense.values())[0]}"]["Budget"]
         percentage = float(category_total) / float(category_budget) * 100
-        category_budget = expenses_result[f"{list(category_expense.values())[0]}"]["percentage"] = percentage
+        expenses_result[f"{list(category_expense.values())[0]}"]["percentage"] = percentage
         print(percentage, 'percentage')
     #  #### END OF CATEGORIES EACH MONTH TOTAL EXPENSES ####
 
@@ -358,7 +358,7 @@ def year_to_date(request, year):
     print(month_expenses, 'month_expenses')
     # income_result['test'].update({"Budget": 10000})
     month_income.update({"Budget": total_income_budget})
-    month_expenses.update({"Budget": total_expanse_budget})
+    month_expenses.update({"Budget": total_expense_budget})
     net_income = []
     for key, value in month_expenses.items():
         net_income.append(month_income[key] - month_expenses[key])
@@ -368,7 +368,7 @@ def year_to_date(request, year):
         "total_income": total_income,
         "income_budget": total_income_budget,
         "total_expense": total_expense,
-        "expense_budget": total_expanse_budget,
+        "expense_budget": total_expense_budget,
         "total_amount": net_amount,
         "month_expenses": month_expenses,
         "month_income": month_income,
@@ -379,6 +379,6 @@ def year_to_date(request, year):
         "expenses_result": expenses_result,
         "net_income": net_income,
         "income_budget_percentage": (float(total_income) / float(total_income_budget)) * 100,
-        "expense_budget_percentage": float(total_expense) / float(total_expanse_budget) * 100,
+        "expense_budget_percentage": float(total_expense) / float(total_expense_budget) * 100,
     }
     return render(request, "incomestatements/ytd.html", context)

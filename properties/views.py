@@ -605,9 +605,7 @@ def property_summary_view(request, year, *args, **kwargs):
     """
     for my_year in years_list:
         props_qs = Property.objects.filter(purchase_date__year=my_year)
-        yearwise_props_assets = props_qs.aggregate(Sum("market_value")).get(
-            "market_value__sum"
-        )
+        yearwise_props_assets = props_qs.aggregate(Sum("market_value")).get("market_value__sum")
         # print(yearwise_props_assets)
         yearwise_props_liabilities = props_qs.aggregate(Sum("loan_amount")).get(
             "loan_amount__sum"
