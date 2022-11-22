@@ -13,7 +13,7 @@ from .views import (
     property_summary_view,
     add_property,
     update_property,
-    delete_property,
+    delete_property, addproperty, editproperty, deleteproperty,
 )
 
 app_name = "properties"
@@ -26,6 +26,9 @@ urlpatterns = [
     path("summary/<str:year>/", property_summary_view, name="summary"),
     path("properties/<pk>/", property_detail_view, name="detail"),
     path("properties/add", add_property, name="add-property"),
+    path("properties_add", addproperty, name="addproperty"),
+    path("properties_delete", deleteproperty, name="deleteproperty"),
+    path("properties_edit", editproperty, name="editproperty"),
     path("properties/<str:pk>/edit", update_property, name="update-property"),
     path("properties/<str:pk>/delete", delete_property, name="delete-property"),
 ]

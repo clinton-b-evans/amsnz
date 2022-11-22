@@ -204,7 +204,7 @@ def add_transaction(request):
                     stock.investment -= float(transactionData["quantity"]) * float(transactionData["spot_price"])
                 stock.save()
             else:
-                data={
+                data = {
                     "quantity": "error"
                 }
                 return JsonResponse(data)

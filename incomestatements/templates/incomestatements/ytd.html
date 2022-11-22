@@ -7,7 +7,9 @@
 {% endblock title %}
 
 {% block content %}
+<script src="{% static 'apexcharts/apexcharts.min.js' %}"></script>
 <script language="javascript" type="text/javascript">
+
 <!--
 function popitup(url) {
     newwindow=window.open(url,'{{title}}','height=510,width=384');
@@ -21,9 +23,29 @@ function popitup(url) {
 
 <div class="dashboard">
   <div class="chart-container" style="position: relative;">
-    <div class="row justify-content-around">
+     <div class="row justify-content-around">
+          <div class="col-lg-6">
+          <div class="card">
+            <div class="card-body pb-0">
+              <h5 class="card-title">Incomes <span>| {{year}}</span></h5>
+              <div id="chart" style="width: auto ; height: 20rem;"></div>
+            </div>
+          </div>
+            </div>
+          <div class="col-lg-6">
+          <div class="card">
+              <div class="card-body pb-0">
+                <h5 class="card-title">Expenses <span>| {{year}}</span></h5>
+                <div id="chart1" style="width: auto ; height: 20rem;"></div>
+           </div>
+          </div>
+            </div>
+        </div>
+        </div>
 
-      <div class="col-lg-9">
+
+    <div class="row justify-content-around">
+      <div class="col-lg-12">
         <div class="card">
           <div class="filter">
             <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
@@ -56,6 +78,8 @@ function popitup(url) {
                   <th scope="col">Nov</th>
                   <th scope="col">Dec</th>
                   <th scope="col">Total</th>
+                  <th scope="col">Budget</th>
+                  <th scope="col">% of Budget</th>
                 </tr>
               </thead>
               <tbody>
@@ -72,6 +96,12 @@ function popitup(url) {
                       {% endfor %}
                     {% endfor %}
                     <td>${{data.total}}</td>
+                    <td>${{data.Budget}}</td>
+                    <td>
+                      <div class="progress">
+                          <div class="progress-bar bg-info" role="progressbar" style="width: {{data.percentage}}%" aria-valuenow="{{data.percentage}}" aria-valuemin="0" aria-valuemax="100">{{data.percentage}}%</div>
+                        </div>
+                    </td>
                   </tr>
                   {% endfor %}
 
@@ -82,7 +112,9 @@ function popitup(url) {
                     {% for amount in month_income.values %}
                     <th>${{amount}}</th>
                     {% endfor %}
-                    <th></th>
+                    <th><div class="progress">
+                      <div class="progress-bar bg-success" role="progressbar" style="width: {{income_budget_percentage}}%" aria-valuenow="{{income_budget_percentage}}" aria-valuemin="0" aria-valuemax="100">{{income_budget_percentage}}%</div>
+                    </div></th>
                     </tr>
                   </thead>
                 <tr>
@@ -117,8 +149,15 @@ function popitup(url) {
 
                       {% endfor %}
 
-                    <td>${{data.total}}</td>
+                      <td>${{data.total}}</td>
+                      <td>${{data.Budget}}</td>
+                      <td>
+                      <div class="progress">
+                          <div class="progress-bar bg-warning" role="progressbar" style="width: {{data.percentage}}%" aria-valuenow="{{data.percentage}}%" aria-valuemin="0" aria-valuemax="100">{{data.percentage}}%</div>
+                        </div>
+                    </td>
                     </tr>
+                {{data.percentage}}
                   {% endfor %}
                 <thead>
                   <tr style="background-color: #ededed">
@@ -126,7 +165,11 @@ function popitup(url) {
                     {% for amount in month_expenses.values %}
                     <th>${{amount}}</th>
                     {% endfor %}
-                    <th></th>
+                    <th>
+                      <div class="progress">
+  <div class="progress-bar bg-success" role="progressbar" style="width: {{expense_budget_percentage}}%" aria-valuenow="{{expense_budget_percentage}}" aria-valuemin="0" aria-valuemax="100">{{expense_budget_percentage}}%</div>
+</div>
+                    </th>
                   </tr>
                 </thead>
                 <tr>
@@ -156,6 +199,11 @@ function popitup(url) {
                     {% for amount in net_income %}
                     <th>${{amount}}</th>
                     {% endfor %}
+                    <th>
+                      <div class="progress">
+  <div class="progress-bar bg-danger" role="progressbar" style="width: {{income_budget_percentage}}%" aria-valuenow="{{income_budget_percentage}}" aria-valuemin="0" aria-valuemax="100">{{income_budget_percentage}}%</div>
+</div>
+                    </th>
                     <th></th>
                   </tr>
                 </thead>
@@ -163,26 +211,33 @@ function popitup(url) {
             </table>
           </div>
         </div>
-
-      </div>
-
-      <div class="col-lg-3">
-        <div class="card">
-          <div class="card-body pb-0">
-            <h5 class="card-title">All Expenses <span>| {{year}}</span></h5>
-            <div id="donutchart" style="width: auto; height: 20rem;"></div>
+<div class="row">
+        <div class="col-lg-4">
+          <div class="card">
+            <div class="card-body pb-0">
+              <h5 class="card-title">All Expenses <span>| {{year}}</span></h5>
+              <div id="donutchart" style="width: auto; height: 20rem;"></div>
+            </div>
           </div>
         </div>
-
-        <div class="card">
-          <div class="card-body pb-0">
-            <h5 class="card-title">Income vs Expense <span>| {{year}}</span></h5>
-            <div id="piechart" style="width: auto; height: 20rem;"></div>
+        <div class="col-lg-4">
+          <div class="card">
+            <div class="card-body pb-0">
+              <h5 class="card-title">All Incomes<span>| {{year}}</span></h5>
+              <div id="donutchart1" style="width: auto; height: 20rem;"></div>
+            </div>
           </div>
         </div>
-
+      <div class="col-lg-4">
+        <div class="card">
+            <div class="card-body pb-0">
+              <h5 class="card-title">Income vs Expense <span>| {{year}}</span></h5>
+              <div id="piechart" style="width: auto; height: 20rem;"></div>
+            </div>
+          </div>
+        </div>
       </div>
-
+      </div>
     </div>
   </div>
 </div>
@@ -217,7 +272,6 @@ function popitup(url) {
     chart.draw(data, options);
   }
 </script>
-
 <script type="text/javascript">
   google.charts.load('current', { 'packages': ['corechart'] });
   google.charts.setOnLoadCallback(drawChart);
@@ -226,8 +280,75 @@ function popitup(url) {
 
     var data = google.visualization.arrayToDataTable([
       ['Task', 'Hours per Day'],
-     ['Income', {{ total_income|stringformat:"i"}}],
-      ['Expense', {{ total_expense|stringformat:"i"}}]
+      {% for key, value in categories_income_yearly.items %}
+      ['{{key}}', {{value}}],
+      {% endfor %}
+    ]);
+
+    var options = {
+      pieHole: 0.4,
+      legend: { position: 'top', alignment: 'start' },
+    };
+
+    var chart = new google.visualization.PieChart(document.getElementById('donutchart1'));
+
+    chart.draw(data, options);
+  }
+</script>
+<script>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load("current", {packages:["corechart"]});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Task', 'Hours per Day'],
+          ['Actual',     {{ total_expense|stringformat:"i"}}],
+          ['Budget',      {{ expense_budget|stringformat:"i"}}],
+        ]);
+
+        var options = {
+          title: 'Income percentage of Budget',
+          pieHole: 0.4,
+          legend: { position: 'top', alignment: 'start' },
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('chart'));
+        chart.draw(data, options);
+      }
+</script>
+<script>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load("current", {packages:["corechart"]});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Task', 'Hours per Day'],
+          ['Actual',     {{ total_income|stringformat:"i"}}],
+          ['Budget',     {{ income_budget|stringformat:"i"}}],
+        ]);
+
+        var options = {
+          title: 'Expanse percentage of Budget',
+          pieHole: 0.4,
+          legend: { position: 'top', alignment: 'start' },
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('chart1'));
+        chart.draw(data, options);
+      }
+</script>
+<script type="text/javascript">
+  google.charts.load('current', { 'packages': ['corechart'] });
+  google.charts.setOnLoadCallback(drawChart);
+
+  function drawChart() {
+
+    var data = google.visualization.arrayToDataTable([
+      ['Task', 'Hours per Day'],
+      ['Expense', {{ total_expense|stringformat:"i"}}],
+      ['Income', {{ total_income|stringformat:"i"}}],
     ]);
 
     var options = {
@@ -239,6 +360,7 @@ function popitup(url) {
 
     chart.draw(data, options);
   }
+
 </script>
 
 <br>

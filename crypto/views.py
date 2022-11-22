@@ -61,7 +61,10 @@ def update(request):
 def compute_pie_chart_transaction_types(cryptos, totalMarketValue, crypto_prices):
     pie_chart_data = []
     for crypto in cryptos:
-        percentage = ((float(crypto.quantity) * float(crypto_prices[crypto.ticker])) / totalMarketValue) * 100
+        if crypto.quantity > 0:
+            percentage = ((float(crypto.quantity) * float(crypto_prices[crypto.ticker])) / totalMarketValue) * 100
+        else:
+            percentage = 0
         pie_chart_data.append({
             "name": crypto.name,
             "percentage": percentage
@@ -272,14 +275,22 @@ def add_transaction(request):
             crypto.save()
         # when transactions_type is sell
         else:
-            crypto.quantity -= float(transactionData["quantity"])
-            if crypto.investment - float(transactionData["quantity"]) * float(transactionData["spot_price"]) < 0:
-                crypto.investment = float(0.0)
+            if crypto.quantity - float(transactionData["quantity"]) > -1:
+                crypto.quantity -= float(transactionData["quantity"])
+                if crypto.investment - (float(transactionData["quantity"]) * float(transactionData["spot_price"])) < 0:
+                    crypto.investment = float(0.0)
+                    print("working")
+                else:
+                    crypto.investment -= float(transactionData["quantity"]) * float(transactionData["spot_price"])
+                    print("not working")
+                crypto.save()
             else:
-                crypto.investment -= float(transactionData["quantity"]) * float(transactionData["spot_price"])
-            crypto.save()
+                data = {
+                    "quantity": "error"
+                }
+                return JsonResponse(data)
         obj = CryptoTransaction.objects.create(
-            coin=Crypto.objects.get(name=transactionData["coin"]),
+            coin=Crypto.objects.get(name=transactionData["coin"],user=request.user ),
             transaction_type=transactionData['transaction_type'],
             quantity=transactionData['quantity'],
             spot_price=transactionData['spot_price'],

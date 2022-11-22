@@ -79,6 +79,10 @@ function popitup(url) {
       </div>
       <div class="modal-body">
         <form id="addTransaction">
+            <div class="alert alert-warning alert-dismissible fade show" style="display:none" role="alert" id="quantity_alert">
+                    You don't have sufficient weight for this commodity.
+                  <button type="button" class="btn-close"  onclick="closeAlert()" aria-label="Close"></button>
+                </div>
             <div class="mb-3">
                 <label class="form-label">Commodity</label>
                 <select class="form-select" name="commodity" id="commodity" aria-label="Default select example">
@@ -94,9 +98,15 @@ function popitup(url) {
                     <option value="Sell">Sell</option>
                 </select>
                 <label class="form-label">Weight</label>
-                <input class="form-control" name="weight" value=0.0 id="weight" type="number">
+                <input class="form-control" name="weight" min="0" step="any" value=0.0 id="weight" type="number" oninput="validity.valid||
+    (value='');">
+                <div class="alert alert-warning alert-dismissible fade show" style="padding-top: 5px;margin-top: 5px;padding-bottom: 5px;display:none" role="alert" id="quantity_alert">
+                    You don't have sufficient weight for this commodity.
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" style="padding-top: 5px;margin-top: 5px;padding-bottom: 5px;" aria-label="Close"></button>
+                </div>
                 <label class="form-label">Value</label>
-                <input class="form-control" name="value" value=0.0 id="value" type="number">
+                <input class="form-control" name="value" min="0" step="any" id="value" type="number" oninput="validity.valid||
+    (value='');">
                 <label class="form-label">Date</label>
                 <input class="form-control" name="date" id="date" type="text" value="{% now "Y-m-j" %}" disabled>
             </div>
@@ -263,7 +273,12 @@ function popitup(url) {
 </div>
 
 <script>
-    console.log("{% now "j-m-Y" %}","uasd")
+    $('#exampleModal').on('hidden.bs.modal', function () {
+        $('form#addTransaction').trigger("reset");
+    })
+    function closeAlert(){
+        $('#quantity_alert').hide();
+    }
     $(document).ready( function () {
       $('#commodity_transaction').DataTable();
     });
@@ -301,6 +316,10 @@ function popitup(url) {
                         appendToTransactionTable(data.user);
                         $(`#exampleModal`).modal('hide');
                     }
+                    if(data.weight=="error"){
+                        console.log("agya j");
+                        $('#quantity_alert').show();
+                    }
                 },
                 failure: function (response) {
                     $('#result').html(response);
@@ -311,7 +330,7 @@ function popitup(url) {
         {
             alert("All fields must have a valid value.");
         }
-        $('form#addTransaction').trigger("reset");
+<!--        $('form#addTransaction').trigger("reset");-->
         return false;
     }
     function appendToTransactionTable(user) {

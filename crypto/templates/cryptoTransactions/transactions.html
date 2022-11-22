@@ -85,6 +85,10 @@ function popitup(url) {
       </div>
       <div class="modal-body">
         <form id="addTransaction">
+            <div class="alert alert-warning alert-dismissible fade show" style="display:none" role="alert" id="quantity_alert">
+                    You don't have sufficient quantity for this coin.
+                  <button type="button" class="btn-close"  onclick="closeAlert()" aria-label="Close"></button>
+                </div>
             <div class="mb-3">
                 <label class="form-label">Bitcoins</label>
                 <select class="form-select" name="coin" id="coin" aria-label="Default select example">
@@ -100,9 +104,11 @@ function popitup(url) {
                     <option value="Sell">Sell</option>
                 </select>
                 <label class="form-label">Quantity</label>
-                <input class="form-control" name="quantity" value=0.0 id="quantity" type="number">
+                <input class="form-control" name="quantity" min="0" step="any" id="quantity" type="number" oninput="validity.valid||
+    (value='');">
                 <label class="form-label">Spot Price</label>
-                <input class="form-control" name="spot_price" value=0.0 id="spot_price" type="number">
+                <input class="form-control" name="spot_price" id="spot_price" type="number" min="0" step="any" oninput="validity.valid||
+    (value='');">
                 <label class="form-label">Date</label>
                 <input class="form-control" name="date" id="date" type="text" value="{% now "Y-m-j" %}" disabled>
             </div>
@@ -265,6 +271,12 @@ function popitup(url) {
     </div>
 </div>
 <script>
+    $('#exampleModal').on('hidden.bs.modal', function () {
+        $('form#addTransaction').trigger("reset");
+    })
+    function closeAlert(){
+        $('#quantity_alert').hide();
+    }
     function addTransaction() {
         var coin = document.getElementById('coin').value;
         var transaction_type = document.getElementById(`transaction_type`).value;
@@ -297,6 +309,10 @@ function popitup(url) {
                         appendToTransactionTable(data.user);
                         $(`#exampleModal`).modal('hide');
                     }
+                    if(data.quantity=="error"){
+                        console.log("agya j");
+                        $('#quantity_alert').show();
+                    }
                 },
                 failure: function (response) {
                     $('#result').html(response);
@@ -307,7 +323,7 @@ function popitup(url) {
         {
             alert("All fields must have a valid value.");
         }
-        $('form#addTransaction').trigger("reset");
+<!--        $('form#addTransaction').trigger("reset");-->
         return false;
     }
     function appendToTransactionTable(user) {
@@ -395,7 +411,7 @@ function popitup(url) {
                                         <p>Are you sure you want to delete ${user.coin}?</p>
                                         <p>This action cannot be undone.</p>
                                         <p>All transctions for this fund will be lost</p>
-                                          <button class="btn btn-danger form-control" type="button" onclick="deleteTransaction(${id})">Delete</button>
+                                          <button class="btn btn-danger form-control" type="button" onclick="deleteTransaction(${user.id})">Delete</button>
                                       </div>
                                 </div>
                               </div>

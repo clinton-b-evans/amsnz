@@ -1,3 +1,4 @@
+import json
 from decimal import Decimal
 
 from django.shortcuts import render, redirect
@@ -9,7 +10,7 @@ from django.utils.timezone import now
 from django.http import (
     HttpResponse,
     HttpResponseRedirect,
-    HttpResponsePermanentRedirect,
+    HttpResponsePermanentRedirect, JsonResponse,
 )
 from .forms import PropertyForm
 from .models import Property, Transactions
@@ -35,7 +36,8 @@ def home_view(request):
 @login_required(login_url='/login/')
 def property_list_view(request):
     selected = "Yearly"
-    qs = Property.objects.all()
+    qs = Property.objects.filter(user=request.user)
+    print(qs, 'qs')
     total_operating_costs = 0
     total_noi = 0
     total_rent = 0
@@ -75,10 +77,12 @@ def property_list_view(request):
         .aggregate(Sum("management_fee"))
         .get("management_fee__sum")
     )
-
-    total_cap_rate = ((total_rent - total_operating_costs) / total_market_value) * 100
-    total_loan_to_value = total_loan_amount / total_market_value * 100
-
+    if total_market_value:
+        total_cap_rate = ((total_rent - total_operating_costs) / total_market_value) * 100
+        total_loan_to_value = total_loan_amount / total_market_value * 100
+    else:
+        total_cap_rate = 0
+        total_loan_to_value = 0
     context = {
         "object_list": qs,
         "total_market_value": total_market_value,
@@ -96,7 +100,7 @@ def property_list_view(request):
 
 def property_list_weekly(request):
     selected = "Weekly"
-    qs = Property.objects.all()
+    qs = Property.objects.all(user=request.user)
     total_operating_costs = 0
     total_noi = 0
     total_rent = 0
@@ -162,7 +166,7 @@ def property_list_weekly(request):
 
 def property_list_monthly(request):
     selected = "Monthly"
-    qs = Property.objects.all()
+    qs = Property.objects.filter(user=request.user)
     total_operating_costs = 0
     total_noi = 0
     total_rent = 0
@@ -323,7 +327,7 @@ def property_summary_view(request, year, *args, **kwargs):
     """
     Get Property objects for selected year
     """
-    qs = Property.objects.filter(purchase_date__year=year)
+    qs = Property.objects.filter(user=request.user).filter(purchase_date__year=year)
 
     """
     Get retirement goals objects for selected year
@@ -408,6 +412,7 @@ def property_summary_view(request, year, *args, **kwargs):
 
     if total_other_income == None:
         total_other_income = 0
+
     total_rent = total_rent_after_vacany_rate
     total_income = total_rent + total_other_income
     # total_networth = total_assets - total_liabilities
@@ -418,9 +423,10 @@ def property_summary_view(request, year, *args, **kwargs):
 
     total_net_rental_income = total_income - total_expenses
     property_progress = total_networth / property_goal * 100
-
-    loan_to_debt_ratio = total_income / total_repayments
-    loan_to_debt_percent = (total_repayments / total_income) * 100
+    print (total_repayments,"asdf")
+    if total_income and total_repayments:
+        loan_to_debt_ratio = total_income / total_repayments
+        loan_to_debt_percent = (total_repayments / total_income) * 100
 
     debt_service_coverage_ratio = (
                                           total_income - total_operating_expenses
@@ -600,7 +606,7 @@ def property_summary_view(request, year, *args, **kwargs):
     Get all years records from apps
     """
     for my_year in years_list:
-        props_qs = Property.objects.filter(purchase_date__year=my_year)
+        props_qs = Property.objects.filter(purchase_date__year=my_year, user=request.user)
         yearwise_props_assets = props_qs.aggregate(Sum("market_value")).get(
             "market_value__sum"
         )
@@ -738,6 +744,48 @@ def property_summary_view(request, year, *args, **kwargs):
     return render(request, "properties/summary.html", context)
 
 
+def addproperty(request):
+    if request.method == "POST":
+        print("Adding", request.body)
+        propertyData = json.loads(request.body)
+        obj = Property.objects.create(
+            name=propertyData['name'],
+            property_type=propertyData["type"],
+            land_size=int(propertyData['land_size']),
+            building_size=propertyData['building_size'],
+            lounge=propertyData['lounge'],
+            bedrooms=propertyData['bedrooms'],
+            bathrooms=propertyData['bathrooms'],
+            parking=propertyData['parking'],
+            garage=propertyData["Garage"],
+            vacancy_rate=propertyData["vacancy_rate"],
+            street_address=propertyData["address"],
+            purchase_date=propertyData["date"],
+            market_value=propertyData["market_value"],
+            purchase_price=propertyData["purchase_price"],
+            deposit=propertyData["deposit"],
+            loan_amount=propertyData["loan_amount"],
+            loan_term=propertyData["loan_amount"],
+            interest_rate=propertyData["interest_rate"],
+            repayments=propertyData["repayments"],
+            rates=propertyData["rates"],
+            rent=propertyData["rent"],
+            other_income=propertyData["other_income"],
+            bodycorp_fee=propertyData["body_corp_fee"],
+            management_fee=propertyData["management_fee"],
+            insurance=propertyData["insurance"],
+            maintenance=propertyData["maintenance"],
+            user=request.user
+        )
+
+        # user = {'id': obj.id, 'ticker': obj.ticker, 'quantity': obj.quantity, 'name': obj.name}
+
+        data = {
+            'user': "data is saved"
+        }
+        return JsonResponse(data)
+
+
 def add_property(request):
     submitted = False
     if request.method == "POST":
@@ -757,6 +805,45 @@ def add_property(request):
     )
 
 
+def editproperty(request):
+    if request.method == "POST":
+        propertyData = json.loads(request.body)
+        property = Property.objects.get(id=propertyData['id'], user=request.user)
+        print(propertyData, 'propertyData')
+        print(property, 'property')
+        print(propertyData['land_size'], 'land_size')
+        property.name = propertyData['name']
+        property.property_type = propertyData['type']
+        property.land_size = int(propertyData['land_size'])
+        property.building_size = propertyData['building_size']
+        property.lounge = propertyData['lounge']
+        property.bedrooms = propertyData['bedrooms']
+        property.bathrooms = propertyData['bathrooms']
+        property.parking = propertyData['parking']
+        property.garage = propertyData['Garage']
+        property.vacancy_rate = propertyData['vacancy_rate']
+        property.purchase_date = propertyData['date']
+        property.market_value = propertyData['purchase_price']
+        property.purchase_price = propertyData['market_value']
+        property.deposit = propertyData['deposit']
+        property.loan_amount = propertyData['loan_amount']
+        property.loan_term = propertyData['loan_term']
+        property.interest_rate = propertyData['interest_rate']
+        property.repayments = propertyData['repayments']
+        property.rates = propertyData['rates']
+        property.rent = propertyData['rent']
+        property.other_income = propertyData['other_income']
+        property.bodycorp_fee = propertyData['body_corp_fee']
+        property.management_fee = propertyData['management_fee']
+        property.insurance = propertyData['insurance']
+        property.maintenance = propertyData['maintenance']
+        property.save()
+        data = {
+            'user': "data is updated"
+        }
+        return JsonResponse(data)
+
+
 def update_property(request, pk):
     property = Property.objects.get(id=pk)
     form = PropertyForm(instance=property)
@@ -770,6 +857,16 @@ def update_property(request, pk):
             )
     context = {"form": form}
     return render(request, "properties/add.html", context)
+
+
+def deleteproperty(request):
+    id1 = request.GET.get('id', None)
+    print(id1, "delete")
+    Property.objects.get(id=id1, user=request.user).delete()
+    data = {
+        'deleted': True
+    }
+    return JsonResponse(data)
 
 
 def delete_property(request, pk):

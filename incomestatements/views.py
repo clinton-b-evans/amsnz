@@ -134,7 +134,19 @@ def year_to_date(request, year):
     qs = IncomeStatement.objects.filter(date__year=year)
     cat_dict = Category.objects.all()
     expense_qs = qs.filter(category__transaction_type="Expense")
-
+    income_qs = qs.filter(category__transaction_type="Income")
+    categories_income_yearly = {}
+    for item in cat_dict:
+        categories_income_yearly[item.name] = 0
+    for item in income_qs:
+        cat_qs = Category.objects.get(name=item.category)
+        if cat_qs.name in categories_income_yearly:
+            categories_income_yearly[cat_qs.name] += item.amount
+        else:
+            print("Here is thing")
+    categories_income_yearly = {
+        x: y for x, y in categories_income_yearly.items() if y != 0
+    }
     categories_expense_yearly = {}
     for item in cat_dict:
         categories_expense_yearly[item.name] = 0
@@ -254,25 +266,33 @@ def year_to_date(request, year):
             "months": deepcopy(monthly_income_data),
             "total": 0,
         }
-
-    for month in monthly_income_data.keys():
-        current_month_total_income = 0
-        month_int = datetime.datetime.strptime(month, "%B").month
-        current_month_income = income_qs.filter(date__month=month_int)
-        # print(month, current_month_income)
-        for income_in_current_month in current_month_income:
-            current_month_total_income += income_in_current_month.amount
-            category_of_income = Category.objects.get(
-                name=income_in_current_month.category
-            )
-            income_result[f"{category_of_income}"]["months"][f"{month}"] = float(
-                current_month_total_income
-            )
-
+    for category in unique_categories_of_income:
+        for month in monthly_income_data.keys():
+            current_month_total_income = 0
+            month_int = datetime.datetime.strptime(month, "%B").month
+            current_month_income = income_qs.filter(date__month=month_int, category__name=category['category__name'])
+            # print(month, current_month_income)
+            for income_in_current_month in current_month_income:
+                current_month_total_income += income_in_current_month.amount
+                category_of_income = Category.objects.get(
+                    name=income_in_current_month.category
+                )
+                income_result[f"{category_of_income}"]["months"][f"{month}"] = float(
+                    current_month_total_income
+                )
+    total_income_budget = 0
     for category in unique_categories_of_income:
         income_result[f"{list(category.values())[0]}"]["total"] = sum(
             income_result[f"{list(category.values())[0]}"]["months"].values()
         )
+        income_result[f"{list(category.values())[0]}"]["Budget"] = Category.objects.get(
+            name=category['category__name']).budget
+        total_income_budget += Category.objects.get(name=category['category__name']).budget
+        category_total=income_result[f"{list(category.values())[0]}"]["total"]
+        category_budget=income_result[f"{list(category.values())[0]}"]["Budget"]
+        percentage= float(category_total)/float(category_budget)* 100
+        income_result[f"{list(category.values())[0]}"]["percentage"]=percentage
+        print(percentage, 'percentage')
     # #### END OF CATEGORIES EACH MONTH TOTAL Income ####
 
     # START CATEGORIES EACH MONTH TOTAL EXPENSES
@@ -298,24 +318,34 @@ def year_to_date(request, year):
             "total": 0,
         }
 
-    for month in monthly_expenses_data.keys():
-        current_month_total_expense = 0
-        month_int = datetime.datetime.strptime(month, "%B").month
-        current_month_expenses = expense_qs.filter(date__month=month_int)
-        # print(month, current_month_expenses)
-        for expense_in_current_month in current_month_expenses:
-            current_month_total_expense += expense_in_current_month.amount
-            category_of_expense = Category.objects.get(
-                name=expense_in_current_month.category
-            )
-            expenses_result[f"{category_of_expense}"]["months"][f"{month}"] = float(
-                current_month_total_expense
-            )
-
+    for category_expense in unique_categories_of_expenses:
+        for month in monthly_expenses_data.keys():
+            current_month_total_expense = 0
+            month_int = datetime.datetime.strptime(month, "%B").month
+            current_month_expenses = expense_qs.filter(date__month=month_int,
+                                                       category__name=category_expense['category__name'])
+            # print(month, current_month_expenses)
+            for expense_in_current_month in current_month_expenses:
+                current_month_total_expense += expense_in_current_month.amount
+                category_of_expense = Category.objects.get(
+                    name=expense_in_current_month.category
+                )
+                expenses_result[f"{category_of_expense}"]["months"][f"{month}"] = float(
+                    current_month_total_expense
+                )
+    total_expanse_budget = 0
     for category_expense in unique_categories_of_expenses:
         expenses_result[f"{list(category_expense.values())[0]}"]["total"] = sum(
             expenses_result[f"{list(category_expense.values())[0]}"]["months"].values()
         )
+        expenses_result[f"{list(category_expense.values())[0]}"]["Budget"] = Category.objects.get(
+            name=category['category__name']).budget
+        total_expanse_budget += Category.objects.get(name=category['category__name']).budget
+        category_total = expenses_result[f"{list(category_expense.values())[0]}"]["total"]
+        category_budget = expenses_result[f"{list(category_expense.values())[0]}"]["Budget"]
+        percentage = float(category_total) / float(category_budget) * 100
+        category_budget = expenses_result[f"{list(category_expense.values())[0]}"]["percentage"] = percentage
+        print(percentage, 'percentage')
     #  #### END OF CATEGORIES EACH MONTH TOTAL EXPENSES ####
 
     years = list(IncomeStatement.objects.values_list("date__year").distinct())
@@ -324,22 +354,31 @@ def year_to_date(request, year):
         for item in each:
             years_list.append(item)
     years_list = sort(years_list)
+    print(month_income, 'month_income')
+    print(month_expenses, 'month_expenses')
+    # income_result['test'].update({"Budget": 10000})
+    month_income.update({"Budget": total_income_budget})
+    month_expenses.update({"Budget": total_expanse_budget})
     net_income = []
     for key, value in month_expenses.items():
         net_income.append(month_income[key] - month_expenses[key])
-    print(net_income, 'net_income')
     context = {
         "object_list": qs,
         "year": year,
         "total_income": total_income,
+        "income_budget": total_income_budget,
         "total_expense": total_expense,
+        "expense_budget": total_expanse_budget,
         "total_amount": net_amount,
         "month_expenses": month_expenses,
         "month_income": month_income,
         "categories_expense_yearly": categories_expense_yearly,
+        "categories_income_yearly": categories_income_yearly,
         "years_list": years_list,
         "income_result": income_result,
         "expenses_result": expenses_result,
         "net_income": net_income,
+        "income_budget_percentage": (float(total_income) / float(total_income_budget)) * 100,
+        "expense_budget_percentage": float(total_expense) / float(total_expanse_budget) * 100,
     }
     return render(request, "incomestatements/ytd.html", context)

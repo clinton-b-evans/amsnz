@@ -66,7 +66,7 @@ def generate_bar_graph_series_data(commodities, commodity_prices):
 
 @login_required(login_url='/login/')
 def commodity_list_view(request, year=""):
-    commodities = Commodity.objects.filter(user=request.user).exclude(weight=0)
+    commodities = Commodity.objects.filter(user=request.user).exclude(quantity=0)
     commodity_prices = get_commodities()
     investments, assetsGains = generate_bar_graph_series_data(commodities, commodity_prices)
 
@@ -155,12 +155,18 @@ def addTransaction(request):
             commodity.save()
         # when transactions_type is sell
         else:
-            commodity.weight -= float(transactionData["weight"])
-            if commodity.investment - float(transactionData["weight"]) * float(transactionData["value"]) < 0:
-                commodity.investment = float(0.0)
+            if commodity.weight - float(transactionData["weight"]) > -1:
+                commodity.weight -= float(transactionData["weight"])
+                if commodity.investment - float(transactionData["weight"]) * float(transactionData["spot_price"]) < 0:
+                    commodity.investment = float(0.0)
+                else:
+                    commodity.investment -= float(transactionData["weight"]) * float(transactionData["spot_price"])
+                commodity.save()
             else:
-                commodity.investment -= float(transactionData["weight"]) * float(transactionData["value"])
-            commodity.save()
+                data = {
+                    "weight": "error"
+                }
+                return JsonResponse(data)
         obj = Transaction.objects.create(
             commodity=Commodity.objects.get(name=transactionData["commodity"], user=request.user),
             transaction_type=transactionData['transaction_type'],

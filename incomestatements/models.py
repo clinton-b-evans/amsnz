@@ -11,6 +11,11 @@ class Category(models.Model):
     transaction_type = models.CharField(
         choices=TRANSACTION_TYPE_SOURCES, max_length=100, null=True, blank=True
     )
+    budget = models.DecimalField(
+        max_digits=12, decimal_places=2, blank=True, default=0.00
+    )
+    year = models.CharField(null=False, blank=False, max_length=4)
+
 
     def __str__(self):
         return f"{self.name}"

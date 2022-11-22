@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from django.shortcuts import reverse
 from datetime import datetime
@@ -9,7 +10,7 @@ class Property(models.Model):
 
     PROPERTY_TYPE_SOURCES = (
         ("Residential", "Residential"),
-        ("Commerical", "Commerical"),
+        ("Commercial", "Commercial"),
         ("Industrial", "Industrial"),
         ("Retail", "Retail"),
         ("Land", "Land"),
@@ -73,6 +74,8 @@ class Property(models.Model):
     maintenance = models.DecimalField(
         max_digits=12, decimal_places=2, blank=True, default=0.00
     )
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
+
     image = models.ImageField(upload_to="products", default="no_picture.png")
 
     class Meta:

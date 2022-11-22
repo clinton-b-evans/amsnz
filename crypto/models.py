@@ -24,6 +24,7 @@ class Crypto(models.Model):
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
 
+
     class Meta:
         unique_together = ('user', 'ticker', 'name')
 
