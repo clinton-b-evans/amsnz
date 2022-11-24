@@ -80,7 +80,7 @@ function popitup(url) {
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Add Transaction</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -90,7 +90,7 @@ function popitup(url) {
                   <button type="button" class="btn-close"  onclick="closeAlert()" aria-label="Close"></button>
                 </div>
             <div class="mb-3">
-                <label class="form-label">Bitcoins</label>
+                <label class="form-label">Select Crypto</label>
                 <select class="form-select" name="coin" id="coin" aria-label="Default select example">
                     <option selected>------</option>
                     {% for coins in crypto %}
@@ -125,7 +125,7 @@ function popitup(url) {
                 <table class="table table-hover" style="font-size:small" id="transactionTable">
                     <thead>
                     <tr>
-                        <th style="text-align:left">Commodity</th>
+                        <th style="text-align:left">Name</th>
                         <th style="text-align:left">Transaction Type</th>
                         <th style="text-align:right">Quantity</th>
                         <th style="text-align:right">Purchased Price</th>

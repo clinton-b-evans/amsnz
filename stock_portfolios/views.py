@@ -101,11 +101,10 @@ def add_stock(request):
         obj = Stock.objects.create(
             name=stockData['stock'],
             ticker=stockData['ticker'],
-            quantity=stockData['quantity'],
             user=request.user
         )
 
-        user = {'id': obj.id, 'ticker': obj.ticker, 'quantity': obj.quantity, 'name': obj.name}
+        user = {'id': obj.id, 'ticker': obj.ticker, 'name': obj.name}
 
         data = {
             'user': user

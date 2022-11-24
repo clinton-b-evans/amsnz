@@ -66,7 +66,7 @@ def generate_bar_graph_series_data(commodities, commodity_prices):
 
 @login_required(login_url='/login/')
 def commodity_list_view(request, year=""):
-    commodities = Commodity.objects.filter(user=request.user).exclude(quantity=0)
+    commodities = Commodity.objects.filter(user=request.user).exclude(weight=0)
     commodity_prices = get_commodities()
     investments, assetsGains = generate_bar_graph_series_data(commodities, commodity_prices)
 

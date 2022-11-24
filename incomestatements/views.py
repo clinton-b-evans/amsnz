@@ -50,7 +50,6 @@ def addcategory_incomestatements(request):
         obj = Category.objects.create(
             name=categoryData['name'],
             transaction_type=categoryData["Transaction"],
-            budget=categoryData["budget"],
             year=categoryData["year"],
         )
         user = {

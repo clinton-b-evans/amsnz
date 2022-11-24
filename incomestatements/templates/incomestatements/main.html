@@ -108,9 +108,6 @@ function popitup(url) {
                     <option value="Income">Income</option>
                     <option value="Expense">Expense</option>
                 </select>
-              <label class="form-label">Budget</label>
-                <input class="form-control" value="" name="budget" min=0 step="any" id="budget" type="number" oninput="validity.valid||
-    (value='');">
               <label class="form-label">Year</label>
                 <input class="form-control" value="" name="year" min=0 step="any" id="year" type="number" oninput="validity.valid||
     (value='');">
@@ -257,15 +254,13 @@ function popitup(url) {
   function addCategory() {
         var name = document.getElementById('name').value;
         var Transaction = document.getElementById(`Transaction`).value;
-        var budget = document.getElementById('budget').value;
         var year = document.getElementById('year').value;
-        if (name && Transaction && budget && year) {
+        if (name && Transaction && year) {
             // Create Ajax Call
             $(document).ready(function () {
             let body={
                 'name': name,
                 'Transaction': Transaction,
-                'budget': budget,
                 'year': year
             }
             $.ajax({

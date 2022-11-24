@@ -54,7 +54,7 @@ function popitup(url) {
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Add Stock</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Add Coin</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -64,8 +64,6 @@ function popitup(url) {
                 <input class="form-control" type="text" value="" name="name" id="coin">
                 <label class="form-label">Ticker</label>
                 <input class="form-control" type="text" value="" name="ticker" id="ticker">
-                <label class="form-label">Quantity</label>
-                <input class="form-control" name="quantity" value=0.0 id="quantity" type="number">
             </div>
             <button class="btn btn-primary form-control" type="button" onclick="addCrypto()">ADD</button>
         </form>
@@ -266,14 +264,12 @@ function popitup(url) {
   function addCrypto() {
         var coin = document.getElementById('coin').value;
         var ticker = document.getElementById(`ticker`).value;
-        var quantity = document.getElementById('quantity').value;
-        if (coin && ticker && quantity) {
+        if (coin && ticker) {
             // Create Ajax Call
             $(document).ready(function () {
             let body={
                 'coin': coin,
                 'ticker': ticker,
-                'quantity': quantity,
             }
             $.ajax({
                 contentType: 'application/json; charset=utf-8',

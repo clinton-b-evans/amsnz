@@ -249,11 +249,10 @@ def add_crypto(request):
         obj = Crypto.objects.create(
             name=cryptoData['coin'],
             ticker=cryptoData['ticker'],
-            quantity=cryptoData['quantity'],
             user=request.user
         )
 
-        user = {'id': obj.id, 'ticker': obj.ticker, 'quantity': obj.quantity, 'name': obj.name}
+        user = {'id': obj.id, 'ticker': obj.ticker, 'name': obj.name}
 
         data = {
             'user': user
