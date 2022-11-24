@@ -1,8 +1,9 @@
 import datetime
+import json
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.db.models.functions import TruncMonth, ExtractMonth
 
 from django.db.models import Count, Sum, FloatField
@@ -18,8 +19,8 @@ from copy import deepcopy
 @login_required(login_url='/login/')
 def incomestatement_property_list_view(request):
     property_list = request.GET.getlist("properties")
-
     prop_qs = Property.objects.all()
+    prop_cat = PropertyCategory.objects.all()
     if not property_list:
         qs = PropertyIncomeStatement.objects.all()
     else:
@@ -44,8 +45,74 @@ def incomestatement_property_list_view(request):
         "prop_qs": prop_qs,
         "income_statement_list": income_statement_list,
         "total": total,
+        "prop_cat": prop_cat,
     }
     return render(request, "propertyincomestatements/main.html", context)
+
+
+def addcategory_incomestatements(request):
+    if request.method == "POST":
+        print(request.body, "property")
+        categoryData = json.loads(request.body)
+        obj = PropertyCategory.objects.create(
+            name=categoryData['name'],
+            transaction_type=categoryData["Transaction"],
+        )
+        user = {
+            'name': obj.name,
+        }
+        data = {
+            'user': user
+        }
+        print(data, 'data')
+        return JsonResponse(data)
+
+
+def addproperty_incomestatements(request):
+    if request.method == "POST":
+        print(request.body, "property")
+        propertyData = json.loads(request.body)
+        obj = PropertyIncomeStatement.objects.create(
+            name=propertyData['name'],
+            property=Property.objects.get(name=propertyData["property"]),
+            date=propertyData["date"],
+            propcategory=PropertyCategory.objects.get(name=propertyData["propcategory"]),
+            amount=propertyData["amount"],
+        )
+        user = {
+            'name': obj.name,
+        }
+        data = {
+            'user': user
+        }
+        print(data, 'data')
+        return JsonResponse(data)
+
+
+def editproperty_incomestatements(request):
+    if request.method == "POST":
+        print(request.body, "property")
+        propertyData = json.loads(request.body)
+        property = PropertyIncomeStatement.objects.get(id=propertyData['id'])
+        property.name = propertyData['name']
+        property.property = Property.objects.get(name=propertyData["property"])
+        property.propcategory = PropertyCategory.objects.get(name=propertyData["propcategory"])
+        property.amount = propertyData['amount']
+        property.save()
+        data = {
+            'user': "data is updated"
+        }
+        return JsonResponse(data)
+
+
+def deleteproperty_incomestatement(request):
+    id1 = request.GET.get('id', None)
+    print(id1, "delete")
+    PropertyIncomeStatement.objects.get(id=id1).delete()
+    data = {
+        'deleted': True
+    }
+    return JsonResponse(data)
 
 
 def add_property_incomestatements(request):

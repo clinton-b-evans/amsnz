@@ -267,94 +267,94 @@ function popitup(url) {
                                             <div class="modal-body">
                                                 <form>
                                                     <div class="mb-3">
-                <label class="form-label">Name</label>
-                <input class="form-control" value="{{ obj.name }}" name="name_edit" id="name_edit" type="text" >
-                <label class="form-label">Property Type</label>
-                <select class="form-select" name="type_edit" id="type_edit" aria-label="Default select example">
-                    <option selected>{{ obj.property_type }}</option>
-                    <option value="Residential">Residential</option>
-                    <option value="Commercial">Commercial</option>
-                    <option value="Industrial">Industrial</option>
-                    <option value="Retail">Retail</option>
-                    <option value="Land">Land</option>
-                    <option value="Other">Other</option>
-                </select>
-              <label class="form-label">Land Size </label>
-              <input class="form-control" value="{{ obj.land_size }}" name="land_size_edit" min=0  step="any" id="land_size_edit" type="number" oninput="validity.valid||
-    (value='');">
-               <label class="form-label">Building Size</label>
-              <input class="form-control" value="{{ obj.building_size }}" name="building_size_edit" min=0  step="any" id="building_size_edit" type="number" oninput="validity.valid||
-    (value='');">
-                <label class="form-label">Lounge</label>
-                <input class="form-control" value="{{ obj.lounge }}" name="lounge_edit" min=0 step="any" id="lounge_edit" type="number" oninput="validity.valid||
-    (value='');">
-              <label class="form-label">Bedrooms</label>
-              <input class="form-control" value="{{ obj.bedrooms }}" name="bedrooms_edit" min=0 step="any" id="bedrooms_edit" type="number" oninput="validity.valid||
-    (value='');">
-              <label class="form-label">Bathrooms</label>
-              <input class="form-control" value="{{ obj.bathrooms }}" name="bathrooms_edit" min=0 step="any" id="bathrooms_edit" type="number" oninput="validity.valid||
-    (value='');">
-              <label class="form-label">Parking</label>
-                <input class="form-control" value="{{ obj.parking }}" name="parking_edit" value=0 min=0 step="any" id="parking_edit" type="number" oninput="validity.valid||
-    (value='');">
-              <label class="form-label">Garage</label>
-                <select class="form-select" name="Garage_edit" id="Garage_edit" aria-label="Default select example">
-                    <option selected>{{ obj.garage }}</option>
-                    <option value="None">None</option>
-                    <option value="Carport">Carport</option>
-                    <option value="Single">Single</option>
-                    <option value="Single with Workshop">Single with Workshop</option>
-                    <option value="Double">Double</option>
-                    <option value="Double with Workshop">Double with Workshop</option>
-                    <option value="Other">Other</option>
-                </select>
-              <label class="form-label">Vacancy Rate %</label>
-                <input class="form-control" value="{{ obj.vacancy_rate }}" name="vacancy_rate_edit" min=0 step="any" id="vacancy_rate_edit" type="number" oninput="validity.valid||
-    (value='');">
-              <label class="form-label">Date</label>
-                <input class="form-control" name="date_edit" id="date_edit" type="text" value="{% now "Y-m-j" %}" disabled>
-              <label class="form-label">Purchase Price</label>
-                <input class="form-control" value="{{ obj.purchase_price }}" name="purchase_price_edit" min=0 step="any" id="purchase_price_edit" type="number" oninput="validity.valid||
-    (value='');">
-              <label class="form-label">Market Value</label>
-                <input class="form-control" value="{{ obj.market_value }}" name="market_value_edit" min=0 step="any" id="market_value_edit" type="number" oninput="validity.valid||
-    (value='');">
-              <label class="form-label">Deposit</label>
-                <input class="form-control" value="{{ obj.deposit }}" name="deposit_edit" min=0  step="any" id="deposit_edit" type="number" oninput="validity.valid||
-    (value='');">
-              <label class="form-label">Loan amount</label>
-                <input class="form-control" value="{{ obj.loan_amount }}" name="loan_amount_edit" min=0  step="any" id="loan_amount_edit" type="number" oninput="validity.valid||
-    (value='');">
-              <label class="form-label">Loan Term</label>
-              <input class="form-control" value="{{ obj.loan_term }}" name="loan_term_edit" min=0 step="any" id="loan_term_edit" type="number" oninput="validity.valid||
-    (value='');">
-              <label class="form-label">Interest Rate %</label>
-                <input class="form-control" value="{{ obj.interest_rate }}" name="interest_rate_edit" min=0  step="any" id="interest_rate_edit" type="number" oninput="validity.valid||
-    (value='');">
-              <label class="form-label">Repayments</label>
-              <input class="form-control" value="{{ obj.repayments }}" name="repayments_edit" min=0 step="any" id="repayments_edit" type="number" oninput="validity.valid||
-    (value='');">
-              <label class="form-label">Rates</label>
-              <input class="form-control" value="{{ obj.rates }}" name="rates_edit" min=0 step="any" id="rates_edit" type="number" oninput="validity.valid||
-    (value='');">
-              <label class="form-label">Rent</label>
-               <input class="form-control" value="{{ obj.rent }}" name="rent_edit" min=0 step="any" id="rent_edit" type="number" oninput="validity.valid||
-    (value='');">
-                <label class="form-label">Other Income</label>
-                <input class="form-control" value="{{ obj.other_income }}" name="other_income_edit" min=0 step="any" id="other_income_edit" type="number" oninput="validity.valid||
-    (value='');">
-                <label class="form-label">Body Corp Fee</label>
-                <input class="form-control" value="{{ obj.bodycorp_fee }}" name="body_corp_fee_edit" id="body_corp_fee_edit" type="number" min="0" step="any" oninput="validity.valid||
-    (value='');">
-              <label class="form-label">Management Fee %</label>
-                <input class="form-control" value="{{ obj.management_fee }}" name="management_fee_edit" min=0 step="any" id="management_fee_edit" type="number" oninput="validity.valid||
-    (value='');">
-              <label class="form-label">Insurance</label>
-                <input class="form-control" value="{{ obj.insurance }}" name="insurance_edit" id="insurance_edit" type="number" min=0 step="any" oninput="validity.valid||
-    (value='');">
-              <label class="form-label">Maintenance</label>
-                <input class="form-control" value="{{ obj.maintenance }}" name="maintenance_edit" id="maintenance_edit" type="number" min=0 step="any" oninput="validity.valid||
-    (value='');">
+                                                        <label class="form-label">Name</label>
+                                                        <input class="form-control" value="{{ obj.name }}" name="name_edit" id="name_edit{{obj.id}}" type="text" >
+                                                        <label class="form-label">Property Type</label>
+                                                        <select class="form-select" name="type_edit" id="type_edit{{obj.id}}" aria-label="Default select example">
+                                                            <option selected>{{ obj.property_type }}</option>
+                                                            <option value="Residential">Residential</option>
+                                                            <option value="Commercial">Commercial</option>
+                                                            <option value="Industrial">Industrial</option>
+                                                            <option value="Retail">Retail</option>
+                                                            <option value="Land">Land</option>
+                                                            <option value="Other">Other</option>
+                                                        </select>
+                                                      <label class="form-label">Land Size </label>
+                                                      <input class="form-control" value="{{ obj.land_size }}" name="land_size_edit" min=0  step="any" id="land_size_edit{{obj.id}}" type="number" oninput="validity.valid||
+                                            (value='');">
+                                                       <label class="form-label">Building Size</label>
+                                                      <input class="form-control" value="{{ obj.building_size }}" name="building_size_edit" min=0  step="any" id="building_size_edit{{obj.id}}" type="number" oninput="validity.valid||
+                                            (value='');">
+                                                        <label class="form-label">Lounge</label>
+                                                        <input class="form-control" value="{{ obj.lounge }}" name="lounge_edit" min=0 step="any" id="lounge_edit{{obj.id}}" type="number" oninput="validity.valid||
+                                            (value='');">
+                                                      <label class="form-label">Bedrooms</label>
+                                                      <input class="form-control" value="{{ obj.bedrooms }}" name="bedrooms_edit" min=0 step="any" id="bedrooms_edit{{obj.id}}" type="number" oninput="validity.valid||
+                                            (value='');">
+                                                      <label class="form-label">Bathrooms</label>
+                                                      <input class="form-control" value="{{ obj.bathrooms }}" name="bathrooms_edit" min=0 step="any" id="bathrooms_edit{{obj.id}}" type="number" oninput="validity.valid||
+                                            (value='');">
+                                                      <label class="form-label">Parking</label>
+                                                        <input class="form-control" value="{{ obj.parking }}" name="parking_edit" value=0 min=0 step="any" id="parking_edit{{obj.id}}" type="number" oninput="validity.valid||
+                                            (value='');">
+                                                      <label class="form-label">Garage</label>
+                                                        <select class="form-select" name="Garage_edit" id="Garage_edit{{obj.id}}" aria-label="Default select example">
+                                                            <option selected>{{ obj.garage }}</option>
+                                                            <option value="None">None</option>
+                                                            <option value="Carport">Carport</option>
+                                                            <option value="Single">Single</option>
+                                                            <option value="Single with Workshop">Single with Workshop</option>
+                                                            <option value="Double">Double</option>
+                                                            <option value="Double with Workshop">Double with Workshop</option>
+                                                            <option value="Other">Other</option>
+                                                        </select>
+                                                      <label class="form-label">Vacancy Rate %</label>
+                                                        <input class="form-control" value="{{ obj.vacancy_rate }}" name="vacancy_rate_edit" min=0 step="any" id="vacancy_rate_edit{{obj.id}}" type="number" oninput="validity.valid||
+                                            (value='');">
+                                                      <label class="form-label">Date</label>
+                                                        <input class="form-control" name="date_edit" id="date_edit{{obj.id}}" type="text" value="{% now "Y-m-j" %}" disabled>
+                                                      <label class="form-label">Purchase Price</label>
+                                                        <input class="form-control" value="{{ obj.purchase_price }}" name="purchase_price_edit" min=0 step="any" id="purchase_price_edit{{obj.id}}" type="number" oninput="validity.valid||
+                                            (value='');">
+                                                      <label class="form-label">Market Value</label>
+                                                        <input class="form-control" value="{{ obj.market_value }}" name="market_value_edit" min=0 step="any" id="market_value_edit{{obj.id}}" type="number" oninput="validity.valid||
+                                            (value='');">
+                                                      <label class="form-label">Deposit</label>
+                                                        <input class="form-control" value="{{ obj.deposit }}" name="deposit_edit" min=0  step="any" id="deposit_edit{{obj.id}}" type="number" oninput="validity.valid||
+                                            (value='');">
+                                                      <label class="form-label">Loan amount</label>
+                                                        <input class="form-control" value="{{ obj.loan_amount }}" name="loan_amount_edit" min=0  step="any" id="loan_amount_edit{{obj.id}}" type="number" oninput="validity.valid||
+                                            (value='');">
+                                                      <label class="form-label">Loan Term</label>
+                                                      <input class="form-control" value="{{ obj.loan_term }}" name="loan_term_edit" min=0 step="any" id="loan_term_edit{{obj.id}}" type="number" oninput="validity.valid||
+                                            (value='');">
+                                                      <label class="form-label">Interest Rate %</label>
+                                                        <input class="form-control" value="{{ obj.interest_rate }}" name="interest_rate_edit" min=0  step="any" id="interest_rate_edit{{obj.id}}" type="number" oninput="validity.valid||
+                                            (value='');">
+                                                      <label class="form-label">Repayments</label>
+                                                      <input class="form-control" value="{{ obj.repayments }}" name="repayments_edit" min=0 step="any" id="repayments_edit{{obj.id}}" type="number" oninput="validity.valid||
+                                            (value='');">
+                                                      <label class="form-label">Rates</label>
+                                                      <input class="form-control" value="{{ obj.rates }}" name="rates_edit" min=0 step="any" id="rates_edit{{obj.id}}" type="number" oninput="validity.valid||
+                                            (value='');">
+                                                      <label class="form-label">Rent</label>
+                                                       <input class="form-control" value="{{ obj.rent }}" name="rent_edit" min=0 step="any" id="rent_edit{{obj.id}}" type="number" oninput="validity.valid||
+                                            (value='');">
+                                                        <label class="form-label">Other Income</label>
+                                                        <input class="form-control" value="{{ obj.other_income }}" name="other_income_edit" min=0 step="any" id="other_income_edit{{obj.id}}" type="number" oninput="validity.valid||
+                                            (value='');">
+                                                        <label class="form-label">Body Corp Fee</label>
+                                                        <input class="form-control" value="{{ obj.bodycorp_fee }}" name="body_corp_fee_edit" id="body_corp_fee_edit{{obj.id}}" type="number" min="0" step="any" oninput="validity.valid||
+                                            (value='');">
+                                                      <label class="form-label">Management Fee %</label>
+                                                        <input class="form-control" value="{{ obj.management_fee }}" name="management_fee_edit" min=0 step="any" id="management_fee_edit{{obj.id}}" type="number" oninput="validity.valid||
+                                            (value='');">
+                                                      <label class="form-label">Insurance</label>
+                                                        <input class="form-control" value="{{ obj.insurance }}" name="insurance_edit" id="insurance_edit{{obj.id}}" type="number" min=0 step="any" oninput="validity.valid||
+                                            (value='');">
+                                                      <label class="form-label">Maintenance</label>
+                                                        <input class="form-control" value="{{ obj.maintenance }}" name="maintenance_edit" id="maintenance_edit{{obj.id}}" type="number" min=0 step="any" oninput="validity.valid||
+                                            (value='');">
                                                     </div>
 
                                                     <button class="btn btn-primary" type="button" onclick="EditTransaction({{obj.id}})">Submit</button>
@@ -378,33 +378,33 @@ function popitup(url) {
 <!--                  </svg>-->
 <!--                </button>-->
 <!--              </a>-->
-                <button type="button" class="btn btn-danger-1 btn-sm rounded-0" data-bs-toggle="modal" data-bs-target="#deleteModal">
-                              <svg class="bi bi-trash" fill="currentColor" height="16" viewBox="0 0 16 16"
-                                         width="16" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
-                                              fill-rule="evenodd"/>
-                                    </svg>
-                            </button>
+                <button type="button" class="btn btn-danger-1 btn-sm rounded-0" data-bs-toggle="modal" data-bs-target="#deleteModal{{obj.id}}">
+                  <svg class="bi bi-trash" fill="currentColor" height="16" viewBox="0 0 16 16"
+                             width="16" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                            <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
+                                  fill-rule="evenodd"/>
+                        </svg>
+                </button>
 
-                            <!-- Modal -->
-                            <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-                              <div class="modal-dialog">
-                                <div class="modal-content">
-                                  <div class="modal-header">
-                                    <h5 class="modal-title" id="deleteModalLabel">Delete Property</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                  </div>
-                                      <div class="modal-body deleteForm">
-                                        <h2 class="">You are about to delete this Property</h2>
-                                        <p>Are you sure you want to delete<strong> {{ obj.name  }}</strong>?</p>
-                                        <p>This action cannot be undone.</p>
-                                        <p>All transctions for this fund will be lost</p>
-                                          <button class="btn btn-danger form-control" type="button" onclick="deleteTransaction({{obj.id}})">Delete</button>
-                                      </div>
-                                </div>
-                              </div>
-                            </div>
+                <!-- Modal -->
+                <div class="modal fade" id="deleteModal{{obj.id}}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel">Delete Property</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                          <div class="modal-body deleteForm">
+                            <h2 class="">You are about to delete this Property</h2>
+                            <p>Are you sure you want to delete<strong> {{ obj.name  }}</strong>?</p>
+                            <p>This action cannot be undone.</p>
+                            <p>All transctions for this fund will be lost</p>
+                              <button class="btn btn-danger form-control" type="button" onclick="deleteTransaction({{obj.id}})">Delete</button>
+                          </div>
+                    </div>
+                  </div>
+                </div>
             </td>
           </tr>    
           {% endfor %}
@@ -522,31 +522,31 @@ function popitup(url) {
     }
     function EditTransaction(id){
         console.log("edit_transaction",id);
-        var name = document.getElementById('name_edit').value;
-        var type = document.getElementById(`type_edit`).value;
-        var land_size = document.getElementById('land_size_edit').value;
-        var building_size = document.getElementById('building_size_edit').value;
-        var lounge = document.getElementById('lounge_edit').value;
-        var bedrooms = document.getElementById('bedrooms_edit').value;
-        var bathrooms = document.getElementById('bathrooms_edit').value;
-        var parking = document.getElementById('parking_edit').value;
-        var Garage = document.getElementById('Garage_edit').value;
-        var vacancy_rate = document.getElementById('vacancy_rate_edit').value;
-        var date = document.getElementById('date_edit').value;
-        var purchase_price = document.getElementById('purchase_price_edit').value;
-        var market_value = document.getElementById('market_value_edit').value;
-        var deposit = document.getElementById('deposit_edit').value;
-        var loan_amount = document.getElementById('loan_amount_edit').value;
-        var loan_term = document.getElementById('loan_term_edit').value;
-        var interest_rate = document.getElementById('interest_rate_edit').value;
-        var repayments = document.getElementById('repayments_edit').value;
-        var rates = document.getElementById('rates_edit').value;
-        var rent = document.getElementById('rent_edit').value;
-        var other_income = document.getElementById('other_income_edit').value;
-        var body_corp_fee = document.getElementById('body_corp_fee_edit').value;
-        var management_fee = document.getElementById('management_fee_edit').value;
-        var insurance = document.getElementById('insurance_edit').value;
-        var maintenance = document.getElementById('maintenance_edit').value;
+        var name = document.getElementById(`name_edit${id}`).value;
+        var type = document.getElementById(`type_edit${id}`).value;
+        var land_size = document.getElementById(`land_size_edit${id}`).value;
+        var building_size = document.getElementById(`building_size_edit${id}`).value;
+        var lounge = document.getElementById(`lounge_edit${id}`).value;
+        var bedrooms = document.getElementById(`bedrooms_edit${id}`).value;
+        var bathrooms = document.getElementById(`bathrooms_edit${id}`).value;
+        var parking = document.getElementById(`parking_edit${id}`).value;
+        var Garage = document.getElementById(`Garage_edit${id}`).value;
+        var vacancy_rate = document.getElementById(`vacancy_rate_edit${id}`).value;
+        var date = document.getElementById(`date_edit${id}`).value;
+        var purchase_price = document.getElementById(`purchase_price_edit${id}`).value;
+        var market_value = document.getElementById(`market_value_edit${id}`).value;
+        var deposit = document.getElementById(`deposit_edit${id}`).value;
+        var loan_amount = document.getElementById(`loan_amount_edit${id}`).value;
+        var loan_term = document.getElementById(`loan_term_edit${id}`).value;
+        var interest_rate = document.getElementById(`interest_rate_edit${id}`).value;
+        var repayments = document.getElementById(`repayments_edit${id}`).value;
+        var rates = document.getElementById(`rates_edit${id}`).value;
+        var rent = document.getElementById(`rent_edit${id}`).value;
+        var other_income = document.getElementById(`other_income_edit${id}`).value;
+        var body_corp_fee = document.getElementById(`body_corp_fee_edit${id}`).value;
+        var management_fee = document.getElementById(`management_fee_edit${id}`).value;
+        var insurance = document.getElementById(`insurance_edit${id}`).value;
+        var maintenance = document.getElementById(`maintenance_edit${id}`).value;
         $(document).ready(function () {
             let body={
                 'id': id,

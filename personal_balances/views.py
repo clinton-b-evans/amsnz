@@ -1,8 +1,10 @@
+import json
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from .models import PersonalBalance
 from .forms import PersonalBalanceForm
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 
 
 @login_required(login_url='/login/')
@@ -148,6 +150,51 @@ def personal_balance_list_weekly(request):
         "selected": selected,
     }
     return render(request, "personal_balances/main.html", context)
+
+
+def addpersonal_balance(request):
+    if request.method == "POST":
+        print(request.body, "property")
+        categoryData = json.loads(request.body)
+        obj = PersonalBalance.objects.create(
+            description=categoryData['description'],
+            entry_type=categoryData["entry"],
+            amount=categoryData["amount"],
+            date=categoryData["date"],
+        )
+        user = {
+            'name': obj.description,
+        }
+        data = {
+            'user': user
+        }
+        print(data, 'data')
+        return JsonResponse(data)
+
+
+def updatepersonal_balance(request):
+    if request.method == "POST":
+        print(request.body, "property")
+        propertyData = json.loads(request.body)
+        property = PersonalBalance.objects.get(id=propertyData['id'])
+        property.description = propertyData['description']
+        property.entry_type =propertyData["entry"]
+        property.amount = propertyData['amount']
+        property.save()
+        data = {
+            'user': "data is updated"
+        }
+        return JsonResponse(data)
+
+
+def deletepersonal_balance(request):
+    id1 = request.GET.get('id', None)
+    print(id1, "delete")
+    PersonalBalance.objects.get(id=id1).delete()
+    data = {
+        'deleted': True
+    }
+    return JsonResponse(data)
 
 
 def add_personal_balance(request):

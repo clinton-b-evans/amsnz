@@ -38,15 +38,55 @@ function popitup(url) {
 </script>
 
 
-<a href="popupex.html" onclick="return popitup('/personal_balances/add')">
-  <button type="button" class="btn btn-dashboard mb-3">
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-plus me-1" viewBox="0 0 16 16">
-      <path d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>
-      <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
-    </svg>
-    New Entry 
-  </button>
-</a>
+<!--<a href="popupex.html" onclick="return popitup('/personal_balances/add')">-->
+<!--  <button type="button" class="btn btn-dashboard mb-3">-->
+<!--    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-plus me-1" viewBox="0 0 16 16">-->
+<!--      <path d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>-->
+<!--      <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>-->
+<!--    </svg>-->
+<!--    New Entry-->
+<!--  </button>-->
+<!--</a>-->
+<button type="button" class="btn btn-dashboard mb-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    <svg class="bi bi-calendar-plus me-1" fill="currentColor" height="16" viewBox="0 0 16 16"
+             width="16" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>
+            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+        </svg>
+  New Entry
+</button>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Record Income / Expense</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="addStock">
+            <div class="mb-3">
+                <label class="form-label">Description</label>
+                <input class="form-control" type="text" value="" name="description" id="description">
+                <label class="form-label">Entry Type</label>
+                <select class="form-select" name="entry" id="entry" aria-label="Default select example" required>
+                    <option selected>------</option>
+                    <option value="Asset">Asset</option>
+                    <option value="Savings">Savings</option>
+                    <option value="Retirement Acc">Retirement Acc</option>
+                    <option value="Liability">Liability</option>
+                </select>
+              <label class="form-label">Amount</label>
+                <input class="form-control" value="" name="amount" min=0 step="any" id="amount" type="number" oninput="validity.valid||
+    (value='');">
+              <label class="form-label">Date</label>
+                <input class="form-control" name="date" id="date" type="text" value="{% now "Y-m-j" %}" disabled>
+            </div>
+            <button class="btn btn-primary form-control" type="button" onclick="addEntry()">ADD</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
 <section class="section contact">
 
@@ -133,22 +173,95 @@ function popitup(url) {
                     <td>{{obj.description}}</td>
                     <td style="text-align:right">${{obj.amount}}</td>
                     <td style="text-align:right">
-                      <a href="popupex.html" onclick="return popitup('/personal_balances/{{ obj.pk }}/edit')">
-                        <button class="btn btn-success btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Edit">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-                          </svg>
-                        </button>
-                      </a>
-                      <a href="popupex.html" onclick="return popitup('/personal_balances/{{ obj.pk }}/delete')">
-                        <button class="btn btn-danger btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Delete">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                          </svg>
-                        </button>
-                      </a>
+<!--                      <a href="popupex.html" onclick="return popitup('/personal_balances/{{ obj.pk }}/edit')">-->
+<!--                        <button class="btn btn-success btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Edit">-->
+<!--                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">-->
+<!--                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>-->
+<!--                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>-->
+<!--                          </svg>-->
+<!--                        </button>-->
+<!--                      </a>-->
+<!--                      <a href="popupex.html" onclick="return popitup('/personal_balances/{{ obj.pk }}/delete')">-->
+<!--                        <button class="btn btn-danger btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Delete">-->
+<!--                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">-->
+<!--                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>-->
+<!--                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>-->
+<!--                          </svg>-->
+<!--                        </button>-->
+<!--                      </a>-->
+                      <button class="btn btn-success btn-sm rounded-0" data-bs-target="#basicModalAssets{{obj.id}}"
+                          data-bs-toggle="modal" data-placement="top"
+                          title="Edit" type="button">
+                      <svg class="bi bi-pencil-square" fill="currentColor" height="16" viewBox="0 0 16 16"
+                           width="16" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                          <path d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"
+                                fill-rule="evenodd"/>
+                      </svg>
+                  </button>
+                  <!--                            </a>-->
+                  <div class="modal fade" id=basicModalAssets{{obj.id}} tabindex="-1">
+                      <div class="modal-dialog">
+                          <form action="" method=POST>
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h5 class="modal-title">Edit Transaction</h5>
+                                      <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"
+                                              type="button"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                      <form>
+                                          <div class="mb-3">
+                                              <label class="form-label">Date</label>
+                                              <input class="form-control" value="{{ obj.date }}" name="date_edit{{obj.id}}" id="date_edit{{obj.id}}" type="text" value="{% now "Y-m-j" %}" disabled>
+                                              <label class="form-label">Description</label>
+                                              <input class="form-control" value="{{ obj.description }}" type="text" name="description_edit{{obj.id}}" id="description_edit{{obj.id}}">
+                                              <label class="form-label">Entry type</label>
+                                              <select class="form-select"  name="entry_edit{{obj.id}}" id="entry_edit{{obj.id}}" aria-label="Default select example" required>
+                                                  <option value="{{ obj.entry_type }}" selected>{{ obj.entry_type }}</option>
+                                                  <option value="Asset">Asset</option>
+                                                  <option value="Savings">Savings</option>
+                                                  <option value="Retirement Acc">Retirement Acc</option>
+                                                  <option value="Liability">Liability</option>
+                                              </select>
+                                            <label class="form-label">Amount</label>
+                                              <input class="form-control" value="{{ obj.amount }}" name="amount_edit{{obj.id}}" min=0 step="any" id="amount_edit{{obj.id}}" type="number" oninput="validity.valid||
+                                  (value='');">
+                                          </div>
+                                          <button class="btn btn-primary" type="button" onclick="EditProperty({{obj.id}})">Submit</button>
+                                      </form>
+                                  </div>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+                    <button type="button" class="btn btn-danger-1 btn-sm rounded-0" data-bs-toggle="modal" data-bs-target="#deleteModalAssets{{obj.id}}">
+                        <svg class="bi bi-trash" fill="currentColor" height="16" viewBox="0 0 16 16"
+                                   width="16" xmlns="http://www.w3.org/2000/svg">
+                                  <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                  <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
+                                        fill-rule="evenodd"/>
+                              </svg>
+                      </button>
+
+                      <!-- Modal -->
+                      <div class="modal fade" id="deleteModalAssets{{obj.id}}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="deleteModalLabelAssets">Delete Property</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                                <div class="modal-body deleteForm">
+                                  <h2 class="">You are about to delete this Property</h2>
+                                  <p>Are you sure you want to delete<strong> {{ obj.description  }}</strong>?</p>
+                                  <p>This action cannot be undone.</p>
+                                  <p>All transctions for this fund will be lost</p>
+                                    <button class="btn btn-danger form-control" type="button" onclick="deleteProperty({{obj.id}})">Delete</button>
+                                </div>
+                          </div>
+                        </div>
+                      </div>
                     </td>
                   </tr>
                   {% endfor %}
@@ -186,22 +299,96 @@ function popitup(url) {
                     <td>{{obj.description}}</td>
                     <td style="text-align:right">${{obj.amount}}</td>
                     <td style="text-align:right">
-                      <a href="popupex.html" onclick="return popitup('/personal_balances/{{ obj.pk }}/edit')">
-                        <button class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-                          </svg>
-                        </button>
-                      </a>
-                      <a href="popupex.html" onclick="return popitup('/personal_balances/{{ obj.pk }}/delete')">
-                        <button class="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                          </svg>
-                        </button>
-                      </a>
+<!--                      <a href="popupex.html" onclick="return popitup('/personal_balances/{{ obj.pk }}/edit')">-->
+<!--                        <button class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit">-->
+<!--                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">-->
+<!--                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>-->
+<!--                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>-->
+<!--                          </svg>-->
+
+<!--                        </button>-->
+<!--                        </a>-->
+                        <button class="btn btn-success btn-sm rounded-0" data-bs-target="#basicModalSavings{{obj.id}}"
+                          data-bs-toggle="modal" data-placement="top"
+                          title="Edit" type="button">
+                      <svg class="bi bi-pencil-square" fill="currentColor" height="16" viewBox="0 0 16 16"
+                           width="16" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                          <path d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"
+                                fill-rule="evenodd"/>
+                      </svg>
+                  </button>
+                        <div class="modal fade" id=basicModalSavings{{obj.id}} tabindex="-1">
+                      <div class="modal-dialog">
+                          <form action="" method=POST>
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h5 class="modal-title">Edit Transaction</h5>
+                                      <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"
+                                              type="button"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                      <form>
+                                          <div class="mb-3">
+                                              <label class="form-label">Date</label>
+                                              <input class="form-control" value="{{ obj.date }}" name="date_edit{{obj.id}}" id="date_edit{{obj.id}}" type="text" value="{% now "Y-m-j" %}" disabled>
+                                              <label class="form-label">Description</label>
+                                              <input class="form-control" value="{{ obj.description }}" type="text" name="description_edit{{obj.id}}" id="description_edit{{obj.id}}">
+                                              <label class="form-label">Entry type</label>
+                                              <select class="form-select"  name="entry_edit{{obj.id}}" id="entry_edit{{obj.id}}" aria-label="Default select example" required>
+                                                  <option value="{{ obj.entry_type }}" selected>{{ obj.entry_type }}</option>
+                                                  <option value="Asset">Asset</option>
+                                                  <option value="Savings">Savings</option>
+                                                  <option value="Retirement Acc">Retirement Acc</option>
+                                                  <option value="Liability">Liability</option>
+                                              </select>
+                                            <label class="form-label">Amount</label>
+                                              <input class="form-control" value="{{ obj.amount }}" name="amount_edit{{obj.id}}" min=0 step="any" id="amount_edit{{obj.id}}" type="number" oninput="validity.valid||
+                                  (value='');">
+                                          </div>
+                                          <button class="btn btn-primary" type="button" onclick="EditProperty({{obj.id}})">Submit</button>
+                                      </form>
+                                  </div>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+                    <button type="button" class="btn btn-danger-1 btn-sm rounded-0" data-bs-toggle="modal" data-bs-target="#deleteModalSavings{{obj.id}}">
+                        <svg class="bi bi-trash" fill="currentColor" height="16" viewBox="0 0 16 16"
+                                   width="16" xmlns="http://www.w3.org/2000/svg">
+                                  <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                  <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
+                                        fill-rule="evenodd"/>
+                              </svg>
+                      </button>
+
+                      <!-- Modal -->
+                      <div class="modal fade" id="deleteModalSavings{{obj.id}}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="deleteModalLabelSavings">Delete Property</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                                <div class="modal-body deleteForm">
+                                  <h2 class="">You are about to delete this Property</h2>
+                                  <p>Are you sure you want to delete<strong> {{ obj.description  }}</strong>?</p>
+                                  <p>This action cannot be undone.</p>
+                                  <p>All transctions for this fund will be lost</p>
+                                    <button class="btn btn-danger form-control" type="button" onclick="deleteProperty({{obj.id}})">Delete</button>
+                                </div>
+                          </div>
+                        </div>
+                      </div>
+
+<!--                      <a href="popupex.html" onclick="return popitup('/personal_balances/{{ obj.pk }}/delete')">-->
+<!--                        <button class="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete">-->
+<!--                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">-->
+<!--                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>-->
+<!--                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>-->
+<!--                          </svg>-->
+<!--                        </button>-->
+<!--                      </a>-->
                     </td>
                   </tr>
                   {% endfor %}
@@ -239,22 +426,94 @@ function popitup(url) {
                     <td>{{obj.description}}</td>
                     <td style="text-align:right">${{obj.amount}}</td>
                     <td style="text-align:right">
-                      <a href="popupex.html" onclick="return popitup('/personal_balances/{{ obj.pk }}/edit')">      
-                        <button class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-                          </svg>
-                        </button>
-                      </a>
-                      <a href="popupex.html" onclick="return popitup('/personal_balances/{{ obj.pk }}/delete')">
-                        <button class="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                          </svg>
-                        </button>
-                      </a>  
+<!--                      <a href="popupex.html" onclick="return popitup('/personal_balances/{{ obj.pk }}/edit')">      -->
+<!--                        <button class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit">-->
+<!--                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">-->
+<!--                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>-->
+<!--                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>-->
+<!--                          </svg>-->
+<!--                        </button>-->
+<!--                      </a>-->
+                      <button class="btn btn-success btn-sm rounded-0" data-bs-target="#basicModalretirement_acc{{obj.id}}"
+                          data-bs-toggle="modal" data-placement="top"
+                          title="Edit" type="button">
+                      <svg class="bi bi-pencil-square" fill="currentColor" height="16" viewBox="0 0 16 16"
+                           width="16" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                          <path d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"
+                                fill-rule="evenodd"/>
+                      </svg>
+                  </button>
+                        <div class="modal fade" id=basicModalretirement_acc{{obj.id}} tabindex="-1">
+                      <div class="modal-dialog">
+                          <form action="" method=POST>
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h5 class="modal-title">Edit Transaction</h5>
+                                      <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"
+                                              type="button"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                      <form>
+                                          <div class="mb-3">
+                                              <label class="form-label">Date</label>
+                                              <input class="form-control" value="{{ obj.date }}" name="date_edit{{obj.id}}" id="date_edit{{obj.id}}" type="text" value="{% now "Y-m-j" %}" disabled>
+                                              <label class="form-label">Description</label>
+                                              <input class="form-control" value="{{ obj.description }}" type="text" name="description_edit{{obj.id}}" id="description_edit{{obj.id}}">
+                                              <label class="form-label">Entry type</label>
+                                              <select class="form-select"  name="entry_edit{{obj.id}}" id="entry_edit{{obj.id}}" aria-label="Default select example" required>
+                                                  <option value="{{ obj.entry_type }}" selected>{{ obj.entry_type }}</option>
+                                                  <option value="Asset">Asset</option>
+                                                  <option value="Savings">Savings</option>
+                                                  <option value="Retirement Acc">Retirement Acc</option>
+                                                  <option value="Liability">Liability</option>
+                                              </select>
+                                            <label class="form-label">Amount</label>
+                                              <input class="form-control" value="{{ obj.amount }}" name="amount_edit{{obj.id}}" min=0 step="any" id="amount_edit{{obj.id}}" type="number" oninput="validity.valid||
+                                  (value='');">
+                                          </div>
+                                          <button class="btn btn-primary" type="button" onclick="EditProperty({{obj.id}})">Submit</button>
+                                      </form>
+                                  </div>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+                    <button type="button" class="btn btn-danger-1 btn-sm rounded-0" data-bs-toggle="modal" data-bs-target="#deleteModalretirement_acc{{obj.id}}">
+                        <svg class="bi bi-trash" fill="currentColor" height="16" viewBox="0 0 16 16"
+                                   width="16" xmlns="http://www.w3.org/2000/svg">
+                                  <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                  <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
+                                        fill-rule="evenodd"/>
+                              </svg>
+                      </button>
+
+                      <!-- Modal -->
+                      <div class="modal fade" id="deleteModalretirement_acc{{obj.id}}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="deleteModalLabelretirement_acc">Delete Property</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                                <div class="modal-body deleteForm">
+                                  <h2 class="">You are about to delete this Property</h2>
+                                  <p>Are you sure you want to delete<strong> {{ obj.description  }}</strong>?</p>
+                                  <p>This action cannot be undone.</p>
+                                  <p>All transctions for this fund will be lost</p>
+                                    <button class="btn btn-danger form-control" type="button" onclick="deleteProperty({{obj.id}})">Delete</button>
+                                </div>
+                          </div>
+                        </div>
+                      </div>
+<!--                      <a href="popupex.html" onclick="return popitup('/personal_balances/{{ obj.pk }}/delete')">-->
+<!--                        <button class="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete">-->
+<!--                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">-->
+<!--                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>-->
+<!--                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>-->
+<!--                          </svg>-->
+<!--                        </button>-->
+<!--                      </a>  -->
                     </td>
                   </tr>
                   {% endfor %}
@@ -291,22 +550,94 @@ function popitup(url) {
                     <td>{{obj.description}}</td>
                     <td style="text-align:right">${{obj.amount}}</td>
                     <td style="text-align:right">
-                      <a href="popupex.html" onclick="return popitup('/personal_balances/{{ obj.pk }}/edit')">     
-                        <button class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-                          </svg>
-                        </button>
-                      </a>
-                      <a href="popupex.html" onclick="return popitup('/personal_balances/{{ obj.pk }}/delete')">
-                        <button class="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                          </svg>
-                        </button>
-                      </a>
+                      <button class="btn btn-success btn-sm rounded-0" data-bs-target="#basicModalliability{{obj.id}}"
+                          data-bs-toggle="modal" data-placement="top"
+                          title="Edit" type="button">
+                      <svg class="bi bi-pencil-square" fill="currentColor" height="16" viewBox="0 0 16 16"
+                           width="16" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                          <path d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"
+                                fill-rule="evenodd"/>
+                      </svg>
+                  </button>
+                        <div class="modal fade" id=basicModalliability{{obj.id}} tabindex="-1">
+                      <div class="modal-dialog">
+                          <form action="" method=POST>
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h5 class="modal-title">Edit Transaction</h5>
+                                      <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"
+                                              type="button"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                      <form>
+                                          <div class="mb-3">
+                                              <label class="form-label">Date</label>
+                                              <input class="form-control" value="{{ obj.date }}" name="date_edit{{obj.id}}" id="date_edit{{obj.id}}" type="text" value="{% now "Y-m-j" %}" disabled>
+                                              <label class="form-label">Description</label>
+                                              <input class="form-control" value="{{ obj.description }}" type="text" name="description_edit{{obj.id}}" id="description_edit{{obj.id}}">
+                                              <label class="form-label">Entry type</label>
+                                              <select class="form-select"  name="entry_edit{{obj.id}}" id="entry_edit{{obj.id}}" aria-label="Default select example" required>
+                                                  <option value="{{ obj.entry_type }}" selected>{{ obj.entry_type }}</option>
+                                                  <option value="Asset">Asset</option>
+                                                  <option value="Savings">Savings</option>
+                                                  <option value="Retirement Acc">Retirement Acc</option>
+                                                  <option value="Liability">Liability</option>
+                                              </select>
+                                            <label class="form-label">Amount</label>
+                                              <input class="form-control" value="{{ obj.amount }}" name="amount_edit{{obj.id}}" min=0 step="any" id="amount_edit{{obj.id}}" type="number" oninput="validity.valid||
+                                  (value='');">
+                                          </div>
+                                          <button class="btn btn-primary" type="button" onclick="EditProperty({{obj.id}})">Submit</button>
+                                      </form>
+                                  </div>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+                    <button type="button" class="btn btn-danger-1 btn-sm rounded-0" data-bs-toggle="modal" data-bs-target="#deleteModalliability{{obj.id}}">
+                        <svg class="bi bi-trash" fill="currentColor" height="16" viewBox="0 0 16 16"
+                                   width="16" xmlns="http://www.w3.org/2000/svg">
+                                  <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                  <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
+                                        fill-rule="evenodd"/>
+                              </svg>
+                      </button>
+
+                      <!-- Modal -->
+                      <div class="modal fade" id="deleteModalliability{{obj.id}}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="deleteModalLabelliability">Delete Property</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                                <div class="modal-body deleteForm">
+                                  <h2 class="">You are about to delete this Property</h2>
+                                  <p>Are you sure you want to delete<strong> {{ obj.description  }}</strong>?</p>
+                                  <p>This action cannot be undone.</p>
+                                  <p>All transctions for this fund will be lost</p>
+                                    <button class="btn btn-danger form-control" type="button" onclick="deleteProperty({{obj.id}})">Delete</button>
+                                </div>
+                          </div>
+                        </div>
+                      </div>
+<!--                      <a href="popupex.html" onclick="return popitup('/personal_balances/{{ obj.pk }}/edit')">     -->
+<!--                        <button class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit">-->
+<!--                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">-->
+<!--                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>-->
+<!--                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>-->
+<!--                          </svg>-->
+<!--                        </button>-->
+<!--                      </a>-->
+<!--                      <a href="popupex.html" onclick="return popitup('/personal_balances/{{ obj.pk }}/delete')">-->
+<!--                        <button class="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete">-->
+<!--                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">-->
+<!--                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>-->
+<!--                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>-->
+<!--                          </svg>-->
+<!--                        </button>-->
+<!--                      </a>-->
                     </td>
                   </tr>
                   {% endfor %}
@@ -557,6 +888,95 @@ function popitup(url) {
 </div> -->
 
 <br> 
-
+<script>
+  function addEntry() {
+        var description = document.getElementById('description').value;
+        var entry = document.getElementById('entry').value;
+        var date = document.getElementById('date').value;
+        var amount = document.getElementById('amount').value;
+        if (description && date && entry && amount) {
+            // Create Ajax Call
+            $(document).ready(function () {
+            let body={
+                'date': date,
+                'description': description,
+                'entry': entry,
+                'amount': amount,
+            }
+            $.ajax({
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                type: 'POST',
+                url: '{% url "personal_balances:addpersonal_balance" %}',
+                headers: {//<==
+                    "X-CSRFTOKEN": "{{ csrf_token }}"//<==
+                },
+                data: JSON.stringify(body),
+                success: function(data) {
+                //Success code
+                    console.log(data,'data')
+                    if (data.user) {
+                        location.reload();
+                    }
+                },
+                failure: function (response) {
+                    $('#result').html(response);
+                }
+            });
+        });
+        } else
+        {
+            alert("All fields must have a valid value.");
+        }
+  }
+  function EditProperty(id){
+        var description = document.getElementById(`description_edit${id}`).value;
+        var entry = document.getElementById(`entry_edit${id}`).value;
+        var amount = document.getElementById(`amount_edit${id}`).value;
+        $(document).ready(function () {
+            let body={
+                'id': id,
+                'description': description,
+                'entry': entry,
+                'amount': amount,
+            }
+            $.ajax({
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                type: 'POST',
+                url: '{% url 'personal_balances:updatepersonal_balance' %}',
+                headers: {//<==
+                    "X-CSRFTOKEN": "{{ csrf_token }}"//<==
+                },
+                data: JSON.stringify(body),
+                success: function(data) {
+                //Success code
+<!--                    $(`#basicModal${data.user.id}`).modal('hide');-->
+                    if (data.user) {
+                        location.reload();
+                    }
+                },
+                failure: function (response) {
+                    $('#result').html(response);
+                }
+            });
+        });
+    }
+    function deleteProperty(id) {
+        $.ajax({
+            url: '{% url "personal_balances:deletepersonal_balance" %}',
+            data: {
+                'id': id,
+            },
+            dataType: 'json',
+            success: function (data) {
+                console.log(data,'delete');
+                if (data.deleted) {
+                    location.reload();
+                }
+            }
+        });
+    }
+</script>
 
 {% endblock content %}

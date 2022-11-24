@@ -29,6 +29,47 @@ function popitup(url) {
     New Contact
   </button>
 </a>
+<button type="button" class="btn btn-dashboard mb-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    <svg class="bi bi-calendar-plus me-1" fill="currentColor" height="16" viewBox="0 0 16 16"
+             width="16" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>
+            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+        </svg>
+  New Contact
+</button>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Record Income / Expense</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="addStock">
+            <div class="mb-3">
+                <label class="form-label">First name</label>
+                <input class="form-control" name="first_name" id="first_name" type="text">
+              <label class="form-label">Last name</label>
+                <input class="form-control" name="last_name" id="last_name" type="text">
+              <label class="form-label">Company name</label>
+                <input class="form-control" name="company_name" id="company_name" type="text">
+              <label class="form-label">Occupation</label>
+                <input class="form-control" name="occupation" id="occupation" type="text">
+              <label class="form-label">Contact number</label>
+                <input class="form-control" name="contact_number" id="contact_number" type="text">
+              <label class="form-label">Service area</label>
+                <input class="form-control" name="service_area" id="service_area" type="text">
+              <label class="form-label">Website url</label>
+                <input class="form-control" name="website_url" id="website_url" type="text">
+              <label for="notes" class="form-label">Notes</label>
+                <textarea class="form-control" id="notes" rows="3"></textarea>
+               </div>
+            <button class="btn btn-primary form-control" type="button" onclick="newContact()">ADD</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- <div class="card">
   <div class="card-body mt-4" style="overflow-x:auto;">
@@ -105,17 +146,187 @@ function popitup(url) {
           <a href="tel:{{ obj.contact_number }}" class="btn btn-sm bg-success text-white">
             <i class="fas fa-phone"></i> Call
           </a>
-          <a href="popupex.html" onclick="return popitup('/contacts/{{ obj.id }}/edit')" class="btn btn-sm bg-primary text-white">
-            <i class="fas fa-edit"></i> Edit
-          </a>
-          <a href="popupex.html" onclick="return popitup('/contacts/{{ obj.pk }}/delete')" class="btn btn-sm bg-danger text-white">
-            <i class="fas fa-trash"></i> Delete
-          </a>
+<!--          <a href="popupex.html" onclick="return popitup('/contacts/{{ obj.id }}/edit')" class="btn btn-sm bg-primary text-white">-->
+<!--            <i class="fas fa-edit"></i> Edit-->
+<!--          </a>-->
+<!--          <a href="popupex.html" onclick="return popitup('/contacts/{{ obj.pk }}/delete')" class="btn btn-sm bg-danger text-white">-->
+<!--            <i class="fas fa-trash"></i> Delete-->
+<!--          </a>-->
+          <button class="btn btn-sm bg-primary text-white"" data-bs-target="#basicModal{{obj.id}}"
+                          data-bs-toggle="modal" data-placement="top"
+                          title="Edit" type="button"><i class="fas fa-edit"></i>Edit
+                  </button>
+                  <!--                            </a>-->
+                  <div class="modal fade" id=basicModal{{obj.id}} tabindex="-1">
+                      <div class="modal-dialog">
+                          <form action="" method=POST>
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h5 class="modal-title">Edit Transaction</h5>
+                                      <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"
+                                              type="button"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                      <form>
+                                          <div class="mb-3">
+                                              <label class="form-label">First name</label>
+                                                <input class="form-control" value="{{obj.first_name}}" name="first_name{{obj.id}}" id="first_name{{obj.id}}" type="text">
+                                              <label class="form-label">Last name</label>
+                                                <input class="form-control" value="{{obj.last_name}}" name="last_name{{obj.id}}" id="last_name{{obj.id}}" type="text">
+                                              <label class="form-label">Company name</label>
+                                                <input class="form-control" value="{{obj.company_name}}" name="company_name{{obj.id}}" id="company_name{{obj.id}}" type="text">
+                                              <label class="form-label">Occupation</label>
+                                                <input class="form-control" value="{{obj.occupation}}" name="occupation{{obj.id}}" id="occupation{{obj.id}}" type="text">
+                                              <label class="form-label">Contact number</label>
+                                                <input class="form-control" value="{{obj.contact_number}}" name="contact_number{{obj.id}}" id="contact_number{{obj.id}}" type="text">
+                                              <label class="form-label">Service area</label>
+                                                <input class="form-control" value="{{obj.service_area}}" name="service_area{{obj.id}}" id="service_area{{obj.id}}" type="text">
+                                              <label class="form-label">Website url</label>
+                                                <input class="form-control" value="{{obj.website_url}}" name="website_url{{obj.id}}" id="website_url{{obj.id}}" type="text">
+                                              <label for="notes" class="form-label">Notes</label>
+                                                <textarea class="form-control" id="notes{{obj.id}}" rows="3">{{obj.notes}}</textarea>
+                                          </div>
+                                          <button class="btn btn-primary" type="button" onclick="EditContact({{obj.id}})">Submit</button>
+                                      </form>
+                                  </div>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+                    <button type="button" class="btn btn-sm bg-danger text-white" data-bs-toggle="modal" data-bs-target="#deleteModal{{obj.id}}">
+                        <i class="fas fa-trash"></i>Delete
+                      </button>
+
+                      <!-- Modal -->
+                      <div class="modal fade" id="deleteModal{{obj.id}}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="deleteModalLabelAssets">Delete Property</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                                <div class="modal-body deleteForm">
+                                  <h2 class="">You are about to delete this Property</h2>
+                                  <p>Are you sure you want to delete<strong> {{ obj.last_name  }}</strong>?</p>
+                                  <p>This action cannot be undone.</p>
+                                  <p>All transctions for this fund will be lost</p>
+                                    <button class="btn btn-danger form-control" type="button" onclick="deleteContact({{obj.id}})">Delete</button>
+                                </div>
+                          </div>
+                        </div>
+                      </div>
         </div>
       </div>
     </div>
   </div>
   {% endfor %}
 </div>
-
+<script>
+  function newContact() {
+        var first_name = document.getElementById('first_name').value;
+        var last_name = document.getElementById('last_name').value;
+        var company_name = document.getElementById('company_name').value;
+        var occupation = document.getElementById('occupation').value;
+        var contact_number = document.getElementById('contact_number').value;
+        var service_area = document.getElementById('service_area').value;
+        var website_url = document.getElementById('website_url').value;
+        var notes = document.getElementById('notes').value;
+        if (first_name && last_name && company_name && contact_number && occupation && notes) {
+            // Create Ajax Call
+            $(document).ready(function () {
+            let body={
+                'first_name': first_name,
+                'last_name': last_name,
+                'company_name': company_name,
+                'occupation': occupation,
+                'contact_number': contact_number,
+                'service_area': service_area,
+                'website_url': website_url,
+                'notes': notes,
+            }
+            $.ajax({
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                type: 'POST',
+                url: '{% url "contacts:addcontact" %}',
+                headers: {//<==
+                    "X-CSRFTOKEN": "{{ csrf_token }}"//<==
+                },
+                data: JSON.stringify(body),
+                success: function(data) {
+                //Success code
+                    console.log(data,'data')
+                    if (data.user) {
+                        location.reload();
+                    }
+                },
+                failure: function (response) {
+                    $('#result').html(response);
+                }
+            });
+        });
+        } else
+        {
+            alert("All fields must have a valid value.");
+        }
+  }
+  function EditContact(id){
+        var first_name = document.getElementById(`first_name${id}`).value;
+        var last_name = document.getElementById(`last_name${id}`).value;
+        var company_name = document.getElementById(`company_name${id}`).value;
+        var occupation = document.getElementById(`occupation${id}`).value;
+        var contact_number = document.getElementById(`contact_number${id}`).value;
+        var service_area = document.getElementById(`service_area${id}`).value;
+        var website_url = document.getElementById(`website_url${id}`).value;
+        var notes = document.getElementById(`notes${id}`).value;
+        $(document).ready(function () {
+            let body={
+                 'id': id,
+                'first_name': first_name,
+                'last_name': last_name,
+                'company_name': company_name,
+                'occupation': occupation,
+                'contact_number': contact_number,
+                'service_area': service_area,
+                'website_url': website_url,
+                'notes': notes,
+            }
+            $.ajax({
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                type: 'POST',
+                url: '{% url 'contacts:editcontact' %}',
+                headers: {//<==
+                    "X-CSRFTOKEN": "{{ csrf_token }}"//<==
+                },
+                data: JSON.stringify(body),
+                success: function(data) {
+                //Success code
+<!--                    $(`#basicModal${data.user.id}`).modal('hide');-->
+                    if (data.user) {
+                        location.reload();
+                    }
+                },
+                failure: function (response) {
+                    $('#result').html(response);
+                }
+            });
+        });
+    }
+    function deleteContact(id) {
+        $.ajax({
+            url: '{% url "contacts:deletecontact" %}',
+            data: {
+                'id': id,
+            },
+            dataType: 'json',
+            success: function (data) {
+                console.log(data,'delete');
+                if (data.deleted) {
+                    location.reload();
+                }
+            }
+        });
+    }
+</script>
 {% endblock content %}

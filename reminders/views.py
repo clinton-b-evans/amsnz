@@ -2,12 +2,14 @@ import json
 
 from django.core import serializers
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from properties.models import Property
 from reminders.models import Reminder
 from django.db.models import Sum
 from datetime import date, datetime
 from .forms import ReminderForm
+
+from datetime import datetime
 
 # Create your views here.
 
@@ -17,11 +19,60 @@ def home_view(request):
 
 
 def reminder_list_view(request):
+    property=Property.objects.all()
     reminders = Reminder.objects.all().order_by("due_date")
     context = {
         "object_list": reminders,
+        "property": property
     }
     return render(request, "reminders/main.html", context)
+
+
+def addreminder(request):
+    if request.method == "POST":
+        print(request.body, "property")
+        propertyData = json.loads(request.body)
+        obj = Reminder.objects.create(
+            property=Property.objects.get(name=propertyData["property"]),
+            # property=propertyData["property"],
+            detail=propertyData["detail"],
+            due_date=propertyData["date"],
+            reminder_type=propertyData["type"],
+        )
+        user = {
+            'id': obj.id
+        }
+        data = {
+            'user': user
+        }
+        print(data, 'data')
+        return JsonResponse(data)
+
+
+def editreminder(request):
+    if request.method == "POST":
+        print(request.body, "property")
+        propertyData = json.loads(request.body)
+        property = Reminder.objects.get(id=propertyData['id'])
+        property.property = Property.objects.get(name=propertyData["property"])
+        property.detail = propertyData['detail']
+        property.reminder_type = propertyData['type']
+        property.save()
+        data = {
+            'user': "data is updated"
+        }
+        return JsonResponse(data)
+
+
+def deletereminder(request):
+    id1 = request.GET.get('id', None)
+    print(id1, "delete")
+    Reminder.objects.get(id=id1).delete()
+    data = {
+        'deleted': True
+    }
+    return JsonResponse(data)
+
 
 
 def add_reminder(request):

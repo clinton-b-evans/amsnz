@@ -4,7 +4,7 @@ from .views import (
     contact_list_view,
     add_contact,
     update_contact,
-    delete_contact,
+    delete_contact, addcontact, editcontact, deletecontact,
 )
 
 app_name = "contacts"
@@ -14,4 +14,7 @@ urlpatterns = [
     path("contacts/add", add_contact, name="add-contact"),
     path("contacts/<str:pk>/edit", update_contact, name="update-contact"),
     path("contacts/<str:pk>/delete", delete_contact, name="delete-contact"),
+    path("addcontact", addcontact, name="addcontact"),
+    path("editcontact", editcontact, name="editcontact"),
+    path("deletecontact", deletecontact, name="deletecontact"),
 ]
