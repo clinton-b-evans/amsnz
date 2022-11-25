@@ -3,7 +3,7 @@ from incomestatements.models import Category
 
 
 class Budget(models.Model):
-    budget_category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    self = models.ForeignKey(Category, on_delete=models.CASCADE)
     year = models.CharField(null=False, blank=False, max_length=4)
     january_budget = models.FloatField(null=True, blank=True, default=0)
     february_budget = models.FloatField(null=True, blank=True, default=0)
@@ -17,4 +17,6 @@ class Budget(models.Model):
     october_budget = models.FloatField(null=True, blank=True, default=0)
     november_budget = models.FloatField(null=True, blank=True, default=0)
     december_budget = models.FloatField(null=True, blank=True, default=0)
+    def compute_budget(self):
+        return self.january_budget + self.february_budget + self.march_budget + self.april_budget + self.may_budget + self.june_budget + self.july_budget + self.august_budget + self.september_budget + self.october_budget + self.november_budget + self.december_budget
 
