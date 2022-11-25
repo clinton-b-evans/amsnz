@@ -224,7 +224,7 @@ function popitup(url) {
         xaxis: {
           categories: [
               {% for value in usedCrypto %}
-                "{{value}}",
+                "{{value|floatformat:2}}",
               {% endfor %}
           ],
         },

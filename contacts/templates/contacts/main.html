@@ -63,6 +63,13 @@ function popitup(url) {
                 <input class="form-control" name="website_url" id="website_url" type="text">
               <label for="notes" class="form-label">Notes</label>
                 <textarea class="form-control" id="notes" rows="3"></textarea>
+                <label for="notes" class="form-label">Properties</label>
+                <select class="form-select" multiple aria-label="multiple select example" id="properties">
+                  <option selected>------</option>
+                    {% for property in property %}
+                     <option value="{{property}}">{{property}}</option>
+                    {% endfor %}
+                </select>
                </div>
             <button class="btn btn-primary form-control" type="button" onclick="newContact()">ADD</button>
         </form>
@@ -185,6 +192,12 @@ function popitup(url) {
                                                 <input class="form-control" value="{{obj.website_url}}" name="website_url{{obj.id}}" id="website_url{{obj.id}}" type="text">
                                               <label for="notes" class="form-label">Notes</label>
                                                 <textarea class="form-control" id="notes{{obj.id}}" rows="3">{{obj.notes}}</textarea>
+                                              <select class="form-select" multiple aria-label="multiple select example" id="properties{{obj.id}}">
+                                                  <option selected>{% for property in obj.properties.all %} {{property}} {% if not forloop.last %} / {% endif %}{% endfor %}</option>
+                                                    {% for property in property %}
+                                                     <option value="{{property}}">{{property}}</option>
+                                                    {% endfor %}
+                                                </select>
                                           </div>
                                           <button class="btn btn-primary" type="button" onclick="EditContact({{obj.id}})">Submit</button>
                                       </form>
@@ -234,6 +247,7 @@ function popitup(url) {
         if (first_name && last_name && company_name && contact_number && occupation && notes) {
             // Create Ajax Call
             $(document).ready(function () {
+            const mySelect = $('#properties')
             let body={
                 'first_name': first_name,
                 'last_name': last_name,
@@ -243,7 +257,9 @@ function popitup(url) {
                 'service_area': service_area,
                 'website_url': website_url,
                 'notes': notes,
+                'properties': mySelect.val(),
             }
+            console.log('hello')
             $.ajax({
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
@@ -280,6 +296,7 @@ function popitup(url) {
         var website_url = document.getElementById(`website_url${id}`).value;
         var notes = document.getElementById(`notes${id}`).value;
         $(document).ready(function () {
+            const mySelect = $(`#properties${id}`)
             let body={
                  'id': id,
                 'first_name': first_name,
@@ -290,6 +307,7 @@ function popitup(url) {
                 'service_area': service_area,
                 'website_url': website_url,
                 'notes': notes,
+                'properties': mySelect.val(),
             }
             $.ajax({
                 contentType: 'application/json; charset=utf-8',

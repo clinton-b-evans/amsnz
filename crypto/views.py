@@ -77,7 +77,7 @@ def generate_bar_graph_series_data(cryptos, crypto_prices):
     assetsGains = []
     for crypto in cryptos:
         spotPrice = crypto_prices[crypto.ticker]
-        currentMarketValue = float(crypto.quantity) * spotPrice
+        currentMarketValue = float(crypto.quantity) * float(spotPrice)
         assetsGains.append(
             0 if float(currentMarketValue) < float(crypto.investment) else float(currentMarketValue) - float(
                 crypto.investment))
@@ -130,15 +130,16 @@ def crypto_list_view(request):
                 crypto.investment)) * 100 if crypto.investment > 0 else 'N/A',
             "status": status
         })
-
+    my_investments_list = ['%.2f' % elem for elem in investments]
+    my_assetsGains_list = ['%.2f' % elem for elem in assetsGains]
     context = {
         "transactions": transactions_table,
         "crypto_prices": crypto_prices,
         "totalInvestment": totalInvestment,
         "totalMarketValue": totalMarketValue,
         "usedCrypto": cryptos.values_list('name', flat=True).distinct(),
-        "investments": investments,
-        "assetsGains": assetsGains,
+        "investments": list(map(float, my_investments_list)),
+        "assetsGains": list(map(float, my_assetsGains_list)),
         "pie_chart_date": compute_pie_chart_transaction_types(cryptos, totalMarketValue, crypto_prices)
 
     }

@@ -28,6 +28,8 @@ def addcontact(request):
             website_url=propertyData["website_url"],
             notes=propertyData["notes"],
             )
+        property = Property.objects.filter(name__in=propertyData["properties"])
+        obj.properties.update(*property)
         user = {
             'id': obj.id
         }
@@ -51,6 +53,8 @@ def editcontact(request):
         contact.service_area = propertyData["service_area"]
         contact.website_url = propertyData["website_url"]
         contact.notes = propertyData["notes"]
+        property = Property.objects.filter(name__in=propertyData["properties"])
+        contact.properties.add(*property)
         contact.save()
         data = {
             'user': "data is updated"
