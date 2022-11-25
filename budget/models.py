@@ -3,7 +3,7 @@ from incomestatements.models import Category
 
 
 class Budget(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    budget_category = models.ForeignKey(Category, on_delete=models.CASCADE)
     year = models.CharField(null=False, blank=False, max_length=4)
     january_budget = models.FloatField(null=True, blank=True, default=0)
     february_budget = models.FloatField(null=True, blank=True, default=0)
