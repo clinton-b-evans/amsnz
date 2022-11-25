@@ -94,15 +94,16 @@ def commodity_list_view(request, year=""):
                 commodity.investment)) * 100 if commodity.investment > 0 else 'N/A',
             "status": status
         })
-
+    my_investments_list = ['%.2f' % elem for elem in investments]
+    my_assetsGains_list = ['%.2f' % elem for elem in assetsGains]
     context = {
         "transactions": transactions_table,
         "commodities_list": commodity_prices,
         "totalInvestmentSum": totalInvestment,
         "currentMarketValueSum": totalMarketValue,
         "usedCommodities": commodities.values_list('name', flat=True).distinct(),
-        "investments": investments,
-        "assetsGains": assetsGains,
+        "investments": list(map(float, my_investments_list)),
+        "assetsGains": list(map(float, my_assetsGains_list)),
         "pie_chart_date": compute_pie_chart_transaction_types(commodities, totalMarketValue, commodity_prices)
 
     }
