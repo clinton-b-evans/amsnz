@@ -78,15 +78,16 @@ def stock_list_view(request):
                 stock.investment)) * 100 if stock.investment > 0 else 'N/A',
             "status": status
         })
-
+    my_investments_list = ['%.2f' % elem for elem in investments]
+    my_assetsGains_list = ['%.2f' % elem for elem in assetsGains]
     context = {
         "transactions": transactions_table,
         "stock_prices": stock_prices,
         "totalInvestment": totalInvestment,
         "totalMarketValue": totalMarketValue,
         "usedStock": stocks.values_list('name', flat=True).distinct(),
-        "investments": investments,
-        "assetsGains": assetsGains,
+        "investments": list(map(float, my_investments_list)),
+        "assetsGains": list(map(float, my_assetsGains_list)),
         "pie_chart_date": compute_pie_chart_transaction_types(stocks, totalMarketValue, stock_prices)
 
     }
