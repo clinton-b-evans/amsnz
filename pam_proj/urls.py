@@ -21,7 +21,6 @@ urlpatterns = [
     path("", include("retirement_goals.urls", namespace="retirement")),
     path("", include("crypto.urls", namespace="crypto")),
     path("", include("incomestatements.urls", namespace="incomestatements")),
-    path("", include("budget.urls", namespace="budget")),
     path(
         "",
         include(

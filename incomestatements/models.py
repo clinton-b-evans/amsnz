@@ -25,6 +25,8 @@ class Category(models.Model):
     november_budget = models.FloatField(null=True, blank=True, default=0)
     december_budget = models.FloatField(null=True, blank=True, default=0)
 
+    def compute_budget(self):
+        return self.january_budget + self.february_budget + self.march_budget + self.april_budget + self.may_budget + self.june_budget + self.july_budget + self.august_budget + self.september_budget + self.october_budget + self.november_budget + self.december_budget
 
     def __str__(self):
         return f"{self.name}"

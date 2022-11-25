@@ -36,7 +36,6 @@ INSTALLED_APPS = [
     "bootstrapform",
     "stock_portfolios",
     "user.apps.UserConfig",
-    "budget",
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

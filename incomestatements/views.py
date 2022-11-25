@@ -406,7 +406,7 @@ def year_to_date(request, year):
         )
         budget_category = Category.objects.get(name=category['category__name'], year=year)
         expenses_result[f"{list(category_expense.values())[0]}"]["Budget"] = budget_category.compute_budget()
-        total_expense_budget += Category.objects.get(name=category['category__name']).budget
+        total_expense_budget += Category.objects.get(name=category['category__name'], year=year).compute_budget()
         category_total = expenses_result[f"{list(category_expense.values())[0]}"]["total"]
         category_budget = expenses_result[f"{list(category_expense.values())[0]}"]["Budget"]
         percentage = float(category_total) / float(category_budget) * 100
@@ -451,6 +451,6 @@ def year_to_date(request, year):
         "net_income": net_income,
         "income_budget_percentage": (float(total_income) / float(total_income_budget)) * 100,
         "expense_budget_percentage": (float(total_expense) / float(total_expense_budget)) * 100,
-        "total_budget_percentage": (float(net_total) / float(net_Budget)) * 100
+        # "total_budget_percentage": (float(net_total) / float(net_Budget)) * 100
     }
     return render(request, "incomestatements/ytd.html", context)
