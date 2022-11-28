@@ -3,8 +3,10 @@ import json
 from copy import deepcopy
 
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.template import loader
+
 from .models import IncomeStatement, Category
 from .forms import IncomeStatementForm, CategoryForm
 from django.db.models.functions import TruncMonth, ExtractMonth
@@ -97,6 +99,27 @@ def editproperty_incomestatements(request):
         return JsonResponse(data)
 
 
+def show_report(request, category, year):
+    category_data = Category.objects.get(name=category, year=year)
+    if category_data.transaction_type == 'Income':
+        report_data = incomes_result(year, category)
+    else:
+        report_data = expense_result(year, category)
+    percentage = float("{:.1f}".format(report_data[category]['total'] / category_data.compute_budget() * 100))
+    context = {
+        "transaction_type": category_data.transaction_type,
+        "year": year,
+        "category_name": category_data.name,
+        "budget": category_data,
+        "report_data": report_data[category],
+        "percentage": percentage
+
+    }
+    return render(
+        request, "incomestatements/report.html", context
+    )
+
+
 def deleteproperty_incomestatement(request):
     id1 = request.GET.get('id', None)
     print(id1, "delete")
@@ -105,6 +128,7 @@ def deleteproperty_incomestatement(request):
         'deleted': True
     }
     return JsonResponse(data)
+
 
 def add_incomestatements(request):
     submitted = False
@@ -194,6 +218,120 @@ def update_category(request, pk):
 def sort(myList):
     myList.sort()
     return myList
+
+
+def incomes_result(year, category):
+    qs = IncomeStatement.objects.filter(date__year=year)
+    income_qs = qs.filter(category__transaction_type="Income", category__name=category)
+    # CATEGORIES EACH MONTH TOTAL Income
+    monthly_income_data = {
+        "January": 0,
+        "February": 0,
+        "March": 0,
+        "April": 0,
+        "May": 0,
+        "June": 0,
+        "July": 0,
+        "August": 0,
+        "September": 0,
+        "October": 0,
+        "November": 0,
+        "December": 0,
+    }
+    unique_categories_of_income = income_qs.values("category__name").distinct()
+    income_result = {}
+    for category in unique_categories_of_income:
+        income_result[f"{list(category.values())[0]}"] = {
+            "months": deepcopy(monthly_income_data),
+            "total": 0,
+        }
+    for category in unique_categories_of_income:
+        for month in monthly_income_data.keys():
+            current_month_total_income = 0
+            month_int = datetime.datetime.strptime(month, "%B").month
+            current_month_income = income_qs.filter(date__month=month_int, category__name=category['category__name'])
+            # print(month, current_month_income)
+            for income_in_current_month in current_month_income:
+                current_month_total_income += income_in_current_month.amount
+                category_of_income = Category.objects.get(
+                    name=income_in_current_month.category
+                )
+                income_result[f"{category_of_income}"]["months"][f"{month}"] = float(
+                    current_month_total_income
+                )
+    total_income_budget = 0
+    for category in unique_categories_of_income:
+        income_result[f"{list(category.values())[0]}"]["total"] = sum(
+            income_result[f"{list(category.values())[0]}"]["months"].values()
+        )
+        budget_category = Category.objects.get(name=category['category__name'], year=year)
+        income_result[f"{list(category.values())[0]}"]["Budget"] = budget_category.compute_budget()
+        total_income_budget += budget_category.compute_budget()
+        category_total = income_result[f"{list(category.values())[0]}"]["total"]
+        category_budget = income_result[f"{list(category.values())[0]}"]["Budget"]
+        percentage = float(category_total) / float(category_budget) * 100
+        income_result[f"{list(category.values())[0]}"]["percentage"] = percentage
+        print(percentage, 'percentage')
+    # #### END OF CATEGORIES EACH MONTH TOTAL Income ####
+    return income_result
+
+
+def expense_result(year, category):
+    qs = IncomeStatement.objects.filter(date__year=year)
+    expense_qs = qs.filter(category__transaction_type="Expense", category__name=category)
+    # START CATEGORIES EACH MONTH TOTAL EXPENSES
+    monthly_expenses_data = {
+        "January": 0,
+        "February": 0,
+        "March": 0,
+        "April": 0,
+        "May": 0,
+        "June": 0,
+        "July": 0,
+        "August": 0,
+        "September": 0,
+        "October": 0,
+        "November": 0,
+        "December": 0,
+    }
+    unique_categories_of_expenses = expense_qs.values("category__name").distinct()
+    expenses_result = {}
+    for category_expense in unique_categories_of_expenses:
+        expenses_result[f"{list(category_expense.values())[0]}"] = {
+            "months": deepcopy(monthly_expenses_data),
+            "total": 0,
+        }
+
+    for category_expense in unique_categories_of_expenses:
+        for month in monthly_expenses_data.keys():
+            current_month_total_expense = 0
+            month_int = datetime.datetime.strptime(month, "%B").month
+            current_month_expenses = expense_qs.filter(date__month=month_int,
+                                                       category__name=category_expense['category__name'])
+            # print(month, current_month_expenses)
+            for expense_in_current_month in current_month_expenses:
+                current_month_total_expense += expense_in_current_month.amount
+                category_of_expense = Category.objects.get(
+                    name=expense_in_current_month.category
+                )
+                expenses_result[f"{category_of_expense}"]["months"][f"{month}"] = float(
+                    current_month_total_expense
+                )
+    total_expense_budget = 0
+    for category_expense in unique_categories_of_expenses:
+        expenses_result[f"{list(category_expense.values())[0]}"]["total"] = sum(
+            expenses_result[f"{list(category_expense.values())[0]}"]["months"].values()
+        )
+        budget_category = Category.objects.get(name=category_expense['category__name'], year=year)
+        expenses_result[f"{list(category_expense.values())[0]}"]["Budget"] = budget_category.compute_budget()
+        total_expense_budget += Category.objects.get(name=category_expense['category__name'],
+                                                     year=year).compute_budget()
+        category_total = expenses_result[f"{list(category_expense.values())[0]}"]["total"]
+        category_budget = expenses_result[f"{list(category_expense.values())[0]}"]["Budget"]
+        percentage = float(category_total) / float(category_budget) * 100
+        expenses_result[f"{list(category_expense.values())[0]}"]["percentage"] = percentage
+    #### END OF CATEGORIES EACH MONTH TOTAL EXPENSES ####
+    return expenses_result
 
 
 def year_to_date(request, year):
@@ -404,9 +542,10 @@ def year_to_date(request, year):
         expenses_result[f"{list(category_expense.values())[0]}"]["total"] = sum(
             expenses_result[f"{list(category_expense.values())[0]}"]["months"].values()
         )
-        budget_category = Category.objects.get(name=category['category__name'], year=year)
+        budget_category = Category.objects.get(name=category_expense['category__name'], year=year)
         expenses_result[f"{list(category_expense.values())[0]}"]["Budget"] = budget_category.compute_budget()
-        total_expense_budget += Category.objects.get(name=category['category__name'], year=year).compute_budget()
+        total_expense_budget += Category.objects.get(name=category_expense['category__name'],
+                                                     year=year).compute_budget()
         category_total = expenses_result[f"{list(category_expense.values())[0]}"]["total"]
         category_budget = expenses_result[f"{list(category_expense.values())[0]}"]["Budget"]
         percentage = float(category_total) / float(category_budget) * 100

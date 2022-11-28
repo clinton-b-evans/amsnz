@@ -102,7 +102,13 @@ function popitup(url) {
                           <div class="progress-bar bg-info" role="progressbar" style="width: {{data.percentage|stringformat:"i"}}%" aria-valuenow="{{data.percentage|stringformat:"i"}}" aria-valuemin="0" aria-valuemax="100">{{data.percentage|stringformat:"i"}}%</div>
                         </div>
                     </td>
-            <td><button class="btn btn-primary btn-sm">View monthly report</button></td>
+                    <td>
+                    <a type="button" class="btn btn-primary btn-sm" href="{% url 'incomestatements:report' category_name 2022 %}">
+                      View Monthly Report
+                    </a>
+                    </td>
+                    <!-- Modal -->
+
                   </tr>
                   {% endfor %}
 
@@ -157,7 +163,13 @@ function popitup(url) {
                           <div class="progress-bar bg-warning" role="progressbar" style="width: {{data.percentage|stringformat:"i"}}%" aria-valuenow="{{data.percentage|stringformat:"i"}}%" aria-valuemin="0" aria-valuemax="100">{{data.percentage|stringformat:"i"}}%</div>
                         </div>
                     </td>
-                    <td><button class="btn btn-primary btn-sm">View monthly report</button></td>
+                    <td>
+                    <a type="button" class="btn btn-primary btn-sm" href="{% url 'incomestatements:report' category_name 2022 %}">
+                      View Monthly Report
+                    </a>
+                    </td>
+                    <!-- Modal -->
+
                     </tr>
                   {% endfor %}
                 <thead>
