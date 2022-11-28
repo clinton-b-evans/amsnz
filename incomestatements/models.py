@@ -25,6 +25,22 @@ class Category(models.Model):
     november_budget = models.FloatField(null=True, blank=True, default=0)
     december_budget = models.FloatField(null=True, blank=True, default=0)
 
+    def months_data(self):
+        data = {
+            "January": self.january_budget,
+            "February": self.february_budget,
+            "March": self.march_budget,
+            "April": self.april_budget,
+            "May": self.may_budget,
+            "June": self.june_budget,
+            "July": self.july_budget,
+            "August": self.august_budget,
+            "September": self.september_budget,
+            "October": self.october_budget,
+            "November": self.november_budget,
+            "December": self.december_budget,
+        }
+        return data
     def compute_budget(self):
         return self.january_budget + self.february_budget + self.march_budget + self.april_budget + self.may_budget + self.june_budget + self.july_budget + self.august_budget + self.september_budget + self.october_budget + self.november_budget + self.december_budget
 

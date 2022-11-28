@@ -365,7 +365,13 @@
           <!-- <span data-feather="file">Income Statement</span> -->
         </a>
       </li><!-- End Personal Income Statement Page Nav -->
-
+      <li class="nav-item">
+            <a {% if request.resolver_match.url_name == 'category_list' %} class="nav-link active" {% else %}class="nav-link collapsed" {% endif %} href="/category_list">
+              <i class="bi bi-circle"></i>
+              <span>Categories</span>
+              <!-- <span data-feather="file">Income Statements</span> -->
+            </a>
+          </li>
       <li class="nav-item">
         <a {% if request.resolver_match.url_name == 'incomestatement_year_to_date' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} href="/incomestatements/yeartodate/{% now 'Y' %}/">
           <i class="bi bi-bar-chart-line"></i>

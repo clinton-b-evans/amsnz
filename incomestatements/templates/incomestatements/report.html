@@ -64,211 +64,21 @@ function popitup(url) {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <th scope="col">Jan</th>
-                    <td>{{budget.january_budget}}</td>
-                    <td>{{report_data.months.January}}</td>
-                    <td>{{ budget.january_budget|sub:report_data.months.January }}</td>
+                {% for key, value in summary.items %}
+                    <tr>
+                  <th scope="col">{{value.name}}</th>
+                    <td>{{value.budget}}</td>
+                    <td>{{value.actual}}</td>
+                    <td>{{value.difference}}</td>
                     <td>
-                        {% if budget.january_budget == 0 or report_data.months.January == 0 %}
                         <div class="progress">
-                          <div class="progress-bar bg-warning" role="progressbar" style="width: 0%" aria-valuenow="0%" aria-valuemin="0" aria-valuemax="100">0%</div>
+                          <div {% if value.percentage > 100 %} class="progress-bar bg-danger" {% else %} class="progress-bar bg-warning" {% endif %} role="progressbar" style="width: {{value.percentage}}%" aria-valuenow="{{value.percentage}}%" aria-valuemin="0" aria-valuemax="100">{{value.percentage}}%</div>
                         </div>
-                        {% else %}
-                        <div class="progress">
-                          <div class="progress-bar bg-warning" role="progressbar" style="width: {% widthratio report_data.months.January budget.january_budget 100 %}%" aria-valuenow="{% widthratio report_data.months.January budget.january_budget 100 %}%" aria-valuemin="0" aria-valuemax="100">{% widthratio report_data.months.January budget.january_budget 100 %}%</div>
-                        </div>
-                        {% endif %}
                     </td>
                 </tr>
-                <tr>
-                    <th scope="col">Feb</th>
-                    <td>{{budget.february_budget}}</td>
-                    <td>{{report_data.months.February}}</td>
-                    <td>{{ budget.february_budget|sub:report_data.months.February }}</td>
-                    <td>
-                        {% if budget.february_budget == 0 or report_data.months.February == 0 %}
-                        <div class="progress">
-                          <div class="progress-bar bg-warning" role="progressbar" style="width: 0%" aria-valuenow="0%" aria-valuemin="0" aria-valuemax="100">0%</div>
-                        </div>
-                        {% else %}
-                        <div class="progress">
-                          <div class="progress-bar bg-warning" role="progressbar" style="width: {% widthratio report_data.months.February budget.february_budget 100 %}%" aria-valuenow="{% widthratio report_data.months.February budget.february_budget 100 %}%" aria-valuemin="0" aria-valuemax="100">{% widthratio report_data.months.February budget.february_budget 100 %}%</div>
-                        </div>
-                        {% endif %}
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="col">Mar</th>
-                    <td>{{budget.march_budget}}</td>
-                    <td>{{report_data.months.March}}</td>
-                    <td>{{ budget.march_budget|sub:report_data.months.March }}</td>
-                    <td>
-                        {% if budget.march_budget == 0 or report_data.months.March == 0 %}
-                        <div class="progress">
-                          <div class="progress-bar bg-warning" role="progressbar" style="width: 0%" aria-valuenow="0%" aria-valuemin="0" aria-valuemax="100">0%</div>
-                        </div>
-                        {% else %}
-                        <div class="progress">
-                          <div class="progress-bar bg-warning" role="progressbar" style="width: {% widthratio report_data.months.March budget.march_budget 100 %}%" aria-valuenow="{% widthratio report_data.months.March budget.march_budget 100 %}%" aria-valuemin="0" aria-valuemax="100">{% widthratio report_data.months.March budget.march_budget 100 %}%</div>
-                        </div>
-                        {% endif %}
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="col">Apr</th>
-                    <td>{{budget.april_budget}}</td>
-                    <td>{{report_data.months.April}}</td>
-                    <td>{{ budget.april_budget|sub:report_data.months.April }}</td>
-                    <td>
-                        {% if budget.april_budget == 0 or report_data.months.April == 0 %}
-                        <div class="progress">
-                          <div class="progress-bar bg-warning" role="progressbar" style="width: 0%" aria-valuenow="0%" aria-valuemin="0" aria-valuemax="100">0%</div>
-                        </div>
-                        {% else %}
-                        <div class="progress">
-                          <div class="progress-bar bg-warning" role="progressbar" style="width: {% widthratio report_data.months.April budget.april_budget 100 %}%" aria-valuenow="{% widthratio report_data.months.April budget.april_budget 100 %}%" aria-valuemin="0" aria-valuemax="100">{% widthratio report_data.months.April budget.april_budget 100 %}%</div>
-                        </div>
-                        {% endif %}
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="col">May</th>
-                    <td>{{budget.may_budget}}</td>
-                    <td>{{report_data.months.May}}</td>
-                    <td>{{ budget.may_budget|sub:report_data.months.May }}</td>
-                    <td>
-                        {% if budget.may_budget == 0 or report_data.months.May == 0 %}
-                        <div class="progress">
-                          <div class="progress-bar bg-warning" role="progressbar" style="width: 0%" aria-valuenow="0%" aria-valuemin="0" aria-valuemax="100">0%</div>
-                        </div>
-                        {% else %}
-                        <div class="progress">
-                          <div class="progress-bar bg-warning" role="progressbar" style="width: {% widthratio report_data.months.May budget.may_budget 100 %}%" aria-valuenow="{% widthratio report_data.months.May budget.may_budget 100 %}%" aria-valuemin="0" aria-valuemax="100">{% widthratio report_data.months.May budget.may_budget 100 %}</div>
-                        </div>
-                        {% endif %}
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="col">Jun</th>
-                    <td>{{budget.june_budget}}</td>
-                    <td>{{report_data.months.June}}</td>
-                    <td>{{ budget.june_budget|sub:report_data.months.June }}</td>
-                    <td>
-                        {% if budget.june_budget == 0 or report_data.months.June == 0 %}
-                        <div class="progress">
-                          <div class="progress-bar bg-warning" role="progressbar" style="width: 0%" aria-valuenow="0%" aria-valuemin="0" aria-valuemax="100">0%</div>
-                        </div>
-                        {% else %}
-                        <div class="progress">
-                          <div class="progress-bar bg-warning" role="progressbar" style="width: {% widthratio report_data.months.June budget.june_budget 100 %}%" aria-valuenow="{% widthratio report_data.months.June budget.june_budget 100 %}%" aria-valuemin="0" aria-valuemax="100">{% widthratio report_data.months.June budget.june_budget 100 %}%</div>
-                        </div>
-                        {% endif %}
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="col">Jul</th>
-                    <td>{{budget.july_budget}}</td>
-                    <td>{{report_data.months.July}}</td>
-                    <td>{{ budget.july_budget|sub:report_data.months.July }}</td>
-                    <td>
-                        {% if budget.july_budget == 0 or report_data.months.July == 0 %}
-                        <div class="progress">
-                          <div class="progress-bar bg-warning" role="progressbar" style="width: 0%" aria-valuenow="0%" aria-valuemin="0" aria-valuemax="100">0%</div>
-                        </div>
-                        {% else %}
-                        <div class="progress">
-                          <div class="progress-bar bg-warning" role="progressbar" style="width: {% widthratio report_data.months.July budget.july_budget 100 %}%" aria-valuenow="{% widthratio report_data.months.July budget.july_budget 100 %}%" aria-valuemin="0" aria-valuemax="100">{% widthratio report_data.months.July budget.july_budget 100 %}%</div>
-                        </div>
-                        {% endif %}
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="col">Aug</th>
-                    <td>{{budget.august_budget}}</td>
-                    <td>{{report_data.months.August}}</td>
-                    <td>{{ budget.august_budget|sub:report_data.months.August }}</td>
-                    <td>
-                        {% if budget.august_budget == 0 or report_data.months.August == 0 %}
-                        <div class="progress">
-                          <div class="progress-bar bg-warning" role="progressbar" style="width: 0%" aria-valuenow="0%" aria-valuemin="0" aria-valuemax="100">0%</div>
-                        </div>
-                        {% else %}
-                        <div class="progress">
-                          <div class="progress-bar bg-warning" role="progressbar" style="width: {% widthratio report_data.months.August budget.august_budget 100 %}%" aria-valuenow="{% widthratio report_data.months.August budget.august_budget 100 %}%" aria-valuemin="0" aria-valuemax="100">{% widthratio report_data.months.August budget.august_budget 100 %}%</div>
-                        </div>
-                        {% endif %}
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="col">Sep</th>
-                    <td>{{budget.september_budget}}</td>
-                    <td>{{report_data.months.September}}</td>
-                    <td>{{ budget.september_budget|sub:report_data.months.September }}</td>
-                    <td>
-                        {% if budget.september_budget == 0 or report_data.months.September == 0 %}
-                        <div class="progress">
-                          <div class="progress-bar bg-warning" role="progressbar" style="width: 0%" aria-valuenow="0%" aria-valuemin="0" aria-valuemax="100">0%</div>
-                        </div>
-                        {% else %}
-                        <div class="progress">
-                          <div class="progress-bar bg-warning" role="progressbar" style="width: {% widthratio report_data.months.September budget.september_budget 100 %}%" aria-valuenow="{% widthratio report_data.months.September budget.september_budget 100 %}%" aria-valuemin="0" aria-valuemax="100">{% widthratio report_data.months.September budget.september_budget 100 %}%</div>
-                        </div>
-                        {% endif %}
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="col">Oct</th>
-                    <td>{{budget.october_budget}}</td>
-                    <td>{{report_data.months.October}}</td>
-                    <td>{{ budget.october_budget|sub:report_data.months.October }}</td>
-                    <td>
-                        {% if budget.october_budget == 0 or report_data.months.October == 0 %}
-                        <div class="progress">
-                          <div class="progress-bar bg-warning" role="progressbar" style="width: 0%" aria-valuenow="0%" aria-valuemin="0" aria-valuemax="100">0%</div>
-                        </div>
-                        {% else %}
-                        <div class="progress">
-                          <div class="progress-bar bg-warning" role="progressbar" style="width: {% widthratio report_data.months.October budget.october_budget 100 %}%" aria-valuenow="{% widthratio report_data.months.October budget.october_budget 100 %}%" aria-valuemin="0" aria-valuemax="100">{% widthratio report_data.months.October budget.october_budget 100 %}%</div>
-                        </div>
-                        {% endif %}
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="col">Nov</th>
-                    <td>{{budget.november_budget}}</td>
-                    <td>{{report_data.months.November}}</td>
-                    <td>{{ budget.november_budget|sub:report_data.months.November }}</td>
-                    <td>
-                        {% if budget.november_budget == 0 or report_data.months.November == 0 %}
-                        <div class="progress">
-                          <div class="progress-bar bg-warning" role="progressbar" style="width: 0%" aria-valuenow="0%" aria-valuemin="0" aria-valuemax="100">0%</div>
-                        </div>
-                        {% else %}
-                        <div class="progress">
-                          <div class="progress-bar bg-warning" role="progressbar" style="width: {% widthratio report_data.months.November budget.november_budget 100 %}%" aria-valuenow="{% widthratio report_data.months.November budget.november_budget 100 %}%" aria-valuemin="0" aria-valuemax="100">{% widthratio report_data.months.November budget.november_budget 100 %}%</div>
-                        </div>
-                        {% endif %}
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="col">Dec</th>
-                    <td>{{budget.december_budget}}</td>
-                    <td>{{report_data.months.December}}</td>
-                    <td>{{ budget.december_budget|sub:report_data.months.December }}</td>
-                    <td>
-                        {% if budget.december_budget == 0 or report_data.months.December == 0 %}
-                        <div class="progress">
-                          <div class="progress-bar bg-warning" role="progressbar" style="width: 0%" aria-valuenow="0%" aria-valuemin="0" aria-valuemax="100">0%</div>
-                        </div>
-                        {% else %}
-                        <div class="progress">
-                          <div class="progress-bar bg-warning" role="progressbar" style="width: {% widthratio report_data.months.December budget.december_budget 100 %}%" aria-valuenow="{% widthratio report_data.months.December budget.december_budget 100 %}%" aria-valuemin="0" aria-valuemax="100">{% widthratio report_data.months.December budget.december_budget 100 %}%</div>
-                        </div>
-                        {% endif %}
-                    </td>
-                </tr>
-                <tr>
+                {% endfor %}
+                <thead>
+                <tr style="background-color: #ededed">
                     <th scope="col">Total</th>
                     <td>{{budget.compute_budget}}</td>
                     <td>{{report_data.total}}</td>
@@ -285,6 +95,7 @@ function popitup(url) {
                         {% endif %}
                     </td>
                 </tr>
+            </thead>
               </tbody>
             </table>
           </div>

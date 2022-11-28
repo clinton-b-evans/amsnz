@@ -99,12 +99,148 @@ def editproperty_incomestatements(request):
         return JsonResponse(data)
 
 
+def edit_category(request):
+    if request.method == "POST":
+        print(request.body, "property")
+        propertyData = json.loads(request.body)
+        property = Category.objects.get(id=propertyData['id'])
+        property.name = propertyData['name']
+        property.transaction_type = propertyData['transaction_type']
+        property.january_budget = propertyData['january_budget']
+        property.february_budget = propertyData['february_budget']
+        property.march_budget = propertyData['march_budget']
+        property.april_budget = propertyData['april_budget']
+        property.may_budget = propertyData['may_budget']
+        property.june_budget = propertyData['june_budget']
+        property.july_budget = propertyData['july_budget']
+        property.august_budget = propertyData['august_budget']
+        property.september_budget = propertyData['september_budget']
+        property.october_budget = propertyData['october_budget']
+        property.november_budget = propertyData['november_budget']
+        property.december_budget = propertyData['december_budget']
+        property.year = propertyData['year']
+        property.save()
+        data = {
+            'user': "data is updated"
+        }
+        return JsonResponse(data)
+
+
+def delete_category(request):
+    id1 = request.GET.get('id', None)
+    print(id1, "delete")
+    Category.objects.get(id=id1).delete()
+    data = {
+        'deleted': True
+    }
+    return JsonResponse(data)
+
+
 def show_report(request, category, year):
     category_data = Category.objects.get(name=category, year=year)
+    monthly = category_data.months_data()
     if category_data.transaction_type == 'Income':
         report_data = incomes_result(year, category)
     else:
         report_data = expense_result(year, category)
+    monthly_data = {
+        1: {
+            "name": "January",
+            "budget": 0,
+            "actual": 0,
+            "difference": 0,
+            "percentage": 0,
+        },
+        2: {
+            "name": "February",
+            "budget": 0,
+            "actual": 0,
+            "difference": 0,
+            "percentage": 0,
+        },
+        3: {
+            "name": "March",
+            "budget": 0,
+            "actual": 0,
+            "difference": 0,
+            "percentage": 0,
+        },
+        4: {
+            "name": "April",
+            "budget": 0,
+            "actual": 0,
+            "difference": 0,
+            "percentage": 0,
+        },
+        5: {
+            "name": "May",
+            "budget": 0,
+            "actual": 0,
+            "difference": 0,
+            "percentage": 0,
+        },
+        6: {
+            "name": "June",
+            "budget": 0,
+            "actual": 0,
+            "difference": 0,
+            "percentage": 0,
+        },
+        7: {
+            "name": "July",
+            "budget": 0,
+            "actual": 0,
+            "difference": 0,
+            "percentage": 0,
+        },
+        8: {
+            "name": "August",
+            "budget": 0,
+            "actual": 0,
+            "difference": 0,
+            "percentage": 0,
+        },
+        9: {
+            "name": "September",
+            "budget": 0,
+            "actual": 0,
+            "difference": 0,
+            "percentage": 0,
+        },
+        10: {
+            "name": "October",
+            "budget": 0,
+            "actual": 0,
+            "difference": 0,
+            "percentage": 0,
+        },
+        11: {
+            "name": "November",
+            "budget": 0,
+            "actual": 0,
+            "difference": 0,
+            "percentage": 0,
+        },
+        12: {
+            "name": "December",
+            "budget": 0,
+            "actual": 0,
+            "difference": 0,
+            "percentage": 0,
+        },
+    }
+    summary = []
+    for x in range(1, 13):
+        monthly_data[x]['budget'] = monthly[monthly_data[x]['name']]
+        monthly_data[x]['actual'] = report_data[category]['months'][monthly_data[x]['name']]
+        monthly_data[x]['difference'] = monthly_data[x]['budget'] - monthly_data[x]['actual']
+        if monthly_data[x]['budget'] != 0 and monthly_data[x]['actual'] != 0:
+            monthly_data[x]['percentage'] = float(
+                "{:.1f}".format(monthly_data[x]['actual'] / monthly_data[x]['budget'] * 100))
+        else:
+            monthly_data[x]['percentage'] = 0
+        summary.append(monthly_data[x])
+    print(summary, 'x')
     percentage = float("{:.1f}".format(report_data[category]['total'] / category_data.compute_budget() * 100))
     context = {
         "transaction_type": category_data.transaction_type,
@@ -112,11 +248,22 @@ def show_report(request, category, year):
         "category_name": category_data.name,
         "budget": category_data,
         "report_data": report_data[category],
-        "percentage": percentage
+        "percentage": percentage,
+        "summary": monthly_data
 
     }
     return render(
         request, "incomestatements/report.html", context
+    )
+
+
+def category_list(request):
+    category_data = Category.objects.all()
+    context = {
+        'category_list': category_data,
+    }
+    return render(
+        request, "incomestatements/category.html", context
     )
 
 
