@@ -53,6 +53,18 @@ def addcategory_incomestatements(request):
             name=categoryData['name'],
             transaction_type=categoryData["Transaction"],
             year=categoryData["year"],
+            january_budget=categoryData['january_budget'],
+            february_budget=categoryData['february_budget'],
+            march_budget=categoryData['march_budget'],
+            april_budget=categoryData['april_budget'],
+            may_budget=categoryData['may_budget'],
+            june_budget=categoryData['june_budget'],
+            july_budget=categoryData['july_budget'],
+            august_budget=categoryData['august_budget'],
+            september_budget=categoryData['september_budget'],
+            october_budget=categoryData['october_budget'],
+            november_budget=categoryData['november_budget'],
+            december_budget=categoryData['december_budget'],
         )
         user = {
             'name': obj.name,

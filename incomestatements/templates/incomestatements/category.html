@@ -348,13 +348,37 @@ function popitup(url) {
         var name = document.getElementById('name').value;
         var Transaction = document.getElementById(`Transaction`).value;
         var year = document.getElementById('year').value;
+        var january_budget = document.getElementById(`january_budget`).value;
+        var february_budget = document.getElementById(`february_budget`).value;
+        var march_budget = document.getElementById(`march_budget`).value;
+        var april_budget = document.getElementById(`april_budget`).value;
+        var may_budget = document.getElementById(`may_budget`).value;
+        var june_budget = document.getElementById(`june_budget`).value;
+        var july_budget = document.getElementById(`july_budget`).value;
+        var august_budget = document.getElementById(`august_budget`).value;
+        var september_budget = document.getElementById(`september_budget`).value;
+        var october_budget = document.getElementById(`october_budget`).value;
+        var november_budget = document.getElementById(`november_budget`).value;
+        var december_budget = document.getElementById(`december_budget`).value;
         if (name && Transaction && year) {
             // Create Ajax Call
             $(document).ready(function () {
             let body={
                 'name': name,
                 'Transaction': Transaction,
-                'year': year
+                'year': year,
+                'january_budget': january_budget,
+                'february_budget': february_budget,
+                'may_budget': may_budget,
+                'march_budget': march_budget,
+                'april_budget': april_budget,
+                'june_budget': june_budget,
+                'july_budget': july_budget,
+                'august_budget': august_budget,
+                'september_budget': september_budget,
+                'october_budget': october_budget,
+                'november_budget': november_budget,
+                'december_budget':december_budget,
             }
             $.ajax({
                 contentType: 'application/json; charset=utf-8',
@@ -370,7 +394,7 @@ function popitup(url) {
                     console.log(data,'data')
                     if (data.user) {
                         $(`#exampleModal`).modal('hide');
-                        alert(`${data?.user?.name} has been successfully added to Categories`)
+                        location.reload();
                     }
                 },
                 failure: function (response) {
