@@ -4,7 +4,7 @@
 {% load mathfilters %}
 
 {% block title %}
-<div class="title">Categories</div>
+<div class="title">Forcast</div>
 {% endblock title %}
 
 {% block content %}
@@ -56,7 +56,7 @@ function popitup(url) {
             <path d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>
             <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
         </svg>
-  New Category
+  New Forcast
 </button>
 <!-- Modal -->
 <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -108,40 +108,40 @@ function popitup(url) {
                     <option value="Income">Income</option>
                     <option value="Expense">Expense</option>
                 </select>
-                <label class="form-label">january_budget</label>
+                <label class="form-label">January</label>
                 <input class="form-control" value="" name="january_budget" min=0 step="any" id="january_budget" type="number" oninput="validity.valid||
     (value='');">
-                <label class="form-label">february_budget</label>
+                <label class="form-label">February</label>
                 <input class="form-control" value="" name="february_budget" min=0 step="any" id="february_budget" type="number" oninput="validity.valid||
     (value='');">
-                <label class="form-label">march_budget</label>
+                <label class="form-label">March</label>
                 <input class="form-control" value="" name="march_budget" min=0 step="any" id="march_budget" type="number" oninput="validity.valid||
     (value='');">
-                <label class="form-label">april_budget</label>
+                <label class="form-label">April</label>
                 <input class="form-control" value="" name="april_budget" min=0 step="any" id="april_budget" type="number" oninput="validity.valid||
     (value='');">
-                <label class="form-label">may_budget</label>
+                <label class="form-label">May</label>
                 <input class="form-control" value="" name="may_budget" min=0 step="any" id="may_budget" type="number" oninput="validity.valid||
     (value='');">
-                <label class="form-label">june_budget</label>
+                <label class="form-label">June</label>
                 <input class="form-control" value="" name="june_budget" min=0 step="any" id="june_budget" type="number" oninput="validity.valid||
     (value='');">
-                <label class="form-label">july_budget</label>
+                <label class="form-label">July</label>
                 <input class="form-control" value="" name="july_budget" min=0 step="any" id="july_budget" type="number" oninput="validity.valid||
     (value='');">
-                <label class="form-label">august_budget</label>
+                <label class="form-label">August</label>
                 <input class="form-control" value="" name="august_budget" min=0 step="any" id="august_budget" type="number" oninput="validity.valid||
     (value='');">
-                <label class="form-label">september_budget</label>
+                <label class="form-label">September</label>
                 <input class="form-control" value="" name="september_budget" min=0 step="any" id="september_budget" type="number" oninput="validity.valid||
     (value='');">
-                <label class="form-label">october_budget</label>
+                <label class="form-label">October</label>
                 <input class="form-control" value="" name="october_budget" min=0 step="any" id="october_budget" type="number" oninput="validity.valid||
     (value='');">
-                <label class="form-label">november_budget</label>
+                <label class="form-label">November</label>
                 <input class="form-control" value="" name="november_budget" min=0 step="any" id="november_budget" type="number" oninput="validity.valid||
     (value='');">
-                <label class="form-label">december_budget</label>
+                <label class="form-label">December</label>
                 <input class="form-control" value="" name="december_budget" min=0 step="any" id="december_budget" type="number" oninput="validity.valid||
     (value='');">
               <label class="form-label">Year</label>
@@ -179,10 +179,11 @@ function popitup(url) {
               </thead>
               <tbody>
                 <tr>
-                  <th scope="col">Budget</th>
+                  <th scope="col">INCOME</th>
                 </tr>
                   <!-- <td scope="row">Maintenance</td>-->
                   {% for data in category_list %}
+                {% if data.transaction_type == "Income" %}
                   <tr>
                     <th scope="row">{{data.name}} ({{data.year}})</th>
                       <td>{{data.transaction_type}}</td>
@@ -239,40 +240,40 @@ function popitup(url) {
                                             <option value="Income">Income</option>
                                             <option value="Expense">Expense</option>
                                         </select>
-                                        <label class="form-label">january_budget</label>
+                                        <label class="form-label">January</label>
                                         <input class="form-control" value="{{data.january_budget}}" name="january_budget_edit{{data.id}}" min=0 step="any" id="january_budget_edit{{data.id}}" type="number" oninput="validity.valid||
                             (value='');">
-                                        <label class="form-label">february_budget</label>
+                                        <label class="form-label">February</label>
                                         <input class="form-control" value="{{data.february_budget}}" name="february_budget_edit{{data.id}}" min=0 step="any" id="february_budget_edit{{data.id}}" type="number" oninput="validity.valid||
                             (value='');">
-                                        <label class="form-label">march_budget</label>
+                                        <label class="form-label">March</label>
                                         <input class="form-control" value="{{data.march_budget}}" name="march_budget_edit{{data.id}}" min=0 step="any" id="march_budget_edit{{data.id}}" type="number" oninput="validity.valid||
                             (value='');">
-                                        <label class="form-label">april_budget</label>
+                                        <label class="form-label">April</label>
                                         <input class="form-control" value="{{data.april_budget}}" name="april_budget_edit{{data.id}}" min=0 step="any" id="april_budget_edit{{data.id}}" type="number" oninput="validity.valid||
                             (value='');">
-                                        <label class="form-label">may_budget</label>
+                                        <label class="form-label">May</label>
                                         <input class="form-control" value="{{data.may_budget}}" name="may_budget_edit{{data.id}}" min=0 step="any" id="may_budget_edit{{data.id}}" type="number" oninput="validity.valid||
                             (value='');">
-                                        <label class="form-label">june_budget</label>
+                                        <label class="form-label">June</label>
                                         <input class="form-control" value="{{data.june_budget}}" name="june_budget_edit{{data.id}}" min=0 step="any" id="june_budget_edit{{data.id}}" type="number" oninput="validity.valid||
                             (value='');">
-                                        <label class="form-label">july_budget</label>
+                                        <label class="form-label">July</label>
                                         <input class="form-control" value="{{data.july_budget}}" name="july_budget_edit{{data.id}}" min=0 step="any" id="july_budget_edit{{data.id}}" type="number" oninput="validity.valid||
                             (value='');">
-                                        <label class="form-label">august_budget</label>
+                                        <label class="form-label">August</label>
                                         <input class="form-control" value="{{data.august_budget}}" name="august_budget_edit{{data.id}}" min=0 step="any" id="august_budget_edit{{data.id}}" type="number" oninput="validity.valid||
                             (value='');">
-                                        <label class="form-label">september_budget</label>
+                                        <label class="form-label">September</label>
                                         <input class="form-control" value="{{data.september_budget}}" name="september_budget_edit{{data.id}}" min=0 step="any" id="september_budget_edit{{data.id}}" type="number" oninput="validity.valid||
                             (value='');">
-                                        <label class="form-label">october_budget</label>
+                                        <label class="form-label">October</label>
                                         <input class="form-control" value="{{data.october_budget}}" name="october_budget_edit{{data.id}}" min=0 step="any" id="october_budget_edit{{data.id}}" type="number" oninput="validity.valid||
                             (value='');">
-                                        <label class="form-label">november_budget</label>
+                                        <label class="form-label">November</label>
                                         <input class="form-control" value="{{data.november_budget}}" name="november_budget_edit{{data.id}}" min=0 step="any" id="november_budget_edit{{data.id}}" type="number" oninput="validity.valid||
                             (value='');">
-                                        <label class="form-label">december_budget</label>
+                                        <label class="form-label">December</label>
                                         <input class="form-control" value="{{data.december_budget}}" name="december_budget_edit{{data.id}}" min=0 step="any" id="december_budget_edit{{data.id}}" type="number" oninput="validity.valid||
                             (value='');">
                                       <label class="form-label">Year</label>
@@ -324,8 +325,170 @@ function popitup(url) {
           </td>
                     <!-- Modal -->
                   </tr>
+                {% endif %}
                   {% endfor %}
+                <thead>
+                  <tr style="background-color: #ededed">
+                    <th scope="row"><i>Total</i></th>
+                    {% for amount in month_expenses.values %}
+                    <th>${{amount}}</th>
+                    {% endfor %}
+                    <th>
+                      <div class="progress">
+  <div class="progress-bar bg-success" role="progressbar" style="width: {{expense_budget_percentage|stringformat:"i"}}%" aria-valuenow="{{expense_budget_percentage|stringformat:"i"}}" aria-valuemin="0" aria-valuemax="100">{{expense_budget_percentage|stringformat:"i"}}%</div>
+</div>
+                    </th>
+                  </tr>
+                </thead>
+                    <tr>
+                  <th scope="col">EXPENSE</th>
+                </tr>
+                  <!-- <td scope="row">Maintenance</td>-->
+                  {% for data in category_list %}
+                {% if data.transaction_type == "Expense" %}
+                  <tr>
+                    <th scope="row">{{data.name}} ({{data.year}})</th>
+                      <td>{{data.transaction_type}}</td>
+                      <td>${{data.january_budget}}</td>
+                      <td>${{data.february_budget}}</td>
+                      <td>${{data.march_budget}}</td>
+                      <td>${{data.april_budget}}</td>
+                      <td>${{data.may_budget}}</td>
+                      <td>${{data.june_budget}}</td>
+                      <td>${{data.july_budget}}</td>
+                      <td>${{data.august_budget}}</td>
+                      <td>${{data.september_budget}}</td>
+                      <td>${{data.october_budget}}</td>
+                      <td>${{data.november_budget}}</td>
+                      <td>${{data.december_budget}}</td>
+                      <td>${{data.compute_budget}}</td>
+                      <td style="text-align:right">
+<!--            <a href="popupex.html" onclick="return popitup('/incomestatements/{{ obj.id }}/edit')">-->
+<!--              <button class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit">-->
+<!--                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">-->
+<!--                  <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>-->
+<!--                  <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>-->
+<!--                </svg>-->
+<!--              </button>-->
+<!--            </a>-->
+              <button class="btn btn-success btn-sm rounded-0" data-bs-target="#basicModal{{data.id}}"
+                    data-bs-toggle="modal" data-placement="top"
+                    title="Edit" type="button">
+                <svg class="bi bi-pencil-square" fill="currentColor" height="16" viewBox="0 0 16 16"
+                     width="16" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                    <path d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"
+                          fill-rule="evenodd"/>
+                </svg>
+            </button>
+            <!--                            </a>-->
+            <div class="modal fade" id=basicModal{{data.id}} tabindex="-1">
+                <div class="modal-dialog">
+                    <form action="" method=POST>
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Edit Transaction</h5>
+                                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"
+                                        type="button"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <div class="mb-3">
+                                        <label class="form-label">Name</label>
+                                        <input class="form-control" type="text" value="{{data.name}}" name="name_edit{{data.id}}" id="name_edit{{data.id}}">
+                                        <label class="form-label">Transaction Type</label>
+                                        <select class="form-select" name="Transaction_edit{{data.id}}" id="Transaction_edit{{data.id}}" aria-label="Default select example" required>
+                                            <option value="{{data.transaction_type}}" selected>{{data.transaction_type}}</option>
+                                            <option value="Income">Income</option>
+                                            <option value="Expense">Expense</option>
+                                        </select>
+                                        <label class="form-label">January</label>
+                                        <input class="form-control" value="{{data.january_budget}}" name="january_budget_edit{{data.id}}" min=0 step="any" id="january_budget_edit{{data.id}}" type="number" oninput="validity.valid||
+                            (value='');">
+                                        <label class="form-label">February</label>
+                                        <input class="form-control" value="{{data.february_budget}}" name="february_budget_edit{{data.id}}" min=0 step="any" id="february_budget_edit{{data.id}}" type="number" oninput="validity.valid||
+                            (value='');">
+                                        <label class="form-label">March</label>
+                                        <input class="form-control" value="{{data.march_budget}}" name="march_budget_edit{{data.id}}" min=0 step="any" id="march_budget_edit{{data.id}}" type="number" oninput="validity.valid||
+                            (value='');">
+                                        <label class="form-label">April</label>
+                                        <input class="form-control" value="{{data.april_budget}}" name="april_budget_edit{{data.id}}" min=0 step="any" id="april_budget_edit{{data.id}}" type="number" oninput="validity.valid||
+                            (value='');">
+                                        <label class="form-label">May</label>
+                                        <input class="form-control" value="{{data.may_budget}}" name="may_budget_edit{{data.id}}" min=0 step="any" id="may_budget_edit{{data.id}}" type="number" oninput="validity.valid||
+                            (value='');">
+                                        <label class="form-label">June</label>
+                                        <input class="form-control" value="{{data.june_budget}}" name="june_budget_edit{{data.id}}" min=0 step="any" id="june_budget_edit{{data.id}}" type="number" oninput="validity.valid||
+                            (value='');">
+                                        <label class="form-label">July</label>
+                                        <input class="form-control" value="{{data.july_budget}}" name="july_budget_edit{{data.id}}" min=0 step="any" id="july_budget_edit{{data.id}}" type="number" oninput="validity.valid||
+                            (value='');">
+                                        <label class="form-label">August</label>
+                                        <input class="form-control" value="{{data.august_budget}}" name="august_budget_edit{{data.id}}" min=0 step="any" id="august_budget_edit{{data.id}}" type="number" oninput="validity.valid||
+                            (value='');">
+                                        <label class="form-label">September</label>
+                                        <input class="form-control" value="{{data.september_budget}}" name="september_budget_edit{{data.id}}" min=0 step="any" id="september_budget_edit{{data.id}}" type="number" oninput="validity.valid||
+                            (value='');">
+                                        <label class="form-label">October</label>
+                                        <input class="form-control" value="{{data.october_budget}}" name="october_budget_edit{{data.id}}" min=0 step="any" id="october_budget_edit{{data.id}}" type="number" oninput="validity.valid||
+                            (value='');">
+                                        <label class="form-label">November</label>
+                                        <input class="form-control" value="{{data.november_budget}}" name="november_budget_edit{{data.id}}" min=0 step="any" id="november_budget_edit{{data.id}}" type="number" oninput="validity.valid||
+                            (value='');">
+                                        <label class="form-label">December</label>
+                                        <input class="form-control" value="{{data.december_budget}}" name="december_budget_edit{{data.id}}" min=0 step="any" id="december_budget_edit{{data.id}}" type="number" oninput="validity.valid||
+                            (value='');">
+                                      <label class="form-label">Year</label>
+                                        <input class="form-control" value="{{data.year}}" name="year_edit{{data.id}}" min=0 step="any" id="year_edit{{data.id}}" type="number" oninput="validity.valid||
+                            (value='');">
+                                    </div>
+                                    <button class="btn btn-primary" type="button" onclick="EditProperty({{data.id}})">Submit</button>
+                                </form>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+              <button type="button" class="btn btn-danger-1 btn-sm rounded-0" data-bs-toggle="modal" data-bs-target="#deleteModal{{data.id}}">
+                  <svg class="bi bi-trash" fill="currentColor" height="16" viewBox="0 0 16 16"
+                             width="16" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                            <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
+                                  fill-rule="evenodd"/>
+                        </svg>
+                </button>
 
+                <!-- Modal -->
+                <div class="modal fade" id="deleteModal{{data.id}}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel">Delete Property</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                          <div class="modal-body deleteForm">
+                            <h2 class="">You are about to delete this Property</h2>
+                            <p>Are you sure you want to delete<strong> {{ data.name  }}</strong>?</p>
+                            <p>This action cannot be undone.</p>
+                            <p>All transctions for this fund will be lost</p>
+                              <button class="btn btn-danger form-control" type="button" onclick="deleteProperty({{data.id}})">Delete</button>
+                          </div>
+                    </div>
+                  </div>
+                </div>
+<!--            <a href="popupex.html" onclick="return popitup('/incomestatements/{{ obj.pk }}/delete')">-->
+<!--              <button class="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete">-->
+<!--                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">-->
+<!--                  <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>-->
+<!--                  <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>-->
+<!--                </svg>-->
+<!--              </button>-->
+<!--            </a>-->
+          </td>
+                    <!-- Modal -->
+                  </tr>
+                    {% endif %}
+                  {% endfor %}
               </tbody>
             </table>
 <!--    <table>-->

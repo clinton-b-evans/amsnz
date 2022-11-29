@@ -316,8 +316,8 @@ function popitup(url) {
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
           ['Task', 'Hours per Day'],
-          ['Actual',     {{ total_expense|stringformat:"i"}}],
-          ['Budget',      {{ expense_budget|stringformat:"i"}}],
+          ['Actual',     {{ total_income|stringformat:"i"}}],
+          ['Budget',      {{ income_budget|stringformat:"i"}}],
         ]);
 
         var options = {
@@ -338,8 +338,8 @@ function popitup(url) {
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
           ['Task', 'Hours per Day'],
-          ['Actual',     {{ total_income|stringformat:"i"}}],
-          ['Budget',     {{ income_budget|stringformat:"i"}}],
+          ['Actual',     {{ total_expense|stringformat:"i"}}],
+          ['Budget',     {{ expense_budget|stringformat:"i"}}],
         ]);
 
         var options = {

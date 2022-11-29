@@ -261,8 +261,7 @@ def show_report(request, category, year):
         "budget": category_data,
         "report_data": report_data[category],
         "percentage": percentage,
-        "summary": monthly_data
-
+        "summary": monthly_data,
     }
     return render(
         request, "incomestatements/report.html", context
@@ -271,6 +270,23 @@ def show_report(request, category, year):
 
 def category_list(request):
     category_data = Category.objects.all()
+    month_expenses = {
+        "January": 0,
+        "February": 0,
+        "March": 0,
+        "April": 0,
+        "May": 0,
+        "June": 0,
+        "July": 0,
+        "August": 0,
+        "September": 0,
+        "October": 0,
+        "November": 0,
+        "December": 0,
+    }
+    # for item in category_data:
+    #     if item.transaction_type == "Expense":
+    #         u=
     context = {
         'category_list': category_data,
     }
@@ -564,10 +580,12 @@ def year_to_date(request, year):
         for key in month_expenses.keys():
             if item["month"] == key:
                 month_expenses[key] += item["total"]
+    print(month_expenses, 'total')
     total_expense = 0
     for month, amount in month_expenses.items():
         total_expense += amount
     month_expenses.update({"total": total_expense})
+
     #  ### END OF EACH YEAR MONTHLY EXPENSES CALCULATIONS ###
 
     # START OF EACH YEAR MONTHLY INCOME CALCULATIONS
