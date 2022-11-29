@@ -7,6 +7,7 @@ from django.http import HttpResponse, JsonResponse
 from django.views.generic import ListView
 from yahooquery import Ticker
 
+from incomestatements_property.views import sort_years_list
 from .models import Crypto, CryptoTransaction, CrudUser
 from .forms import CryptoForm, TransactionForm
 import yfinance as yf
@@ -99,7 +100,7 @@ def get_crypto_price_data(tickers):
 
 
 @login_required(login_url='/login/')
-def crypto_list_view(request):
+def crypto_list_view(request, year):
     cryptos = Crypto.objects.filter(user=request.user).exclude(quantity=0)
     used_cryptos_ticker = cryptos.values_list('ticker', flat=True).distinct()
     crypto_prices = get_crypto_price_data(used_cryptos_ticker)
@@ -132,6 +133,12 @@ def crypto_list_view(request):
         })
     my_investments_list = ['%.2f' % elem for elem in investments]
     my_assetsGains_list = ['%.2f' % elem for elem in assetsGains]
+    years = CryptoTransaction.objects.values_list("date__year").distinct()
+    years_list = []
+    for data in years:
+        for item in data:
+            years_list.append(item)
+    years_list = sort_years_list(years_list)
     context = {
         "transactions": transactions_table,
         "crypto_prices": crypto_prices,
@@ -140,14 +147,14 @@ def crypto_list_view(request):
         "usedCrypto": cryptos.values_list('name', flat=True).distinct(),
         "investments": list(map(float, my_investments_list)),
         "assetsGains": list(map(float, my_assetsGains_list)),
-        "pie_chart_date": compute_pie_chart_transaction_types(cryptos, totalMarketValue, crypto_prices)
-
+        "pie_chart_date": compute_pie_chart_transaction_types(cryptos, totalMarketValue, crypto_prices),
+        "years_list":years_list
     }
     return render(request, "crypto/main.html", context)
 
 
 @login_required(login_url='/login/')
-def crypto_transactions(request, year=''):
+def crypto_transactions(request, year):
     crypto_coin = Crypto.objects.filter(user=request.user).values()
     if year == '':
         transactions = CryptoTransaction.objects.filter(user=request.user).order_by('date')
@@ -166,11 +173,18 @@ def crypto_transactions(request, year=''):
             "date": transaction.date,
             "totalInvestment": totalInvestment,
         })
+    years = CryptoTransaction.objects.values_list("date__year").distinct()
+    years_list = []
+    for data in years:
+        for item in data:
+            years_list.append(item)
+    years_list = sort_years_list(years_list)
     context = {
         "year": year,
         "transactions": transactions_table,
         "form": TransactionForm,
-        "crypto": crypto_coin
+        "crypto": crypto_coin,
+        "years_list": years_list,
     }
     return render(request, "cryptoTransactions/transactions.html", context)
 

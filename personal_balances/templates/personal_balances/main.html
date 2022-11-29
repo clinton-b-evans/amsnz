@@ -3,7 +3,18 @@
 {% load mathfilters %}
 
 {% block title %}
-<div class="title">Personal Balance Sheet <span>| Networth: ${{ networth }} </span></div>
+<div class="title">Personal Balance Sheet <span>| Networth: ${{ networth }} </span>
+<span class="filter position-absolute" style="right: 2rem;">
+        <a class="icon btn btn-dashboard" data-bs-toggle="dropdown" href="#" type="button">View By <i class="bi bi-grid"></i></a>
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+            <li class="dropdown-header text-start">
+                <h6>Filter</h6>
+            </li>
+            {% for year in years_list%}
+            <li><a class="dropdown-item" href="{% url 'personal_balances:personal_balances_list' year %}">{{year|stringformat:"i"}}</a></li>
+            {%endfor%}
+        </ul>
+    </span></div>
 {% endblock title %}
 
 {% block content %}
@@ -79,7 +90,7 @@ function popitup(url) {
                 <input class="form-control" value="" name="amount" min=0 step="any" id="amount" type="number" oninput="validity.valid||
     (value='');">
               <label class="form-label">Date</label>
-                <input class="form-control" name="date" id="date" type="text" value="{% now "Y-m-j" %}" disabled>
+                <input class="form-control" name="date" id="date" type="date" value="{% now "Y-m-j" %}">
             </div>
             <button class="btn btn-primary form-control" type="button" onclick="addEntry()">ADD</button>
         </form>

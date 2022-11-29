@@ -12,7 +12,7 @@ app_name = "personal_balances"
 
 urlpatterns = [
     path(
-        "personal_balances/", personal_balance_list_view, name="personal_balances_list"
+        "personal_balances/<str:year>/", personal_balance_list_view, name="personal_balances_list"
     ),
     path("personal_balances/weekly", personal_balance_list_weekly, name="weekly-list"),
     path(

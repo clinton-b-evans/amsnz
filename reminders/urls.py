@@ -11,7 +11,7 @@ from .views import (
 app_name = "reminders"
 
 urlpatterns = [
-    path("reminders/", reminder_list_view, name="reminders_list"),
+    path("reminders/<str:year>/", reminder_list_view, name="reminders_list"),
     path("reminders/add_reminder", add_reminder, name="add-reminder"),
     path("reminders/add_reminder/<str:pk>/", update_reminder, name="update-reminder"),
     path("reminders/<str:pk>/delete", delete_reminder, name="delete-reminder"),

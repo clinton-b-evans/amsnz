@@ -2,13 +2,15 @@ import json
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+
+from incomestatements_property.views import sort_years_list
 from .models import PersonalBalance
 from .forms import PersonalBalanceForm
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 
 
 @login_required(login_url='/login/')
-def personal_balance_list_view(request):
+def personal_balance_list_view(request, year):
     selected = "Yearly"
 
     qs_asset = PersonalBalance.objects.filter(entry_type="Asset")
@@ -36,6 +38,12 @@ def personal_balance_list_view(request):
         networth_class = "black"
     else:
         networth_class = "red"
+    years = PersonalBalance.objects.values_list("date__year").distinct()
+    years_list = []
+    for data in years:
+        for item in data:
+            years_list.append(item)
+    years_list = sort_years_list(years_list)
     context = {
         "assets": qs_asset,
         "liability": qs_lib,
@@ -48,6 +56,7 @@ def personal_balance_list_view(request):
         "networth": networth,
         "networth_class": networth_class,
         "selected": selected,
+        "years_list": years_list,
     }
     return render(request, "personal_balances/main.html", context)
 

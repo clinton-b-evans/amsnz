@@ -56,6 +56,5 @@ urlpatterns = [
         name="get_commodities",
     ),
 
-    path("commodities/", commodity_list_view, name="commodities_list"),
     path("commodities/<str:year>/", commodity_list_view, name="commodities_list"),
 ]

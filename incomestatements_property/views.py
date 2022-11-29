@@ -17,7 +17,7 @@ from copy import deepcopy
 
 
 @login_required(login_url='/login/')
-def incomestatement_property_list_view(request):
+def incomestatement_property_list_view(request, year):
     property_list = request.GET.getlist("properties")
     prop_qs = Property.objects.all()
     prop_cat = PropertyCategory.objects.all()
@@ -39,13 +39,19 @@ def incomestatement_property_list_view(request):
             total_expense += item.amount
 
     total = total_income - total_expense
-
+    years = PropertyIncomeStatement.objects.values_list("date__year").distinct()
+    years_list = []
+    for data in years:
+        for item in data:
+            years_list.append(item)
+    years_list = sort_years_list(years_list)
     context = {
         "object_list": qs,
         "prop_qs": prop_qs,
         "income_statement_list": income_statement_list,
         "total": total,
         "prop_cat": prop_cat,
+        "years_list": years_list,
     }
     return render(request, "propertyincomestatements/main.html", context)
 

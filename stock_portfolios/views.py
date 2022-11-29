@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from yahooquery import Ticker
 
+from incomestatements_property.views import sort_years_list
 from .models import Stock, StockTransaction
 from .forms import StockForm, TransactionForm
 import yfinance as yf
@@ -47,7 +48,7 @@ def get_stock_price_data(tickers):
 
 
 @login_required(login_url='/login/')
-def stock_list_view(request):
+def stock_list_view(request, year):
     stocks = Stock.objects.filter(user=request.user).exclude(quantity=0)
     used_stocks_ticker = stocks.values_list('ticker', flat=True).distinct()
     stock_prices = get_stock_price_data(used_stocks_ticker)
@@ -80,6 +81,12 @@ def stock_list_view(request):
         })
     my_investments_list = ['%.2f' % elem for elem in investments]
     my_assetsGains_list = ['%.2f' % elem for elem in assetsGains]
+    years = StockTransaction.objects.values_list("date__year").distinct()
+    years_list = []
+    for data in years:
+        for item in data:
+            years_list.append(item)
+    years_list = sort_years_list(years_list)
     context = {
         "transactions": transactions_table,
         "stock_prices": stock_prices,
@@ -88,8 +95,8 @@ def stock_list_view(request):
         "usedStock": stocks.values_list('name', flat=True).distinct(),
         "investments": list(map(float, my_investments_list)),
         "assetsGains": list(map(float, my_assetsGains_list)),
-        "pie_chart_date": compute_pie_chart_transaction_types(stocks, totalMarketValue, stock_prices)
-
+        "pie_chart_date": compute_pie_chart_transaction_types(stocks, totalMarketValue, stock_prices),
+        "years_list": years_list
     }
     return render(request, "stock/main.html", context)
 
@@ -153,7 +160,7 @@ def add_stock(request):
 #     return render(request, "stock/add.html", {"form": form, "submitted": submitted})
 
 @login_required(login_url='/login/')
-def stock_transactions(request, year=''):
+def stock_transactions(request, year):
     if year == '':
         stock = Stock.objects.filter(user=request.user).values()
         transactions = StockTransaction.objects.filter(user=request.user).order_by('date')
@@ -173,11 +180,18 @@ def stock_transactions(request, year=''):
             "date": transaction.date,
             "totalInvestment": totalInvestment,
         })
-
+    years = StockTransaction.objects.values_list("date__year").distinct()
+    years_list = []
+    for data in years:
+        for item in data:
+            years_list.append(item)
+    years_list = sort_years_list(years_list)
+    print(years_list,'years_list')
     context = {
         "year": year,
         "transactions": transactions_table,
-        "stock": stock
+        "stock": stock,
+        "years_list": years_list,
     }
     return render(request, "stockTransactions/transactions.html", context)
 

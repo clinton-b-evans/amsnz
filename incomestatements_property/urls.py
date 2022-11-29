@@ -13,7 +13,7 @@ app_name = "incomestatements_property"
 
 urlpatterns = [
     path(
-        "propertyincomestatements/",
+        "propertyincomestatements/<str:year>/",
         incomestatement_property_list_view,
         name="property-incomestatement-list",
     ),

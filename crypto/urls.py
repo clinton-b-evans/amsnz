@@ -20,8 +20,8 @@ class CreateCrudUser:
 
 
 urlpatterns = [
-    path("crypto/", crypto_list_view, name="crypto-list"),
-    path("crypto/transactions", crypto_transactions, name="crypto-transactions"),
+    path("crypto/<str:year>/", crypto_list_view, name="crypto-list"),
+    path("crypto/transactions/<str:year>/", crypto_transactions, name="crypto-transactions"),
     path("crypto/transaction/add/", add_transaction, name="crypto-transaction-add"),
     path("crypto/addTransaction/", add_transaction, name="addTransaction"),
     path('crypto/deleteTransaction/',  delete_transaction, name='deleteTransaction'),

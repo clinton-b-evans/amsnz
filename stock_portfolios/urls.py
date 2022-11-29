@@ -9,9 +9,8 @@ from .views import (
 app_name = "stock"
 
 urlpatterns = [
-    path("stock/", stock_list_view, name="stock-list"),
-    path("stock/transactions", stock_transactions, name="stock-transactions"),
-    path("stock/transactions/<str:year>", stock_transactions, name="stock-transactions"),
+    path("stock/<str:year>/", stock_list_view, name="stock-list"),
+    path("stock/transactions/<str:year>/", stock_transactions, name="stock-transactions"),
     path("stock/transaction/add/", add_transaction, name="stock-transaction-add"),
     # path("stock/add", add_stock, name="stock-add"),
     path("stock/addTransaction/", add_transaction, name="addTransaction"),

@@ -7,6 +7,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.template import loader
 
+from incomestatements_property.views import sort_years_list
 from .models import IncomeStatement, Category
 from .forms import IncomeStatementForm, CategoryForm
 from django.db.models.functions import TruncMonth, ExtractMonth
@@ -14,7 +15,7 @@ from django.db.models import Count, Sum, FloatField
 
 
 @login_required(login_url='/login/')
-def incomestatements_list_view(request):
+def incomestatements_list_view(request, year):
     prop_cat = Category.objects.all()
     if request.method == "POST":
         form = IncomeStatementForm(request.POST)
@@ -36,11 +37,18 @@ def incomestatements_list_view(request):
         total = total_income - total_expense
 
         form = IncomeStatementForm()
+        years = IncomeStatement.objects.values_list("date__year").distinct()
+        years_list = []
+        for data in years:
+            for item in data:
+                years_list.append(item)
+        years_list = sort_years_list(years_list)
         context = {
             "object_list": qs,
             "total": total,
             "form": form,
             "prop_cat": prop_cat,
+            "years_list": years_list,
         }
         return render(request, "incomestatements/main.html", context)
 
@@ -268,7 +276,7 @@ def show_report(request, category, year):
     )
 
 
-def category_list(request):
+def category_list(request, year):
     category_data = Category.objects.all()
     month_expenses = {
         "January": 0,
@@ -284,11 +292,16 @@ def category_list(request):
         "November": 0,
         "December": 0,
     }
-    # for item in category_data:
-    #     if item.transaction_type == "Expense":
-    #         u=
+    years = Category.objects.values_list("year").distinct()
+    years_list = []
+    for data in years:
+        for item in data:
+            years_list.append(int(item))
+    years_list = sort_years_list(years_list)
+    print(years_list)
     context = {
         'category_list': category_data,
+        "years_list": years_list
     }
     return render(
         request, "incomestatements/category.html", context

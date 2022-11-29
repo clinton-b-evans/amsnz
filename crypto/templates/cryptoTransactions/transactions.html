@@ -11,9 +11,8 @@
             <li class="dropdown-header text-start">
                 <h6>Filter</h6>
             </li>
-            <li><a class="dropdown-item" href="{% url 'commodities:commodities_list' %}">All years</a></li>
             {% for year in years_list%}
-            <li><a class="dropdown-item" href="{% url 'commodities:commodities_list' year %}">{{year|stringformat:"i"}}</a></li>
+            <li><a class="dropdown-item" href="{% url 'crypto:crypto-transactions' year %}">{{year|stringformat:"i"}}</a></li>
             {%endfor%}
         </ul>
     </span>
@@ -110,7 +109,7 @@ function popitup(url) {
                 <input class="form-control" name="spot_price" id="spot_price" type="number" min="0" step="any" oninput="validity.valid||
     (value='');">
                 <label class="form-label">Date</label>
-                <input class="form-control" name="date" id="date" type="text" value="{% now "Y-m-j" %}" disabled>
+                <input class="form-control" name="date" id="date" type="date" value="{% now "Y-m-j" %}">
             </div>
             <button class="btn btn-primary form-control" type="button" onclick="addTransaction()">ADD</button>
         </form>

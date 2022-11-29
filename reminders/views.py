@@ -3,6 +3,8 @@ import json
 from django.core import serializers
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+
+from incomestatements_property.views import sort_years_list
 from properties.models import Property
 from reminders.models import Reminder
 from django.db.models import Sum
@@ -18,12 +20,19 @@ def home_view(request):
     return render(request, "reminders/home.html", {})
 
 
-def reminder_list_view(request):
+def reminder_list_view(request, year):
     property=Property.objects.all()
     reminders = Reminder.objects.all().order_by("due_date")
+    years = Reminder.objects.values_list("due_date__year").distinct()
+    years_list = []
+    for data in years:
+        for item in data:
+            years_list.append(item)
+    years_list = sort_years_list(years_list)
     context = {
         "object_list": reminders,
-        "property": property
+        "property": property,
+        "years_list": years_list
     }
     return render(request, "reminders/main.html", context)
 

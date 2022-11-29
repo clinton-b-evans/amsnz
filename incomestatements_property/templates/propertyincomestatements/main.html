@@ -3,7 +3,18 @@
 {% load mathfilters %}
 
 {% block title %}
-<div class="title">Property Income Statement</div>
+<div class="title">Property Income Statement
+ <span class="filter position-absolute" style="right: 2rem;">
+    <a class="icon btn btn-dashboard" data-bs-toggle="dropdown" href="#" type="button">View By <i class="bi bi-grid"></i></a>
+    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+        <li class="dropdown-header text-start">
+            <h6>Filter</h6>
+        </li>
+        {% for year in years_list%}
+        <li><a class="dropdown-item" href="{% url 'incomestatements_property:property-incomestatement-list' year %}">{{year|stringformat:"i"}}</a></li>
+        {%endfor%}
+    </ul>
+</span></div>
 {% endblock title %}
 
 {% block content %}
@@ -51,7 +62,7 @@
         <form id="addStock1">
             <div class="mb-3">
                 <label class="form-label">Date</label>
-                <input class="form-control" name="date" id="date" type="text" value="{% now "Y-m-j" %}" disabled>
+                <input class="form-control" name="date" id="date" type="date" value="{% now "Y-m-j" %}">
                 <label class="form-label">Property</label>
                 <select class="form-select" name="Property" id="Property" aria-label="Default select example" required>
                      <option selected>------</option>

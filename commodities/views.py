@@ -66,7 +66,7 @@ def generate_bar_graph_series_data(commodities, commodity_prices):
 
 
 @login_required(login_url='/login/')
-def commodity_list_view(request, year=""):
+def commodity_list_view(request, year):
     commodities = Commodity.objects.filter(user=request.user).exclude(weight=0)
     commodity_prices = get_commodities()
     investments, assetsGains = generate_bar_graph_series_data(commodities, commodity_prices)
@@ -118,7 +118,7 @@ def commodity_list_view(request, year=""):
 
 
 @login_required(login_url='/login/')
-def commodity_transactions(request, year=''):
+def commodity_transactions(request, year):
     if year == '':
         commodity = Commodity.objects.filter(user=request.user).values()
     else:
@@ -127,7 +127,7 @@ def commodity_transactions(request, year=''):
         transactions = Transaction.objects.filter(user=request.user).order_by('date')
     else:
         transactions = Transaction.objects.filter(date__year=year, user=request.user).order_by('date')
-
+    years = Transaction.objects.values_list("date__year").distinct()
     transactions_table = []
     for transaction in transactions:
         totalInvestment = float(transaction.weight) * float(transaction.value)
