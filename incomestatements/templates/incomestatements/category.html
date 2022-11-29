@@ -4,7 +4,20 @@
 {% load mathfilters %}
 
 {% block title %}
-<div class="title">Forcast</div>
+<div class="title">Forecast
+<span class="filter position-absolute" style="right: 2rem;">
+    <a class="icon btn btn-dashboard" data-bs-toggle="dropdown" href="#" type="button">View By <i class="bi bi-grid"></i></a>
+    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+        <li class="dropdown-header text-start">
+            <h6>Filter</h6>
+        </li>
+        <li><a class="dropdown-item" href="{% url 'incomestatements:category_list' %}">All years</a></li>
+        {% for year in years_list%}
+        <li><a class="dropdown-item" href="{% url 'incomestatements:category_list' year %}">{{year|stringformat:"i"}}</a></li>
+        {%endfor%}
+    </ul>
+</span>
+    </div>
 {% endblock title %}
 
 {% block content %}
@@ -56,7 +69,7 @@ function popitup(url) {
             <path d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>
             <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
         </svg>
-  New Forcast
+  New Forecast
 </button>
 <!-- Modal -->
 <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -327,19 +340,6 @@ function popitup(url) {
                   </tr>
                 {% endif %}
                   {% endfor %}
-                <thead>
-                  <tr style="background-color: #ededed">
-                    <th scope="row"><i>Total</i></th>
-                    {% for amount in month_expenses.values %}
-                    <th>${{amount}}</th>
-                    {% endfor %}
-                    <th>
-                      <div class="progress">
-  <div class="progress-bar bg-success" role="progressbar" style="width: {{expense_budget_percentage|stringformat:"i"}}%" aria-valuenow="{{expense_budget_percentage|stringformat:"i"}}" aria-valuemin="0" aria-valuemax="100">{{expense_budget_percentage|stringformat:"i"}}%</div>
-</div>
-                    </th>
-                  </tr>
-                </thead>
                     <tr>
                   <th scope="col">EXPENSE</th>
                 </tr>

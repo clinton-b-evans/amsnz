@@ -3,7 +3,20 @@
 {% load mathfilters %}
 
 {% block title %}
-<div class="title">Profit and Loss</div>
+<div class="title">Profit and Loss
+<span class="filter position-absolute" style="right: 2rem;">
+    <a class="icon btn btn-dashboard" data-bs-toggle="dropdown" href="#" type="button">View By <i class="bi bi-grid"></i></a>
+    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+        <li class="dropdown-header text-start">
+            <h6>Filter</h6>
+        </li>
+        <li><a class="dropdown-item" href="{% url 'incomestatements:incomestatement_year_to_date' 2022 %}">All years</a></li>
+        {% for year in years_list%}
+        <li><a class="dropdown-item" href="{% url 'incomestatements:incomestatement_year_to_date' year %}">{{year|stringformat:"i"}}</a></li>
+        {%endfor%}
+    </ul>
+</span>
+</div>
 {% endblock title %}
 
 {% block content %}
@@ -104,7 +117,7 @@ function popitup(url) {
                     </td>
                     <td>
                     <a type="button" class="btn btn-primary btn-sm" href="{% url 'incomestatements:report' category_name 2022 %}">
-                      View Monthly Report
+                      Monthly Report
                     </a>
                     </td>
                     <!-- Modal -->
@@ -165,7 +178,7 @@ function popitup(url) {
                     </td>
                     <td>
                     <a type="button" class="btn btn-primary btn-sm" href="{% url 'incomestatements:report' category_name 2022 %}">
-                      View Monthly Report
+                      Monthly Report
                     </a>
                     </td>
                     <!-- Modal -->

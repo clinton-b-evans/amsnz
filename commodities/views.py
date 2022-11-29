@@ -8,6 +8,7 @@ from django.http import HttpResponse, JsonResponse
 from yahooquery import Ticker
 from yfinance import ticker
 
+from incomestatements_property.views import sort_years_list
 from .models import Commodity, Transaction
 from .forms import CommodityForm, TransactionForm
 from datetime import date
@@ -96,6 +97,12 @@ def commodity_list_view(request, year=""):
         })
     my_investments_list = ['%.2f' % elem for elem in investments]
     my_assetsGains_list = ['%.2f' % elem for elem in assetsGains]
+    years = Transaction.objects.values_list("date__year").distinct()
+    years_list = []
+    for data in years:
+        for item in data:
+            years_list.append(item)
+    years_list = sort_years_list(years_list)
     context = {
         "transactions": transactions_table,
         "commodities_list": commodity_prices,
@@ -104,8 +111,8 @@ def commodity_list_view(request, year=""):
         "usedCommodities": commodities.values_list('name', flat=True).distinct(),
         "investments": list(map(float, my_investments_list)),
         "assetsGains": list(map(float, my_assetsGains_list)),
-        "pie_chart_date": compute_pie_chart_transaction_types(commodities, totalMarketValue, commodity_prices)
-
+        "pie_chart_date": compute_pie_chart_transaction_types(commodities, totalMarketValue, commodity_prices),
+        "years_list": years_list
     }
     return render(request, "commodities/main.html", context)
 
@@ -133,11 +140,17 @@ def commodity_transactions(request, year=''):
             "date": transaction.date,
             "totalInvestment": totalInvestment,
         })
-
+    years = Transaction.objects.values_list("date__year").distinct()
+    years_list = []
+    for data in years:
+        for item in data:
+            years_list.append(item)
+    years_list = sort_years_list(years_list)
     context = {
         "year": year,
         "transactions": transactions_table,
         "commodity": commodity,
+        "years_list": years_list,
     }
     return render(request, "commodities/commodity_classes.html", context)
 
