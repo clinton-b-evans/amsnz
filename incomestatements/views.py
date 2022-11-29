@@ -731,6 +731,14 @@ def year_to_date(request, year):
     net_total = month_income["total"] - month_expenses["total"]
     net_Budget = month_income["Budget"] - month_expenses["Budget"]
     print(net_total, net_Budget)
+    if total_income != 0 and total_income_budget != 0:
+        income_budget_percentage = (float(total_income) / float(total_income_budget)) * 100
+    else:
+        income_budget_percentage = 0
+    if total_expense != 0 and total_expense_budget != 0:
+        expense_budget_percentage = (float(total_expense) / float(total_expense_budget)) * 100,
+    else:
+        expense_budget_percentage = 0
     context = {
         "object_list": qs,
         "year": year,
@@ -747,8 +755,8 @@ def year_to_date(request, year):
         "income_result": income_result,
         "expenses_result": expenses_result,
         "net_income": net_income,
-        "income_budget_percentage": (float(total_income) / float(total_income_budget)) * 100,
-        "expense_budget_percentage": (float(total_expense) / float(total_expense_budget)) * 100,
+        "income_budget_percentage": income_budget_percentage,
+        "expense_budget_percentage": expense_budget_percentage,
         # "total_budget_percentage": (float(net_total) / float(net_Budget)) * 100
     }
     return render(request, "incomestatements/ytd.html", context)
