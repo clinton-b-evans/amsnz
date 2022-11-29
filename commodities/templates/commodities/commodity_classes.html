@@ -96,7 +96,7 @@ function popitup(url) {
                 <input class="form-control" name="value" min="0" step="any" id="value" type="number" oninput="validity.valid||
     (value='');">
                 <label class="form-label">Date</label>
-                <input class="form-control" name="date" id="date" type="text" value="{% now "Y-m-j" %}" disabled>
+                <input class="form-control" name="date" id="date" type="date" value="{% now "Y-m-j" %}">
             </div>
             <button class="btn btn-primary form-control" type="button" onclick="addTransaction()">ADD</button>
         </form>
@@ -159,7 +159,7 @@ function popitup(url) {
                             <div class="modal fade" id=basicModal{{obj.id}} tabindex="-1">
                                 <div class="modal-dialog">
                                     <form action="" method=POST>
-                                        <div class="modal-content">
+                                        <div class="modal-content" style="text-align:left">
                                             <div class="modal-header">
                                                 <h5 class="modal-title">Edit Transaction</h5>
                                                 <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"
