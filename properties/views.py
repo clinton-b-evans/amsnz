@@ -333,13 +333,13 @@ def property_summary_view(request, year, *args, **kwargs):
     Get retirement goals objects for selected year
     """
 
-    retirementgoal = RetirementGoal.objects.filter(start_date__year=year, user=request.user)
-    if retirementgoal:
-        goal_networth = float(retirementgoal.networth_goal)
-        real_estate_percent = float(retirementgoal.real_estate / 100)
-        commodities_percent = float(retirementgoal.commodities / 100)
-        crypto_percent = float(retirementgoal.crypto / 100)
-        stocks_percent = Decimal(retirementgoal.stocks / 100)
+    retirement_goal = RetirementGoal.objects.filter(start_date__year=year, user=request.user)
+    if retirement_goal:
+        goal_networth = float(retirement_goal.networth_goal)
+        real_estate_percent = float(retirement_goal.real_estate / 100)
+        commodities_percent = float(retirement_goal.commodities / 100)
+        crypto_percent = float(retirement_goal.crypto / 100)
+        stocks_percent = Decimal(retirement_goal.stocks / 100)
     else:
         goal_networth = None
         real_estate_percent = None
@@ -357,16 +357,16 @@ def property_summary_view(request, year, *args, **kwargs):
     """
     Set retirement goals and current value by tracking it yearly
     """
-    if retirementgoal:
-        start_year = retirementgoal.start_date.year
+    if retirement_goal:
+        start_year = retirement_goal.start_date.year
     else:
         start_year = None
     total_operating_expenses = 0
 
     # PV is present retirement networth goal, r is consumer price index(cpi) ratio
     PV = goal_networth
-    if retirementgoal:
-        r = float(retirementgoal.cpi)
+    if retirement_goal:
+        r = float(retirement_goal.cpi)
     else:
         r = None
     n = 10
