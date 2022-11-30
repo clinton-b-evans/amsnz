@@ -335,11 +335,12 @@ def property_summary_view(request, year, *args, **kwargs):
 
     retirement_goal = RetirementGoal.objects.filter(start_date__year=year, user=request.user)
     if retirement_goal:
-        goal_networth = float(retirement_goal.networth_goal)
-        real_estate_percent = float(retirement_goal.real_estate / 100)
-        commodities_percent = float(retirement_goal.commodities / 100)
-        crypto_percent = float(retirement_goal.crypto / 100)
-        stocks_percent = Decimal(retirement_goal.stocks / 100)
+        for retirement_goal in retirement_goal:
+            goal_networth = float(retirement_goal.networth_goal)
+            real_estate_percent = float(retirement_goal.real_estate / 100)
+            commodities_percent = float(retirement_goal.commodities / 100)
+            crypto_percent = float(retirement_goal.crypto / 100)
+            stocks_percent = Decimal(retirement_goal.stocks / 100)
     else:
         goal_networth = None
         real_estate_percent = None
