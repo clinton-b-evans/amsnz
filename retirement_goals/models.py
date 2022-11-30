@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from django.utils.timezone import now
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -41,6 +42,7 @@ class RetirementGoal(models.Model):
     stocks_swr = models.DecimalField(
         max_digits=4, decimal_places=2, default=0, verbose_name="Stocks SWR"
     )
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
 
     def __str__(self):
         return str(self.networth_goal)

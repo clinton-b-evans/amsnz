@@ -221,7 +221,7 @@ function popitup(url) {
 <!--                </svg>-->
 <!--              </button>-->
 <!--            </a>-->
-              <button class="btn btn-success btn-sm rounded-0" data-bs-target="#basicModal{{data.id}}"
+              <button class="btn btn-success btn-sm rounded-0" data-bs-target="#basicModalIncome{{data.id}}"
                     data-bs-toggle="modal" data-placement="top"
                     title="Edit" type="button">
                 <svg class="bi bi-pencil-square" fill="currentColor" height="16" viewBox="0 0 16 16"
@@ -232,7 +232,7 @@ function popitup(url) {
                 </svg>
             </button>
             <!--                            </a>-->
-            <div class="modal fade" id=basicModal{{data.id}} tabindex="-1">
+            <div class="modal fade" id=basicModalIncome{{data.id}} tabindex="-1">
                 <div class="modal-dialog">
                     <form action="" method=POST>
                         <div class="modal-content">
@@ -245,9 +245,9 @@ function popitup(url) {
                                 <form>
                                     <div class="mb-3">
                                         <label class="form-label">Name</label>
-                                        <input class="form-control" type="text" value="{{data.name}}" name="name_edit{{data.id}}" id="name_edit{{data.id}}">
+                                        <input class="form-control" type="text" value="{{data.name}}" name="name_edit{{data.id}}" id="name_editIncome{{data.id}}">
                                         <label class="form-label">Transaction Type</label>
-                                        <select class="form-select" name="Transaction_edit{{data.id}}" id="Transaction_edit{{data.id}}" aria-label="Default select example" required>
+                                        <select class="form-select" name="Transaction_edit{{data.id}}" id="Transaction_editIncome{{data.id}}" aria-label="Default select example" required>
                                             <option value="{{data.transaction_type}}" selected>{{data.transaction_type}}</option>
                                             <option value="Income">Income</option>
                                             <option value="Expense">Expense</option>
@@ -299,7 +299,7 @@ function popitup(url) {
                     </form>
                 </div>
             </div>
-              <button type="button" class="btn btn-danger-1 btn-sm rounded-0" data-bs-toggle="modal" data-bs-target="#deleteModal{{data.id}}">
+              <button type="button" class="btn btn-danger-1 btn-sm rounded-0" data-bs-toggle="modal" data-bs-target="#deleteModalIncome{{data.id}}">
                   <svg class="bi bi-trash" fill="currentColor" height="16" viewBox="0 0 16 16"
                              width="16" xmlns="http://www.w3.org/2000/svg">
                             <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
@@ -309,11 +309,11 @@ function popitup(url) {
                 </button>
 
                 <!-- Modal -->
-                <div class="modal fade" id="deleteModal{{data.id}}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                <div class="modal fade" id="deleteModalIncome{{data.id}}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
                   <div class="modal-dialog">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h5 class="modal-title" id="deleteModalLabel">Delete Property</h5>
+                        <h5 class="modal-title" id="deleteModalLabelIncome">Delete Property</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                           <div class="modal-body deleteForm">
@@ -339,6 +339,36 @@ function popitup(url) {
                   </tr>
                 {% endif %}
                   {% endfor %}
+                <tr>
+                  <thead>
+                    <tr style="background-color: #ededed">
+                        <th scope="row">
+                            <i>Total</i>
+                        </th>
+                        <th>Income</th>
+                        {% for amount in income.values %}
+                        <th>${{amount.total}}</th>
+                        {% endfor %}
+                        <th>${{yearly_income_budget}}</th>
+                    </tr>
+                  </thead>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
                     <tr>
                   <th scope="col">EXPENSE</th>
                 </tr>
@@ -488,6 +518,36 @@ function popitup(url) {
                   </tr>
                     {% endif %}
                   {% endfor %}
+              <tr>
+                  <thead>
+                    <tr style="background-color: #ededed">
+                        <th scope="row">
+                            <i>Total</i>
+                        </th>
+                        <th>Expense</th>
+                        {% for amount in expense.values %}
+                        <th>${{amount.total}}</th>
+                        {% endfor %}
+                        <th>${{yearly_expense_budget}}</th>
+                    </tr>
+                  </thead>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
               </tbody>
             </table>
 <!--    <table>-->
@@ -616,7 +676,6 @@ function popitup(url) {
                 data: JSON.stringify(body),
                 success: function(data) {
                 //Success code
-<!--                    $(`#basicModal${data.user.id}`).modal('hide');-->
                     if (data.user) {
                         location.reload();
                     }

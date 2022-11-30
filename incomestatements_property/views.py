@@ -19,27 +19,27 @@ from copy import deepcopy
 @login_required(login_url='/login/')
 def incomestatement_property_list_view(request, year):
     property_list = request.GET.getlist("properties")
-    prop_qs = Property.objects.all()
-    prop_cat = PropertyCategory.objects.all()
+    prop_qs = Property.objects.filter(user=request.user)
+    prop_cat = PropertyCategory.objects.filter(user=request.user)
     if not property_list:
-        qs = PropertyIncomeStatement.objects.all()
+        qs = PropertyIncomeStatement.objects.filter(user=request.user)
     else:
         qs = PropertyIncomeStatement.objects.filter(
-            property__in=property_list
+            property__in=property_list, user=request.user
         ).order_by("-date")
-    income_statement_list = PropertyIncomeStatement.objects.all().order_by("-date")
+    income_statement_list = PropertyIncomeStatement.objects.filter(user=request.user).order_by("-date")
     total_income = 0
     total_expense = 0
     total = 0
     for item in qs:
-        cat_qs = PropertyCategory.objects.get(name=item.propcategory)
+        cat_qs = PropertyCategory.objects.filter(user=request.user).get(name=item.propcategory)
         if cat_qs.transaction_type == "Income":
             total_income += item.amount
         else:
             total_expense += item.amount
 
     total = total_income - total_expense
-    years = PropertyIncomeStatement.objects.values_list("date__year").distinct()
+    years = PropertyIncomeStatement.objects.filter(user=request.user).values_list("date__year").distinct()
     years_list = []
     for data in years:
         for item in data:
@@ -63,6 +63,7 @@ def addcategory_incomestatements(request):
         obj = PropertyCategory.objects.create(
             name=categoryData['name'],
             transaction_type=categoryData["Transaction"],
+            user=request.user
         )
         user = {
             'name': obj.name,
@@ -80,10 +81,11 @@ def addproperty_incomestatements(request):
         propertyData = json.loads(request.body)
         obj = PropertyIncomeStatement.objects.create(
             name=propertyData['name'],
-            property=Property.objects.get(name=propertyData["property"]),
+            property=Property.objects.filter(user=request.user).get(name=propertyData["property"]),
             date=propertyData["date"],
-            propcategory=PropertyCategory.objects.get(name=propertyData["propcategory"]),
+            propcategory=PropertyCategory.objects.filter(user=request.user).get(name=propertyData["propcategory"]),
             amount=propertyData["amount"],
+            user=request.user
         )
         user = {
             'name': obj.name,
@@ -99,10 +101,10 @@ def editproperty_incomestatements(request):
     if request.method == "POST":
         print(request.body, "property")
         propertyData = json.loads(request.body)
-        property = PropertyIncomeStatement.objects.get(id=propertyData['id'])
+        property = PropertyIncomeStatement.objects.filter(user=request.user).get(id=propertyData['id'])
         property.name = propertyData['name']
-        property.property = Property.objects.get(name=propertyData["property"])
-        property.propcategory = PropertyCategory.objects.get(name=propertyData["propcategory"])
+        property.property = Property.objects.filter(user=request.user).get(name=propertyData["property"])
+        property.propcategory = PropertyCategory.objects.filter(user=request.user).get(name=propertyData["propcategory"])
         property.amount = propertyData['amount']
         property.save()
         data = {
@@ -114,7 +116,7 @@ def editproperty_incomestatements(request):
 def deleteproperty_incomestatement(request):
     id1 = request.GET.get('id', None)
     print(id1, "delete")
-    PropertyIncomeStatement.objects.get(id=id1).delete()
+    PropertyIncomeStatement.objects.filter(user=request.user).get(id=id1).delete()
     data = {
         'deleted': True
     }
@@ -143,7 +145,7 @@ def add_property_incomestatements(request):
 
 
 def update_property_incomestatements(request, pk):
-    propertyincomestatement = PropertyIncomeStatement.objects.get(id=pk)
+    propertyincomestatement = PropertyIncomeStatement.objects.filter(user=request.user).get(id=pk)
     form = PropertyIncomeStatementForm(instance=propertyincomestatement)
 
     if request.method == "POST":
@@ -160,8 +162,8 @@ def update_property_incomestatements(request, pk):
 
 
 def delete_property_incomestatement(request, pk):
-    propertyincomestatement = PropertyIncomeStatement.objects.get(id=pk)
-    qs = PropertyIncomeStatement.objects.get(id=pk)
+    propertyincomestatement = PropertyIncomeStatement.objects.filter(user=request.user).get(id=pk)
+    qs = PropertyIncomeStatement.objects.filter(user=request.user).get(id=pk)
     context = {
         "object": qs,
     }
@@ -195,7 +197,7 @@ def add_property_category(request):
 
 
 def update_category(request, pk):
-    category = Category.objects.get(id=pk)
+    category = Category.objects.filter(user=request.user).get(id=pk)
     form = CategoryForm(instance=category)
 
     if request.method == "POST":
@@ -215,24 +217,24 @@ def sort_years_list(myList):
 
 
 def year_to_date(request, year):
-    years = PropertyIncomeStatement.objects.values_list("date__year").distinct()
+    years = PropertyIncomeStatement.objects.filter(user=request.user).values_list("date__year").distinct()
     years_list = []
     for data in years:
         for item in data:
             years_list.append(item)
     years_list = sort_years_list(years_list)
 
-    prop_qs = Property.objects.all()
+    prop_qs = Property.objects.filter(user=request.user)
     property_list = request.GET.getlist("properties")
     if not property_list:
-        qs = PropertyIncomeStatement.objects.all()
+        qs = PropertyIncomeStatement.objects.filter(user=request.user)
     else:
         qs = PropertyIncomeStatement.objects.filter(
-            property__in=property_list
+            property__in=property_list, user=request.user
         ).order_by("-date")
 
     qs = qs.filter(date__year=year)
-    cat_dict = PropertyCategory.objects.all()
+    cat_dict = PropertyCategory.objects.filter(user=request.user)
     categories = {}
 
     expense_qs = qs.filter(propcategory__transaction_type="Expense")
@@ -338,7 +340,7 @@ def year_to_date(request, year):
         current_month_income = income_qs.filter(date__month=month_int)
         for income_in_current_month in current_month_income:
             current_month_total_income += income_in_current_month.amount
-            category_of_income = PropertyCategory.objects.get(
+            category_of_income = PropertyCategory.objects.filter(user=request.user).get(
                 name=income_in_current_month.propcategory
             )
             income_result[f"{category_of_income}"]["months"][f"{month}"] = float(
@@ -382,7 +384,7 @@ def year_to_date(request, year):
         # print(month, current_month_expenses)
         for expense_in_current_month in current_month_expenses:
             current_month_total_expense += expense_in_current_month.amount
-            category_of_expense = PropertyCategory.objects.get(
+            category_of_expense = PropertyCategory.objects.filter(user=request.user).get(
                 name=expense_in_current_month.propcategory
             )
             expenses_result[f"{category_of_expense}"]["months"][f"{month}"] = float(
@@ -401,14 +403,14 @@ def year_to_date(request, year):
         categories_total_yearly[item.name] = 0
         categories[item.name] = 0
     for item in expense_qs:
-        cat_qs = PropertyCategory.objects.get(name=item.propcategory)
+        cat_qs = PropertyCategory.objects.filter(user=request.user).get(name=item.propcategory)
         if cat_qs.name in categories_total_yearly:
             categories_total_yearly[cat_qs.name] += item.amount
 
     total_income = 0
     total_expense = 0
     for item in qs:
-        cat_qs = PropertyCategory.objects.get(name=item.propcategory)
+        cat_qs = PropertyCategory.objects.filter(user=request.user).get(name=item.propcategory)
         if cat_qs.transaction_type == "Income":
             total_income += item.amount
         else:

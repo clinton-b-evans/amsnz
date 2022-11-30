@@ -62,18 +62,18 @@ def property_list_view(request):
     total_market_value = qs.aggregate(Sum("market_value")).get("market_value__sum")
     total_loan_amount = qs.aggregate(Sum("loan_amount")).get("loan_amount__sum")
     total_repayments = (
-        Property.objects.all().aggregate(Sum("repayments")).get("repayments__sum")
+        Property.objects.filter(user=request.user).aggregate(Sum("repayments")).get("repayments__sum")
     )
 
-    total_rates = Property.objects.all().aggregate(Sum("rates")).get("rates__sum")
+    total_rates = Property.objects.filter(user=request.user).aggregate(Sum("rates")).get("rates__sum")
     total_insurance = (
-        Property.objects.all().aggregate(Sum("insurance")).get("insurance__sum")
+        Property.objects.filter(user=request.user).aggregate(Sum("insurance")).get("insurance__sum")
     )
     total_maintenance = (
-        Property.objects.all().aggregate(Sum("maintenance")).get("maintenance__sum")
+        Property.objects.filter(user=request.user).aggregate(Sum("maintenance")).get("maintenance__sum")
     )
     total_management_fee = (
-        Property.objects.all()
+        Property.objects.filter(user=request.user)
         .aggregate(Sum("management_fee"))
         .get("management_fee__sum")
     )
@@ -100,7 +100,7 @@ def property_list_view(request):
 
 def property_list_weekly(request):
     selected = "Weekly"
-    qs = Property.objects.all(user=request.user)
+    qs = Property.objects.filter(user=request.user)
     total_operating_costs = 0
     total_noi = 0
     total_rent = 0
@@ -128,18 +128,18 @@ def property_list_weekly(request):
     total_market_value = qs.aggregate(Sum("market_value")).get("market_value__sum")
     total_loan_amount = qs.aggregate(Sum("loan_amount")).get("loan_amount__sum")
     total_repayments = (
-        Property.objects.all().aggregate(Sum("repayments")).get("repayments__sum")
+        Property.objects.filter(user=request.user).aggregate(Sum("repayments")).get("repayments__sum")
     )
 
-    total_rates = Property.objects.all().aggregate(Sum("rates")).get("rates__sum")
+    total_rates = Property.objects.filter(user=request.user).aggregate(Sum("rates")).get("rates__sum")
     total_insurance = (
-        Property.objects.all().aggregate(Sum("insurance")).get("insurance__sum")
+        Property.objects.filter(user=request.user).aggregate(Sum("insurance")).get("insurance__sum")
     )
     total_maintenance = (
-        Property.objects.all().aggregate(Sum("maintenance")).get("maintenance__sum")
+        Property.objects.filter(user=request.user).aggregate(Sum("maintenance")).get("maintenance__sum")
     )
     total_management_fee = (
-        Property.objects.all()
+        Property.objects.filter(user=request.user)
         .aggregate(Sum("management_fee"))
         .get("management_fee__sum")
     )
@@ -194,18 +194,18 @@ def property_list_monthly(request):
     total_market_value = qs.aggregate(Sum("market_value")).get("market_value__sum")
     total_loan_amount = qs.aggregate(Sum("loan_amount")).get("loan_amount__sum")
     total_repayments = (
-        Property.objects.all().aggregate(Sum("repayments")).get("repayments__sum")
+        Property.objects.filter(user=request.user).aggregate(Sum("repayments")).get("repayments__sum")
     )
 
-    total_rates = Property.objects.all().aggregate(Sum("rates")).get("rates__sum")
+    total_rates = Property.objects.filter(user=request.user).aggregate(Sum("rates")).get("rates__sum")
     total_insurance = (
-        Property.objects.all().aggregate(Sum("insurance")).get("insurance__sum")
+        Property.objects.filter(user=request.user).aggregate(Sum("insurance")).get("insurance__sum")
     )
     total_maintenance = (
-        Property.objects.all().aggregate(Sum("maintenance")).get("maintenance__sum")
+        Property.objects.filter(user=request.user).aggregate(Sum("maintenance")).get("maintenance__sum")
     )
     total_management_fee = (
-        Property.objects.all()
+        Property.objects.filter(user=request.user)
         .aggregate(Sum("management_fee"))
         .get("management_fee__sum")
     )
@@ -234,10 +234,10 @@ def property_list_monthly(request):
 def property_detail_view(request, **kwargs):
     pk = kwargs.get("pk")
 
-    obj = Property.objects.get(pk=pk)
-    contact_obj = Contact.objects.filter(properties=pk)
+    obj = Property.objects.filter(user=request.user).get(pk=pk)
+    contact_obj = Contact.objects.filter(properties=pk, user=request.user)
 
-    reminders = Reminder.objects.filter(property=obj).order_by("due_date")
+    reminders = Reminder.objects.filter(property=obj, user=request.user).order_by("due_date")
     reminders_count = reminders.count()
 
     nper_interest = float(obj.interest_rate / 100)
@@ -327,17 +327,25 @@ def property_summary_view(request, year, *args, **kwargs):
     """
     Get Property objects for selected year
     """
-    qs = Property.objects.all().filter(purchase_date__year=year)
+    qs = Property.objects.filter(purchase_date__year=year, user=request.user)
 
     """
     Get retirement goals objects for selected year
     """
-    retirementgoal = RetirementGoal.objects.filter(start_date__year=year).latest("cash")
-    goal_networth = float(retirementgoal.networth_goal)
-    real_estate_percent = float(retirementgoal.real_estate / 100)
-    commodities_percent = float(retirementgoal.commodities / 100)
-    crypto_percent = float(retirementgoal.crypto / 100)
-    stocks_percent = Decimal(retirementgoal.stocks / 100)
+
+    retirementgoal = RetirementGoal.objects.filter(start_date__year=year, user=request.user)
+    if retirementgoal:
+        goal_networth = float(retirementgoal.networth_goal)
+        real_estate_percent = float(retirementgoal.real_estate / 100)
+        commodities_percent = float(retirementgoal.commodities / 100)
+        crypto_percent = float(retirementgoal.crypto / 100)
+        stocks_percent = Decimal(retirementgoal.stocks / 100)
+    else:
+        goal_networth = None
+        real_estate_percent = None
+        commodities_percent = None
+        crypto_percent = None
+        stocks_percent = None
     print("stocks_percent", stocks_percent)
 
     """
@@ -349,25 +357,38 @@ def property_summary_view(request, year, *args, **kwargs):
     """
     Set retirement goals and current value by tracking it yearly
     """
-    start_year = retirementgoal.start_date.year
+    if retirementgoal:
+        start_year = retirementgoal.start_date.year
+    else:
+        start_year = None
     total_operating_expenses = 0
 
     # PV is present retirement networth goal, r is consumer price index(cpi) ratio
     PV = goal_networth
-    r = float(retirementgoal.cpi)
+    if retirementgoal:
+        r = float(retirementgoal.cpi)
+    else:
+        r = None
     n = 10
 
     def CurrentYearGoal():
-        return date.today().year - start_year
+        if start_year is not None:
+            return date.today().year - start_year
+        return None
 
     def FutureValue(x):
-        return PV * (1 + r / 100) ** x
+        if r is not None:
+            return PV * (1 + r / 100) ** x
+        return None
 
     """
     Estimate future value of current year goal networth
     """
     current_goal = FutureValue(CurrentYearGoal())
-    property_goal = real_estate_percent * current_goal
+    if current_goal is not None:
+        property_goal = real_estate_percent * current_goal
+    else:
+        property_goal = None
     total_rent_after_vacany_rate = 0
 
     """
@@ -421,19 +442,29 @@ def property_summary_view(request, year, *args, **kwargs):
     total_expenses = 2000
 
     total_net_rental_income = total_income - total_expenses
-    property_progress = total_networth / property_goal * 100
+    if property_goal is not None:
+        property_progress = total_networth / property_goal * 100
+    else:
+        property_progress = None
+    if total_repayments is not None:
+        loan_to_debt_ratio = total_income / total_repayments
+        loan_to_debt_percent = (total_repayments / total_income) * 100
 
-    loan_to_debt_ratio = total_income / total_repayments
-    loan_to_debt_percent = (total_repayments / total_income) * 100
-
-    debt_service_coverage_ratio = (
-                                          total_income - total_operating_expenses
-                                  ) / total_repayments
-    debt_service_coverage_percent = (
-                                            total_repayments / (total_income - total_operating_expenses)
-                                    ) * 100
-
-    break_even_point = (total_expenses / total_income) * 100
+        debt_service_coverage_ratio = (
+                                              total_income - total_operating_expenses
+                                      ) / total_repayments
+        debt_service_coverage_percent = (
+                                                total_repayments / (total_income - total_operating_expenses)
+                                        ) * 100
+    else:
+        loan_to_debt_ratio = None
+        loan_to_debt_percent = None
+        debt_service_coverage_ratio = None
+        debt_service_coverage_percent = None
+    if total_income != 0 and total_expenses != 0:
+        break_even_point = (total_expenses / total_income) * 100
+    else:
+        break_even_point = 0
 
     """
         Stocks Calculations::
@@ -443,7 +474,7 @@ def property_summary_view(request, year, *args, **kwargs):
         ** get commodities total
         ** get reits total
     """
-    stocks_qs = IndexFund.objects.filter(date__year=year)
+    stocks_qs = IndexFund.objects.filter(date__year=year, user=request.user)
     stocks_total_value = 0
     stocks_total_equities = 0
     stocks_total_bonds = 0
@@ -472,20 +503,18 @@ def property_summary_view(request, year, *args, **kwargs):
             stocks_total_other = stocks_total_other + obj.value
     # Adding retirement's networth current goal and stocks percent
     print("stocks_total_value", stocks_total_value)
-    stocks_goal = Decimal(stocks_percent) * Decimal(current_goal)
-    print("stocks_goal", stocks_goal)
-    stocks_total_progress = 0
-    stocks_total_progress1 = float(stocks_total_value / stocks_goal) * 100
-    print("stocks_total_progress1", stocks_total_progress1)
-    if stocks_goal > 0 and stocks_total_progress1 > 0:
-        stocks_total_progress += stocks_total_progress1
-    else:
+    if stocks_percent is not None:
+        stocks_goal = Decimal(stocks_percent) * Decimal(current_goal)
         stocks_total_progress = 0
-
-    crypto_goal = crypto_percent * current_goal
+        stocks_total_progress1 = float(stocks_total_value / stocks_goal) * 100
+        print("stocks_total_progress1", stocks_total_progress1)
+        if stocks_goal > 0 and stocks_total_progress1 > 0:
+            stocks_total_progress += stocks_total_progress1
+        else:
+            stocks_total_progress = 0
 
     # Commodities
-    commodities = Commodity.objects.all()
+    commodities = Commodity.objects.filter(user=request.user)
     # commodities_total_amount = 0
     # invested_total = 0
     # for commodity in commodities:
@@ -505,45 +534,50 @@ def property_summary_view(request, year, *args, **kwargs):
     #     commodities_total_amount += commodity.total
     #     invested_total += commodity.invested
     grand_total = 0
-
-    commodities_goal = float(commodities_percent * current_goal)
-    # commodities_progress1 = float(commodities_total_amount) / commodities_goal * 100
-    commodities_progress1 = float(20000) / commodities_goal * 100
-    commod_progress = 0.0
-    if commodities_goal > 0 and commodities_progress1 > 0:
-        commod_progress += commodities_progress1
-    else:
+    print(current_goal)
+    if current_goal is not None:
+        commodities_goal = float(commodities_percent * current_goal)
+        # commodities_progress1 = float(commodities_total_amount) / commodities_goal * 100
+        commodities_progress1 = float(20000) / commodities_goal * 100
         commod_progress = 0.0
+        if commodities_goal > 0 and commodities_progress1 > 0:
+            commod_progress += commodities_progress1
+        else:
+            commod_progress = 0.0
 
-    # Crypto
-    crypto_qs = Crypto.objects.filter()
-    crypto_total_amount = 0
-    # for item in crypto_qs:
-    #     item.total = item.quantity * item.spot_price
-    #     crypto_total_amount += item.total
-    crypto_goal = float(crypto_percent * current_goal)
+        # Crypto
+        try:
+            crypto_qs = Crypto.objects.filter(user=request.user)
+        except Crypto.objects.filter(user=request.user).DoesNotExist:
+            crypto_qs = None
+        crypto_total_amount = 0
+        # for item in crypto_qs:
+        #     item.total = item.quantity * item.spot_price
+        #     crypto_total_amount += item.total
+        crypto_goal = float(crypto_percent * current_goal)
 
-    if crypto_goal > 0:
-        crypto_progress = float(crypto_total_amount) / crypto_goal * 100
+        if crypto_goal > 0:
+            crypto_progress = float(crypto_total_amount) / crypto_goal * 100
+        else:
+            crypto_progress = 0
     else:
-        crypto_progress = 0
-    print("crypto_progress", crypto_progress)
+        crypto_total_amount = 0
     # Personal Balance Sheet
-    pba_qs = PersonalBalance.objects.filter(entry_type="Asset", date__year=year)
-    pbl_qs = PersonalBalance.objects.filter(entry_type="Liability", date__year=year)
+    pba_qs = PersonalBalance.objects.filter(entry_type="Asset", date__year=year, user=request.user)
+    pbl_qs = PersonalBalance.objects.filter(entry_type="Liability", date__year=year, user=request.user)
     total_pb_assets = pba_qs.aggregate(Sum("amount")).get("amount__sum")
     total_pb_liabilities = pbl_qs.aggregate(Sum("amount")).get("amount__sum")
     if total_pb_assets is None:
         total_pb_assets = 0
     if total_pb_liabilities is None:
         total_pb_liabilities = 0
-    qs_save = PersonalBalance.objects.filter(entry_type="Savings", date__year=year)
+    qs_save = PersonalBalance.objects.filter(entry_type="Savings", date__year=year, user=request.user)
     savings_total = 0
     for item in qs_save:
         savings_total = savings_total + item.amount
 
     qs_retirement = PersonalBalance.objects.filter(
-        entry_type="Retirement Acc", date__year=year
+        entry_type="Retirement Acc", date__year=year, user=request.user
     )
     total_retirement = 0
     for item in qs_retirement:
@@ -554,8 +588,8 @@ def property_summary_view(request, year, *args, **kwargs):
     )
     cf_income_yearly = 0
     cf_expense_yearly = 0
-    cf_income_qs = CashFlow.objects.filter(entry_type="Income", date__year=year)
-    cf_expense_qs = CashFlow.objects.filter(entry_type="Expense", date__year=year)
+    cf_income_qs = CashFlow.objects.filter(entry_type="Income", date__year=year, user=request.user)
+    cf_expense_qs = CashFlow.objects.filter(entry_type="Expense", date__year=year, user=request.user)
 
     for item in cf_income_qs:
         if item.frequency == "Weekly":
@@ -589,7 +623,7 @@ def property_summary_view(request, year, *args, **kwargs):
     """
     extracted all Years from Database 
     """
-    years = list(Property.objects.values_list("purchase_date__year").distinct())
+    years = list(Property.objects.filter(user=request.user).values_list("purchase_date__year").distinct())
     years_list = []
     for data in years:
         for item in data:
@@ -604,20 +638,20 @@ def property_summary_view(request, year, *args, **kwargs):
     Get all years records from apps
     """
     for my_year in years_list:
-        props_qs = Property.objects.filter(purchase_date__year=my_year)
+        props_qs = Property.objects.filter(purchase_date__year=my_year, user=request.user)
         yearwise_props_assets = props_qs.aggregate(Sum("market_value")).get("market_value__sum")
         # print(yearwise_props_assets)
         yearwise_props_liabilities = props_qs.aggregate(Sum("loan_amount")).get(
             "loan_amount__sum"
         )
 
-        pba_qs = PersonalBalance.objects.filter(entry_type="Asset", date__year=my_year)
+        pba_qs = PersonalBalance.objects.filter(entry_type="Asset", date__year=my_year, user=request.user)
         pbl_qs = PersonalBalance.objects.filter(
             entry_type="Liability", date__year=my_year
         )
-        qs_save = PersonalBalance.objects.filter(entry_type="Savings", date__year=year)
+        qs_save = PersonalBalance.objects.filter(entry_type="Savings", date__year=year, user=request.user)
         qs_retirement = PersonalBalance.objects.filter(
-            entry_type="Retirement Acc", date__year=year
+            entry_type="Retirement Acc", date__year=year, user=request.user
         )
 
         yearwise_pb_assets = pba_qs.aggregate(Sum("amount")).get("amount__sum")
@@ -627,13 +661,13 @@ def property_summary_view(request, year, *args, **kwargs):
             "amount__sum"
         )
 
-        yearwise_crypto_qs = Crypto.objects.filter()
+        yearwise_crypto_qs = Crypto.objects.filter(user=request.user)
         crypto_total_value = 0
         # for item in yearwise_crypto_qs:
         #     item.total = item.quantity * item.spot_price
         #     crypto_total_value += item.total
 
-        yearwise_stocks_qs = IndexFund.objects.filter(date__year=my_year)
+        yearwise_stocks_qs = IndexFund.objects.filter(date__year=my_year, user=request.user)
         stocks_total_value = 0
         for obj in yearwise_stocks_qs:
             obj.value = round(obj.shares * obj.share_price, 2)
@@ -672,17 +706,31 @@ def property_summary_view(request, year, *args, **kwargs):
         """
         Single selected Year graph assets, liabilities and networth.
         """
-    graph_asset = (
-            total_assets
-            + total_pb_assets
-            + savings_total
-            + total_retirement
-            + stocks_total_value
-            + 2000
-            + crypto_total_amount
-    )
-
-    graph_lib = total_liabilities + total_pb_liabilities
+    print(total_pb_assets, total_pb_assets, savings_total, total_retirement, stocks_total_value, crypto_total_amount)
+    if total_assets is not None:
+        graph_asset = (
+                total_assets
+                + total_pb_assets
+                + savings_total
+                + total_retirement
+                + stocks_total_value
+                + 2000
+                + crypto_total_amount
+        )
+    else:
+        graph_asset = (
+                total_pb_assets
+                + savings_total
+                + total_retirement
+                + stocks_total_value
+                + 2000
+                + crypto_total_amount
+        )
+    print(total_liabilities, total_pb_assets)
+    if total_liabilities is not None and total_pb_liabilities is not None:
+        graph_lib = total_liabilities + total_pb_liabilities
+    else:
+        graph_lib = 0
     graph_nw = graph_asset - graph_lib
     context = {
         "object_list": qs,
@@ -721,12 +769,8 @@ def property_summary_view(request, year, *args, **kwargs):
         "stocks_total_other": stocks_total_other,
         "commodities": commodities,
         "commodities_total_value": 200,
-        "crypto_qs": crypto_qs,
         "crypto_total_amount": crypto_total_amount,
         "property_progress": property_progress,
-        "crypto_progress": crypto_progress,
-        "commodities_prog": commod_progress,
-        "stocks_total_progress": stocks_total_progress,
         # Single year context for assets, liabilities and networth
         "graph_asset": graph_asset,
         "graph_lib": graph_lib,
@@ -804,7 +848,7 @@ def add_property(request):
 def editproperty(request):
     if request.method == "POST":
         propertyData = json.loads(request.body)
-        property = Property.objects.get(id=propertyData['id'], user=request.user)
+        property = Property.objects.filter(user=request.user).get(id=propertyData['id'])
         print(propertyData, 'propertyData')
         print(property, 'property')
         print(propertyData['land_size'], 'land_size')
@@ -841,7 +885,7 @@ def editproperty(request):
 
 
 def update_property(request, pk):
-    property = Property.objects.get(id=pk)
+    property = Property.objects.filter(user=request.user).get(id=pk)
     form = PropertyForm(instance=property)
 
     if request.method == "POST":
@@ -858,7 +902,7 @@ def update_property(request, pk):
 def deleteproperty(request):
     id1 = request.GET.get('id', None)
     print(id1, "delete")
-    Property.objects.get(id=id1, user=request.user).delete()
+    Property.objects.filter(user=request.user).get(id=id1).delete()
     data = {
         'deleted': True
     }
@@ -866,8 +910,8 @@ def deleteproperty(request):
 
 
 def delete_property(request, pk):
-    property = Property.objects.get(id=pk)
-    qs = Property.objects.get(id=pk)
+    property = Property.objects.filter(user=request.user).get(id=pk)
+    qs = Property.objects.filter(user=request.user).get(id=pk)
     context = {
         "object": qs,
     }

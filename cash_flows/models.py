@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from django.utils.timezone import now
 
@@ -27,6 +28,7 @@ class CashFlow(models.Model):
     )
     amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     date = models.DateField(null=True, blank=True, default=now)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
 
     def __str__(self):
         return f"{self.entry_type} - {self.amount}"

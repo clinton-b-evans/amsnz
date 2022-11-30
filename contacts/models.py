@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from properties.models import Property
 from django.utils.timezone import now
@@ -20,6 +21,7 @@ class Contact(models.Model):
         blank=True,
         verbose_name="Properties - Hold CTRL/CMD to select multiple",
     )
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
 
     def __str__(self):
         return f"{self.first_name}"

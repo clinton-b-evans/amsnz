@@ -13,10 +13,10 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 def personal_balance_list_view(request, year):
     selected = "Yearly"
 
-    qs_asset = PersonalBalance.objects.filter(entry_type="Asset")
-    qs_lib = PersonalBalance.objects.filter(entry_type="Liability")
-    qs_save = PersonalBalance.objects.filter(entry_type="Savings")
-    qs_retirement = PersonalBalance.objects.filter(entry_type="Retirement Acc")
+    qs_asset = PersonalBalance.objects.filter(entry_type="Asset", user=request.user)
+    qs_lib = PersonalBalance.objects.filter(entry_type="Liability", user=request.user)
+    qs_save = PersonalBalance.objects.filter(entry_type="Savings", user=request.user)
+    qs_retirement = PersonalBalance.objects.filter(entry_type="Retirement Acc", user=request.user)
     total_asset = 0
     total_liability = 0
     total_savings = 0
@@ -38,7 +38,7 @@ def personal_balance_list_view(request, year):
         networth_class = "black"
     else:
         networth_class = "red"
-    years = PersonalBalance.objects.values_list("date__year").distinct()
+    years = PersonalBalance.objects.filter(user=request.user).values_list("date__year").distinct()
     years_list = []
     for data in years:
         for item in data:
@@ -64,10 +64,10 @@ def personal_balance_list_view(request, year):
 def personal_balance_list_monthly(request):
     selected = "Monthly"
 
-    qs_asset = PersonalBalance.objects.filter(entry_type="Asset")
-    qs_lib = PersonalBalance.objects.filter(entry_type="Liability")
-    qs_save = PersonalBalance.objects.filter(entry_type="Savings")
-    qs_retirement = PersonalBalance.objects.filter(entry_type="Retirement Acc")
+    qs_asset = PersonalBalance.objects.filter(entry_type="Asset", user=request.user)
+    qs_lib = PersonalBalance.objects.filter(entry_type="Liability", user=request.user)
+    qs_save = PersonalBalance.objects.filter(entry_type="Savings", user=request.user)
+    qs_retirement = PersonalBalance.objects.filter(entry_type="Retirement Acc", user=request.user)
 
     total_asset = 0
     total_liability = 0
@@ -114,10 +114,10 @@ def personal_balance_list_monthly(request):
 def personal_balance_list_weekly(request):
     selected = "Weekly"
 
-    qs_asset = PersonalBalance.objects.filter(entry_type="Asset")
-    qs_lib = PersonalBalance.objects.filter(entry_type="Liability")
-    qs_save = PersonalBalance.objects.filter(entry_type="Savings")
-    qs_retirement = PersonalBalance.objects.filter(entry_type="Retirement Acc")
+    qs_asset = PersonalBalance.objects.filter(entry_type="Asset", user=request.user)
+    qs_lib = PersonalBalance.objects.filter(entry_type="Liability", user=request.user)
+    qs_save = PersonalBalance.objects.filter(entry_type="Savings", user=request.user)
+    qs_retirement = PersonalBalance.objects.filter(entry_type="Retirement Acc", user=request.user)
 
     total_asset = 0
     total_liability = 0
@@ -170,6 +170,7 @@ def addpersonal_balance(request):
             entry_type=categoryData["entry"],
             amount=categoryData["amount"],
             date=categoryData["date"],
+            user=request.user
         )
         user = {
             'name': obj.description,
@@ -185,9 +186,9 @@ def updatepersonal_balance(request):
     if request.method == "POST":
         print(request.body, "property")
         propertyData = json.loads(request.body)
-        property = PersonalBalance.objects.get(id=propertyData['id'])
+        property = PersonalBalance.objects.filter(user=request.user).get(id=propertyData['id'])
         property.description = propertyData['description']
-        property.entry_type =propertyData["entry"]
+        property.entry_type = propertyData["entry"]
         property.amount = propertyData['amount']
         property.save()
         data = {
@@ -199,7 +200,7 @@ def updatepersonal_balance(request):
 def deletepersonal_balance(request):
     id1 = request.GET.get('id', None)
     print(id1, "delete")
-    PersonalBalance.objects.get(id=id1).delete()
+    PersonalBalance.objects.filter(user=request.user).get(id=id1).delete()
     data = {
         'deleted': True
     }
@@ -226,7 +227,7 @@ def add_personal_balance(request):
 
 
 def update_personal_balance(request, pk):
-    personal_balance = PersonalBalance.objects.get(id=pk)
+    personal_balance = PersonalBalance.objects.filter(user=request.user).get(id=pk)
     form = PersonalBalanceForm(instance=personal_balance)
 
     if request.method == "POST":
@@ -241,8 +242,8 @@ def update_personal_balance(request, pk):
 
 
 def delete_personal_balance(request, pk):
-    personal_balance = PersonalBalance.objects.get(id=pk)
-    qs = PersonalBalance.objects.get(id=pk)
+    personal_balance = PersonalBalance.objects.filter(user=request.user).get(id=pk)
+    qs = PersonalBalance.objects.filter(user=request.user).get(id=pk)
     context = {
         "object": qs,
     }

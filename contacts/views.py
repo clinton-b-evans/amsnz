@@ -27,6 +27,7 @@ def addcontact(request):
             service_area=propertyData["service_area"],
             website_url=propertyData["website_url"],
             notes=propertyData["notes"],
+            user=request.user
             )
         property = Property.objects.filter(name__in=propertyData["properties"])
         obj.properties.update(*property)
@@ -74,8 +75,8 @@ def deletecontact(request):
 
 @login_required(login_url='/login/')
 def contact_list_view(request):
-    property = Property.objects.all()
-    qs = Contact.objects.all()
+    property = Property.objects.filter(user=request.user)
+    qs = Contact.objects.filter(user=request.user)
     print(qs)
     context = {
         "object_list": qs,

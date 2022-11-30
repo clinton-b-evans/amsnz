@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from properties.models import Property
 import datetime
@@ -12,6 +13,7 @@ class PropertyCategory(models.Model):
     transaction_type = models.CharField(
         choices=TRANSACTION_TYPE_SOURCES, max_length=100, null=True, blank=True
     )
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
 
     def __str__(self):
         return f"{self.name}"
@@ -29,6 +31,7 @@ class PropertyIncomeStatement(models.Model):
     amount = models.DecimalField(
         max_digits=12, decimal_places=2, blank=True, default=0.00
     )
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
 
     def __str__(self):
         return f"{self.name}"

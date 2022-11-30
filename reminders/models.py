@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from properties.models import Property
 from django.utils.timezone import now
@@ -20,6 +21,7 @@ class Reminder(models.Model):
     reminder_type = models.CharField(
         choices=REMINDER_TYPES, max_length=120, default="oneoff"
     )
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
 
     def __str__(self):
         return f"{self.property.name} - {self.detail} - Due: {self.due_date}"

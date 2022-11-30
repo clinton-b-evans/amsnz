@@ -21,9 +21,9 @@ def home_view(request):
 
 
 def reminder_list_view(request, year):
-    property=Property.objects.all()
-    reminders = Reminder.objects.all().order_by("due_date")
-    years = Reminder.objects.values_list("due_date__year").distinct()
+    property=Property.objects.filter(user=request.user)
+    reminders = Reminder.objects.filter(user=request.user).order_by("due_date")
+    years = Reminder.objects.filter(user=request.user).values_list("due_date__year").distinct()
     years_list = []
     for data in years:
         for item in data:
@@ -42,11 +42,12 @@ def addreminder(request):
         print(request.body, "property")
         propertyData = json.loads(request.body)
         obj = Reminder.objects.create(
-            property=Property.objects.get(name=propertyData["property"]),
+            property=Property.objects.filter(user=request.user).get(name=propertyData["property"]),
             # property=propertyData["property"],
             detail=propertyData["detail"],
             due_date=propertyData["date"],
             reminder_type=propertyData["type"],
+            user=request.user
         )
         user = {
             'id': obj.id
@@ -62,8 +63,8 @@ def editreminder(request):
     if request.method == "POST":
         print(request.body, "property")
         propertyData = json.loads(request.body)
-        property = Reminder.objects.get(id=propertyData['id'])
-        property.property = Property.objects.get(name=propertyData["property"])
+        property = Reminder.objects.filter(user=request.user).get(id=propertyData['id'])
+        property.property = Property.objects.filter(user=request.user).get(name=propertyData["property"])
         property.detail = propertyData['detail']
         property.reminder_type = propertyData['type']
         property.save()
@@ -76,7 +77,7 @@ def editreminder(request):
 def deletereminder(request):
     id1 = request.GET.get('id', None)
     print(id1, "delete")
-    Reminder.objects.get(id=id1).delete()
+    Reminder.objects.filter(user=request.user).get(id=id1).delete()
     data = {
         'deleted': True
     }
@@ -104,7 +105,7 @@ def add_reminder(request):
 
 
 def update_reminder(request, pk):
-    reminder = Reminder.objects.get(id=pk)
+    reminder = Reminder.objects.filter(user=request.user).get(id=pk)
     form = ReminderForm(instance=reminder)
 
     if request.method == "POST":
@@ -119,8 +120,8 @@ def update_reminder(request, pk):
 
 
 def delete_reminder(request, pk):
-    reminder = Reminder.objects.get(id=pk)
-    qs = Reminder.objects.get(id=pk)
+    reminder = Reminder.objects.filter(user=request.user).get(id=pk)
+    qs = Reminder.objects.filter(user=request.user).get(id=pk)
     context = {
         "object": qs,
     }
@@ -132,7 +133,7 @@ def delete_reminder(request, pk):
 
 
 def get_reminders(request):
-    reminders = Reminder.objects.filter(due_date__gte=date.today())
+    reminders = Reminder.objects.filter(due_date__gte=date.today(), user=request.user)
     reminder_list = []
     for reminder in reminders:
         if reminder.reminder_type == "oneoff":

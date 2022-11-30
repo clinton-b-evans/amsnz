@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from django.utils.timezone import now
 
@@ -32,6 +33,7 @@ class IndexFund(models.Model):
     share_price = models.DecimalField(
         max_digits=12, decimal_places=4, blank=True, default=0.00
     )
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
 
     def __str__(self):
         if self.ticker is None:
@@ -59,6 +61,7 @@ class Trade(models.Model):
     share_price = models.DecimalField(
         max_digits=12, decimal_places=2, blank=True, default=0.00
     )
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
 
     def __str__(self):
         return f"{self.date} - {self.indexfund } -- ({self.type})"

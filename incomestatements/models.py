@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 import datetime
 
@@ -24,6 +25,7 @@ class Category(models.Model):
     october_budget = models.FloatField(null=True, blank=True, default=0)
     november_budget = models.FloatField(null=True, blank=True, default=0)
     december_budget = models.FloatField(null=True, blank=True, default=0)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
 
     def months_data(self):
         data = {
@@ -57,6 +59,7 @@ class IncomeStatement(models.Model):
     amount = models.DecimalField(
         max_digits=12, decimal_places=2, blank=True, default=0.00
     )
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
 
     def __str__(self):
         return f"{self.name}"

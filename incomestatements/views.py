@@ -16,19 +16,19 @@ from django.db.models import Count, Sum, FloatField
 
 @login_required(login_url='/login/')
 def incomestatements_list_view(request, year):
-    prop_cat = Category.objects.all()
+    prop_cat = Category.objects.filter(user=request.user)
     if request.method == "POST":
         form = IncomeStatementForm(request.POST)
         if form.is_valid():
             form.save()
             return render(request, "incomestatements/main.html")
     else:
-        qs = IncomeStatement.objects.all()
+        qs = IncomeStatement.objects.filter(user=request.user)
         total_income = 0
         total_expense = 0
         total = 0
         for item in qs:
-            cat_qs = Category.objects.get(name=item.category)
+            cat_qs = Category.objects.filter(user=request.user).get(name=item.category)
             if cat_qs.transaction_type == "Income":
                 total_income += item.amount
             else:
@@ -37,7 +37,7 @@ def incomestatements_list_view(request, year):
         total = total_income - total_expense
 
         form = IncomeStatementForm()
-        years = IncomeStatement.objects.values_list("date__year").distinct()
+        years = IncomeStatement.objects.filter(user=request.user).values_list("date__year").distinct()
         years_list = []
         for data in years:
             for item in data:
@@ -73,6 +73,7 @@ def addcategory_incomestatements(request):
             october_budget=categoryData['october_budget'],
             november_budget=categoryData['november_budget'],
             december_budget=categoryData['december_budget'],
+            user=request.user
         )
         user = {
             'name': obj.name,
@@ -91,8 +92,9 @@ def addproperty_incomestatements(request):
         obj = IncomeStatement.objects.create(
             name=propertyData['name'],
             date=propertyData["date"],
-            category=Category.objects.get(name=propertyData["propcategory"]),
+            category=Category.objects.filter(user=request.user).get(name=propertyData["propcategory"]),
             amount=propertyData["amount"],
+            user=request.user
         )
         user = {
             'name': obj.name,
@@ -108,9 +110,9 @@ def editproperty_incomestatements(request):
     if request.method == "POST":
         print(request.body, "property")
         propertyData = json.loads(request.body)
-        property = IncomeStatement.objects.get(id=propertyData['id'])
+        property = IncomeStatement.objects.filter(user=request.user).get(id=propertyData['id'])
         property.name = propertyData['name']
-        property.propcategory = Category.objects.get(name=propertyData["propcategory"])
+        property.propcategory = Category.objects.filter(user=request.user).get(name=propertyData["propcategory"])
         property.amount = propertyData['amount']
         property.save()
         data = {
@@ -123,7 +125,7 @@ def edit_category(request):
     if request.method == "POST":
         print(request.body, "property")
         propertyData = json.loads(request.body)
-        property = Category.objects.get(id=propertyData['id'])
+        property = Category.objects.filter(user=request.user).get(id=propertyData['id'])
         property.name = propertyData['name']
         property.transaction_type = propertyData['transaction_type']
         property.january_budget = propertyData['january_budget']
@@ -149,7 +151,7 @@ def edit_category(request):
 def delete_category(request):
     id1 = request.GET.get('id', None)
     print(id1, "delete")
-    Category.objects.get(id=id1).delete()
+    Category.objects.filter(user=request.user).get(id=id1).delete()
     data = {
         'deleted': True
     }
@@ -157,12 +159,12 @@ def delete_category(request):
 
 
 def show_report(request, category, year):
-    category_data = Category.objects.get(name=category, year=year)
+    category_data = Category.objects.filter(user=request.user).get(name=category, year=year)
     monthly = category_data.months_data()
     if category_data.transaction_type == 'Income':
-        report_data = incomes_result(year, category)
+        report_data = incomes_result(request, year, category)
     else:
-        report_data = expense_result(year, category)
+        report_data = expense_result(request, year, category)
     monthly_data = {
         1: {
             "name": "January",
@@ -260,6 +262,7 @@ def show_report(request, category, year):
         else:
             monthly_data[x]['percentage'] = 0
         summary.append(monthly_data[x])
+
     print(summary, 'x')
     percentage = float("{:.1f}".format(report_data[category]['total'] / category_data.compute_budget() * 100))
     context = {
@@ -276,32 +279,150 @@ def show_report(request, category, year):
     )
 
 
-def category_list(request, year):
-    category_data = Category.objects.all()
-    month_expenses = {
-        "January": 0,
-        "February": 0,
-        "March": 0,
-        "April": 0,
-        "May": 0,
-        "June": 0,
-        "July": 0,
-        "August": 0,
-        "September": 0,
-        "October": 0,
-        "November": 0,
-        "December": 0,
+def expense_budget_total(request):
+    month_total = {
+        1: {
+            "name": "january_budget",
+            "total": 0,
+        },
+        2: {
+            "name": "february_budget",
+            "total": 0,
+        },
+        3: {
+            "name": "march_budget",
+            "total": 0,
+        },
+        4: {
+            "name": "april_budget",
+            "total": 0,
+        },
+        5: {
+            "name": "may_budget",
+            "total": 0,
+        },
+        6: {
+            "name": "june_budget",
+            "total": 0,
+        },
+        7: {
+            "name": "july_budget",
+            "total": 0,
+        },
+        8: {
+            "name": "august_budget",
+            "total": 0,
+        },
+        9: {
+            "name": "september_budget",
+            "total": 0,
+        },
+        10: {
+            "name": "october_budget",
+            "total": 0,
+        },
+        11: {
+            "name": "november_budget",
+            "total": 0
+        },
+        12: {
+            "name": "december_budget",
+            "total": 0,
+        },
     }
-    years = Category.objects.values_list("year").distinct()
+    for i in range(1, 13):
+        data = Category.objects.filter(transaction_type="Expense",user=request.user).values_list(month_total[i]["name"])
+        total = 0
+        for j in data:
+            total += j[0]
+        month_total[i]["total"] = total
+    return month_total
+
+
+def income_budget_total(request):
+    month_total = {
+        1: {
+            "name": "january_budget",
+            "total": 0,
+        },
+        2: {
+            "name": "february_budget",
+            "total": 0,
+        },
+        3: {
+            "name": "march_budget",
+            "total": 0,
+        },
+        4: {
+            "name": "april_budget",
+            "total": 0,
+        },
+        5: {
+            "name": "may_budget",
+            "total": 0,
+        },
+        6: {
+            "name": "june_budget",
+            "total": 0,
+        },
+        7: {
+            "name": "july_budget",
+            "total": 0,
+        },
+        8: {
+            "name": "august_budget",
+            "total": 0,
+        },
+        9: {
+            "name": "september_budget",
+            "total": 0,
+        },
+        10: {
+            "name": "october_budget",
+            "total": 0,
+        },
+        11: {
+            "name": "november_budget",
+            "total": 0
+        },
+        12: {
+            "name": "december_budget",
+            "total": 0,
+        },
+    }
+    yearly_income_budget = 0
+    for i in range(1, 13):
+        data = Category.objects.filter(transaction_type="Income", user=request.user).values_list(month_total[i]["name"])
+        total = 0
+        for j in data:
+            total += j[0]
+        month_total[i]["total"] = total
+    return month_total
+
+
+def category_list(request, year):
+    category_data = Category.objects.filter(user=request.user)
+    years = Category.objects.filter(user=request.user).values_list("year").distinct()
     years_list = []
     for data in years:
         for item in data:
             years_list.append(int(item))
     years_list = sort_years_list(years_list)
-    print(years_list)
+    income_budget = income_budget_total(request)
+    yearly_income_budget = 0
+    for i in income_budget.values():
+        yearly_income_budget += i["total"]
+    expense_budget = expense_budget_total(request)
+    yearly_expense_budget = 0
+    for i in expense_budget.values():
+        yearly_expense_budget += i["total"]
     context = {
         'category_list': category_data,
-        "years_list": years_list
+        "years_list": years_list,
+        "income": income_budget_total(request),
+        "expense": expense_budget_total(request),
+        "yearly_income_budget": yearly_income_budget,
+        "yearly_expense_budget": yearly_expense_budget
     }
     return render(
         request, "incomestatements/category.html", context
@@ -311,7 +432,7 @@ def category_list(request, year):
 def deleteproperty_incomestatement(request):
     id1 = request.GET.get('id', None)
     print(id1, "delete")
-    IncomeStatement.objects.get(id=id1).delete()
+    IncomeStatement.objects.filter(user=request.user).get(id=id1).delete()
     data = {
         'deleted': True
     }
@@ -338,7 +459,7 @@ def add_incomestatements(request):
 
 
 def update_incomestatements(request, pk):
-    incomestatement = IncomeStatement.objects.get(id=pk)
+    incomestatement = IncomeStatement.objects.filter(user=request.user).get(id=pk)
     form = IncomeStatementForm(instance=incomestatement)
 
     if request.method == "POST":
@@ -353,8 +474,8 @@ def update_incomestatements(request, pk):
 
 
 def delete_incomestatement(request, pk):
-    incomestatement = IncomeStatement.objects.get(id=pk)
-    qs = IncomeStatement.objects.get(id=pk)
+    incomestatement = IncomeStatement.objects.filter(user=request.user).get(id=pk)
+    qs = IncomeStatement.objects.filter(user=request.user).get(id=pk)
     context = {
         "object": qs,
     }
@@ -389,7 +510,7 @@ def add_category(request):
 
 
 def update_category(request, pk):
-    category = Category.objects.get(id=pk)
+    category = Category.objects.filter(user=request.user).get(id=pk)
     form = CategoryForm(instance=category)
 
     if request.method == "POST":
@@ -408,8 +529,8 @@ def sort(myList):
     return myList
 
 
-def incomes_result(year, category):
-    qs = IncomeStatement.objects.filter(date__year=year)
+def incomes_result(request, year, category):
+    qs = IncomeStatement.objects.filter(date__year=year, user=request.user)
     income_qs = qs.filter(category__transaction_type="Income", category__name=category)
     # CATEGORIES EACH MONTH TOTAL Income
     monthly_income_data = {
@@ -441,7 +562,7 @@ def incomes_result(year, category):
             # print(month, current_month_income)
             for income_in_current_month in current_month_income:
                 current_month_total_income += income_in_current_month.amount
-                category_of_income = Category.objects.get(
+                category_of_income = Category.objects.filter(user=request.user).get(
                     name=income_in_current_month.category
                 )
                 income_result[f"{category_of_income}"]["months"][f"{month}"] = float(
@@ -452,7 +573,7 @@ def incomes_result(year, category):
         income_result[f"{list(category.values())[0]}"]["total"] = sum(
             income_result[f"{list(category.values())[0]}"]["months"].values()
         )
-        budget_category = Category.objects.get(name=category['category__name'], year=year)
+        budget_category = Category.objects.filter(user=request.user).get(name=category['category__name'], year=year)
         income_result[f"{list(category.values())[0]}"]["Budget"] = budget_category.compute_budget()
         total_income_budget += budget_category.compute_budget()
         category_total = income_result[f"{list(category.values())[0]}"]["total"]
@@ -464,8 +585,8 @@ def incomes_result(year, category):
     return income_result
 
 
-def expense_result(year, category):
-    qs = IncomeStatement.objects.filter(date__year=year)
+def expense_result(request, year, category):
+    qs = IncomeStatement.objects.filter(date__year=year, user=request.user)
     expense_qs = qs.filter(category__transaction_type="Expense", category__name=category)
     # START CATEGORIES EACH MONTH TOTAL EXPENSES
     monthly_expenses_data = {
@@ -499,7 +620,7 @@ def expense_result(year, category):
             # print(month, current_month_expenses)
             for expense_in_current_month in current_month_expenses:
                 current_month_total_expense += expense_in_current_month.amount
-                category_of_expense = Category.objects.get(
+                category_of_expense = Category.objects.filter(user=request.user).get(
                     name=expense_in_current_month.category
                 )
                 expenses_result[f"{category_of_expense}"]["months"][f"{month}"] = float(
@@ -510,9 +631,9 @@ def expense_result(year, category):
         expenses_result[f"{list(category_expense.values())[0]}"]["total"] = sum(
             expenses_result[f"{list(category_expense.values())[0]}"]["months"].values()
         )
-        budget_category = Category.objects.get(name=category_expense['category__name'], year=year)
+        budget_category = Category.objects.filter(user=request.user).get(name=category_expense['category__name'], year=year)
         expenses_result[f"{list(category_expense.values())[0]}"]["Budget"] = budget_category.compute_budget()
-        total_expense_budget += Category.objects.get(name=category_expense['category__name'],
+        total_expense_budget += Category.objects.filter(user=request.user).get(name=category_expense['category__name'],
                                                      year=year).compute_budget()
         category_total = expenses_result[f"{list(category_expense.values())[0]}"]["total"]
         category_budget = expenses_result[f"{list(category_expense.values())[0]}"]["Budget"]
@@ -523,15 +644,15 @@ def expense_result(year, category):
 
 
 def year_to_date(request, year):
-    qs = IncomeStatement.objects.filter(date__year=year)
-    cat_dict = Category.objects.all()
+    qs = IncomeStatement.objects.filter(date__year=year, user=request.user)
+    cat_dict = Category.objects.filter(user=request.user)
     expense_qs = qs.filter(category__transaction_type="Expense")
     income_qs = qs.filter(category__transaction_type="Income")
     categories_income_yearly = {}
     for item in cat_dict:
         categories_income_yearly[item.name] = 0
     for item in income_qs:
-        cat_qs = Category.objects.get(name=item.category)
+        cat_qs = Category.objects.filter(user=request.user).get(name=item.category)
         if cat_qs.name in categories_income_yearly:
             categories_income_yearly[cat_qs.name] += item.amount
         else:
@@ -543,7 +664,7 @@ def year_to_date(request, year):
     for item in cat_dict:
         categories_expense_yearly[item.name] = 0
     for item in expense_qs:
-        cat_qs = Category.objects.get(name=item.category)
+        cat_qs = Category.objects.filter(user=request.user).get(name=item.category)
         if cat_qs.name in categories_expense_yearly:
             categories_expense_yearly[cat_qs.name] += item.amount
         else:
@@ -555,7 +676,7 @@ def year_to_date(request, year):
     total_income = 0
     total_expense = 0
     for item in qs:
-        cat_qs = Category.objects.get(name=item.category)
+        cat_qs = Category.objects.filter(user=request.user).get(name=item.category)
         if cat_qs.transaction_type == "Income":
             total_income += item.amount
         else:
@@ -668,7 +789,7 @@ def year_to_date(request, year):
             # print(month, current_month_income)
             for income_in_current_month in current_month_income:
                 current_month_total_income += income_in_current_month.amount
-                category_of_income = Category.objects.get(
+                category_of_income = Category.objects.filter(user=request.user).get(
                     name=income_in_current_month.category
                 )
                 income_result[f"{category_of_income}"]["months"][f"{month}"] = float(
@@ -679,7 +800,7 @@ def year_to_date(request, year):
         income_result[f"{list(category.values())[0]}"]["total"] = sum(
             income_result[f"{list(category.values())[0]}"]["months"].values()
         )
-        budget_category = Category.objects.get(name=category['category__name'], year=year)
+        budget_category = Category.objects.filter(user=request.user).get(name=category['category__name'], year=year)
         income_result[f"{list(category.values())[0]}"]["Budget"] = budget_category.compute_budget()
         total_income_budget += budget_category.compute_budget()
         category_total = income_result[f"{list(category.values())[0]}"]["total"]
@@ -721,7 +842,7 @@ def year_to_date(request, year):
             # print(month, current_month_expenses)
             for expense_in_current_month in current_month_expenses:
                 current_month_total_expense += expense_in_current_month.amount
-                category_of_expense = Category.objects.get(
+                category_of_expense = Category.objects.filter(user=request.user).get(
                     name=expense_in_current_month.category
                 )
                 expenses_result[f"{category_of_expense}"]["months"][f"{month}"] = float(
@@ -732,9 +853,9 @@ def year_to_date(request, year):
         expenses_result[f"{list(category_expense.values())[0]}"]["total"] = sum(
             expenses_result[f"{list(category_expense.values())[0]}"]["months"].values()
         )
-        budget_category = Category.objects.get(name=category_expense['category__name'], year=year)
+        budget_category = Category.objects.filter(user=request.user).get(name=category_expense['category__name'], year=year)
         expenses_result[f"{list(category_expense.values())[0]}"]["Budget"] = budget_category.compute_budget()
-        total_expense_budget += Category.objects.get(name=category_expense['category__name'],
+        total_expense_budget += Category.objects.filter(user=request.user).get(name=category_expense['category__name'],
                                                      year=year).compute_budget()
         category_total = expenses_result[f"{list(category_expense.values())[0]}"]["total"]
         category_budget = expenses_result[f"{list(category_expense.values())[0]}"]["Budget"]
@@ -743,7 +864,7 @@ def year_to_date(request, year):
         print(percentage, 'percentage')
     #  #### END OF CATEGORIES EACH MONTH TOTAL EXPENSES ####
 
-    years = list(IncomeStatement.objects.values_list("date__year").distinct())
+    years = list(IncomeStatement.objects.filter(user=request.user).values_list("date__year").distinct())
     years_list = []
     for each in years:
         for item in each:

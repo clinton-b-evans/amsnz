@@ -128,15 +128,22 @@ function popitup(url) {
                 <tr>
                   <thead>
                     <tr style="background-color: #ededed">
-                    <th scope="row"><i>Total</i></th>
-                    {% for amount in month_income.values %}
-                    <th>${{amount}}</th>
-                    {% endfor %}
-                    <th><div class="progress">
-                      <div class="progress-bar bg-success" role="progressbar" style="width: {{income_budget_percentage|stringformat:"i"}}%" aria-valuenow="{{income_budget_percentage|stringformat:"i"}}" aria-valuemin="0" aria-valuemax="100">{{income_budget_percentage|stringformat:"i"}}%</div>
-                    </div></th>
+                        <th scope="row">
+                            <i>Total</i>
+                        </th>
+                        {% for amount in month_income.values %}
+                        <th>${{amount}}</th>
+                        {% endfor %}
+                        <th>
+                            <div class="progress">
+                              <div class="progress-bar bg-success" role="progressbar" style="width: {{income_budget_percentage|stringformat:"i"}}%" aria-valuenow="{{income_budget_percentage|stringformat:"i"}}" aria-valuemin="0" aria-valuemax="100">
+                                    {{income_budget_percentage|stringformat:"i"}}%
+                                </div>
+                            </div>
+                        </th>
                     </tr>
                   </thead>
+                </tr>
                 <tr>
                   <td></td>
                   <td></td>
