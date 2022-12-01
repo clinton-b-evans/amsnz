@@ -24,7 +24,7 @@
     text-align:left;
   } 
 </style>
-
+{% if form %}
 <form class="bg-white p-4 shadow mb-4" action="" method=POST> 
   {% csrf_token %}
   <label>Start Date</label> &nbsp;
@@ -118,15 +118,15 @@
         </div>
         <div class="col">
           <br/>
-          <p id="id_real_estate_p"></p>   
+          <p id="id_real_estate_p"></p>
         </div>
         <div class="col">
         </div>
       </div>
     </div>
 
-    <div class="col-lg-6">  
-      <div id="piechart" style="width: auto; height: 450px"></div>  
+    <div class="col-lg-6">
+      <div id="piechart" style="width: auto; height: 450px"></div>
     </div>
 
   </div>
@@ -196,7 +196,71 @@
   </div>
 
 </div>
+{% else %}
+<div class="row">
+        <div class="col">
+          <p id="counter"></p>
+          <button type="button" class="btn btn-dashboard mb-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    <svg class="bi bi-calendar-plus me-1" fill="currentColor" height="16" viewBox="0 0 16 16"
+             width="16" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>
+            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+        </svg>
+  Add
+</button>
 
+<!-- Modal -->
+<div class="modal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Property</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+            <div class="mb-3">
+              <label class="form-label">Start Date</label>
+                <input class="form-control" name="start_date" id="start_date" type="date" value="{% now "Y-m-j" %}">
+            </div>
+              <label class="form-label">Networth Goal</label>
+              <input class="form-control" name="networth_goal" min=0 step="any" id="networth_goal" type="number" oninput="validity.valid||
+    (value='');" required>
+                <label class="form-label">Cpi</label>
+              <input class="form-control" name="cpi" min=0 step="any" id="cpi" type="number" oninput="validity.valid||
+    (value='');" required>
+                <label class="form-label">Real Estate</label>
+                <input class="form-control" name="real_estate" min=0 step="any" id="real_estate" type="number" oninput="validity.valid||
+    (value='');" required>
+              <label class="form-label">Stocks</label>
+              <input class="form-control" name="stocks" min=0 step="any" id="stocks" type="number" oninput="validity.valid||
+    (value='');" required>
+              <label class="form-label">Crypto</label>
+              <input class="form-control" name="crypto" min=0 step="any" id="crypto" type="number" oninput="validity.valid||
+    (value='');" required>
+              <label class="form-label">Commodities</label>
+                <input class="form-control" name="commodities" min=0 step="any" id="commodities" type="number" oninput="validity.valid||
+    (value='');" required>
+              <label class="form-label">Collectables</label>
+                <input class="form-control" name="collectables" min=0 step="any" id="collectables" type="number" oninput="validity.valid||
+    (value='');" required>
+              <label class="form-label">Cash</label>
+                <input class="form-control" name="cash" min=0 step="any" id="cash" type="number" oninput="validity.valid||
+    (value='');" required>
+                <label class="form-label">Real Estate SWR</label>
+                <input class="form-control" name="real_estate_swr" min=0 step="any" id="real_estate_swr" type="number" oninput="validity.valid||
+    (value='');" required>
+              <label class="form-label">Stocks SWR</label>
+                <input class="form-control mb-2" name="stocks_swr" min=0 step="any" id="stocks_swr" type="number" oninput="validity.valid||
+    (value='');" required>
+            <button class="btn btn-primary form-control" type="button" onclick="addEntry()">ADD</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+          {% endif %}
 <script>
   var formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -286,7 +350,62 @@
       //document.getElementById("id_networth_goal").value = nw;
   }
 </script> 
-
+<script>
+  function addEntry() {
+        var start_date = document.getElementById('start_date').value;
+        var networth_goal = document.getElementById('networth_goal').value;
+        var cpi = document.getElementById('cpi').value;
+        var real_estate = document.getElementById('real_estate').value;
+        var stocks = document.getElementById('stocks').value;
+        var crypto = document.getElementById('crypto').value;
+        var commodities = document.getElementById('commodities').value;
+        var collectables = document.getElementById('collectables').value;
+        var cash = document.getElementById('cash').value;
+        var real_estate_swr = document.getElementById('real_estate_swr').value;
+        var stocks_swr = document.getElementById('stocks_swr').value;
+        if (start_date && networth_goal && cpi && real_estate && stocks && crypto && commodities && collectables && cash && real_estate_swr && stocks_swr) {
+            // Create Ajax Call
+            $(document).ready(function () {
+            let body={
+                'start_date': start_date,
+                'networth_goal': networth_goal,
+                'cpi': cpi,
+                'real_estate': real_estate,
+                'stocks': stocks,
+                'crypto': crypto,
+                'commodities': commodities,
+                'collectables': collectables,
+                'cash': cash,
+                'real_estate_swr': real_estate_swr,
+                'stocks_swr': stocks_swr,
+            }
+            $.ajax({
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                type: 'POST',
+                url: '{% url "retirement_goals:add_retirement_goal" %}',
+                headers: {//<==
+                    "X-CSRFTOKEN": "{{ csrf_token }}"//<==
+                },
+                data: JSON.stringify(body),
+                success: function(data) {
+                //Success code
+                    console.log(data,'data')
+                    if (data.user) {
+                        location.reload();
+                    }
+                },
+                failure: function (response) {
+                    $('#result').html(response);
+                }
+            });
+        });
+        } else
+        {
+            alert("All fields must have a valid value.");
+        }
+  }
+</script>
 <script type="text/javascript">
   google.charts.load('current', {'packages':['corechart']});
   google.charts.setOnLoadCallback(drawChart);
