@@ -625,7 +625,7 @@ def property_summary_view(request, year, *args, **kwargs):
     extracted all Years from Database 
     """
     years = list(Property.objects.filter(user=request.user).values_list("purchase_date__year").distinct())
-    print(years,'yearssd')
+    print(years, 'yearssd')
     years_list = []
     for data in years:
         for item in data:
@@ -642,7 +642,7 @@ def property_summary_view(request, year, *args, **kwargs):
     for my_year in years_list:
         props_qs = Property.objects.filter(purchase_date__year=my_year, user=request.user)
         yearwise_props_assets = props_qs.aggregate(Sum("market_value")).get("market_value__sum")
-        print(yearwise_props_assets,"asdfasdf")
+        print(yearwise_props_assets, "asdfasdf")
         yearwise_props_liabilities = props_qs.aggregate(Sum("loan_amount")).get(
             "loan_amount__sum"
         )
@@ -689,29 +689,24 @@ def property_summary_view(request, year, *args, **kwargs):
         #             item.totalweight -= items.weight
         #     item.total = item.totalweight * item.spot_price
         #     commodities_total_value += item.total
-        print(yearwise_props_assets
-                , yearwise_pb_assets
-                , yearwise_pb_save
-                , yearwise_pb_qs_retirement
-                , crypto_total_value
-                , stocks_total_value
-                , 10000)
-        if yearwise_props_assets is not None and yearwise_pb_assets is not None and yearwise_pb_save is not None and yearwise_pb_qs_retirement is not None and crypto_total_value is not None and stocks_total_value is not None:
-            yearwise_graph_asset = (
-                    yearwise_props_assets
-                    + yearwise_pb_assets
-                    + yearwise_pb_save
-                    + yearwise_pb_qs_retirement
-                    + crypto_total_value
-                    + stocks_total_value
-                    + 10000
-            )
-            yearwise_graph_lib = yearwise_props_liabilities + yearwise_pb_liabilities
-            yearwise_networth = yearwise_graph_asset - yearwise_graph_lib
+        if yearwise_props_assets is not None and yearwise_pb_assets is not None:
+            if yearwise_pb_save is not None and yearwise_pb_qs_retirement is not None:
+                if crypto_total_value is not None and stocks_total_value is not None:
+                    yearwise_graph_asset = (
+                            yearwise_props_assets
+                            + yearwise_pb_assets
+                            + yearwise_pb_save
+                            + yearwise_pb_qs_retirement
+                            + crypto_total_value
+                            + stocks_total_value
+                            + 10000
+                    )
+                    yearwise_graph_lib = yearwise_props_liabilities + yearwise_pb_liabilities
+                    yearwise_networth = yearwise_graph_asset - yearwise_graph_lib
 
-            yearwise_graph_assets.append(float(yearwise_graph_asset))
-            yearwise_graph_libs.append(float(yearwise_graph_lib))
-            yearwise_networths.append(float(yearwise_networth))
+                    yearwise_graph_assets.append(float(yearwise_graph_asset))
+                    yearwise_graph_libs.append(float(yearwise_graph_lib))
+                    yearwise_networths.append(float(yearwise_networth))
         """
         Single selected Year graph assets, liabilities and networth.
         """
