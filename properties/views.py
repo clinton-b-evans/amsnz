@@ -792,7 +792,7 @@ def addproperty(request):
     if request.method == "POST":
         print("Adding", request.body)
         propertyData = json.loads(request.body)
-        obj = Property.objects.create(
+        form= PropertyForm(
             name=propertyData['name'],
             property_type=propertyData["type"],
             land_size=int(propertyData['land_size']),
@@ -820,6 +820,38 @@ def addproperty(request):
             maintenance=propertyData["maintenance"],
             user=request.user
         )
+        if form.is_valid():
+            form.save()
+        else:
+            print(form.errors,"error")
+        # obj = Property.objects.create(
+        #     name=propertyData['name'],
+        #     property_type=propertyData["type"],
+        #     land_size=int(propertyData['land_size']),
+        #     building_size=propertyData['building_size'],
+        #     lounge=propertyData['lounge'],
+        #     bedrooms=propertyData['bedrooms'],
+        #     bathrooms=propertyData['bathrooms'],
+        #     parking=propertyData['parking'],
+        #     garage=propertyData["Garage"],
+        #     vacancy_rate=propertyData["vacancy_rate"],
+        #     street_address=propertyData["address"],
+        #     purchase_date=propertyData["date"],
+        #     market_value=propertyData["market_value"],
+        #     purchase_price=propertyData["purchase_price"],
+        #     deposit=propertyData["deposit"],
+        #     loan_amount=propertyData["loan_amount"],
+        #     loan_term=propertyData["loan_amount"],
+        #     interest_rate=propertyData["interest_rate"],
+        #     repayments=propertyData["repayments"],
+        #     rates=propertyData["rates"],
+        #     rent=propertyData["rent"],
+        #     bodycorp_fee=propertyData["body_corp_fee"],
+        #     management_fee=propertyData["management_fee"],
+        #     insurance=propertyData["insurance"],
+        #     maintenance=propertyData["maintenance"],
+        #     user=request.user
+        # )
 
         # user = {'id': obj.id, 'ticker': obj.ticker, 'quantity': obj.quantity, 'name': obj.name}
 

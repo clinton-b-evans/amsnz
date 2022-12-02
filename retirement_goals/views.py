@@ -36,10 +36,10 @@ def add_retirement_goal(request):
 
 
 # Create your views here.
-def update_retirementgoal(request,year):
-    retirementgoal = RetirementGoal.objects.filter(user=request.user,start_date__year=year)
-    if retirementgoal:
-        for retirementgoal in retirementgoal:
+def update_retirementgoal(request, year):
+    retirementgoals = RetirementGoal.objects.filter(user=request.user)
+    if retirementgoals:
+        for retirementgoal in retirementgoals:
             print(retirementgoal, "retirementgoal")
             goal = retirementgoal.networth_goal
             start_year = retirementgoal.start_date.year
@@ -97,11 +97,11 @@ def update_retirementgoal(request,year):
                 amount_FV.append(amount_FV_value)
 
             print(goals)
-
-            form = RetirementGoalForm(instance=retirementgoal)
+            retirementgoal.user = request.user
+            form = RetirementGoalForm(instance=retirementgoal, user=request.user)
 
             if request.method == "POST":
-                form = RetirementGoalForm(request.POST, instance=retirementgoal)
+                form = RetirementGoalForm(request.POST, instance=retirementgoal, user=request.user)
                 if form.is_valid():
                     form.save()
                     return HttpResponseRedirect("/retiregoals/")
