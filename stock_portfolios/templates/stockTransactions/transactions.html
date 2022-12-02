@@ -68,7 +68,37 @@ function popitup(url) {
         </svg>
   New Transaction
 </button>
+<button type="button" class="btn btn-dashboard mb-3" data-bs-toggle="modal" data-bs-target="#addModal">
+    <svg class="bi bi-calendar-plus me-1" fill="currentColor" height="16" viewBox="0 0 16 16"
+             width="16" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>
+            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+        </svg>
+  Add Stock
+</button>
 
+<!-- Modal -->
+<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addModalLabel">Add Stock</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="addStock">
+            <div class="mb-3">
+                <label class="form-label">Name</label>
+                <input class="form-control" type="text" value="" name="add_stock" id="add_stock">
+                <label class="form-label">Ticker</label>
+                <input class="form-control" type="text" value="" name="add_ticker" id="add_ticker">
+            </div>
+            <button class="btn btn-primary form-control" type="button" onclick="addStock()">ADD</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -485,6 +515,48 @@ function popitup(url) {
                 }
             }
         });
+    }
+</script>
+<script>
+  function addStock() {
+         console.log("here")
+        var stock = document.getElementById('add_stock').value;
+        var ticker = document.getElementById(`add_ticker`).value;
+        if (stock && ticker) {
+            // Create Ajax Call
+            $(document).ready(function () {
+            let body={
+                'stock': stock,
+                'ticker': ticker,
+            }
+            $.ajax({
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                type: 'POST',
+                url: '{% url "stock_portfolios:addStock" %}',
+                headers: {//<==
+                    "X-CSRFTOKEN": "{{ csrf_token }}"//<==
+                },
+                data: JSON.stringify(body),
+                success: function(data) {
+                //Success code
+                    console.log(data,'data')
+                    if (data.user) {
+                        $(`#addModal`).modal('hide');
+                        alert(`${data?.user?.name} has been successfully added to Stocks`)
+                    }
+                },
+                failure: function (response) {
+                    $('#result').html(response);
+                }
+            });
+        });
+        } else
+        {
+            alert("All fields must have a valid value.");
+        }
+        $('form#addTransaction').trigger("reset");
+        return false;
     }
 </script>
 {% endblock content %}

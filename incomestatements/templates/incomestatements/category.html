@@ -2,7 +2,7 @@
 {% load bootstrap %}
 {% load static  %}
 {% load mathfilters %}
-
+{% load humanize %}
 {% block title %}
 <div class="title">Forecast
 <span class="filter position-absolute" style="right: 2rem;">
@@ -199,19 +199,19 @@ function popitup(url) {
                   <tr>
                     <th scope="row">{{data.name}} ({{data.year}})</th>
                       <td>{{data.transaction_type}}</td>
-                      <td>${{data.january_budget}}</td>
-                      <td>${{data.february_budget}}</td>
-                      <td>${{data.march_budget}}</td>
-                      <td>${{data.april_budget}}</td>
-                      <td>${{data.may_budget}}</td>
-                      <td>${{data.june_budget}}</td>
-                      <td>${{data.july_budget}}</td>
-                      <td>${{data.august_budget}}</td>
-                      <td>${{data.september_budget}}</td>
-                      <td>${{data.october_budget}}</td>
-                      <td>${{data.november_budget}}</td>
-                      <td>${{data.december_budget}}</td>
-                      <td>${{data.compute_budget}}</td>
+                      <td>${{data.january_budget|intcomma}}</td>
+                      <td>${{data.february_budget|intcomma}}</td>
+                      <td>${{data.march_budget|intcomma}}</td>
+                      <td>${{data.april_budget|intcomma}}</td>
+                      <td>${{data.may_budget|intcomma}}</td>
+                      <td>${{data.june_budget|intcomma}}</td>
+                      <td>${{data.july_budget|intcomma}}</td>
+                      <td>${{data.august_budget|intcomma}}</td>
+                      <td>${{data.september_budget|intcomma}}</td>
+                      <td>${{data.october_budget|intcomma}}</td>
+                      <td>${{data.november_budget|intcomma}}</td>
+                      <td>${{data.december_budget|intcomma}}</td>
+                      <td>${{data.compute_budget|intcomma}}</td>
                       <td style="text-align:right">
 <!--            <a href="popupex.html" onclick="return popitup('/incomestatements/{{ obj.id }}/edit')">-->
 <!--              <button class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit">-->
@@ -347,9 +347,9 @@ function popitup(url) {
                         </th>
                         <th>Income</th>
                         {% for amount in income.values %}
-                        <th>${{amount.total}}</th>
+                        <th>${{amount.total|intcomma}}</th>
                         {% endfor %}
-                        <th>${{yearly_income_budget}}</th>
+                        <th>${{yearly_income_budget|intcomma}}</th>
                     </tr>
                   </thead>
                 </tr>
@@ -378,19 +378,19 @@ function popitup(url) {
                   <tr>
                     <th scope="row">{{data.name}} ({{data.year}})</th>
                       <td>{{data.transaction_type}}</td>
-                      <td>${{data.january_budget}}</td>
-                      <td>${{data.february_budget}}</td>
-                      <td>${{data.march_budget}}</td>
-                      <td>${{data.april_budget}}</td>
-                      <td>${{data.may_budget}}</td>
-                      <td>${{data.june_budget}}</td>
-                      <td>${{data.july_budget}}</td>
-                      <td>${{data.august_budget}}</td>
-                      <td>${{data.september_budget}}</td>
-                      <td>${{data.october_budget}}</td>
-                      <td>${{data.november_budget}}</td>
-                      <td>${{data.december_budget}}</td>
-                      <td>${{data.compute_budget}}</td>
+                      <td>${{data.january_budget|intcomma}}</td>
+                      <td>${{data.february_budget|intcomma}}</td>
+                      <td>${{data.march_budget|intcomma}}</td>
+                      <td>${{data.april_budget|intcomma}}</td>
+                      <td>${{data.may_budget|intcomma}}</td>
+                      <td>${{data.june_budget|intcomma}}</td>
+                      <td>${{data.july_budget|intcomma}}</td>
+                      <td>${{data.august_budget|intcomma}}</td>
+                      <td>${{data.september_budget|intcomma}}</td>
+                      <td>${{data.october_budget|intcomma}}</td>
+                      <td>${{data.november_budget|intcomma}}</td>
+                      <td>${{data.december_budget|intcomma}}</td>
+                      <td>${{data.compute_budget|intcomma}}</td>
                       <td style="text-align:right">
 <!--            <a href="popupex.html" onclick="return popitup('/incomestatements/{{ obj.id }}/edit')">-->
 <!--              <button class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit">-->
@@ -526,9 +526,9 @@ function popitup(url) {
                         </th>
                         <th>Expense</th>
                         {% for amount in expense.values %}
-                        <th>${{amount.total}}</th>
+                        <th>${{amount.total|intcomma}}</th>
                         {% endfor %}
-                        <th>${{yearly_expense_budget}}</th>
+                        <th>${{yearly_expense_budget|intcomma}}</th>
                     </tr>
                   </thead>
                 </tr>

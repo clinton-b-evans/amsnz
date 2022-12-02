@@ -13,10 +13,10 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 def personal_balance_list_view(request, year):
     selected = "Yearly"
 
-    qs_asset = PersonalBalance.objects.filter(entry_type="Asset", user=request.user)
-    qs_lib = PersonalBalance.objects.filter(entry_type="Liability", user=request.user)
-    qs_save = PersonalBalance.objects.filter(entry_type="Savings", user=request.user)
-    qs_retirement = PersonalBalance.objects.filter(entry_type="Retirement Acc", user=request.user)
+    qs_asset = PersonalBalance.objects.filter(entry_type="Asset", user=request.user, date__year=year)
+    qs_lib = PersonalBalance.objects.filter(entry_type="Liability", user=request.user, date__year=year)
+    qs_save = PersonalBalance.objects.filter(entry_type="Savings", user=request.user, date__year=year)
+    qs_retirement = PersonalBalance.objects.filter(entry_type="Retirement Acc", user=request.user, date__year=year)
     total_asset = 0
     total_liability = 0
     total_savings = 0
@@ -44,6 +44,7 @@ def personal_balance_list_view(request, year):
         for item in data:
             years_list.append(item)
     years_list = sort_years_list(years_list)
+    print(years_list, 'years')
     context = {
         "assets": qs_asset,
         "liability": qs_lib,

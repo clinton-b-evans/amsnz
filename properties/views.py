@@ -814,7 +814,6 @@ def addproperty(request):
             repayments=propertyData["repayments"],
             rates=propertyData["rates"],
             rent=propertyData["rent"],
-            other_income=propertyData["other_income"],
             bodycorp_fee=propertyData["body_corp_fee"],
             management_fee=propertyData["management_fee"],
             insurance=propertyData["insurance"],
@@ -866,9 +865,8 @@ def editproperty(request):
         property.parking = propertyData['parking']
         property.garage = propertyData['Garage']
         property.vacancy_rate = propertyData['vacancy_rate']
-        property.purchase_date = propertyData['date']
-        property.market_value = propertyData['purchase_price']
-        property.purchase_price = propertyData['market_value']
+        property.purchase_price = propertyData['purchase_price']
+        property.market_value = propertyData['market_value']
         property.deposit = propertyData['deposit']
         property.loan_amount = propertyData['loan_amount']
         property.loan_term = propertyData['loan_term']
@@ -876,7 +874,6 @@ def editproperty(request):
         property.repayments = propertyData['repayments']
         property.rates = propertyData['rates']
         property.rent = propertyData['rent']
-        property.other_income = propertyData['other_income']
         property.bodycorp_fee = propertyData['body_corp_fee']
         property.management_fee = propertyData['management_fee']
         property.insurance = propertyData['insurance']

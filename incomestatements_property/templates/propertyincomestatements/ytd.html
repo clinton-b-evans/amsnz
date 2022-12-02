@@ -171,6 +171,41 @@
                                 <th></th>
                             </tr>
                             </thead>
+                            <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <th scope="col">Net Income</th>
+                </tr>
+                  <!-- Loop 1-->
+
+                <thead>
+                  <tr style="background-color: #ededed">
+                    <th scope="row"><i>Total</i></th>
+                    {% for amount in net_income %}
+                    <th>${{amount}}</th>
+                    {% endfor %}
+                    <th>
+                      <div class="progress">
+  <div class="progress-bar bg-danger" role="progressbar" style="width: {{total_budget_percentage|stringformat:"i"}}%" aria-valuenow="{{total_budget_percentage|stringformat:"i"}}" aria-valuemin="0" aria-valuemax="100">{{total_budget_percentage|stringformat:"i"}}%</div>
+</div>
+                    </th>
+                    <th></th>
+                  </tr>
+                </thead>
                             </tbody>
                         </table>
                     </div>

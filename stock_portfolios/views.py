@@ -102,6 +102,7 @@ def stock_list_view(request, year):
 
 
 def add_stock(request):
+    print(request.body)
     if request.method == "POST":
         # getting body data from request
         stockData = json.loads(request.body)

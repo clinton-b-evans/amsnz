@@ -36,8 +36,8 @@ def add_retirement_goal(request):
 
 
 # Create your views here.
-def update_retirementgoal(request):
-    retirementgoal = RetirementGoal.objects.filter(user=request.user)
+def update_retirementgoal(request,year):
+    retirementgoal = RetirementGoal.objects.filter(user=request.user,start_date__year=year)
     if retirementgoal:
         for retirementgoal in retirementgoal:
             print(retirementgoal, "retirementgoal")

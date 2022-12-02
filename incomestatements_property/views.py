@@ -418,6 +418,10 @@ def year_to_date(request, year):
 
     total = total_income - total_expense
     category_total_yearly = {x: y for x, y in categories_total_yearly.items() if y != 0}
+    net_income = []
+    for key, value in month_expenses.items():
+        net_income.append(month_income[key] - month_expenses[key])
+    print(net_income,'ki bnaya a')
     context = {
         "object_list": qs,
         "year": year,
@@ -427,6 +431,7 @@ def year_to_date(request, year):
         "categories_yearly": category_total_yearly,
         "month_expenses": month_expenses,
         "month_income": month_income,
+        "net_income": net_income,
         "prop_qs": prop_qs,
         "years_list": years_list,
         "expenses_result": expenses_result,

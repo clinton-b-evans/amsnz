@@ -401,7 +401,7 @@ def income_budget_total(request):
 
 
 def category_list(request, year):
-    category_data = Category.objects.filter(user=request.user)
+    category_data = Category.objects.filter(user=request.user, year=year)
     years = Category.objects.filter(user=request.user).values_list("year").distinct()
     years_list = []
     for data in years:

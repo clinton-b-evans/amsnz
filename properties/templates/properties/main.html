@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static  %}
 {% load mathfilters %}
-
+{% load humanize %}
 {% block title %}
 <div class="title">Property Portfolio
 </div>
@@ -124,7 +124,7 @@ function popitup(url) {
               <label for="address">Street address</label>
               <textarea class="form-control" placeholder="Leave a comment here" name="address" id="address" required></textarea>
               <label class="form-label">Date</label>
-                <input class="form-control" name="date" id="date" type="text" value="{% now "Y-m-j" %}" disabled>
+                <input class="form-control" name="date" id="date" type="date">
               <label class="form-label">Purchase Price</label>
                 <input class="form-control" name="purchase_price" min=0 step="any" id="purchase_price" type="number" oninput="validity.valid||
     (value='');" required>
@@ -134,7 +134,7 @@ function popitup(url) {
               <label class="form-label">Deposit</label>
                 <input class="form-control" name="deposit" min=0 step="any" id="deposit" type="number" oninput="validity.valid||
     (value='');" required>
-              <label class="form-label">Loan amount</label>
+              <label class="form-label">Current loan amount</label>
                 <input class="form-control" name="loan_amount" min=0 step="any" id="loan_amount" type="number" oninput="validity.valid||
     (value='');" required>
               <label class="form-label">Loan Term</label>
@@ -143,28 +143,25 @@ function popitup(url) {
               <label class="form-label">Interest Rate %</label>
                 <input class="form-control" name="interest_rate" min=0 step="any" id="interest_rate" type="number" oninput="validity.valid||
     (value='');" required>
-              <label class="form-label">Repayments</label>
+              <label class="form-label">Repayments (yearly)</label>
               <input class="form-control" name="repayments" min=0 step="any" id="repayments" type="number" oninput="validity.valid||
     (value='');" required>
-              <label class="form-label">Rates</label>
+              <label class="form-label">Rates (yearly)</label>
               <input class="form-control" name="rates" min=0 step="any" id="rates" type="number" oninput="validity.valid||
     (value='');" required>
               <label class="form-label">Rent</label>
                <input class="form-control" name="rent" min=0 step="any" id="rent" type="number" oninput="validity.valid||
     (value='');" required>
-                <label class="form-label">Other Income</label>
-                <input class="form-control" name="other_income" min=0 step="any" id="other_income" type="number" oninput="validity.valid||
-    (value='');" required>
-                <label class="form-label">Body Corp Fee</label>
+                <label class="form-label">Body Corp Fee (yearly)</label>
                 <input class="form-control" name="body_corp_fee" id="body_corp_fee" type="number" min=0 step="any" oninput="validity.valid||
     (value='');" required>
               <label class="form-label">Management Fee %</label>
                 <input class="form-control" name="management_fee" min=0 step="any" id="management_fee" type="number" oninput="validity.valid||
     (value='');" required>
-              <label class="form-label">Insurance</label>
+              <label class="form-label">Insurance (yearly)</label>
                 <input class="form-control" name="insurance" id="insurance" type="number" min=0 step="any" oninput="validity.valid||
     (value='');" required>
-              <label class="form-label">Maintenance</label>
+              <label class="form-label">Maintenance (yearly)</label>
                 <input class="form-control" name="maintenance" id="maintenance" type="number" min=0 step="any" oninput="validity.valid||
     (value='');" required>
 <!--              <label for="formFileMultiple" class="form-label">Image</label>-->
@@ -214,7 +211,7 @@ function popitup(url) {
           <tr>
             <th scope="col">Name</th>
             <th style="text-align:right" scope="col">Market Value</th>
-            <th style="text-align:right" scope="col">Loan Amount</th>
+            <th style="text-align:right" scope="col">Current loan amount</th>
             <th style="text-align:right" scope="col">LVR</th>
             <th style="text-align:right" scope="col">Rental Income</th>
             <th style="text-align:right" scope="col">Operating Costs</th>
@@ -228,14 +225,14 @@ function popitup(url) {
           {% for obj in object_list %}
           <tr>
             <td onclick="window.location='{{ obj.get_absolute_url }}';">{{ obj.name }}</td>
-            <td style="text-align:right">${{ obj.market_value }}</td>
-            <td style="text-align:right">${{ obj.loan_amount }}</td>
-            <td style="text-align:right">{{ obj.loan_to_value|floatformat:2 }}%</td>
-            <td style="text-align:right">${{ obj.rent|floatformat:2  }}</td>
-            <td style="text-align:right">$<span id="">{{obj.operating_cost|floatformat:2}}</span></td>
-            <td style="text-align:right">${{obj.repayments}}</td>
-            <td style="text-align:right">${{ obj.net_operating_income|floatformat:2 }}</td>
-            <td style="text-align:right">{{ obj.cap_rate|floatformat:2 }}% </td>
+            <td style="text-align:right">${{ obj.market_value|floatformat:2|intcomma }}</td>
+            <td style="text-align:right">${{ obj.loan_amount|intcomma }}</td>
+            <td style="text-align:right">{{ obj.loan_to_value|intcomma|floatformat:2 }}%</td>
+            <td style="text-align:right">${{ obj.rent|floatformat:2|intcomma  }}</td>
+            <td style="text-align:right">$<span id="">{{obj.operating_cost|floatformat:2|intcomma}}</span></td>
+            <td style="text-align:right">${{obj.repayments|intcomma}}</td>
+            <td style="text-align:right">${{ obj.net_operating_income|floatformat:2|intcomma }}</td>
+            <td style="text-align:right">{{ obj.cap_rate|floatformat:2|intcomma }}% </td>
             <td style="text-align: right;">
 <!--              <a href="popupex.html" onclick="return popitup('/properties/{{ obj.id }}/edit')" style="text-decoration: none;">-->
 <!--                <button class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit">-->
@@ -312,8 +309,8 @@ function popitup(url) {
                                                       <label class="form-label">Vacancy Rate %</label>
                                                         <input class="form-control" value="{{ obj.vacancy_rate }}" name="vacancy_rate_edit" min=0 step="any" id="vacancy_rate_edit{{obj.id}}" type="number" oninput="validity.valid||
                                             (value='');">
-                                                      <label class="form-label">Date</label>
-                                                        <input class="form-control" name="date_edit" id="date_edit{{obj.id}}" type="text" value="{% now "Y-m-j" %}" disabled>
+                                                      <label class="form-label">Purchase Date</label>
+                                                        <input class="form-control" name="date_edit" id="date_edit{{obj.id}}" value="{{obj.purchase_date}}" type="text" disabled>
                                                       <label class="form-label">Purchase Price</label>
                                                         <input class="form-control" value="{{ obj.purchase_price }}" name="purchase_price_edit" min=0 step="any" id="purchase_price_edit{{obj.id}}" type="number" oninput="validity.valid||
                                             (value='');">
@@ -323,7 +320,7 @@ function popitup(url) {
                                                       <label class="form-label">Deposit</label>
                                                         <input class="form-control" value="{{ obj.deposit }}" name="deposit_edit" min=0  step="any" id="deposit_edit{{obj.id}}" type="number" oninput="validity.valid||
                                             (value='');">
-                                                      <label class="form-label">Loan amount</label>
+                                                      <label class="form-label">Current loan amount</label>
                                                         <input class="form-control" value="{{ obj.loan_amount }}" name="loan_amount_edit" min=0  step="any" id="loan_amount_edit{{obj.id}}" type="number" oninput="validity.valid||
                                             (value='');">
                                                       <label class="form-label">Loan Term</label>
@@ -340,9 +337,6 @@ function popitup(url) {
                                             (value='');">
                                                       <label class="form-label">Rent</label>
                                                        <input class="form-control" value="{{ obj.rent }}" name="rent_edit" min=0 step="any" id="rent_edit{{obj.id}}" type="number" oninput="validity.valid||
-                                            (value='');">
-                                                        <label class="form-label">Other Income</label>
-                                                        <input class="form-control" value="{{ obj.other_income }}" name="other_income_edit" min=0 step="any" id="other_income_edit{{obj.id}}" type="number" oninput="validity.valid||
                                             (value='');">
                                                         <label class="form-label">Body Corp Fee</label>
                                                         <input class="form-control" value="{{ obj.bodycorp_fee }}" name="body_corp_fee_edit" id="body_corp_fee_edit{{obj.id}}" type="number" min="0" step="any" oninput="validity.valid||
@@ -379,7 +373,7 @@ function popitup(url) {
 <!--                  </svg>-->
 <!--                </button>-->
 <!--              </a>-->
-                <button type="button" class="btn btn-danger-1 btn-sm rounded-0" data-bs-toggle="modal" data-bs-target="#deleteModal{{obj.id}}">
+                <button type="button" class="btn btn-black btn-sm rounded-0" data-bs-toggle="modal" data-bs-target="#deleteModal{{obj.id}}">
                   <svg class="bi bi-trash" fill="currentColor" height="16" viewBox="0 0 16 16"
                              width="16" xmlns="http://www.w3.org/2000/svg">
                             <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
@@ -412,14 +406,14 @@ function popitup(url) {
           <thead>
             <tr>
               <th>Total:</th>
-              <th style="text-align:right">${{ total_market_value|floatformat:2 }}</th>
-              <th style="text-align:right">${{ total_loan_amount|floatformat:2 }}</th>
-              <th style="text-align:right">{{ total_loan_to_value|floatformat:2 }}%</th>
-              <th style="text-align:right">${{ total_rent|floatformat:2 }}</th>
-              <th style="text-align:right">${{ total_operating_costs|floatformat:2 }}</th>
-              <th style="text-align:right">${{ total_repayments|floatformat:2 }}</th>
-              <th style="text-align:right">${{ total_noi|floatformat:2 }}</th>
-              <th style="text-align:right">{{ total_cap_rate|floatformat:2 }}%</th>
+              <th style="text-align:right">${{ total_market_value|floatformat:2|intcomma }}</th>
+              <th style="text-align:right">${{ total_loan_amount|floatformat:2|intcomma }}</th>
+              <th style="text-align:right">{{ total_loan_to_value|floatformat:2|intcomma }}%</th>
+              <th style="text-align:right">${{ total_rent|floatformat:2|intcomma }}</th>
+              <th style="text-align:right">${{ total_operating_costs|floatformat:2|intcomma }}</th>
+              <th style="text-align:right">${{ total_repayments|floatformat:2|intcomma }}</th>
+              <th style="text-align:right">${{ total_noi|floatformat:2|intcomma }}</th>
+              <th style="text-align:right">{{ total_cap_rate|floatformat:2|intcomma }}%</th>
               <th></th>
             </tr>
           </thead>
@@ -457,7 +451,6 @@ function popitup(url) {
         var repayments = document.getElementById('repayments').value;
         var rates = document.getElementById('rates').value;
         var rent = document.getElementById('rent').value;
-        var other_income = document.getElementById('other_income').value;
         var body_corp_fee = document.getElementById('body_corp_fee').value;
         var management_fee = document.getElementById('management_fee').value;
         var insurance = document.getElementById('insurance').value;
@@ -487,7 +480,6 @@ function popitup(url) {
                 'repayments': repayments,
                 'rates': rates,
                 'rent': rent,
-                'other_income': other_income,
                 'body_corp_fee': body_corp_fee,
                 'management_fee': management_fee,
                 'insurance': insurance,
@@ -533,7 +525,6 @@ function popitup(url) {
         var parking = document.getElementById(`parking_edit${id}`).value;
         var Garage = document.getElementById(`Garage_edit${id}`).value;
         var vacancy_rate = document.getElementById(`vacancy_rate_edit${id}`).value;
-        var date = document.getElementById(`date_edit${id}`).value;
         var purchase_price = document.getElementById(`purchase_price_edit${id}`).value;
         var market_value = document.getElementById(`market_value_edit${id}`).value;
         var deposit = document.getElementById(`deposit_edit${id}`).value;
@@ -543,7 +534,6 @@ function popitup(url) {
         var repayments = document.getElementById(`repayments_edit${id}`).value;
         var rates = document.getElementById(`rates_edit${id}`).value;
         var rent = document.getElementById(`rent_edit${id}`).value;
-        var other_income = document.getElementById(`other_income_edit${id}`).value;
         var body_corp_fee = document.getElementById(`body_corp_fee_edit${id}`).value;
         var management_fee = document.getElementById(`management_fee_edit${id}`).value;
         var insurance = document.getElementById(`insurance_edit${id}`).value;
@@ -561,7 +551,6 @@ function popitup(url) {
                 'parking': parking,
                 'Garage': Garage,
                 'vacancy_rate': vacancy_rate,
-                'date': date,
                 'purchase_price': purchase_price,
                 'market_value':market_value,
                 'deposit': deposit,
@@ -571,7 +560,6 @@ function popitup(url) {
                 'repayments': repayments,
                 'rates': rates,
                 'rent': rent,
-                'other_income': other_income,
                 'body_corp_fee': body_corp_fee,
                 'management_fee': management_fee,
                 'insurance': insurance,

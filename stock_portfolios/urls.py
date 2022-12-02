@@ -15,7 +15,7 @@ urlpatterns = [
     # path("stock/add", add_stock, name="stock-add"),
     path("stock/addTransaction/", add_transaction, name="addTransaction"),
     path('stock/deleteTransaction/',  delete_transaction, name='deleteTransaction'),
-    path('stock/addStock/', add_stock, name="addStock"),
+    path('stock/addStock', add_stock, name="addStock"),
     path(
         "stock/edit",
         edit_transaction,
