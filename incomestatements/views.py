@@ -279,7 +279,7 @@ def show_report(request, category, year):
     )
 
 
-def expense_budget_total(request):
+def expense_budget_total(request, year):
     month_total = {
         1: {
             "name": "january_budget",
@@ -331,7 +331,7 @@ def expense_budget_total(request):
         },
     }
     for i in range(1, 13):
-        data = Category.objects.filter(transaction_type="Expense",user=request.user).values_list(month_total[i]["name"])
+        data = Category.objects.filter(transaction_type="Expense", user=request.user, year=year).values_list(month_total[i]["name"])
         total = 0
         for j in data:
             total += j[0]
@@ -339,7 +339,7 @@ def expense_budget_total(request):
     return month_total
 
 
-def income_budget_total(request):
+def income_budget_total(request, year):
     month_total = {
         1: {
             "name": "january_budget",
@@ -392,7 +392,7 @@ def income_budget_total(request):
     }
     yearly_income_budget = 0
     for i in range(1, 13):
-        data = Category.objects.filter(transaction_type="Income", user=request.user).values_list(month_total[i]["name"])
+        data = Category.objects.filter(transaction_type="Income", user=request.user, year=year).values_list(month_total[i]["name"])
         total = 0
         for j in data:
             total += j[0]
@@ -408,21 +408,22 @@ def category_list(request, year):
         for item in data:
             years_list.append(int(item))
     years_list = sort_years_list(years_list)
-    income_budget = income_budget_total(request)
+    income_budget = income_budget_total(request, year)
     yearly_income_budget = 0
     for i in income_budget.values():
         yearly_income_budget += i["total"]
-    expense_budget = expense_budget_total(request)
+    expense_budget = expense_budget_total(request, year)
     yearly_expense_budget = 0
     for i in expense_budget.values():
         yearly_expense_budget += i["total"]
     context = {
         'category_list': category_data,
         "years_list": years_list,
-        "income": income_budget_total(request),
-        "expense": expense_budget_total(request),
+        "income": income_budget_total(request, year),
+        "expense": expense_budget_total(request, year),
         "yearly_income_budget": yearly_income_budget,
-        "yearly_expense_budget": yearly_expense_budget
+        "yearly_expense_budget": yearly_expense_budget,
+        "current_year": year
     }
     return render(
         request, "incomestatements/category.html", context

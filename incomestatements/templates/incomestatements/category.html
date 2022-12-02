@@ -4,7 +4,7 @@
 {% load mathfilters %}
 {% load humanize %}
 {% block title %}
-<div class="title">Forecast
+<div class="title">Forecast <span>| {{ current_year }} </span>
 <span class="filter position-absolute" style="right: 2rem;">
     <a class="icon btn btn-dashboard" data-bs-toggle="dropdown" href="#" type="button">View By <i class="bi bi-grid"></i></a>
     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
@@ -197,7 +197,7 @@ function popitup(url) {
                   {% for data in category_list %}
                 {% if data.transaction_type == "Income" %}
                   <tr>
-                    <th scope="row">{{data.name}} ({{data.year}})</th>
+                    <th scope="row">{{data.name}}</th>
                       <td>{{data.transaction_type}}</td>
                       <td>${{data.january_budget|intcomma}}</td>
                       <td>${{data.february_budget|intcomma}}</td>
@@ -376,7 +376,7 @@ function popitup(url) {
                   {% for data in category_list %}
                 {% if data.transaction_type == "Expense" %}
                   <tr>
-                    <th scope="row">{{data.name}} ({{data.year}})</th>
+                    <th scope="row">{{data.name}}</th>
                       <td>{{data.transaction_type}}</td>
                       <td>${{data.january_budget|intcomma}}</td>
                       <td>${{data.february_budget|intcomma}}</td>
