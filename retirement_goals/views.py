@@ -1,6 +1,6 @@
 import json
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from retirement_goals.models import RetirementGoal
 from .forms import RetirementGoalForm
@@ -36,10 +36,10 @@ def add_retirement_goal(request):
 
 
 # Create your views here.
-def update_retirementgoal(request,year):
-    retirementgoal = RetirementGoal.objects.filter(user=request.user,start_date__year=year)
-    if retirementgoal:
-        for retirementgoal in retirementgoal:
+def update_retirementgoal(request):
+    retirementgoals = RetirementGoal.objects.filter(user=request.user)
+    if retirementgoals:
+        for retirementgoal in retirementgoals:
             print(retirementgoal, "retirementgoal")
             goal = retirementgoal.networth_goal
             start_year = retirementgoal.start_date.year
@@ -97,14 +97,15 @@ def update_retirementgoal(request,year):
                 amount_FV.append(amount_FV_value)
 
             print(goals)
-
             form = RetirementGoalForm(instance=retirementgoal)
 
             if request.method == "POST":
                 form = RetirementGoalForm(request.POST, instance=retirementgoal)
                 if form.is_valid():
-                    form.save()
-                    return HttpResponseRedirect("/retiregoals/")
+                    goal = form.save(commit=False)
+                    goal.user = request.user
+                    goal.save()
+                    return redirect('retirement:update_retirementgoal')
             zipped = zip(
                 years,
                 goals,

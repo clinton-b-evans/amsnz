@@ -6,6 +6,6 @@ from .views import (
 app_name = "retirement_goals"
 
 urlpatterns = [
-    path("retiregoals/<str:year>/", update_retirementgoal, name="update_retirementgoal"),
+    path("retiregoals/", update_retirementgoal, name="update_retirementgoal"),
     path("add_retirement_goal/", add_retirement_goal, name="add_retirement_goal"),
 ]

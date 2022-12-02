@@ -67,6 +67,7 @@ def editreminder(request):
         property.property = Property.objects.filter(user=request.user).get(name=propertyData["property"])
         property.detail = propertyData['detail']
         property.reminder_type = propertyData['type']
+        property.user = request.user
         property.save()
         data = {
             'user': "data is updated"

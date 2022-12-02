@@ -15,7 +15,6 @@ year = today.year
 
 
 def register_user_view(request):
-
     form = RegisterUserForm()
     if request.method == "POST":
         form = RegisterUserForm(request.POST)

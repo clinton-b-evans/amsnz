@@ -21,7 +21,14 @@ class Reminder(models.Model):
     reminder_type = models.CharField(
         choices=REMINDER_TYPES, max_length=120, default="oneoff"
     )
-    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.property.name} - {self.detail} - Due: {self.due_date}"
+
+class Notification(models.Model):
+    reminder = models.ForeignKey(
+        Reminder, on_delete=models.CASCADE
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
