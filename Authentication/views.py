@@ -19,7 +19,6 @@ def register_user_view(request):
     form = RegisterUserForm()
     if request.method == "POST":
         form = RegisterUserForm(request.POST)
-        print(form,"form")
         if form.is_valid():
             form.save()
             RetirementGoal.objects.create(
