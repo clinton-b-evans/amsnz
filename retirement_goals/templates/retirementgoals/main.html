@@ -155,7 +155,7 @@
         <td>{{ year }} </td>
         <td>${{ goal|intcomma }} </td>
         <td>${{ realestateFV|intcomma }} </td>
-        <td>${{ stocksFV|intcomma }} </td>
+        <td>${{ stocksFV|intcomma }} </td>&nbsp;
         <td>${{ cryptoFV|intcomma }} </td>
         <td>${{ commoditiesFV|intcomma }} </td>
         <td>${{ collectablesFV|intcomma }} </td>
@@ -169,9 +169,9 @@
           <td><a href='./{{obj.pk}}'>{{ obj.commodity_class }}</a></td>
           <td>{{ obj.totalweight }}</td>
           <td>${{ obj.spot_price }} </td>
-          <td>${{ obj.total|floatformat:2 }}</td>
+          <td>${{ obj.total|floatformat }}</td>
           <td>${{ obj.invested }}</td>
-          <td>{{ obj.percent|floatformat:2 }}%</td>
+          <td>{{ obj.percent|floatformat }}%</td>
           <td style="text-align:right">
             <a href="popupex.html" onclick="return popitup('/commodities/{{ obj.id }}/edit')">
               <button class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit">
