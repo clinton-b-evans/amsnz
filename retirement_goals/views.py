@@ -87,8 +87,8 @@ def update_retirementgoal(request):
                 stocks_FV_value = int(current_goal * (stocks / 100))
                 realstate_FV.append(real_estate_FV_value)
                 stocks_FV.append(stocks_FV_value)
-                amount_FV_value = (real_estate_FV_value * (real_estate_swr / 100)) + (
-                        stocks_FV_value * (stocks_swr / 100)
+                amount_FV_value = int((real_estate_FV_value * (real_estate_swr / 100)) + (
+                        stocks_FV_value * (stocks_swr / 100))
                 )
                 crypto_FV.append(int(current_goal * (crypto / 100)))
                 commodities_FV.append(int(current_goal * (commodities / 100)))
