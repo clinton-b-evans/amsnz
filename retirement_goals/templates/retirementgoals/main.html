@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% load crispy_forms_tags %}
+{% load humanize %}
 {% block title %}
 <div class="title">Financial Plan</div>
 {% endblock title %}
@@ -151,15 +152,15 @@
       </thead>
       {% for year, goal, realestateFV, stocksFV, cryptoFV, commoditiesFV, collectablesFV, cashFV, amount in zipped %}
       <tr>
-        <td>{{ year }} </td>
-        <td>${{ goal }} </td>
-        <td>${{ realestateFV }} </td>
-        <td>${{ stocksFV }} </td>
-        <td>${{ cryptoFV }} </td>
-        <td>${{ commoditiesFV }} </td>
-        <td>${{ collectablesFV }} </td>
-        <td>${{ cashFV }} </td>
-        <td>${{ amount }}</td>
+        <td>{{ year|intcomma }} </td>
+        <td>${{ goal|intcomma }} </td>
+        <td>${{ realestateFV|intcomma }} </td>
+        <td>${{ stocksFV|intcomma }} </td>
+        <td>${{ cryptoFV|intcomma }} </td>
+        <td>${{ commoditiesFV|intcomma }} </td>
+        <td>${{ collectablesFV|intcomma }} </td>
+        <td>${{ cashFV|intcomma }} </td>
+        <td>${{ amount|intcomma }}</td>
       </tr>
       {% endfor %}
       <tbody>
