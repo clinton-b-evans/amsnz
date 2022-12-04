@@ -1,4 +1,6 @@
 from django.urls import path
+
+from incomestatements.views import add_category
 from .views import (
     incomestatement_property_list_view,
     add_property_incomestatements,
@@ -6,7 +8,7 @@ from .views import (
     update_property_incomestatements,
     delete_property_incomestatement,
     year_to_date, addproperty_incomestatements, addcategory_incomestatements, editproperty_incomestatements,
-    deleteproperty_incomestatement,
+    deleteproperty_incomestatement, category_list, edit_category, delete_category,
 )
 
 app_name = "incomestatements_property"
@@ -21,6 +23,21 @@ urlpatterns = [
         "addcategory/",
         addcategory_incomestatements,
         name="addcategory",
+    ),
+    path(
+        "category_list_property/<str:year>/",
+        category_list,
+        name="category_list_property",
+    ),
+    path(
+        "editcategory/",
+        edit_category,
+        name="editcategory",
+    ),
+    path(
+        "deletecategory/",
+        delete_category,
+        name="deletecategory",
     ),
     path(
         "addproperty/",
@@ -54,7 +71,7 @@ urlpatterns = [
         name="delete_property_incomestatement",
     ),
     path(
-        "propertyincomestatements//delete",
+        "propertyincomestatements/delete",
         deleteproperty_incomestatement,
         name="deleteproperty_incomestatement",
     ),

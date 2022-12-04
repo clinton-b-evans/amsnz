@@ -56,13 +56,87 @@ def incomestatement_property_list_view(request, year):
     return render(request, "propertyincomestatements/main.html", context)
 
 
+def expense_budget_total(request, year):
+    month_total = {
+        1: {
+            "name": "january_budget",
+            "total": 0,
+        },
+        2: {
+            "name": "february_budget",
+            "total": 0,
+        },
+        3: {
+            "name": "march_budget",
+            "total": 0,
+        },
+        4: {
+            "name": "april_budget",
+            "total": 0,
+        },
+        5: {
+            "name": "may_budget",
+            "total": 0,
+        },
+        6: {
+            "name": "june_budget",
+            "total": 0,
+        },
+        7: {
+            "name": "july_budget",
+            "total": 0,
+        },
+        8: {
+            "name": "august_budget",
+            "total": 0,
+        },
+        9: {
+            "name": "september_budget",
+            "total": 0,
+        },
+        10: {
+            "name": "october_budget",
+            "total": 0,
+        },
+        11: {
+            "name": "november_budget",
+            "total": 0
+        },
+        12: {
+            "name": "december_budget",
+            "total": 0,
+        },
+    }
+    for i in range(1, 13):
+        data = PropertyCategory.objects.filter(transaction_type="Expense", user=request.user, year=year).values_list(month_total[i]["name"])
+        total = 0
+        for j in data:
+            total += j[0]
+        month_total[i]["total"] = total
+    return month_total
+
+
 def addcategory_incomestatements(request):
+    print(request.body)
     if request.method == "POST":
         print(request.body, "property")
         categoryData = json.loads(request.body)
         obj = PropertyCategory.objects.create(
             name=categoryData['name'],
             transaction_type=categoryData["Transaction"],
+            year=categoryData["year"],
+            january_budget=categoryData['january_budget'],
+            february_budget=categoryData['february_budget'],
+            march_budget=categoryData['march_budget'],
+            april_budget=categoryData['april_budget'],
+            may_budget=categoryData['may_budget'],
+            june_budget=categoryData['june_budget'],
+            july_budget=categoryData['july_budget'],
+            august_budget=categoryData['august_budget'],
+            september_budget=categoryData['september_budget'],
+            october_budget=categoryData['october_budget'],
+            november_budget=categoryData['november_budget'],
+            december_budget=categoryData['december_budget'],
             user=request.user
         )
         user = {
@@ -73,6 +147,135 @@ def addcategory_incomestatements(request):
         }
         print(data, 'data')
         return JsonResponse(data)
+
+
+def edit_category(request):
+    if request.method == "POST":
+        print(request.body, "property")
+        propertyData = json.loads(request.body)
+        property = PropertyCategory.objects.filter(user=request.user).get(id=propertyData['id'])
+        property.name = propertyData['name']
+        property.transaction_type = propertyData['transaction_type']
+        property.january_budget = propertyData['january_budget']
+        property.february_budget = propertyData['february_budget']
+        property.march_budget = propertyData['march_budget']
+        property.april_budget = propertyData['april_budget']
+        property.may_budget = propertyData['may_budget']
+        property.june_budget = propertyData['june_budget']
+        property.july_budget = propertyData['july_budget']
+        property.august_budget = propertyData['august_budget']
+        property.september_budget = propertyData['september_budget']
+        property.october_budget = propertyData['october_budget']
+        property.november_budget = propertyData['november_budget']
+        property.december_budget = propertyData['december_budget']
+        property.year = propertyData['year']
+        property.save()
+        data = {
+            'user': "data is updated"
+        }
+        return JsonResponse(data)
+
+
+def delete_category(request):
+    id1 = request.GET.get('id', None)
+    print(id1, "delete")
+    PropertyCategory.objects.filter(user=request.user).get(id=id1).delete()
+    data = {
+        'deleted': True
+    }
+    return JsonResponse(data)
+
+
+def income_budget_total(request, year):
+    month_total = {
+        1: {
+            "name": "january_budget",
+            "total": 0,
+        },
+        2: {
+            "name": "february_budget",
+            "total": 0,
+        },
+        3: {
+            "name": "march_budget",
+            "total": 0,
+        },
+        4: {
+            "name": "april_budget",
+            "total": 0,
+        },
+        5: {
+            "name": "may_budget",
+            "total": 0,
+        },
+        6: {
+            "name": "june_budget",
+            "total": 0,
+        },
+        7: {
+            "name": "july_budget",
+            "total": 0,
+        },
+        8: {
+            "name": "august_budget",
+            "total": 0,
+        },
+        9: {
+            "name": "september_budget",
+            "total": 0,
+        },
+        10: {
+            "name": "october_budget",
+            "total": 0,
+        },
+        11: {
+            "name": "november_budget",
+            "total": 0
+        },
+        12: {
+            "name": "december_budget",
+            "total": 0,
+        },
+    }
+    yearly_income_budget = 0
+    for i in range(1, 13):
+        data = PropertyCategory.objects.filter(transaction_type="Income", user=request.user, year=year).values_list(month_total[i]["name"])
+        total = 0
+        for j in data:
+            total += j[0]
+        month_total[i]["total"] = total
+    return month_total
+
+
+def category_list(request, year):
+    category_data = PropertyCategory.objects.filter(user=request.user, year=year)
+    years = PropertyCategory.objects.filter(user=request.user).values_list("year").distinct()
+    years_list = []
+    for data in years:
+        for item in data:
+            years_list.append(int(item))
+    years_list = sort_years_list(years_list)
+    income_budget = income_budget_total(request, year)
+    yearly_income_budget = 0
+    for i in income_budget.values():
+        yearly_income_budget += i["total"]
+    expense_budget = expense_budget_total(request, year)
+    yearly_expense_budget = 0
+    for i in expense_budget.values():
+        yearly_expense_budget += i["total"]
+    context = {
+        'category_list': category_data,
+        "years_list": years_list,
+        "income": income_budget_total(request, year),
+        "expense": expense_budget_total(request, year),
+        "yearly_income_budget": yearly_income_budget,
+        "yearly_expense_budget": yearly_expense_budget,
+        "current_year": year
+    }
+    return render(
+        request, "incomestatements/category_property.html", context
+    )
+
 
 
 def addproperty_incomestatements(request):
