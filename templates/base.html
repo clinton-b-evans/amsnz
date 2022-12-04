@@ -255,6 +255,13 @@
             </a>
           </li>
           <li class="nav-item">
+            <a {% if request.resolver_match.url_name == 'category_list' %} class="nav-link active" {% else %}class="nav-link collapsed" {% endif %} href="/category_list_property/{% now 'Y' %}/">
+              <i class="bi bi-cash"></i>
+              <span>Forecast</span>
+              <!-- <span data-feather="file">Income Statements</span> -->
+            </a>
+          </li>
+          <li class="nav-item">
             <a {% if request.resolver_match.url_name == 'property_year-to-date' %} class="nav-link active" {% else %} class="nav-link collapsed" {% endif %} href="/propertyincomestatements/yeartodate/{% now 'Y' %}/">
               <i class="bi bi-circle"></i>
               <span>Profit and Loss</span>

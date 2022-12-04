@@ -12,7 +12,7 @@
             <h6>Filter</h6>
         </li>
         {% for year in years_list%}
-        <li><a class="dropdown-item" href="{% url 'incomestatements:category_list' year %}">{{year|stringformat:"i"}}</a></li>
+        <li><a class="dropdown-item" href="{% url 'incomestatements_property:category_list_property' year %}">{{year|stringformat:"i"}}</a></li>
         {%endfor%}
     </ul>
 </span>
@@ -245,54 +245,54 @@ function popitup(url) {
                                 <form>
                                     <div class="mb-3">
                                         <label class="form-label">Name</label>
-                                        <input class="form-control" type="text" value="{{data.name}}" name="name_edit{{data.id}}" id="name_edit{{data.id}}">
+                                        <input class="form-control" type="text" value="{{data.name}}" name="name_edit{{data.id}}" id="name_edit_income{{data.id}}">
                                         <label class="form-label">Transaction Type</label>
-                                        <select class="form-select" name="Transaction_edit{{data.id}}" id="Transaction_edit{{data.id}}" aria-label="Default select example" required>
+                                        <select class="form-select" name="Transaction_edit{{data.id}}" id="Transaction_edit_income{{data.id}}" aria-label="Default select example" required>
                                             <option value="{{data.transaction_type}}" selected>{{data.transaction_type}}</option>
                                             <option value="Income">Income</option>
                                             <option value="Expense">Expense</option>
                                         </select>
                                         <label class="form-label">January</label>
-                                        <input class="form-control" value="{{data.january_budget}}" name="january_budget_edit{{data.id}}" min=0 step="any" id="january_budget_edit{{data.id}}" type="number" oninput="validity.valid||
+                                        <input class="form-control" value="{{data.january_budget}}" name="january_budget_edit{{data.id}}" min=0 step="any" id="january_budget_edit_income{{data.id}}" type="number" oninput="validity.valid||
                             (value='');">
                                         <label class="form-label">February</label>
-                                        <input class="form-control" value="{{data.february_budget}}" name="february_budget_edit{{data.id}}" min=0 step="any" id="february_budget_edit{{data.id}}" type="number" oninput="validity.valid||
+                                        <input class="form-control" value="{{data.february_budget}}" name="february_budget_edit{{data.id}}" min=0 step="any" id="february_budget_edit_income{{data.id}}" type="number" oninput="validity.valid||
                             (value='');">
                                         <label class="form-label">March</label>
-                                        <input class="form-control" value="{{data.march_budget}}" name="march_budget_edit{{data.id}}" min=0 step="any" id="march_budget_edit{{data.id}}" type="number" oninput="validity.valid||
+                                        <input class="form-control" value="{{data.march_budget}}" name="march_budget_edit{{data.id}}" min=0 step="any" id="march_budget_edit_income{{data.id}}" type="number" oninput="validity.valid||
                             (value='');">
                                         <label class="form-label">April</label>
-                                        <input class="form-control" value="{{data.april_budget}}" name="april_budget_edit{{data.id}}" min=0 step="any" id="april_budget_edit{{data.id}}" type="number" oninput="validity.valid||
+                                        <input class="form-control" value="{{data.april_budget}}" name="april_budget_edit{{data.id}}" min=0 step="any" id="april_budget_edit_income{{data.id}}" type="number" oninput="validity.valid||
                             (value='');">
                                         <label class="form-label">May</label>
-                                        <input class="form-control" value="{{data.may_budget}}" name="may_budget_edit{{data.id}}" min=0 step="any" id="may_budget_edit{{data.id}}" type="number" oninput="validity.valid||
+                                        <input class="form-control" value="{{data.may_budget}}" name="may_budget_edit{{data.id}}" min=0 step="any" id="may_budget_edit_income{{data.id}}" type="number" oninput="validity.valid||
                             (value='');">
                                         <label class="form-label">June</label>
-                                        <input class="form-control" value="{{data.june_budget}}" name="june_budget_edit{{data.id}}" min=0 step="any" id="june_budget_edit{{data.id}}" type="number" oninput="validity.valid||
+                                        <input class="form-control" value="{{data.june_budget}}" name="june_budget_edit{{data.id}}" min=0 step="any" id="june_budget_edit_income{{data.id}}" type="number" oninput="validity.valid||
                             (value='');">
                                         <label class="form-label">July</label>
-                                        <input class="form-control" value="{{data.july_budget}}" name="july_budget_edit{{data.id}}" min=0 step="any" id="july_budget_edit{{data.id}}" type="number" oninput="validity.valid||
+                                        <input class="form-control" value="{{data.july_budget}}" name="july_budget_edit{{data.id}}" min=0 step="any" id="july_budget_edit_income{{data.id}}" type="number" oninput="validity.valid||
                             (value='');">
                                         <label class="form-label">August</label>
-                                        <input class="form-control" value="{{data.august_budget}}" name="august_budget_edit{{data.id}}" min=0 step="any" id="august_budget_edit{{data.id}}" type="number" oninput="validity.valid||
+                                        <input class="form-control" value="{{data.august_budget}}" name="august_budget_edit{{data.id}}" min=0 step="any" id="august_budget_edit_income{{data.id}}" type="number" oninput="validity.valid||
                             (value='');">
                                         <label class="form-label">September</label>
-                                        <input class="form-control" value="{{data.september_budget}}" name="september_budget_edit{{data.id}}" min=0 step="any" id="september_budget_edit{{data.id}}" type="number" oninput="validity.valid||
+                                        <input class="form-control" value="{{data.september_budget}}" name="september_budget_edit{{data.id}}" min=0 step="any" id="september_budget_edit_income{{data.id}}" type="number" oninput="validity.valid||
                             (value='');">
                                         <label class="form-label">October</label>
-                                        <input class="form-control" value="{{data.october_budget}}" name="october_budget_edit{{data.id}}" min=0 step="any" id="october_budget_edit{{data.id}}" type="number" oninput="validity.valid||
+                                        <input class="form-control" value="{{data.october_budget}}" name="october_budget_edit{{data.id}}" min=0 step="any" id="october_budget_edit_income{{data.id}}" type="number" oninput="validity.valid||
                             (value='');">
                                         <label class="form-label">November</label>
-                                        <input class="form-control" value="{{data.november_budget}}" name="november_budget_edit{{data.id}}" min=0 step="any" id="november_budget_edit{{data.id}}" type="number" oninput="validity.valid||
+                                        <input class="form-control" value="{{data.november_budget}}" name="november_budget_edit{{data.id}}" min=0 step="any" id="november_budget_edit_income{{data.id}}" type="number" oninput="validity.valid||
                             (value='');">
                                         <label class="form-label">December</label>
-                                        <input class="form-control" value="{{data.december_budget}}" name="december_budget_edit{{data.id}}" min=0 step="any" id="december_budget_edit{{data.id}}" type="number" oninput="validity.valid||
+                                        <input class="form-control" value="{{data.december_budget}}" name="december_budget_edit{{data.id}}" min=0 step="any" id="december_budget_edit_income{{data.id}}" type="number" oninput="validity.valid||
                             (value='');">
                                       <label class="form-label">Year</label>
-                                        <input class="form-control" value="{{data.year}}" name="year_edit{{data.id}}" min=0 step="any" id="year_edit{{data.id}}" type="number" oninput="validity.valid||
+                                        <input class="form-control" value="{{data.year}}" name="year_edit{{data.id}}" min=0 step="any" id="year_edit_income{{data.id}}" type="number" oninput="validity.valid||
                             (value='');">
                                     </div>
-                                    <button class="btn btn-primary" type="button" onclick="EditProperty({{data.id}})">Submit</button>
+                                    <button class="btn btn-primary" type="button" onclick="EditPropertyIncome({{data.id}})">Submit</button>
                                 </form>
                             </div>
                         </div>
@@ -424,51 +424,51 @@ function popitup(url) {
                                 <form>
                                     <div class="mb-3">
                                         <label class="form-label">Name</label>
-                                        <input class="form-control" type="text" value="{{data.name}}" name="name_edit{{data.id}}" id="nameedit{{data.id}}">
+                                        <input class="form-control" type="text" value="{{data.name}}" name="name_edit{{data.id}}" id="name_edit{{data.id}}">
                                         <label class="form-label">Transaction Type</label>
-                                        <select class="form-select" name="Transaction_edit{{data.id}}" id="Transactionedit{{data.id}}" aria-label="Default select example" required>
+                                        <select class="form-select" name="Transaction_edit{{data.id}}" id="Transaction_edit{{data.id}}" aria-label="Default select example" required>
                                             <option value="{{data.transaction_type}}" selected>{{data.transaction_type}}</option>
                                             <option value="Income">Income</option>
                                             <option value="Expense">Expense</option>
                                         </select>
                                         <label class="form-label">January</label>
-                                        <input class="form-control" value="{{data.january_budget}}" name="january_budget_edit{{data.id}}" min=0 step="any" id="januarybudget_edit{{data.id}}" type="number" oninput="validity.valid||
+                                        <input class="form-control" value="{{data.january_budget}}" name="january_budget_edit{{data.id}}" min=0 step="any" id="january_budget_edit{{data.id}}" type="number" oninput="validity.valid||
                             (value='');">
                                         <label class="form-label">February</label>
-                                        <input class="form-control" value="{{data.february_budget}}" name="february_budget_edit{{data.id}}" min=0 step="any" id="februarybudget_edit{{data.id}}" type="number" oninput="validity.valid||
+                                        <input class="form-control" value="{{data.february_budget}}" name="february_budget_edit{{data.id}}" min=0 step="any" id="february_budget_edit{{data.id}}" type="number" oninput="validity.valid||
                             (value='');">
                                         <label class="form-label">March</label>
-                                        <input class="form-control" value="{{data.march_budget}}" name="march_budget_edit{{data.id}}" min=0 step="any" id="marchbudget_edit{{data.id}}" type="number" oninput="validity.valid||
+                                        <input class="form-control" value="{{data.march_budget}}" name="march_budget_edit{{data.id}}" min=0 step="any" id="march_budget_edit{{data.id}}" type="number" oninput="validity.valid||
                             (value='');">
                                         <label class="form-label">April</label>
-                                        <input class="form-control" value="{{data.april_budget}}" name="april_budget_edit{{data.id}}" min=0 step="any" id="aprilbudget_edit{{data.id}}" type="number" oninput="validity.valid||
+                                        <input class="form-control" value="{{data.april_budget}}" name="april_budget_edit{{data.id}}" min=0 step="any" id="april_budget_edit{{data.id}}" type="number" oninput="validity.valid||
                             (value='');">
                                         <label class="form-label">May</label>
-                                        <input class="form-control" value="{{data.may_budget}}" name="may_budget_edit{{data.id}}" min=0 step="any" id="maybudget_edit{{data.id}}" type="number" oninput="validity.valid||
+                                        <input class="form-control" value="{{data.may_budget}}" name="may_budget_edit{{data.id}}" min=0 step="any" id="may_budget_edit{{data.id}}" type="number" oninput="validity.valid||
                             (value='');">
                                         <label class="form-label">June</label>
-                                        <input class="form-control" value="{{data.june_budget}}" name="june_budget_edit{{data.id}}" min=0 step="any" id="junebudget_edit{{data.id}}" type="number" oninput="validity.valid||
+                                        <input class="form-control" value="{{data.june_budget}}" name="june_budget_edit{{data.id}}" min=0 step="any" id="june_budget_edit{{data.id}}" type="number" oninput="validity.valid||
                             (value='');">
                                         <label class="form-label">July</label>
-                                        <input class="form-control" value="{{data.july_budget}}" name="july_budget_edit{{data.id}}" min=0 step="any" id="julybudget_edit{{data.id}}" type="number" oninput="validity.valid||
+                                        <input class="form-control" value="{{data.july_budget}}" name="july_budget_edit{{data.id}}" min=0 step="any" id="july_budget_edit{{data.id}}" type="number" oninput="validity.valid||
                             (value='');">
                                         <label class="form-label">August</label>
-                                        <input class="form-control" value="{{data.august_budget}}" name="august_budget_edit{{data.id}}" min=0 step="any" id="augustbudget_edit{{data.id}}" type="number" oninput="validity.valid||
+                                        <input class="form-control" value="{{data.august_budget}}" name="august_budget_edit{{data.id}}" min=0 step="any" id="august_budget_edit{{data.id}}" type="number" oninput="validity.valid||
                             (value='');">
                                         <label class="form-label">September</label>
-                                        <input class="form-control" value="{{data.september_budget}}" name="september_budget_edit{{data.id}}" min=0 step="any" id="septemberbudget_edit{{data.id}}" type="number" oninput="validity.valid||
+                                        <input class="form-control" value="{{data.september_budget}}" name="september_budget_edit{{data.id}}" min=0 step="any" id="september_budget_edit{{data.id}}" type="number" oninput="validity.valid||
                             (value='');">
                                         <label class="form-label">October</label>
-                                        <input class="form-control" value="{{data.october_budget}}" name="october_budget_edit{{data.id}}" min=0 step="any" id="octoberbudget_edit{{data.id}}" type="number" oninput="validity.valid||
+                                        <input class="form-control" value="{{data.october_budget}}" name="october_budget_edit{{data.id}}" min=0 step="any" id="october_budget_edit{{data.id}}" type="number" oninput="validity.valid||
                             (value='');">
                                         <label class="form-label">November</label>
-                                        <input class="form-control" value="{{data.november_budget}}" name="november_budget_edit{{data.id}}" min=0 step="any" id="novemberbudget_edit{{data.id}}" type="number" oninput="validity.valid||
+                                        <input class="form-control" value="{{data.november_budget}}" name="november_budget_edit{{data.id}}" min=0 step="any" id="november_budget_edit{{data.id}}" type="number" oninput="validity.valid||
                             (value='');">
                                         <label class="form-label">December</label>
-                                        <input class="form-control" value="{{data.december_budget}}" name="december_budget_edit{{data.id}}" min=0 step="any" id="decemberbudget_edit{{data.id}}" type="number" oninput="validity.valid||
+                                        <input class="form-control" value="{{data.december_budget}}" name="december_budget_edit{{data.id}}" min=0 step="any" id="december_budget_edit{{data.id}}" type="number" oninput="validity.valid||
                             (value='');">
                                       <label class="form-label">Year</label>
-                                        <input class="form-control" value="{{data.year}}" name="year_edit{{data.id}}" min=0 step="any" id="yearedit{{data.id}}" type="number" oninput="validity.valid||
+                                        <input class="form-control" value="{{data.year}}" name="year_edit{{data.id}}" min=0 step="any" id="year_edit{{data.id}}" type="number" oninput="validity.valid||
                             (value='');">
                                     </div>
                                     <button class="btn btn-primary" type="button" onclick="EditPropertyExpense({{data.id}})">Submit</button>
@@ -606,7 +606,7 @@ function popitup(url) {
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
                 type: 'POST',
-                url: '{% url "incomestatements:addcategory_incomestatements" %}',
+                url: '{% url "incomestatements_property:addcategory" %}',
                 headers: {//<==
                     "X-CSRFTOKEN": "{{ csrf_token }}"//<==
                 },
@@ -615,7 +615,6 @@ function popitup(url) {
                 //Success code
                     console.log(data,'data')
                     if (data.user) {
-                        $(`#exampleModal`).modal('hide');
                         location.reload();
                     }
                 },
@@ -630,7 +629,7 @@ function popitup(url) {
         }
   }
 
-  function EditProperty(id){
+  function EditPropertyExpense(id){
         var name = document.getElementById(`name_edit${id}`).value;
         var transaction_type = document.getElementById(`Transaction_edit${id}`).value;
         var january_budget = document.getElementById(`january_budget_edit${id}`).value;
@@ -669,7 +668,7 @@ function popitup(url) {
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
                 type: 'POST',
-                url: '{% url 'incomestatements:edit_category' %}',
+                url: '{% url 'incomestatements_property:editcategory' %}',
                 headers: {//<==
                     "X-CSRFTOKEN": "{{ csrf_token }}"//<==
                 },
@@ -686,22 +685,22 @@ function popitup(url) {
             });
         });
     }
-    function EditPropertyExpense(id){
-        var name = document.getElementById(`nameedit${id}`).value;
-        var transaction_type = document.getElementById(`Transactionedit${id}`).value;
-        var january_budget = document.getElementById(`januarybudget_edit${id}`).value;
-        var february_budget = document.getElementById(`februarybudget_edit${id}`).value;
-        var march_budget = document.getElementById(`marchbudget_edit${id}`).value;
-        var april_budget = document.getElementById(`aprilbudget_edit${id}`).value;
-        var may_budget = document.getElementById(`maybudget_edit${id}`).value;
-        var june_budget = document.getElementById(`junebudget_edit${id}`).value;
-        var july_budget = document.getElementById(`julybudget_edit${id}`).value;
-        var august_budget = document.getElementById(`augustbudget_edit${id}`).value;
-        var september_budget = document.getElementById(`septemberbudget_edit${id}`).value;
-        var october_budget = document.getElementById(`octoberbudget_edit${id}`).value;
-        var november_budget = document.getElementById(`novemberbudget_edit${id}`).value;
-        var december_budget = document.getElementById(`decemberbudget_edit${id}`).value;
-        var year = document.getElementById(`yearedit${id}`).value;
+    function EditPropertyIncome(id){
+        var name = document.getElementById(`name_edit_income${id}`).value;
+        var transaction_type = document.getElementById(`Transaction_edit_income${id}`).value;
+        var january_budget = document.getElementById(`january_budget_edit_income${id}`).value;
+        var february_budget = document.getElementById(`february_budget_edit_income${id}`).value;
+        var march_budget = document.getElementById(`march_budget_edit_income${id}`).value;
+        var april_budget = document.getElementById(`april_budget_edit_income${id}`).value;
+        var may_budget = document.getElementById(`may_budget_edit_income${id}`).value;
+        var june_budget = document.getElementById(`june_budget_edit_income${id}`).value;
+        var july_budget = document.getElementById(`july_budget_edit_income${id}`).value;
+        var august_budget = document.getElementById(`august_budget_edit_income${id}`).value;
+        var september_budget = document.getElementById(`september_budget_edit_income${id}`).value;
+        var october_budget = document.getElementById(`october_budget_edit_income${id}`).value;
+        var november_budget = document.getElementById(`november_budget_edit_income${id}`).value;
+        var december_budget = document.getElementById(`december_budget_edit_income${id}`).value;
+        var year = document.getElementById(`year_edit_income${id}`).value;
         $(document).ready(function () {
             let body={
                 'id': id,
@@ -725,7 +724,7 @@ function popitup(url) {
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
                 type: 'POST',
-                url: '{% url 'incomestatements:edit_category' %}',
+                url: '{% url 'incomestatements_property:editcategory' %}',
                 headers: {//<==
                     "X-CSRFTOKEN": "{{ csrf_token }}"//<==
                 },
@@ -744,7 +743,7 @@ function popitup(url) {
     }
     function deleteProperty(id) {
         $.ajax({
-            url: '{% url "incomestatements:delete_category" %}',
+            url: '{% url "incomestatements_property:deletecategory" %}',
             data: {
                 'id': id,
             },
