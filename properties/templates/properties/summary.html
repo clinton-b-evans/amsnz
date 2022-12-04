@@ -194,15 +194,15 @@
                             {{ property_progress|floatformat }}%
                         </div>
                     </div>
-                    <td style="text-align:right">${{ total_assets|floatformat:0 }}</td>
+                    <td style="text-align:right">${{ total_assets|floatformat:2 }}</td>
                 </tr>
                 <tr>
                     <td>Liabilities</td>
-                    <td style="text-align:right">${{ total_liabilities|floatformat:0 }}</td>
+                    <td style="text-align:right">${{ total_liabilities|floatformat:2 }}</td>
                 </tr>
                 <tr>
                     <td>Net Worth</td>
-                    <td style="text-align:right">${{ total_networth|floatformat:0 }}</td>
+                    <td style="text-align:right">${{ total_networth|floatformat:2 }}</td>
                 </tr>
                 <tr>
                     <td></td>
@@ -211,16 +211,16 @@
                 <thead>
                 <tr>
                     <th scope="col">Income</th>
-                    <th style="text-align:right" scope="col">${{ total_income|floatformat:0 }}</th>
+                    <th style="text-align:right" scope="col">${{ total_income|floatformat:2 }}</th>
                 </tr>
                 </thead>
                 <tr>
                     <td>Rental Income</td>
-                    <td style="text-align:right">${{ total_rent|floatformat:0 }}</td>
+                    <td style="text-align:right">${{ total_rent|floatformat:2 }}</td>
                 </tr>
                 <tr>
                     <td>Other Income:</td>
-                    <td style="text-align:right">${{ total_other_income|floatformat:0 }}</td>
+                    <td style="text-align:right">${{ total_other_income|floatformat:2 }}</td>
                 </tr>
                 <tr>
                     <td></td>
@@ -230,16 +230,16 @@
                 <thead>
                 <tr>
                     <th scope="col">Expense</th>
-                    <th style="text-align:right" scope="col">${{ total_expenses|floatformat:0 }}</th>
+                    <th style="text-align:right" scope="col">${{ total_expenses|floatformat:2 }}</th>
                 </tr>
                 </thead>
                 <tr>
                     <td>Operating Expenses</td>
-                    <td style="text-align:right">${{ total_operating_expenses|floatformat:0 }}</td>
+                    <td style="text-align:right">${{ total_operating_expenses|floatformat:2 }}</td>
                 </tr>
                 <tr>
                     <td>Repayments</td>
-                    <td style="text-align:right">${{ total_repayments|floatformat:0 }}</td>
+                    <td style="text-align:right">${{ total_repayments|floatformat:2 }}</td>
                 </tr>
                 <tr>
                     <td></td>
@@ -263,11 +263,11 @@
                 </thead>
                 <tr>
                     <td>Debt to Income Ratio</td>
-                    <td style="text-align:right">{{loan_to_debt_ratio|floatformat:2}}</td>
+                    <td style="text-align:right">{{loan_to_debt_ratio|floatformat:2}}%</td>
                 </tr>
                 <tr>
                     <td>Debt Service Coverage Ratio</td>
-                    <td style="text-align:right">{{ debt_service_coverage_ratio|floatformat:2 }}
+                    <td style="text-align:right">{{ debt_service_coverage_ratio|floatformat:2 }}%
                     </td>
                 </tr>
                 <tr>
