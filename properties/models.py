@@ -74,7 +74,7 @@ class Property(models.Model):
     maintenance = models.DecimalField(
         max_digits=12, decimal_places=2, blank=True, default=0.00
     )
-    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=False)
 
     image = models.ImageField(upload_to="products", default="no_picture.png")
 

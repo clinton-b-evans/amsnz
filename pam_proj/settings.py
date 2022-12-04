@@ -36,7 +36,8 @@ INSTALLED_APPS = [
     "bootstrapform",
     "stock_portfolios",
     "user.apps.UserConfig",
-    'django.contrib.humanize'
+    'django.contrib.humanize',
+    "widget_tweaks"
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
