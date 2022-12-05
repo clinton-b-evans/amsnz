@@ -58,7 +58,7 @@ def property_list_view(request):
         obj.cap_rate = obj.net_operating_income / obj.market_value * 100
         obj.loan_to_value = int(obj.loan_amount) / int(obj.market_value) * 100
         total_noi = total_noi + obj.net_operating_income
-        obj.rent = obj.rent_after_vacany_rate
+        obj.rent = obj.rent_after_vacany_rate * 12
         total_rent = total_rent + obj.rent
 
     total_market_value = qs.aggregate(Sum("market_value")).get("market_value__sum")
