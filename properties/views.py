@@ -579,7 +579,7 @@ def add_property(request):
 def main(request):
     return render(request, 'properties/main.html')
 def property_list(request):
-    selected = "Monthly"
+    selected = "Yearly"
     qs = Property.objects.filter(user=request.user)
     total_operating_costs = 0
     total_noi = 0
@@ -594,15 +594,12 @@ def property_list(request):
                 + obj.rates
                 + obj.bodycorp_fee
         )
-        obj.operating_cost = obj.operating_cost / 12
-        obj.net_operating_income = obj.rent_after_vacany_rate - obj.operating_cost * 12
-        obj.cap_rate = obj.net_operating_income / obj.market_value * 100
-        obj.net_operating_income = obj.net_operating_income / 12
-        obj.loan_to_value = int(obj.loan_amount) / int(obj.market_value) * 100
-        obj.rent = obj.rent_after_vacany_rate / 12
-        obj.repayments = round(obj.repayments / 12, 2)
-        total_noi = total_noi + obj.net_operating_income
         total_operating_costs += obj.operating_cost
+        obj.net_operating_income = obj.rent_after_vacany_rate - obj.operating_cost
+        obj.cap_rate = obj.net_operating_income / obj.market_value * 100
+        obj.loan_to_value = int(obj.loan_amount) / int(obj.market_value) * 100
+        total_noi = total_noi + obj.net_operating_income
+        obj.rent = obj.rent_after_vacany_rate
         total_rent = total_rent + obj.rent
 
     total_market_value = qs.aggregate(Sum("market_value")).get("market_value__sum")
@@ -623,18 +620,18 @@ def property_list(request):
         .aggregate(Sum("management_fee"))
         .get("management_fee__sum")
     )
-
-    # total_operating_costs = total_rates + total_insurance + total_maintenance + total_management_fee
-    total_cap_rate = ((total_noi * 12) / total_market_value) * 100
-    total_loan_to_value = total_loan_amount / total_market_value * 100
-    # total_rent = f"{total_rent:,}"
-
+    if total_market_value:
+        total_cap_rate = ((total_rent - total_operating_costs) / total_market_value) * 100
+        total_loan_to_value = total_loan_amount / total_market_value * 100
+    else:
+        total_cap_rate = 0
+        total_loan_to_value = 0
     context = {
         "object_list": qs,
         "total_market_value": total_market_value,
         "total_loan_amount": total_loan_amount,
         "total_loan_to_value": total_loan_to_value,
-        "total_repayments": total_repayments / 12,
+        "total_repayments": total_repayments,
         "total_rent": total_rent,
         "total_operating_costs": total_operating_costs,
         "total_cap_rate": total_cap_rate,
