@@ -11,23 +11,9 @@
 {% block content %}
 
 <!-- Data Table -->
-<link rel="stylesheet" type="text/css" href="{% static 'DataTables/datatables.min.css' %}">  
+<link rel="stylesheet" type="text/css" href="{% static 'DataTables/datatables.min.css' %}">
+
 <script type="text/javascript" charset="utf8" src="{% static 'DataTables/datatables.min.js' %}"></script>
-
-<script language="javascript" type="text/javascript">
-<!--
-function popitup(url) {
-    newwindow=window.open(url,'{{title}}','height=768,width=384');
-    if (window.focus) {newwindow.focus()}
-    return false;
-}
-
-// -->
-</script>
-<script>
-  window.onblur= function() {window.onfocus= function () {location.reload(true)}};
-</script>
-
 <script type="text/javascript">
   var selectFunction = function() {
     var weekMonthYear = document.getElementById("weekMonthYear").value;
@@ -42,138 +28,11 @@ function popitup(url) {
 
   }
 </script>
-
 <div class="mb-3">
-<!--  <a href="popupex.html" onclick="return popitup('/properties/add')" style="text-decoration: none;"> -->
-<!--    <button type="button" class="btn btn-dashboard">-->
-<!--      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-plus me-1" viewBox="0 0 16 16">-->
-<!--        <path d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>-->
-<!--        <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>-->
-<!--      </svg>-->
-<!--      New Property-->
-<!--    </button>-->
-<!--  </a>-->
-<button type="button" class="btn btn-dashboard mb-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
-    <svg class="bi bi-calendar-plus me-1" fill="currentColor" height="16" viewBox="0 0 16 16"
-             width="16" xmlns="http://www.w3.org/2000/svg">
-            <path d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>
-            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
-        </svg>
-  New Property
-</button>
-
-<!-- Modal -->
-<div class="modal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Add Property</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-            <form id="addTransaction" >
-                <div class="alert alert-warning alert-dismissible fade show" style="display:none" role="alert" id="quantity_alert">
-                        You don't have sufficient quantity for this coin.
-                      <button type="button" class="btn-close"  onclick="closeAlert()" aria-label="Close"></button>
-                    </div>
-            <div class="mb-3">
-                <label class="form-label">Name</label>
-                <input class="form-control" name="name" id="name" type="text" required>
-                <label class="form-label">Property Type</label>
-                <select class="form-select" name="type" id="type" aria-label="Default select example" required>
-                    <option selected>------</option>
-                    <option value="Residential">Residential</option>
-                    <option value="Commercial">Commercial</option>
-                    <option value="Industrial">Industrial</option>
-                    <option value="Retail">Retail</option>
-                    <option value="Land">Land</option>
-                    <option value="Other">Other</option>
-                </select>
-              <label class="form-label">Land size</label>
-              <input class="form-control" name="land_size" min=0 step="any" id="land_size" type="number" oninput="validity.valid||
-    (value='');" required>
-                <label class="form-label">Building size</label>
-              <input class="form-control" name="building_size" min=0 step="any" id="building_size" type="number" oninput="validity.valid||
-    (value='');" required>
-                <label class="form-label">Lounge</label>
-                <input class="form-control" name="lounge" min=0 step="any" id="lounge" type="number" oninput="validity.valid||
-    (value='');" required>
-              <label class="form-label">Bedrooms</label>
-              <input class="form-control" name="bedrooms" min=0 step="any" id="bedrooms" type="number" oninput="validity.valid||
-    (value='');" required>
-              <label class="form-label">Bathrooms</label>
-              <input class="form-control" name="bathrooms" min=0 step="any" id="bathrooms" type="number" oninput="validity.valid||
-    (value='');" required>
-              <label class="form-label">Parking</label>
-                <input class="form-control" name="parking" min=0 step="any" id="parking" type="number" oninput="validity.valid||
-    (value='');" required>
-              <label class="form-label">Garage</label>
-                <select class="form-select" name="Garage" id="Garage" aria-label="Default select example" required>
-                    <option selected>------</option>
-                    <option value="None">None</option>
-                    <option value="Carport">Carport</option>
-                    <option value="Single">Single</option>
-                    <option value="Single with Workshop">Single with Workshop</option>
-                    <option value="Double">Double</option>
-                    <option value="Double with Workshop">Double with Workshop</option>
-                    <option value="Other">Other</option>
-                </select>
-              <label class="form-label">Vacancy Rate %</label>
-                <input class="form-control" name="vacancy_rate" min=0 step="any" id="vacancy_rate" type="number" oninput="validity.valid||
-    (value='');" required>
-              <label for="address">Street address</label>
-              <textarea class="form-control" placeholder="Leave a comment here" name="address" id="address" required></textarea>
-              <label class="form-label">Date</label>
-                <input class="form-control" name="date" id="date" type="date">
-              <label class="form-label">Purchase Price</label>
-                <input class="form-control" name="purchase_price" min=0 step="any" id="purchase_price" type="number" oninput="validity.valid||
-    (value='');" required>
-              <label class="form-label">Market Value</label>
-                <input class="form-control" name="market_value" min=0 step="any" id="market_value" type="number" oninput="validity.valid||
-    (value='');" required>
-              <label class="form-label">Deposit</label>
-                <input class="form-control" name="deposit" min=0 step="any" id="deposit" type="number" oninput="validity.valid||
-    (value='');" required>
-              <label class="form-label">Current loan amount</label>
-                <input class="form-control" name="loan_amount" min=0 step="any" id="loan_amount" type="number" oninput="validity.valid||
-    (value='');" required>
-              <label class="form-label">Loan Term</label>
-              <input class="form-control" name="loan_term" min=0 step="any" id="loan_term" type="number" oninput="validity.valid||
-    (value='');" required>
-              <label class="form-label">Interest Rate %</label>
-                <input class="form-control" name="interest_rate" min=0 step="any" id="interest_rate" type="number" oninput="validity.valid||
-    (value='');" required>
-              <label class="form-label">Repayments (yearly)</label>
-              <input class="form-control" name="repayments" min=0 step="any" id="repayments" type="number" oninput="validity.valid||
-    (value='');" required>
-              <label class="form-label">Rates (yearly)</label>
-              <input class="form-control" name="rates" min=0 step="any" id="rates" type="number" oninput="validity.valid||
-    (value='');" required>
-              <label class="form-label">Rent</label>
-               <input class="form-control" name="rent" min=0 step="any" id="rent" type="number" oninput="validity.valid||
-    (value='');" required>
-                <label class="form-label">Body Corp Fee (yearly)</label>
-                <input class="form-control" name="body_corp_fee" id="body_corp_fee" type="number" min=0 step="any" oninput="validity.valid||
-    (value='');" required>
-              <label class="form-label">Management Fee %</label>
-                <input class="form-control" name="management_fee" min=0 step="any" id="management_fee" type="number" oninput="validity.valid||
-    (value='');" required>
-              <label class="form-label">Insurance (yearly)</label>
-                <input class="form-control" name="insurance" id="insurance" type="number" min=0 step="any" oninput="validity.valid||
-    (value='');" required>
-              <label class="form-label">Maintenance (yearly)</label>
-                <input class="form-control" name="maintenance" id="maintenance" type="number" min=0 step="any" oninput="validity.valid||
-    (value='');" required>
-<!--              <label for="formFileMultiple" class="form-label">Image</label>-->
-<!--  <input class="form-control" type="file" id="formFileMultiple" multiple>-->
-            </div>
-            <button class="btn btn-primary form-control" type="submit">ADD</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-  <!-- <div class="btn-group me-2">
+  <button hx-get="{% url 'properties:add-property' %}" hx-target="#dialog" class="btn btn-primary">
+    Add property
+  </button>
+    <!-- <div class="btn-group me-2">
     <select name="weekMonthYear" id="weekMonthYear" onchange="selectFunction()">
       <option value="Weekly" {% if selected == 'Weekly' %} selected {% endif %}>Weekly</option>
       <option value="Monthly" {% if selected == 'Monthly' %} selected {% endif %}>Monthly</option>
@@ -192,11 +51,10 @@ function popitup(url) {
         </li>
         {% for year in years_list%}
         <!-- <option value="../{{year|stringformat:"i"}}"> {{year|stringformat:"i"}}</option> -->
-        <li><a class="dropdown-item" href="../{{year|stringformat:"i"}}">{{year|stringformat:"i"}}</a></li>
+        <li>
+            <a class="dropdown-item" href="../{{year|stringformat:"i"}}">{{year|stringformat:"i"}}</a>
+        </li>
         {%endfor%}
-
-        
-
         <!-- <li><a class="dropdown-item" href="#">Today</a></li>
         <li><a class="dropdown-item" href="#">This Month</a></li>
         <li><a class="dropdown-item" href="#">This Year</a></li> -->
@@ -221,390 +79,42 @@ function popitup(url) {
             <th style="text-align:right" scope="col">Action</th>
           </tr>
         </thead>
-        <tbody>
-          {% for obj in object_list %}
-          <tr>
-            <td onclick="window.location='{{ obj.get_absolute_url }}';">{{ obj.name }}</td>
-            <td style="text-align:right">${{ obj.market_value|floatformat:2|intcomma }}</td>
-            <td style="text-align:right">${{ obj.loan_amount|intcomma }}</td>
-            <td style="text-align:right">{{ obj.loan_to_value|intcomma|floatformat:2 }}%</td>
-            <td style="text-align:right">${{ obj.rent|floatformat:2|intcomma  }}</td>
-            <td style="text-align:right">$<span id="">{{obj.operating_cost|floatformat:2|intcomma}}</span></td>
-            <td style="text-align:right">${{obj.repayments|intcomma}}</td>
-            <td style="text-align:right">${{ obj.net_operating_income|floatformat:2|intcomma }}</td>
-            <td style="text-align:right">{{ obj.cap_rate|floatformat:2|intcomma }}% </td>
-            <td style="text-align: right;">
-<!--              <a href="popupex.html" onclick="return popitup('/properties/{{ obj.id }}/edit')" style="text-decoration: none;">-->
-<!--                <button class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit">-->
-<!--                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">-->
-<!--                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>-->
-<!--                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>-->
-<!--                  </svg>-->
-<!--                </button>-->
-<!--              </a>-->
-              <button class="btn btn-success btn-sm rounded-0" data-bs-target="#basicModal{{obj.id}}"
-                                    data-bs-toggle="modal" data-placement="top"
-                                    title="Edit" type="button">
-                                <svg class="bi bi-pencil-square" fill="currentColor" height="16" viewBox="0 0 16 16"
-                                     width="16" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                                    <path d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"
-                                          fill-rule="evenodd"/>
-                                </svg>
-                            </button>
-                            <!--                            </a>-->
-                            <div class="modal fade" id=basicModal{{obj.id}} tabindex="-1">
-                                <div class="modal-dialog">
-                                    <form action="" method=POST>
-                                        <div class="modal-content" style="text-align:left">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">Edit Transaction</h5>
-                                                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"
-                                                        type="button"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <form>
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Name</label>
-                                                        <input class="form-control" value="{{ obj.name }}" name="name_edit" id="name_edit{{obj.id}}" type="text" >
-                                                        <label class="form-label">Property Type</label>
-                                                        <select class="form-select" name="type_edit" id="type_edit{{obj.id}}" aria-label="Default select example">
-                                                            <option selected>{{ obj.property_type }}</option>
-                                                            <option value="Residential">Residential</option>
-                                                            <option value="Commercial">Commercial</option>
-                                                            <option value="Industrial">Industrial</option>
-                                                            <option value="Retail">Retail</option>
-                                                            <option value="Land">Land</option>
-                                                            <option value="Other">Other</option>
-                                                        </select>
-                                                      <label class="form-label">Land Size </label>
-                                                      <input class="form-control" value="{{ obj.land_size }}" name="land_size_edit" min=0  step="any" id="land_size_edit{{obj.id}}" type="number" oninput="validity.valid||
-                                            (value='');">
-                                                       <label class="form-label">Building Size</label>
-                                                      <input class="form-control" value="{{ obj.building_size }}" name="building_size_edit" min=0  step="any" id="building_size_edit{{obj.id}}" type="number" oninput="validity.valid||
-                                            (value='');">
-                                                        <label class="form-label">Lounge</label>
-                                                        <input class="form-control" value="{{ obj.lounge }}" name="lounge_edit" min=0 step="any" id="lounge_edit{{obj.id}}" type="number" oninput="validity.valid||
-                                            (value='');">
-                                                      <label class="form-label">Bedrooms</label>
-                                                      <input class="form-control" value="{{ obj.bedrooms }}" name="bedrooms_edit" min=0 step="any" id="bedrooms_edit{{obj.id}}" type="number" oninput="validity.valid||
-                                            (value='');">
-                                                      <label class="form-label">Bathrooms</label>
-                                                      <input class="form-control" value="{{ obj.bathrooms }}" name="bathrooms_edit" min=0 step="any" id="bathrooms_edit{{obj.id}}" type="number" oninput="validity.valid||
-                                            (value='');">
-                                                      <label class="form-label">Parking</label>
-                                                        <input class="form-control" value="{{ obj.parking }}" name="parking_edit" value=0 min=0 step="any" id="parking_edit{{obj.id}}" type="number" oninput="validity.valid||
-                                            (value='');">
-                                                      <label class="form-label">Garage</label>
-                                                        <select class="form-select" name="Garage_edit" id="Garage_edit{{obj.id}}" aria-label="Default select example">
-                                                            <option selected>{{ obj.garage }}</option>
-                                                            <option value="None">None</option>
-                                                            <option value="Carport">Carport</option>
-                                                            <option value="Single">Single</option>
-                                                            <option value="Single with Workshop">Single with Workshop</option>
-                                                            <option value="Double">Double</option>
-                                                            <option value="Double with Workshop">Double with Workshop</option>
-                                                            <option value="Other">Other</option>
-                                                        </select>
-                                                      <label class="form-label">Vacancy Rate %</label>
-                                                        <input class="form-control" value="{{ obj.vacancy_rate }}" name="vacancy_rate_edit" min=0 step="any" id="vacancy_rate_edit{{obj.id}}" type="number" oninput="validity.valid||
-                                            (value='');">
-                                                      <label class="form-label">Purchase Date</label>
-                                                        <input class="form-control" name="date_edit" id="date_edit{{obj.id}}" value="{{obj.purchase_date}}" type="text" disabled>
-                                                      <label class="form-label">Purchase Price</label>
-                                                        <input class="form-control" value="{{ obj.purchase_price }}" name="purchase_price_edit" min=0 step="any" id="purchase_price_edit{{obj.id}}" type="number" oninput="validity.valid||
-                                            (value='');">
-                                                      <label class="form-label">Market Value</label>
-                                                        <input class="form-control" value="{{ obj.market_value }}" name="market_value_edit" min=0 step="any" id="market_value_edit{{obj.id}}" type="number" oninput="validity.valid||
-                                            (value='');">
-                                                      <label class="form-label">Deposit</label>
-                                                        <input class="form-control" value="{{ obj.deposit }}" name="deposit_edit" min=0  step="any" id="deposit_edit{{obj.id}}" type="number" oninput="validity.valid||
-                                            (value='');">
-                                                      <label class="form-label">Current loan amount</label>
-                                                        <input class="form-control" value="{{ obj.loan_amount }}" name="loan_amount_edit" min=0  step="any" id="loan_amount_edit{{obj.id}}" type="number" oninput="validity.valid||
-                                            (value='');">
-                                                      <label class="form-label">Loan Term</label>
-                                                      <input class="form-control" value="{{ obj.loan_term }}" name="loan_term_edit" min=0 step="any" id="loan_term_edit{{obj.id}}" type="number" oninput="validity.valid||
-                                            (value='');">
-                                                      <label class="form-label">Interest Rate %</label>
-                                                        <input class="form-control" value="{{ obj.interest_rate }}" name="interest_rate_edit" min=0  step="any" id="interest_rate_edit{{obj.id}}" type="number" oninput="validity.valid||
-                                            (value='');">
-                                                      <label class="form-label">Repayments</label>
-                                                      <input class="form-control" value="{{ obj.repayments }}" name="repayments_edit" min=0 step="any" id="repayments_edit{{obj.id}}" type="number" oninput="validity.valid||
-                                            (value='');">
-                                                      <label class="form-label">Rates</label>
-                                                      <input class="form-control" value="{{ obj.rates }}" name="rates_edit" min=0 step="any" id="rates_edit{{obj.id}}" type="number" oninput="validity.valid||
-                                            (value='');">
-                                                      <label class="form-label">Rent</label>
-                                                       <input class="form-control" value="{{ obj.rent }}" name="rent_edit" min=0 step="any" id="rent_edit{{obj.id}}" type="number" oninput="validity.valid||
-                                            (value='');">
-                                                        <label class="form-label">Body Corp Fee</label>
-                                                        <input class="form-control" value="{{ obj.bodycorp_fee }}" name="body_corp_fee_edit" id="body_corp_fee_edit{{obj.id}}" type="number" min="0" step="any" oninput="validity.valid||
-                                            (value='');">
-                                                      <label class="form-label">Management Fee %</label>
-                                                        <input class="form-control" value="{{ obj.management_fee }}" name="management_fee_edit" min=0 step="any" id="management_fee_edit{{obj.id}}" type="number" oninput="validity.valid||
-                                            (value='');">
-                                                      <label class="form-label">Insurance</label>
-                                                        <input class="form-control" value="{{ obj.insurance }}" name="insurance_edit" id="insurance_edit{{obj.id}}" type="number" min=0 step="any" oninput="validity.valid||
-                                            (value='');">
-                                                      <label class="form-label">Maintenance</label>
-                                                        <input class="form-control" value="{{ obj.maintenance }}" name="maintenance_edit" id="maintenance_edit{{obj.id}}" type="number" min=0 step="any" oninput="validity.valid||
-                                            (value='');">
-                                                    </div>
-
-                                                    <button class="btn btn-primary" type="button" onclick="EditTransaction({{obj.id}})">Submit</button>
-                                                </form>
-                                            </div>
-<!--                                            <div class="modal-footer">-->
-<!--                                                <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">-->
-<!--                                                    Close-->
-<!--                                                </button>-->
-<!--                                                <button class="btn btn-dashboard" type="submit">Save</button>-->
-<!--                                            </div>-->
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-<!--              <a href="popupex.html" onclick="return popitup('/properties/{{ obj.id }}/delete')" style="text-decoration: none;">-->
-<!--                <button class="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete">-->
-<!--                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">-->
-<!--                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>-->
-<!--                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>-->
-<!--                  </svg>-->
-<!--                </button>-->
-<!--              </a>-->
-                <button type="button" class="btn btn-black btn-sm rounded-0" data-bs-toggle="modal" data-bs-target="#deleteModal{{obj.id}}">
-                  <svg class="bi bi-trash" fill="currentColor" height="16" viewBox="0 0 16 16"
-                             width="16" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                            <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
-                                  fill-rule="evenodd"/>
-                        </svg>
-                </button>
-
-                <!-- Modal -->
-                <div class="modal fade" id="deleteModal{{obj.id}}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="deleteModalLabel">Delete Property</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                          <div class="modal-body deleteForm">
-                            <h2 class="">You are about to delete this Property</h2>
-                            <p>Are you sure you want to delete<strong> {{ obj.name  }}</strong>?</p>
-                            <p>This action cannot be undone.</p>
-                            <p>All transctions for this fund will be lost</p>
-                              <button class="btn btn-danger form-control" type="button" onclick="deleteTransaction({{obj.id}})">Delete</button>
-                          </div>
-                    </div>
-                  </div>
-                </div>
-            </td>
-          </tr>    
-          {% endfor %}
-          <thead>
-            <tr>
-              <th>Total:</th>
-              <th style="text-align:right">${{ total_market_value|floatformat:2|intcomma }}</th>
-              <th style="text-align:right">${{ total_loan_amount|floatformat:2|intcomma }}</th>
-              <th style="text-align:right">{{ total_loan_to_value|floatformat:2|intcomma }}%</th>
-              <th style="text-align:right">${{ total_rent|floatformat:2|intcomma }}</th>
-              <th style="text-align:right">${{ total_operating_costs|floatformat:2|intcomma }}</th>
-              <th style="text-align:right">${{ total_repayments|floatformat:2|intcomma }}</th>
-              <th style="text-align:right">${{ total_noi|floatformat:2|intcomma }}</th>
-              <th style="text-align:right">{{ total_cap_rate|floatformat:2|intcomma }}%</th>
-              <th></th>
-            </tr>
-          </thead>
-        </tbody>
+          <tbody hx-trigger="load, propertyListChanged from:body" hx-get="{% url 'properties:properties_list' %}" hx-target="this">
+              <tr>
+                <td class="spinner-border" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </td>
+              </tr>
+            </tbody>
       </table>
     </div>
   </div>
 </div>
 
-<br> 
+    <!-- Placeholder for the modal -->
+    <div id="modal" class="modal fade">
+      <div id="dialog" class="modal-dialog" hx-target="this"></div>
+    </div>
 
-<script>
-    $("#addTransaction").submit(function(e) {
-    addTransaction();
-    });
-  function addTransaction() {
-        var name = document.getElementById('name').value;
-        var type = document.getElementById(`type`).value;
-        var land_size = document.getElementById('land_size').value;
-        var building_size = document.getElementById('building_size').value;
-        var lounge = document.getElementById('lounge').value;
-        var bedrooms = document.getElementById('bedrooms').value;
-        var bathrooms = document.getElementById('bathrooms').value;
-        var parking = document.getElementById('parking').value;
-        var Garage = document.getElementById('Garage').value;
-        var vacancy_rate = document.getElementById('vacancy_rate').value;
-        var address = document.getElementById('address').value;
-        var date = document.getElementById('date').value;
-        var purchase_price = document.getElementById('purchase_price').value;
-        var market_value = document.getElementById('market_value').value;
-        var deposit = document.getElementById('deposit').value;
-        var loan_amount = document.getElementById('loan_amount').value;
-        var loan_term = document.getElementById('loan_term').value;
-        var interest_rate = document.getElementById('interest_rate').value;
-        var repayments = document.getElementById('repayments').value;
-        var rates = document.getElementById('rates').value;
-        var rent = document.getElementById('rent').value;
-        var body_corp_fee = document.getElementById('body_corp_fee').value;
-        var management_fee = document.getElementById('management_fee').value;
-        var insurance = document.getElementById('insurance').value;
-        var maintenance = document.getElementById('maintenance').value;
-        if (name && type && land_size && building_size && date) {
-            // Create Ajax Call
-            $(document).ready(function () {
-            let body={
-                'name': name,
-                'type': type,
-                'land_size': land_size,
-                'building_size': building_size,
-                'lounge': lounge,
-                'bedrooms': bedrooms,
-                'bathrooms': bathrooms,
-                'parking': parking,
-                'Garage': Garage,
-                'vacancy_rate': vacancy_rate,
-                'address': address,
-                'date': date,
-                'purchase_price': purchase_price,
-                'market_value':market_value,
-                'deposit': deposit,
-                'loan_amount': loan_amount,
-                'loan_term': loan_term,
-                'interest_rate': interest_rate,
-                'repayments': repayments,
-                'rates': rates,
-                'rent': rent,
-                'body_corp_fee': body_corp_fee,
-                'management_fee': management_fee,
-                'insurance': insurance,
-                'maintenance': maintenance,
-            }
-            $.ajax({
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                type: 'POST',
-                url: '{% url "properties:addproperty" %}',
-                headers: {//<==
-                    "X-CSRFTOKEN": "{{ csrf_token }}"//<==
-                },
-                data: JSON.stringify(body),
-                success: function(data) {
-                //Success code
-                    console.log(data,'data')
-                    if (data.user) {
-                        location.reload();
-                    }
-                },
-                failure: function (response) {
-                    $('#result').html(response);
-                }
-            });
-        });
-        } else
-        {
-            alert("All fields must have a valid value.");
-        }
-<!--        $('form#addTransaction').trigger("reset");-->
-        return false;
-    }
-    function EditTransaction(id){
-        console.log("edit_transaction",id);
-        var name = document.getElementById(`name_edit${id}`).value;
-        var type = document.getElementById(`type_edit${id}`).value;
-        var land_size = document.getElementById(`land_size_edit${id}`).value;
-        var building_size = document.getElementById(`building_size_edit${id}`).value;
-        var lounge = document.getElementById(`lounge_edit${id}`).value;
-        var bedrooms = document.getElementById(`bedrooms_edit${id}`).value;
-        var bathrooms = document.getElementById(`bathrooms_edit${id}`).value;
-        var parking = document.getElementById(`parking_edit${id}`).value;
-        var Garage = document.getElementById(`Garage_edit${id}`).value;
-        var vacancy_rate = document.getElementById(`vacancy_rate_edit${id}`).value;
-        var purchase_price = document.getElementById(`purchase_price_edit${id}`).value;
-        var market_value = document.getElementById(`market_value_edit${id}`).value;
-        var deposit = document.getElementById(`deposit_edit${id}`).value;
-        var loan_amount = document.getElementById(`loan_amount_edit${id}`).value;
-        var loan_term = document.getElementById(`loan_term_edit${id}`).value;
-        var interest_rate = document.getElementById(`interest_rate_edit${id}`).value;
-        var repayments = document.getElementById(`repayments_edit${id}`).value;
-        var rates = document.getElementById(`rates_edit${id}`).value;
-        var rent = document.getElementById(`rent_edit${id}`).value;
-        var body_corp_fee = document.getElementById(`body_corp_fee_edit${id}`).value;
-        var management_fee = document.getElementById(`management_fee_edit${id}`).value;
-        var insurance = document.getElementById(`insurance_edit${id}`).value;
-        var maintenance = document.getElementById(`maintenance_edit${id}`).value;
-        $(document).ready(function () {
-            let body={
-                'id': id,
-                'name': name,
-                'type': type,
-                'land_size': land_size,
-                'building_size': building_size,
-                'lounge': lounge,
-                'bedrooms': bedrooms,
-                'bathrooms': bathrooms,
-                'parking': parking,
-                'Garage': Garage,
-                'vacancy_rate': vacancy_rate,
-                'purchase_price': purchase_price,
-                'market_value':market_value,
-                'deposit': deposit,
-                'loan_amount': loan_amount,
-                'loan_term': loan_term,
-                'interest_rate': interest_rate,
-                'repayments': repayments,
-                'rates': rates,
-                'rent': rent,
-                'body_corp_fee': body_corp_fee,
-                'management_fee': management_fee,
-                'insurance': insurance,
-                'maintenance': maintenance,
-            }
-            $.ajax({
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                type: 'POST',
-                url: '{% url 'properties:editproperty' %}',
-                headers: {//<==
-                    "X-CSRFTOKEN": "{{ csrf_token }}"//<==
-                },
-                data: JSON.stringify(body),
-                success: function(data) {
-                //Success code
-<!--                    $(`#basicModal${data.user.id}`).modal('hide');-->
-                    if (data.user) {
-                        location.reload();
-                    }
-                },
-                failure: function (response) {
-                    $('#result').html(response);
-                }
-            });
-        });
-    }
-    function deleteTransaction(id) {
-        $.ajax({
-            url: '{% url "properties:deleteproperty" %}',
-            data: {
-                'id': id,
-            },
-            dataType: 'json',
-            success: function (data) {
-                console.log(data,'delete');
-                if (data.deleted) {
-                    location.reload();
-                }
-            }
-        });
-    }
-  $(document).ready( function () {
-    $('#prop-portfolio').DataTable();
-  });
-</script>
+    <!-- Empty toast to show the message -->
+    <div class="toast-container position-fixed top-0 end-0 p-3">
+      <div id="toast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+          <div id="toast-body" class="toast-body"></div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      </div>
+    </div>
 
+
+    <!-- Scripts: Bootstraps, HTMX, and custom JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/htmx.org@1.6.1/dist/htmx.min.js"></script>
+    <script src="{% static "dialog.js" %}"></script>
+    <script src="{% static "toast.js" %}"></script>
+    <script>
+    $(document).ready( function () {
+        $('#prop-portfolio').DataTable();
+      });
+    </script>
 {% endblock content %}

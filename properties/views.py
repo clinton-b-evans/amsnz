@@ -1,7 +1,7 @@
 import json
 from decimal import Decimal
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -12,6 +12,8 @@ from django.http import (
     HttpResponseRedirect,
     HttpResponsePermanentRedirect, JsonResponse,
 )
+from django.views.decorators.http import require_POST
+
 
 from incomestatements.models import Category
 from incomestatements_property.models import PropertyCategory
@@ -557,97 +559,124 @@ def addproperty(request):
 
 
 def add_property(request):
-    submitted = False
     if request.method == "POST":
         form = PropertyForm(request.POST)
         if form.is_valid():
-            form.save()
+            property = form.save(commit=False)
+            property.user = request.user
+            property.save()
             return HttpResponse(
-                '<script type="text/javascript">window.close()</script>'
-            )
+                status=204,
+                headers={
+                    'HX-Trigger': json.dumps({
+                        "propertyListChanged": None,
+                        "showMessage": f"{property.name} added."
+                    })
+                })
     else:
-        form = PropertyForm
-        if "submitted" in request.GET:
-            submitted = True
-    form = PropertyForm
-    return render(
-        request, "properties/add.html", {"form": form, "submitted": submitted}
+        form = PropertyForm()
+    return render(request, "properties/property_form.html", {"form": form})
+def main(request):
+    return render(request, 'properties/main.html')
+def property_list(request):
+    selected = "Monthly"
+    qs = Property.objects.filter(user=request.user)
+    total_operating_costs = 0
+    total_noi = 0
+    total_rent = 0
+    for obj in qs:
+        obj.rent_after_vacany_rate = obj.rent - (obj.rent * (obj.vacancy_rate / 100))
+        obj.net_management = obj.rent_after_vacany_rate * (obj.management_fee / 100)
+        obj.operating_cost = (
+                obj.net_management
+                + obj.insurance
+                + obj.maintenance
+                + obj.rates
+                + obj.bodycorp_fee
+        )
+        obj.operating_cost = obj.operating_cost / 12
+        obj.net_operating_income = obj.rent_after_vacany_rate - obj.operating_cost * 12
+        obj.cap_rate = obj.net_operating_income / obj.market_value * 100
+        obj.net_operating_income = obj.net_operating_income / 12
+        obj.loan_to_value = int(obj.loan_amount) / int(obj.market_value) * 100
+        obj.rent = obj.rent_after_vacany_rate / 12
+        obj.repayments = round(obj.repayments / 12, 2)
+        total_noi = total_noi + obj.net_operating_income
+        total_operating_costs += obj.operating_cost
+        total_rent = total_rent + obj.rent
+
+    total_market_value = qs.aggregate(Sum("market_value")).get("market_value__sum")
+    total_loan_amount = qs.aggregate(Sum("loan_amount")).get("loan_amount__sum")
+    total_repayments = (
+        Property.objects.filter(user=request.user).aggregate(Sum("repayments")).get("repayments__sum")
     )
 
+    total_rates = Property.objects.filter(user=request.user).aggregate(Sum("rates")).get("rates__sum")
+    total_insurance = (
+        Property.objects.filter(user=request.user).aggregate(Sum("insurance")).get("insurance__sum")
+    )
+    total_maintenance = (
+        Property.objects.filter(user=request.user).aggregate(Sum("maintenance")).get("maintenance__sum")
+    )
+    total_management_fee = (
+        Property.objects.filter(user=request.user)
+        .aggregate(Sum("management_fee"))
+        .get("management_fee__sum")
+    )
 
-def editproperty(request):
-    if request.method == "POST":
-        propertyData = json.loads(request.body)
-        property = Property.objects.filter(user=request.user).get(id=propertyData['id'])
-        print(propertyData, 'propertyData')
-        print(property, 'property')
-        print(propertyData['land_size'], 'land_size')
-        property.name = propertyData['name']
-        property.property_type = propertyData['type']
-        property.land_size = int(propertyData['land_size'])
-        property.building_size = propertyData['building_size']
-        property.lounge = propertyData['lounge']
-        property.bedrooms = propertyData['bedrooms']
-        property.bathrooms = propertyData['bathrooms']
-        property.parking = propertyData['parking']
-        property.garage = propertyData['Garage']
-        property.vacancy_rate = propertyData['vacancy_rate']
-        property.purchase_price = propertyData['purchase_price']
-        property.market_value = propertyData['market_value']
-        property.deposit = propertyData['deposit']
-        property.loan_amount = propertyData['loan_amount']
-        property.loan_term = propertyData['loan_term']
-        property.interest_rate = propertyData['interest_rate']
-        property.repayments = propertyData['repayments']
-        property.rates = propertyData['rates']
-        property.rent = propertyData['rent']
-        property.bodycorp_fee = propertyData['body_corp_fee']
-        property.management_fee = propertyData['management_fee']
-        property.insurance = propertyData['insurance']
-        property.maintenance = propertyData['maintenance']
-        property.save()
-        data = {
-            'user': "data is updated"
-        }
-        return JsonResponse(data)
+    # total_operating_costs = total_rates + total_insurance + total_maintenance + total_management_fee
+    total_cap_rate = ((total_noi * 12) / total_market_value) * 100
+    total_loan_to_value = total_loan_amount / total_market_value * 100
+    # total_rent = f"{total_rent:,}"
 
+    context = {
+        "object_list": qs,
+        "total_market_value": total_market_value,
+        "total_loan_amount": total_loan_amount,
+        "total_loan_to_value": total_loan_to_value,
+        "total_repayments": total_repayments / 12,
+        "total_rent": total_rent,
+        "total_operating_costs": total_operating_costs,
+        "total_cap_rate": total_cap_rate,
+        "total_noi": total_noi,
+        "selected": selected,
+    }
+    return render(request, 'properties/property_list.html', context=context)
 
-def update_property(request, pk):
-    property = Property.objects.filter(user=request.user).get(id=pk)
-    form = PropertyForm(instance=property)
-
+def edit_property(request, pk):
+    property = get_object_or_404(Property, pk=pk)
     if request.method == "POST":
         form = PropertyForm(request.POST, instance=property)
         if form.is_valid():
-            form.save()
+            property = form.save(commit=False)
+            property.user = request.user
+            property.save()
             return HttpResponse(
-                '<script type="text/javascript">window.close()</script>'
+                status=204,
+                headers={
+                    'HX-Trigger': json.dumps({
+                        "propertyListChanged": None,
+                        "showMessage": f"{property.name} updated."
+                    })
+                }
             )
-    context = {"form": form}
-    return render(request, "properties/add.html", context)
+    else:
+        form = PropertyForm(instance=property)
+    return render(request, 'properties/property_form.html', {
+        'form': form,
+        'property': property,
+    })
 
 
-def deleteproperty(request):
-    id1 = request.GET.get('id', None)
-    print(id1, "delete")
-    Property.objects.filter(user=request.user).get(id=id1).delete()
-    data = {
-        'deleted': True
-    }
-    return JsonResponse(data)
-
-
-def delete_property(request, pk):
-    property = Property.objects.filter(user=request.user).get(id=pk)
-    qs = Property.objects.filter(user=request.user).get(id=pk)
-    context = {
-        "object": qs,
-    }
-
-    if request.method == "POST":
-        # delete object
-        property.delete()
-        # after deleting redirect to
-        # home page
-        return HttpResponse('<script type="text/javascript">window.close()</script>')
-    return render(request, "properties/delete_property.html", context)
+@require_POST
+def remove_property(request, pk):
+    property = get_object_or_404(Property, pk=pk)
+    property.delete()
+    return HttpResponse(
+        status=204,
+        headers={
+            'HX-Trigger': json.dumps({
+                "propertyListChanged": None,
+                "showMessage": f"{property.name} deleted."
+            })
+        })

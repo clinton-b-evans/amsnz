@@ -31,3 +31,4 @@ tomli==2.0.1
 typing_extensions==4.3.0
 urllib3==1.26.12
 yfinance==0.1.84
+django-widget-tweaks==1.4.12
