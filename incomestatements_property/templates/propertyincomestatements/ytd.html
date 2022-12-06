@@ -32,7 +32,8 @@
 </script>
 
 <!-- Google Chart -->
-<script src="{% static 'GoogleChart/Gchart.js' %}"></script>
+<!-- <script src="{% static 'GoogleChart/Gchart.js' %}"></script> -->
+<script src="{% static 'apexcharts/apexcharts.min.js' %}"></script>
 
 <div class="col-lg-4 mb-3">
     <form class="form-group" action="/propertyincomestatements/yeartodate/{{year}}/" method="get">
@@ -219,7 +220,8 @@
                 <div class="card">
                     <div class="card-body pb-0">
                         <h5 class="card-title">All Expenses <span>| {{year}}</span></h5>
-                        <div id="donutchart" style="width: auto; height: 20rem;"></div>
+                        <!-- <div id="donutchart" style="width: auto; height: 20rem;"></div> -->
+                        <div id="donutChart" style="width: auto; height: 20rem;"></div>
                     </div>
                 </div>
 
@@ -228,7 +230,8 @@
                 <div class="card">
                     <div class="card-body pb-0">
                         <h5 class="card-title">Income vs Expense <span>| {{year}}</span></h5>
-                        <div id="piechart" style="width: auto; height: 20rem;"></div>
+                        <!-- <div id="piechart" style="width: auto; height: 20rem;"></div> -->
+                        <div id="pieChart" style="width: auto; height: 20rem;"></div>
                     </div>
                 </div>
             </div>
@@ -244,7 +247,7 @@
     })
 </script>
 
-<script type="text/javascript">
+<!-- <script type="text/javascript">
     google.charts.load('current', { 'packages': ['corechart'] });
     google.charts.setOnLoadCallback(drawChart);
 
@@ -257,11 +260,7 @@
       ]);
 
       var options = {
-        // title: 'All Expenses',
-        // is3D: true,
         pieHole: 0.4,
-        // legend: 'none',
-        // pieSliceText: 'label',
         legend: { position: 'top', alignment: 'start' }
       };
 
@@ -269,9 +268,33 @@
 
       chart.draw(data, options);
     }
-</script>
+</script> -->
 
-<script type="text/javascript">
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+  
+    new ApexCharts(document.querySelector("#donutChart"), {
+  
+        series: [
+            {% for key, value in categories_yearly.items %}
+            ['{{key}}', {{value}}],
+            {% endfor %}
+        ],
+        chart: {
+        type: 'donut',
+        toolbar: {
+            show: true
+            }
+        },
+        legend: {
+        position: 'bottom'
+        },
+        // labels: ['Income', 'Expense']
+    }).render();
+    });
+  </script>
+
+<!-- <script type="text/javascript">
     google.charts.load('current', { 'packages': ['corechart'] });
     google.charts.setOnLoadCallback(drawChart);
 
@@ -284,11 +307,6 @@
     ]);
 
     var options = {
-      // title: 'Income Vs Expense',
-      // is3D: true,
-      // pieHole: 0.4,
-      // legend: 'none',
-      // pieSliceText: 'label',
       legend: { position: 'top', alignment: 'center' },
       colors: ['rgb(51, 102, 204)', 'rgb(153, 0, 153)',]
     };
@@ -297,5 +315,32 @@
 
     chart.draw(data, options);
   }
-</script>
+</script> -->
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+  
+    new ApexCharts(document.querySelector("#pieChart"), {
+  
+        series: [{{ income|stringformat:"i"}}, {{ expense|stringformat:"i"}}],
+        chart: {
+        // height: 380,
+        type: 'pie',
+        toolbar: {
+            show: true
+            }
+        },
+        title: {
+        align: 'center',
+        },
+        legend: {
+        position: 'bottom'
+        // horizontalAlign: 'center',
+        // offsetX: 40
+        },
+        labels: ['Income', 'Expense']
+    }).render();
+    });
+  </script>
+
 {% endblock content %}
