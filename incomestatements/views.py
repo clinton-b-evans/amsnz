@@ -802,7 +802,7 @@ def year_to_date(request, year):
             income_result[f"{list(category.values())[0]}"]["total"] = sum(
                 income_result[f"{list(category.values())[0]}"]["months"].values()
             )
-            budget_category = Category.objects.filter(user=request.user).get(name=category['category__name'], year=year)
+            budget_category = Category.objects.filter(user=request.user, year=year).get(name=category['category__name'])
             income_result[f"{list(category.values())[0]}"]["Budget"] = budget_category.compute_budget()
             total_income_budget += budget_category.compute_budget()
             category_total = income_result[f"{list(category.values())[0]}"]["total"]
