@@ -14,6 +14,8 @@
 
 <!-- Google Chart -->
 <script src="{% static 'GoogleChart/Gchart.js' %}"></script>
+<script src="{% static 'apexcharts/apexcharts.min.js' %}"></script>
+
 <!-- <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> -->
 
 <style>
@@ -127,7 +129,8 @@
     </div>
 
     <div class="col-lg-6">
-      <div id="piechart" style="width: auto; height: 450px"></div>
+      <!-- <div id="piechart" style="width: auto; height: 450px"></div> -->
+      <div id="pieChart" style="width: 100%;"></div>
     </div>
 
   </div>
@@ -407,7 +410,7 @@
         }
   }
 </script>
-<script type="text/javascript">
+<!-- <script type="text/javascript">
   google.charts.load('current', {'packages':['corechart']});
   google.charts.setOnLoadCallback(drawChart);
 
@@ -440,6 +443,40 @@
 
     chart.draw(data, options);
   }
+</script> -->
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+  new ApexCharts(document.querySelector("#pieChart"), {
+
+      var realEstate = parseInt(document.getElementById('id_real_estate').value);
+      var stocks = parseInt(document.getElementById('id_stocks').value);
+      var CR = parseInt(document.getElementById('id_crypto').value);
+      var COM = parseInt(document.getElementById('id_commodities').value); 
+      var COL = parseInt(document.getElementById('id_collectables').value); 
+      var cash = parseInt(document.getElementById('id_cash').value); 
+
+      series: [{{realEstate}}, {{stocks}}, {{CR}}, {{COM}}, {{COL}}, {{cash}}],
+      chart: {
+      height: 380,
+      type: 'pie',
+      toolbar: {
+          show: true
+      }
+      },
+      title: {
+      text: 'Financial Plan {{year}}',
+      align: 'center',
+      // offsetX: 110
+      },
+      legend: {
+      position: 'top'
+      // horizontalAlign: 'center',
+      // offsetX: 40
+      },
+      labels: ['Real Estate', 'Stocks', 'Crypto', 'Commodities', 'Collectables', 'Cash']
+  }).render();
+  });
 </script>
 
 <script>

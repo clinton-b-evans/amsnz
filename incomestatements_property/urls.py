@@ -25,9 +25,9 @@ urlpatterns = [
         name="addcategory",
     ),
     path(
-        "category_list_property/<str:year>/",
+        "propert_forecast/<str:year>/",
         category_list,
-        name="category_list_property",
+        name="propert_forecast",
     ),
     path(
         "editcategory/",

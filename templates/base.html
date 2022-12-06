@@ -236,10 +236,10 @@
       <li class="nav-heading">Investments</li>
 
       <li class="nav-item">
-        <a {% if request.resolver_match.url_name in 'properties_list,property-incomestatement-list,property_year-to-date' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+        <a {% if request.resolver_match.url_name in 'properties_list,property-incomestatement-list,propert_forecast,property_year-to-date' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-house"></i><span>Property</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
-        <ul id="components-nav" {% if request.resolver_match.url_name in 'properties_list,property-incomestatement-list,property_year-to-date' %}class="nav-content collapse show active"{% else %}class="nav-content collapse"{% endif %} data-bs-parent="#sidebar-nav">
+        <ul id="components-nav" {% if request.resolver_match.url_name in 'properties_list,property-incomestatement-list,propert_forecast,property_year-to-date' %}class="nav-content collapse show active"{% else %}class="nav-content collapse"{% endif %} data-bs-parent="#sidebar-nav">
           <li class="nav-item">
             <a {% if request.resolver_match.url_name == 'properties_list' %}class="nav-link active"{% else %}class="nav-link collapsed"{% endif %} href="/properties">
               <i class="bi bi-circle"></i>
@@ -255,7 +255,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a {% if request.resolver_match.url_name == 'category_list' %} class="nav-link active" {% else %}class="nav-link collapsed" {% endif %} href="/category_list_property/{% now 'Y' %}/">
+            <a {% if request.resolver_match.url_name == 'propert_forecast' %} class="nav-link active" {% else %}class="nav-link collapsed" {% endif %} href="/propert_forecast/{% now 'Y' %}/">
               <i class="bi bi-cash"></i>
               <span>Forecast</span>
               <!-- <span data-feather="file">Income Statements</span> -->
@@ -299,17 +299,17 @@
 <!--      </li>&lt;!&ndash; End Stocks Nav &ndash;&gt;-->
 
       <li class="nav-item">
-        <a {% if request.resolver_match.url_name in 'commodities_list,commodities_transactions' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} data-bs-target="#commodities-nav" data-bs-toggle="collapse" href="#">
+        <a {% if request.resolver_match.url_name in 'commodities_list,commodities_classes' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} data-bs-target="#commodities-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-gem"></i><span>Commodities</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
-        <ul id="commodities-nav" {% if request.resolver_match.url_name in 'commodities_list,commodities_transactions' %}class="nav-content collapse show active"{% else %}class="nav-content collapse"{% endif %} data-bs-parent="#sidebar-nav">
+        <ul id="commodities-nav" {% if request.resolver_match.url_name in 'commodities_list,commodities_classes' %}class="nav-content collapse show active"{% else %}class="nav-content collapse"{% endif %} data-bs-parent="#sidebar-nav">
           <li class="nav-item">
             <a {% if request.resolver_match.url_name == 'commodities_list' %}class="nav-link active"{% else %}class="nav-link collapsed"{% endif %} href="/commodities/{% now 'Y' %}/">
               <i class="bi bi-circle"></i></i><span>Commodity Portfolio</span>
             </a>
           </li>
           <li class="nav-item">
-            <a {% if request.resolver_match.url_name == 'commodities_transactions' %}class="nav-link active"{% else %}class="nav-link collapsed"{% endif %} href="/commodities-classes/{% now 'Y' %}/">
+            <a {% if request.resolver_match.url_name == 'commodities_classes' %}class="nav-link active"{% else %}class="nav-link collapsed"{% endif %} href="/commodities-classes/{% now 'Y' %}/">
               <i class="bi bi-circle"></i>
               <span>Commodity Transactions</span>
             </a>
@@ -320,7 +320,7 @@
         <a {% if request.resolver_match.url_name in 'stock-list,/stock-transactions' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} data-bs-target="#stocks-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-graph-up-arrow"></i><span>Stocks</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
-        <ul id="stocks-nav" {% if request.resolver_match.url_name in 'crypto-list,/crypto-transactions' %}class="nav-content collapse show active"{% else %}class="nav-content collapse"{% endif %} data-bs-parent="#sidebar-nav">
+        <ul id="stocks-nav" {% if request.resolver_match.url_name in 'stock-list,/stock-transactions' %}class="nav-content collapse show active"{% else %}class="nav-content collapse"{% endif %} data-bs-parent="#sidebar-nav">
           <li class="nav-item">
             <a {% if request.resolver_match.url_name == 'stock-list' %}class="nav-link active"{% else %}class="nav-link collapsed"{% endif %} href="/stock/{% now 'Y' %}/">
               <i class="bi bi-circle"></i>
@@ -373,12 +373,12 @@
         </a>
       </li><!-- End Personal Income Statement Page Nav -->
       <li class="nav-item">
-            <a {% if request.resolver_match.url_name == 'category_list' %} class="nav-link active" {% else %}class="nav-link collapsed" {% endif %} href="/category_list/{% now 'Y' %}/">
-              <i class="bi bi-cash"></i>
-              <span>Forecast</span>
-              <!-- <span data-feather="file">Income Statements</span> -->
-            </a>
-          </li>
+        <a {% if request.resolver_match.view_name == 'incomestatements:category_list' %} class="nav-link" {% else %}class="nav-link collapsed" {% endif %} href="/category_list/{% now 'Y' %}/">
+          <i class="bi bi-cash"></i>
+          <span>Forecast</span>
+          <!-- <span data-feather="file">Income Statements</span> -->
+        </a>
+      </li>
       <li class="nav-item">
         <a {% if request.resolver_match.url_name == 'incomestatement_year_to_date' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} href="/incomestatements/yeartodate/{% now 'Y' %}/">
           <i class="bi bi-bar-chart-line"></i>

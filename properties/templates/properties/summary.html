@@ -33,80 +33,80 @@
                     <div id="Chart" style="width: 100%;"></div>
 
                     <script>
-            document.addEventListener("DOMContentLoaded", () => {
-              new ApexCharts(document.querySelector("#Chart"), {
-                series: [{
-                  name: 'Total Assets',
-                  type: 'column',
-                  data: {{yearwise_graph_assets}}
-                }, {
-                  name: 'Liabilities',
-                  type: 'column',
-                  data: {{yearwise_graph_libs}}
-                }, {
-                  name: 'Networth',
-                  type: 'line',
-                  data: {{yearwise_networths}}
-                }],
-                chart: {
-                  height: 350,
-                  type: 'line',
-                  stacked: false
-                },
-                dataLabels: {
-                  enabled: false
-                },
-                stroke: {
-                  width: [1, 1, 4]
-                },
-                title: {
-                  text: 'Networth Tracker Timeline',
-                  align: 'center',
-                  // offsetX: 110
-                },
-                xaxis: {
-                  categories: {{years_list}},
-                },
-                yaxis: [
-                  {
-                    axisTicks: {
-                      show: true,
-                    },
-                    axisBorder: {
-                      show: true,
-                      color: '#008FFB'
-                    },
-                    labels: {
-                      style: {
-                        colors: '#008FFB',
-                      }
-                    },
-                    title: {
-                      text: "Total Assets",
-                      style: {
-                        color: '#008FFB',
-                      }
-                    },
-                    tooltip: {
-                      enabled: true
-                    }
-                  }
-                ],
-                tooltip: {
-                  fixed: {
-                    enabled: true,
-                    position: 'topLeft', // topRight, topLeft, bottomRight, bottomLeft
-                    offsetY: 30,
-                    offsetX: 60
-                  },
-                },
-                legend: {
-                  position: 'top',
-                  horizontalAlign: 'center',
-                  // offsetX: 40
-                }
-              }).render();
-            });
+                        document.addEventListener("DOMContentLoaded", () => {
+                        new ApexCharts(document.querySelector("#Chart"), {
+                            series: [{
+                            name: 'Total Assets',
+                            type: 'column',
+                            data: {{yearwise_graph_assets}}
+                            }, {
+                            name: 'Liabilities',
+                            type: 'column',
+                            data: {{yearwise_graph_libs}}
+                            }, {
+                            name: 'Networth',
+                            type: 'line',
+                            data: {{yearwise_networths}}
+                            }],
+                            chart: {
+                            height: 350,
+                            type: 'line',
+                            stacked: false
+                            },
+                            dataLabels: {
+                            enabled: false
+                            },
+                            stroke: {
+                            width: [1, 1, 4]
+                            },
+                            title: {
+                            text: 'Networth Tracker Timeline',
+                            align: 'center',
+                            // offsetX: 110
+                            },
+                            xaxis: {
+                            categories: {{years_list}},
+                            },
+                            yaxis: [
+                            {
+                                axisTicks: {
+                                show: true,
+                                },
+                                axisBorder: {
+                                show: true,
+                                color: '#008FFB'
+                                },
+                                labels: {
+                                style: {
+                                    colors: '#008FFB',
+                                }
+                                },
+                                title: {
+                                text: "Total Assets",
+                                style: {
+                                    color: '#008FFB',
+                                }
+                                },
+                                tooltip: {
+                                enabled: true
+                                }
+                            }
+                            ],
+                            tooltip: {
+                            fixed: {
+                                enabled: true,
+                                position: 'topLeft', // topRight, topLeft, bottomRight, bottomLeft
+                                offsetY: 30,
+                                offsetX: 60
+                            },
+                            },
+                            legend: {
+                            position: 'top',
+                            horizontalAlign: 'center',
+                            // offsetX: 40
+                            }
+                        }).render();
+                        });
 
                     </script>
 
