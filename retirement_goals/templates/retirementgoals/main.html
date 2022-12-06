@@ -13,7 +13,7 @@
 <script type="text/javascript" charset="utf8" src="{% static 'DataTables/datatables.min.js' %}"></script>
 
 <!-- Google Chart -->
-<script src="{% static 'GoogleChart/Gchart.js' %}"></script>
+<!-- <script src="{% static 'GoogleChart/Gchart.js' %}"></script> -->
 <script src="{% static 'apexcharts/apexcharts.min.js' %}"></script>
 
 <!-- <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> -->
@@ -39,7 +39,7 @@
 
   </br>
   </br>
-  <div class="row bd-highlight">
+  <div class="row bd-highlight" style="font-size:small">
     <div class="col-lg-6 p-2 bd-highlight">
       <table>
         <tr>
@@ -129,8 +129,8 @@
     </div>
 
     <div class="col-lg-6">
-      <div id="piechart" style="width: auto; height: 450px"></div>
-      <!-- <div id="pieChart" style="width: 100%;"></div> -->
+      <!-- <div id="piechart" style="width: auto; height: 450px"></div> -->
+      <div id="pieChart" style="width: 100%;"></div>
     </div>
 
   </div>
@@ -410,53 +410,23 @@
         }
   }
 </script>
-<script type="text/javascript">
-  google.charts.load('current', {'packages':['corechart']});
-  google.charts.setOnLoadCallback(drawChart);
 
-  var realEstate = parseInt(document.getElementById('id_real_estate').value);
-  var stocks = parseInt(document.getElementById('id_stocks').value);
-  var CR = parseInt(document.getElementById('id_crypto').value);
-  var COM = parseInt(document.getElementById('id_commodities').value); 
-  var COL = parseInt(document.getElementById('id_collectables').value); 
-  var cash = parseInt(document.getElementById('id_cash').value); 
-  
-  function drawChart() {   
-    var data = google.visualization.arrayToDataTable([
-      ['Task', 'Hours per Day'],
-      ['Real Estate', realEstate],
-      ['Stocks',stocks],
-      ['Crypto',CR],
-      ['Commodities',COM],
-      ['Collectables',COL],
-      ['Cash',cash],
-    ]);
 
-    var options = {
-      // is3D: true,
-      // pieHole: 0.4,
-      // legend: 'none',
-      // pieSliceText: 'label',
-    };
-
-    var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-
-    chart.draw(data, options);
-  }
-</script>
-
-<!-- <script>
+<script>
   document.addEventListener("DOMContentLoaded", () => {
-  new ApexCharts(document.querySelector("#pieChart"), {
-
-      var realEstate = parseInt(document.getElementById('id_real_estate').value);
+    var realEstate = parseInt(document.getElementById('id_real_estate').value);
       var stocks = parseInt(document.getElementById('id_stocks').value);
       var CR = parseInt(document.getElementById('id_crypto').value);
       var COM = parseInt(document.getElementById('id_commodities').value); 
       var COL = parseInt(document.getElementById('id_collectables').value); 
       var cash = parseInt(document.getElementById('id_cash').value); 
+      console.log([realEstate, stocks, CR, COM, COL, cash])
 
-      series: [{{realEstate}}, {{stocks}}, {{CR}}, {{COM}}, {{COL}}, {{cash}}],
+  new ApexCharts(document.querySelector("#pieChart"), {
+
+     
+
+      series: [realEstate, stocks, CR, COM, COL, cash],
       chart: {
       height: 380,
       type: 'pie',
@@ -470,14 +440,14 @@
       // offsetX: 110
       },
       legend: {
-      position: 'top'
+      position: 'bottom'
       // horizontalAlign: 'center',
       // offsetX: 40
       },
       labels: ['Real Estate', 'Stocks', 'Crypto', 'Commodities', 'Collectables', 'Cash']
   }).render();
   });
-</script> -->
+</script>
 
 <script>
   $(document).ready( function () {
