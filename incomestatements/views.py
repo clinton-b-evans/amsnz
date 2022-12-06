@@ -797,18 +797,19 @@ def year_to_date(request, year):
                     current_month_total_income
                 )
     total_income_budget = 0
-    for category in unique_categories_of_income:
-        income_result[f"{list(category.values())[0]}"]["total"] = sum(
-            income_result[f"{list(category.values())[0]}"]["months"].values()
-        )
-        budget_category = Category.objects.filter(user=request.user).get(name=category['category__name'], year=year)
-        income_result[f"{list(category.values())[0]}"]["Budget"] = budget_category.compute_budget()
-        total_income_budget += budget_category.compute_budget()
-        category_total = income_result[f"{list(category.values())[0]}"]["total"]
-        category_budget = income_result[f"{list(category.values())[0]}"]["Budget"]
-        percentage = float(category_total) / float(category_budget) * 100
-        income_result[f"{list(category.values())[0]}"]["percentage"] = percentage
-        print(percentage, 'percentage')
+    if unique_categories_of_income:
+        for category in unique_categories_of_income:
+            income_result[f"{list(category.values())[0]}"]["total"] = sum(
+                income_result[f"{list(category.values())[0]}"]["months"].values()
+            )
+            budget_category = Category.objects.filter(user=request.user, year=year).get(name=category['category__name'])
+            income_result[f"{list(category.values())[0]}"]["Budget"] = budget_category.compute_budget()
+            total_income_budget += budget_category.compute_budget()
+            category_total = income_result[f"{list(category.values())[0]}"]["total"]
+            category_budget = income_result[f"{list(category.values())[0]}"]["Budget"]
+            percentage = float(category_total) / float(category_budget) * 100
+            income_result[f"{list(category.values())[0]}"]["percentage"] = percentage
+            print(percentage, 'percentage')
     # #### END OF CATEGORIES EACH MONTH TOTAL Income ####
 
     # START CATEGORIES EACH MONTH TOTAL EXPENSES

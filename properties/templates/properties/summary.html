@@ -33,80 +33,80 @@
                     <div id="Chart" style="width: 100%;"></div>
 
                     <script>
-                        document.addEventListener("DOMContentLoaded", () => {
-                        new ApexCharts(document.querySelector("#Chart"), {
-                            series: [{
-                            name: 'Total Assets',
-                            type: 'column',
-                            data: {{yearwise_graph_assets}}
-                            }, {
-                            name: 'Liabilities',
-                            type: 'column',
-                            data: {{yearwise_graph_libs}}
-                            }, {
-                            name: 'Networth',
-                            type: 'line',
-                            data: {{yearwise_networths}}
-                            }],
-                            chart: {
-                            height: 350,
-                            type: 'line',
-                            stacked: false
-                            },
-                            dataLabels: {
-                            enabled: false
-                            },
-                            stroke: {
-                            width: [1, 1, 4]
-                            },
-                            title: {
-                            text: 'Networth Tracker Timeline',
-                            align: 'center',
-                            // offsetX: 110
-                            },
-                            xaxis: {
-                            categories: {{years_list}},
-                            },
-                            yaxis: [
-                            {
-                                axisTicks: {
-                                show: true,
-                                },
-                                axisBorder: {
-                                show: true,
-                                color: '#008FFB'
-                                },
-                                labels: {
-                                style: {
-                                    colors: '#008FFB',
-                                }
-                                },
-                                title: {
-                                text: "Total Assets",
-                                style: {
-                                    color: '#008FFB',
-                                }
-                                },
-                                tooltip: {
-                                enabled: true
-                                }
-                            }
-                            ],
-                            tooltip: {
-                            fixed: {
-                                enabled: true,
-                                position: 'topLeft', // topRight, topLeft, bottomRight, bottomLeft
-                                offsetY: 30,
-                                offsetX: 60
-                            },
-                            },
-                            legend: {
-                            position: 'top',
-                            horizontalAlign: 'center',
-                            // offsetX: 40
-                            }
-                        }).render();
-                        });
+            document.addEventListener("DOMContentLoaded", () => {
+              new ApexCharts(document.querySelector("#Chart"), {
+                series: [{
+                  name: 'Total Assets',
+                  type: 'column',
+                  data: {{all_assets}}
+                }, {
+                  name: 'Liabilities',
+                  type: 'column',
+                  data: {{all_liabilities}}
+                }, {
+                  name: 'Networth',
+                  type: 'line',
+                  data: {{all_networth}}
+                }],
+                chart: {
+                  height: 350,
+                  type: 'line',
+                  stacked: false
+                },
+                dataLabels: {
+                  enabled: false
+                },
+                stroke: {
+                  width: [1, 1, 4]
+                },
+                title: {
+                  text: 'Networth Tracker Timeline',
+                  align: 'center',
+                  // offsetX: 110
+                },
+                xaxis: {
+                  categories: {{years_list}},
+                },
+                yaxis: [
+                  {
+                    axisTicks: {
+                      show: true,
+                    },
+                    axisBorder: {
+                      show: true,
+                      color: '#008FFB'
+                    },
+                    labels: {
+                      style: {
+                        colors: '#008FFB',
+                      }
+                    },
+                    title: {
+                      text: "Total Assets",
+                      style: {
+                        color: '#008FFB',
+                      }
+                    },
+                    tooltip: {
+                      enabled: true
+                    }
+                  }
+                ],
+                tooltip: {
+                  fixed: {
+                    enabled: true,
+                    position: 'topLeft', // topRight, topLeft, bottomRight, bottomLeft
+                    offsetY: 30,
+                    offsetX: 60
+                  },
+                },
+                legend: {
+                  position: 'top',
+                  horizontalAlign: 'center',
+                  // offsetX: 40
+                }
+              }).render();
+            });
 
                     </script>
 
@@ -144,7 +144,7 @@
                     <script>
                         document.addEventListener("DOMContentLoaded", () => {
                         new ApexCharts(document.querySelector("#pieChart"), {
-                            series: [{{graph_asset}}, {{graph_lib}}, {{graph_nw}}],
+                            series: [{{total_assets}}, {{total_liabilities}}, {{total_networth}}],
                             chart: {
                             height: 380,
                             type: 'pie',
@@ -394,10 +394,8 @@
             <h6 class="min-title">Commodities</h6>
 
             <div class="progress mt-3 mb-2">
-                <div class="progress-bar" role="progressbar"
-                     style="width: {{ commodities_prog|floatformat:1}}%;"
-                     aria-valuenow="{{ commodities_prog|floatformat:1 }}" aria-valuemin="0" aria-valuemax="100">
-                    {{ commodities_prog|floatformat:1 }}%
+                <div class="progress-bar" role="progressbar" style=" width: {{ commodities_prog|floatformat:2 }}% "
+                     aria-valuenow="{{ commodities_prog|floatformat:2 }}" aria-valuemin="0" aria-valuemax="100">{{commodities_prog|floatformat:2}} %
                 </div>
             </div>
             <table class="table table-hover mb-4">

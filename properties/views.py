@@ -1,4 +1,5 @@
 import json
+import datetime
 from decimal import Decimal
 
 from django.shortcuts import render, redirect, get_object_or_404
@@ -329,12 +330,18 @@ def sort(myList):
 
 @login_required(login_url='/login/')
 def property_summary_view(request, year, *args, **kwargs):
+    all_summary = overall_summary(request, year)
     prop_summary = property_summary(request, year)
     pers_summary = personal_summary(request, year)
     cash_summary = cashflow_summary(request, year)
     comm_summary = commodity_summary(request, year)
     cryp_summary = crypto_summary(request, year)
     context = {
+        # overall summary
+        "all_assets": all_summary["all_assets"],
+        "all_liabilities": all_summary["all_liabilities"],
+        "all_networth": all_summary["all_networth"],
+        "years_list": all_summary["years_list"],
         # property summary
         "property_progress": prop_summary['progress_bar'],
         "total_properties": prop_summary['no_of_properties'],
@@ -368,18 +375,51 @@ def property_summary_view(request, year, *args, **kwargs):
         "commodities_prog": comm_summary['commodities_prog'],
         # crypto
         "crypto_qs": cryp_summary["crypto_qs"],
-        "crypto_total_amount": cryp_summary["crypto_total_amount"]
-     }
+        "crypto_total_amount": cryp_summary["crypto_total_amount"],
+        "crypto_progress": cryp_summary["crypto_progress"]
+    }
     return render(request, "properties/summary.html", context)
+
+
+def overall_summary(request, year):
+    all_summary = Property.objects.filter(user=request.user)
+    years = Property.objects.filter(user=request.user).values_list('purchase_date__year').distinct()
+    years_list = []
+    for data in years:
+        for item in data:
+            years_list.append(item)
+    years_list = sort(years_list)
+    all_assets = []
+    all_liabilities = []
+    all_networth = []
+    for year in years_list:
+        asset = sum(data.market_value for data in all_summary.filter(purchase_date__year=year))
+        liability = sum(data.loan_amount for data in all_summary.filter(purchase_date__year=year))
+        all_assets.append(asset)
+        all_liabilities.append(liability)
+        all_networth.append(asset - liability)
+    context = {
+        "all_assets": all_assets,
+        "all_liabilities": all_liabilities,
+        "all_networth": all_networth,
+        "years_list": years_list,
+    }
+    return  context
 
 
 def crypto_summary(request, year):
     crypto_data = Crypto.objects.filter(user=request.user, year=year)
+    financial_plan_data = RetirementGoal.objects.filter(user=request.user, start_date__year=year).values()
     print(crypto_data, 'crypto_data')
     crypto_total_amount = 0
+    crypto_progress = 0
     if crypto_data:
         crypto_total_amount = sum(data.investment for data in crypto_data)
-    context = {"crypto_qs": crypto_data,"crypto_total_amount": crypto_total_amount}
+    if financial_plan_data:
+        if financial_plan_data[0]["crypto"] != 0 and financial_plan_data[0]["crypto"] is not None:
+            crypto_progress = (crypto_total_amount / financial_plan_data[0]["crypto"]) * 100
+
+    context = {"crypto_qs": crypto_data, "crypto_total_amount": crypto_total_amount, "crypto_progress": crypto_progress}
     return context
 
 
