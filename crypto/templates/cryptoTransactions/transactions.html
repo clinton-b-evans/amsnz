@@ -45,7 +45,7 @@ function popitup(url) {
 </script>
 
 <script>
-  window.onblur= function() {window.onfocus= function () {location.reload(true)}};
+
 
 
 
@@ -139,7 +139,7 @@ function popitup(url) {
                 <input class="form-control" name="spot_price" id="spot_price" type="number" min="0" step="any" oninput="validity.valid||
     (value='');">
                 <label class="form-label">Date</label>
-                <input class="form-control" name="date" id="date" type="date" value="{% now "Y-m-j" %}">
+                <input class="form-control" name="date" id="date" type="date" >
             </div>
             <button class="btn btn-primary form-control" type="button" onclick="addTransaction()">ADD</button>
         </form>
@@ -348,8 +348,9 @@ function popitup(url) {
         $('#quantity_alert').hide();
     }
     function addTransaction() {
+    console.log("add transaction")
         var coin = document.getElementById('coin').value;
-        var transaction_type = document.getElementById(`transaction_type`).value;
+        var transaction_type = document.getElementById('transaction_type').value;
         var quantity = document.getElementById('quantity').value;
         var spot_price = document.getElementById('spot_price').value;
         var date = document.getElementById('date').value;
@@ -553,10 +554,7 @@ function popitup(url) {
             success: function (data) {
                 console.log(data,'delete');
                 if (data.deleted) {
-                    console.log(data,'delete');
-                  $(`#deleteModal`).modal('hide');
-                  $("#transactionTable #user-" + id).remove();
-                  console.log(data,'delete');
+                   location.reload();
                 }
             }
         });

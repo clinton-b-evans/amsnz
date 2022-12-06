@@ -14,9 +14,9 @@ from django.http import (
 )
 from django.views.decorators.http import require_POST
 
-
 from incomestatements.models import Category
 from incomestatements_property.models import PropertyCategory
+from stock_portfolios.models import Stock
 from .forms import PropertyForm
 from .models import Property, Transactions
 from retirement_goals.models import RetirementGoal
@@ -333,6 +333,7 @@ def property_summary_view(request, year, *args, **kwargs):
     pers_summary = personal_summary(request, year)
     cash_summary = cashflow_summary(request, year)
     comm_summary = commodity_summary(request, year)
+    cryp_summary = crypto_summary(request, year)
     context = {
         # property summary
         "property_progress": prop_summary['progress_bar'],
@@ -366,8 +367,20 @@ def property_summary_view(request, year, *args, **kwargs):
         "commodities_total_value": comm_summary["commodities_total_value"],
         "commodities_prog": comm_summary['commodities_prog'],
         # crypto
-    }
+        "crypto_qs": cryp_summary["crypto_qs"],
+        "crypto_total_amount": cryp_summary["crypto_total_amount"]
+     }
     return render(request, "properties/summary.html", context)
+
+
+def crypto_summary(request, year):
+    crypto_data = Crypto.objects.filter(user=request.user, year=year)
+    print(crypto_data, 'crypto_data')
+    crypto_total_amount = 0
+    if crypto_data:
+        crypto_total_amount = sum(data.investment for data in crypto_data)
+    context = {"crypto_qs": crypto_data,"crypto_total_amount": crypto_total_amount}
+    return context
 
 
 def commodity_summary(request, year):
@@ -385,8 +398,9 @@ def commodity_summary(request, year):
         }
         arr.append(com)
     commodities_prog = 0
-    if financial_plan_data[0]["commodities"] != 0 and financial_plan_data[0]["commodities"] is not None:
-        commodities_prog = (commodities_total_value / financial_plan_data[0]["commodities"]) * 100
+    if financial_plan_data:
+        if financial_plan_data[0]["commodities"] != 0 and financial_plan_data[0]["commodities"] is not None:
+            commodities_prog = (commodities_total_value / financial_plan_data[0]["commodities"]) * 100
     context = {
         "commodities_total_value": commodities_total_value,
         "commodities": arr,
@@ -576,8 +590,12 @@ def add_property(request):
     else:
         form = PropertyForm()
     return render(request, "properties/property_form.html", {"form": form})
+
+
 def main(request):
     return render(request, 'properties/main.html')
+
+
 def property_list(request):
     selected = "Yearly"
     qs = Property.objects.filter(user=request.user)
@@ -639,6 +657,7 @@ def property_list(request):
         "selected": selected,
     }
     return render(request, 'properties/property_list.html', context=context)
+
 
 def edit_property(request, pk):
     property = get_object_or_404(Property, pk=pk)

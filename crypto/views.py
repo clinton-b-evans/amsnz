@@ -279,6 +279,7 @@ def add_transaction(request):
     if request.method == "POST":
         # getting body data from request
         transactionData = json.loads(request.body)
+        print(request.body)
         # getting models
         crypto = Crypto.objects.get(name=transactionData['coin'], user=request.user)
         # saving data to crypto model
@@ -304,7 +305,7 @@ def add_transaction(request):
                 }
                 return JsonResponse(data)
         obj = CryptoTransaction.objects.create(
-            coin=Crypto.objects.get(name=transactionData["coin"],user=request.user ),
+            coin=Crypto.objects.get(name=transactionData["coin"],user=request.user),
             transaction_type=transactionData['transaction_type'],
             quantity=transactionData['quantity'],
             spot_price=transactionData['spot_price'],
