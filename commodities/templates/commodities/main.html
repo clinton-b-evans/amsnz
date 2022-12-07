@@ -27,7 +27,7 @@
 <script src="{% static 'apexcharts/apexcharts.min.js' %}"></script>
 
 <!-- Google Chart -->
-<script src="{% static 'GoogleChart/Gchart.js' %}"></script>
+<!-- <script src="{% static 'GoogleChart/Gchart.js' %}"></script> -->
 <!-- <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> -->
 
 <script language="javascript" type="text/javascript">
@@ -75,7 +75,7 @@ function popitup(url) {
                       <!-- <span>| {{year}}</span> -->
                     </h5>
                     <!-- <div id="piechart_3d" style="width: auto; min-height: 350px;"></div> -->
-                    <div id="pieChart" style="width: auto; min-height: 350px;"></div>
+                    <div id="pieChart" style="width: 100%;"></div>
                 </div>
             </div>
         </div>
@@ -144,7 +144,7 @@ var options = {
         ],
           chart: {
           type: 'bar',
-          height: 315,
+          height: 350,
           stacked: true,
           toolbar: {
             show: true
@@ -185,6 +185,10 @@ var options = {
               {% endfor %}
           ],
         },
+        title: {
+          text: 'Financial Plan {{year}}',
+          align: 'center',
+        },
         legend: {
           position: 'right',
           offsetY: 40
@@ -199,7 +203,7 @@ var options = {
 
 </script>
 
-<!-- <script type="text/javascript">
+<script type="text/javascript">
   google.charts.load("current", {packages:["corechart"]});
   google.charts.setOnLoadCallback(drawChart);
   function drawChart() {
@@ -219,7 +223,7 @@ var options = {
     var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
     chart.draw(data, options);
   }
-</script> -->
+</script>
 
 <script>
   document.addEventListener("DOMContentLoaded", () => {
@@ -228,21 +232,24 @@ var options = {
 
       series: [
       {% for obj in pie_chart_date %}
-      ['{{ obj.commodity }}', {{obj.percentage|stringformat:".2f"}}],
+      {{obj.percentage|stringformat:".2f"}},
       {% endfor %}
       ],
       chart: {
-      type: 'pie',
-      toolbar: {
+        height: 380,
+        type: 'pie',
+        toolbar: {
           show: true
-          }
+        }
       },
-      // title: {
-      // align: 'center',
-      // },
-      // legend: {
-      // position: 'bottom'
-      // },
+      colors: ['#2E93fA', '#00E396', '#FEB019', '#FF4560', '#775DD0', '#A300D6', '#66DA26', '#546E7A', '#E91E63', '#FF9800'],
+      title: {
+        text: 'Financial Plan {{year}}',
+      align: 'center',
+      },
+      legend: {
+      position: 'top'
+      },
       // labels: ['Income', 'Expense']
   }).render();
   });
