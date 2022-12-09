@@ -226,7 +226,8 @@ class StockTicker(models.Model):
     def __str__(self):
         return f"{self.name} ({self.ticker})"
 
-
+    class Meta:
+        unique_together = (('name', 'ticker', 'user'),)
 class Stock(models.Model):
     stock_ticker = models.ForeignKey(StockTicker, on_delete=models.CASCADE, blank=False, null=False)
     quantity = models.FloatField(
