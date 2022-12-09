@@ -210,10 +210,10 @@ class StockTicker(models.Model):
         ("OTHERS", "Others"),
     )
     name = models.CharField(
-        max_length=50,
+        max_length=50, unique=True
     )
     ticker = models.CharField(
-        max_length=50,
+        max_length=50, unique=True
     )
     stock_type = models.CharField(
         choices=STOCK_TYPE_CHOICES, max_length=100, null=False, blank=False
