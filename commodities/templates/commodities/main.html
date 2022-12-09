@@ -3,7 +3,7 @@
 {% load mathfilters %}
 
 {% block title %}
-<div class="title">Commodities 
+<div class="title">Commodities
   <span class="filter position-absolute" style="right: 2rem;">
       <a class="icon btn btn-dashboard" data-bs-toggle="dropdown" href="#" type="button">View By <i class="bi bi-grid"></i></a>
       <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
@@ -27,7 +27,7 @@
 <script src="{% static 'apexcharts/apexcharts.min.js' %}"></script>
 
 <!-- Google Chart -->
-<script src="{% static 'GoogleChart/Gchart.js' %}"></script>
+<!-- <script src="{% static 'GoogleChart/Gchart.js' %}"></script> -->
 <!-- <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> -->
 
 <script language="javascript" type="text/javascript">
@@ -74,7 +74,8 @@ function popitup(url) {
                     <h5 class="card-title">Commodities
                       <!-- <span>| {{year}}</span> -->
                     </h5>
-                    <div id="piechart_3d" style="width: auto; min-height: 350px;"></div>
+                    <!-- <div id="piechart_3d" style="width: auto; min-height: 350px;"></div> -->
+                    <div id="pieChart" style="width: 100%;"></div>
                 </div>
             </div>
         </div>
@@ -143,7 +144,7 @@ var options = {
         ],
           chart: {
           type: 'bar',
-          height: 315,
+          height: 350,
           stacked: true,
           toolbar: {
             show: true
@@ -184,6 +185,10 @@ var options = {
               {% endfor %}
           ],
         },
+        title: {
+          text: 'Financial Plan {{year}}',
+          align: 'center',
+        },
         legend: {
           position: 'right',
           offsetY: 40
@@ -202,7 +207,7 @@ var options = {
   google.charts.load("current", {packages:["corechart"]});
   google.charts.setOnLoadCallback(drawChart);
   function drawChart() {
-var data = google.visualization.arrayToDataTable([
+  var data = google.visualization.arrayToDataTable([
       ['Task', 'Hours per Day'],
       {% for obj in pie_chart_date %}
       ['{{ obj.commodity }}', {{obj.percentage|stringformat:".2f"}}],
@@ -218,6 +223,36 @@ var data = google.visualization.arrayToDataTable([
     var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
     chart.draw(data, options);
   }
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+
+  new ApexCharts(document.querySelector("#pieChart"), {
+
+      series: [
+      {% for obj in pie_chart_date %}
+      {{obj.percentage|stringformat:".2f"}},
+      {% endfor %}
+      ],
+      chart: {
+        height: 380,
+        type: 'pie',
+        toolbar: {
+          show: true
+        }
+      },
+      colors: ['#2E93fA', '#00E396', '#FEB019', '#FF4560', '#775DD0', '#A300D6', '#66DA26', '#546E7A', '#E91E63', '#FF9800'],
+      title: {
+        text: 'Financial Plan {{year}}',
+      align: 'center',
+      },
+      legend: {
+      position: 'top'
+      },
+      // labels: ['Income', 'Expense']
+  }).render();
+  });
 </script>
 
 <script>

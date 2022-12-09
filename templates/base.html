@@ -236,12 +236,12 @@
       <li class="nav-heading">Investments</li>
 
       <li class="nav-item">
-        <a {% if request.resolver_match.url_name in 'properties_list,property-incomestatement-list,propert_forecast,property_year-to-date' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+        <a {% if request.resolver_match.url_name in 'properties,property-incomestatement-list,propert_forecast,property_year-to-date' %}class="nav-link"{% else %}class="nav-link collapsed"{% endif %} data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-house"></i><span>Property</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
-        <ul id="components-nav" {% if request.resolver_match.url_name in 'properties_list,property-incomestatement-list,propert_forecast,property_year-to-date' %}class="nav-content collapse show active"{% else %}class="nav-content collapse"{% endif %} data-bs-parent="#sidebar-nav">
+        <ul id="components-nav" {% if request.resolver_match.url_name in 'properties,property-incomestatement-list,propert_forecast,property_year-to-date' %}class="nav-content collapse show active"{% else %}class="nav-content collapse"{% endif %} data-bs-parent="#sidebar-nav">
           <li class="nav-item">
-            <a {% if request.resolver_match.url_name == 'properties_list' %}class="nav-link active"{% else %}class="nav-link collapsed"{% endif %} href="/properties">
+            <a {% if request.resolver_match.url_name == 'properties' %}class="nav-link active"{% else %}class="nav-link collapsed"{% endif %} href="/properties">
               <i class="bi bi-circle"></i>
               <span>Property Portfolio</span>
               <!-- <span data-feather="file">Property Portfolio</span> -->
