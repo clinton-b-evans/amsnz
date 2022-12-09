@@ -2,6 +2,8 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils.timezone import now
 
+from stock_portfolios.models import YEAR_CHOICES
+
 COMMODITY_CLASS_CHOICES = (
     ('GC=F', 'GC=F'),
     ('SI=F', 'SI=F'),
@@ -31,7 +33,7 @@ class Commodity(models.Model):
         null=False, blank=False, default=0.0,
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
-    year = models.CharField(null=False, blank=False, max_length=4)
+    year = models.CharField(choices=YEAR_CHOICES, null=False, blank=False, max_length=4)
     class Meta:
         unique_together = ('user', 'commodity_class', 'name', 'year')
         verbose_name_plural = "commodities"

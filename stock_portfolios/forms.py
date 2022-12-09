@@ -2,7 +2,7 @@ from decimal import Decimal
 
 from django.core.exceptions import ValidationError
 from django.forms import ModelForm
-from .models import Stock, StockTransaction
+from .models import Stock, StockTransaction, StockTicker
 from django import forms
 
 
@@ -13,7 +13,14 @@ class DateInput(forms.DateInput):
 class StockForm(ModelForm):
     class Meta:
         model = Stock
-        fields = ("name", "ticker", "quantity")
+        fields = ("stock_ticker", "year", "quantity")
+
+class StockTickerForm(ModelForm):
+    class Meta:
+        model = StockTicker
+        fields = ("name", "ticker", "stock_type", "stock_category")
+
+
 class TransactionForm(ModelForm):
     class Meta:
         model = StockTransaction

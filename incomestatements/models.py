@@ -2,6 +2,8 @@ from django.contrib.auth.models import User
 from django.db import models
 import datetime
 
+from stock_portfolios.models import YEAR_CHOICES
+
 
 class Category(models.Model):
     name = models.CharField(max_length=120)
@@ -12,7 +14,7 @@ class Category(models.Model):
     transaction_type = models.CharField(
         choices=TRANSACTION_TYPE_SOURCES, max_length=100, null=True, blank=True
     )
-    year = models.CharField(null=False, blank=False, max_length=4)
+    year = models.CharField(choices=YEAR_CHOICES, null=False, blank=False, max_length=4)
     january_budget = models.FloatField(null=True, blank=True, default=0)
     february_budget = models.FloatField(null=True, blank=True, default=0)
     march_budget = models.FloatField(null=True, blank=True, default=0)
