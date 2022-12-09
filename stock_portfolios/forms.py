@@ -15,6 +15,7 @@ class StockForm(ModelForm):
         model = Stock
         fields = ("stock_ticker", "year", "quantity")
 
+
 class StockTickerForm(ModelForm):
     class Meta:
         model = StockTicker
@@ -24,14 +25,18 @@ class StockTickerForm(ModelForm):
 class TransactionForm(ModelForm):
     class Meta:
         model = StockTransaction
-        fields = "__all__"
+        fields = ("stock_ticker",
+                  "transaction_type",
+                  "quantity",
+                  "spot_price",
+                  "date")
         widgets = {
             "date": DateInput(),
         }
 
     def clean_quantity(self):
         transaction_type = self.data['transaction_type']
-        stock = self.cleaned_data['stock']
+        stock = self.cleaned_data['stock_ticker']
         quantity = self.cleaned_data['quantity']
         if transaction_type == 'Sell':
             if stock.quantity - float(quantity) < 0:

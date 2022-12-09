@@ -1,7 +1,7 @@
 import json
 
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from yahooquery import Ticker
 
@@ -117,10 +117,51 @@ def add_stock(request):
                 })
     else:
         form = StockTickerForm()
-
-
     return render(request, "stock/add.html", {"form": form})
 
+
+def add_sufi_transaction(request):
+    if request.method == "POST":
+        form = TransactionForm(request.POST)
+        if form.is_valid():
+            stock_transaction = form.save(commit=False)
+            stock_transaction.user = request.user
+            stock_transaction.save()
+            return HttpResponse(
+                status=204,
+                headers={
+                    'HX-Trigger': json.dumps({
+                        "showMessage": f"Transaction for {stock_transaction.stock_ticker} is added."
+                    })
+                })
+    else:
+        form = TransactionForm()
+    return render(request, "stockTransactions/add.html", {"form": form})
+
+
+def edit_sufi_transaction(request, pk):
+    stock_transaction = get_object_or_404(StockTransaction, pk=pk)
+    if request.method == "POST":
+        form = TransactionForm(request.POST, instance=stock_transaction)
+        if form.is_valid():
+            stock_transaction = form.save(commit=False)
+            stock_transaction.user = request.user
+            stock_transaction.save()
+            return HttpResponse(
+                status=204,
+                headers={
+                    'HX-Trigger': json.dumps({
+                        "transactionListChanged": None,
+                        "showMessage": f"{stock_transaction.stock_ticker} updated."
+                    })
+                }
+            )
+    else:
+        form = TransactionForm(instance=stock_transaction)
+    return render(request, 'stockTransactions/add.html', {
+        'form': form,
+        'stock_transactions': stock_transactions,
+    })
 
 
 @login_required(login_url='/login/')
@@ -137,7 +178,7 @@ def stock_transactions(request, year):
         totalInvestment = float(transaction.quantity) * float(transaction.spot_price)
         transactions_table.append({
             "id": transaction.id,
-            "stock_name": transaction.stock,
+            "stock_name": transaction.stock_ticker,
             "transaction_type": transaction.transaction_type,
             "quantity": transaction.quantity,
             "purchasedValue": transaction.spot_price,
@@ -150,7 +191,7 @@ def stock_transactions(request, year):
         for item in data:
             years_list.append(item)
     years_list = sort_years_list(years_list)
-    print(years_list,'years_list')
+    print(years_list, 'years_list')
     context = {
         "year": year,
         "transactions": transactions_table,
@@ -296,18 +337,17 @@ def delete_transaction(request):
     id1 = request.GET.get('id', None)
     transaction = StockTransaction.objects.get(id=id1, user=request.user)
     if transaction.transaction_type == 'Buy':
-        transaction.stock.quantity -= transaction.quantity
-        transaction.stock.investment -= float(transaction.quantity) * float(transaction.spot_price)
-        transaction.stock.save()
+        transaction.stock_ticker.quantity -= transaction.quantity
+        transaction.stock_ticker.investment -= float(transaction.quantity) * float(transaction.spot_price)
+        transaction.stock_ticker.save()
         print('buy')
     else:
-        transaction.stock.quantity += transaction.quantity
-        transaction.stock.investment += float(transaction.quantity) * float(transaction.spot_price)
-        transaction.stock.save()
+        transaction.stock_ticker.quantity += transaction.quantity
+        transaction.stock_ticker.investment += float(transaction.quantity) * float(transaction.spot_price)
+        transaction.stock_ticker.save()
         print('sell')
     StockTransaction.objects.get(id=id1, user=request.user).delete()
     data = {
         'deleted': True
     }
     return JsonResponse(data)
-

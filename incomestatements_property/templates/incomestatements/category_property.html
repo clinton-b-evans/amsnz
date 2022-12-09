@@ -12,7 +12,7 @@
             <h6>Filter</h6>
         </li>
         {% for year in years_list%}
-        <li><a class="dropdown-item" href="{% url 'incomestatements_property:category_list_property' year %}">{{year|stringformat:"i"}}</a></li>
+        <li><a class="dropdown-item" href="{% url 'incomestatements_property:propert_forecast' year %}">{{year|stringformat:"i"}}</a></li>
         {%endfor%}
     </ul>
 </span>

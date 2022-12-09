@@ -228,6 +228,8 @@ class StockTicker(models.Model):
 
     class Meta:
         unique_together = (('name', 'ticker', 'user'),)
+
+
 class Stock(models.Model):
     stock_ticker = models.ForeignKey(StockTicker, on_delete=models.CASCADE, blank=False, null=False)
     quantity = models.FloatField(
@@ -251,7 +253,7 @@ class StockTransaction(models.Model):
         ("Buy", "Buy"),
         ("Sell", "Sell"),
     )
-    stock = models.ForeignKey(Stock, on_delete=models.CASCADE, blank=False, null=False)
+    stock_ticker = models.ForeignKey(StockTicker, on_delete=models.CASCADE, blank=False, null=False)
     transaction_type = models.CharField(
         choices=TRANSACTION_TYPE_SOURCES, max_length=100, null=False, blank=False
     )
