@@ -330,6 +330,7 @@ def sort(myList):
 
 @login_required(login_url='/login/')
 def property_summary_view(request, year, *args, **kwargs):
+    etf_summary = index_funds_summary(request, year)
     all_summary = overall_summary(request, year)
     prop_summary = property_summary(request, year)
     pers_summary = personal_summary(request, year)
@@ -376,7 +377,17 @@ def property_summary_view(request, year, *args, **kwargs):
         # crypto
         "crypto_qs": cryp_summary["crypto_qs"],
         "crypto_total_amount": cryp_summary["crypto_total_amount"],
-        "crypto_progress": cryp_summary["crypto_progress"]
+        "crypto_progress": cryp_summary["crypto_progress"],
+        # Index Funds / ETF
+        "etf_qs": etf_summary["etf_qs"],
+        "stocks_total_value": etf_summary["etf_total_amount"],
+        "stocks_total_progress": etf_summary["etf_progress"],
+        "stocks_total_equities": etf_summary["stocks_total_equities"],
+        "stocks_total_bonds": etf_summary["stocks_total_bonds"],
+        "stocks_total_cce": etf_summary["stocks_total_cce"],
+        "stocks_total_diversified": etf_summary["stocks_total_diversified"],
+        "stocks_total_reits": etf_summary["stocks_total_reits"],
+        "stocks_total_other": etf_summary["stocks_total_other"],
     }
     return render(request, "properties/summary.html", context)
 
@@ -404,7 +415,48 @@ def overall_summary(request, year):
         "all_networth": all_networth,
         "years_list": years_list,
     }
-    return  context
+    return context
+
+
+def index_funds_summary(request, year):
+    etf_data = Stock.objects.filter(user=request.user, year=year)
+    financial_plan_data = RetirementGoal.objects.filter(user=request.user, start_date__year=year).values()
+    print(etf_data, 'etf_data')
+    etf_total_amount = 0
+    etf_progress = 0
+    stocks_total_equities = 0
+    stocks_total_bonds = 0
+    stocks_total_cce = 0
+    stocks_total_diversified = 0
+    stocks_total_reits = 0
+    stocks_total_other = 0
+    print(etf_data[0].stock_ticker.stock_category, "category")
+    if etf_data:
+        etf_total_amount = sum(data.investment for data in etf_data)
+        stocks_total_equities = sum(
+            data.investment for data in etf_data.filter(stock_ticker__stock_category="EQUITIES"))
+        stocks_total_bonds = sum(data.investment for data in etf_data.filter(stock_ticker__stock_category="BONDS"))
+        stocks_total_cce = sum(
+            data.investment for data in etf_data.filter(stock_ticker__stock_category="CASH_AND_CASH_EQUIVALENT"))
+        stocks_total_diversified = sum(
+            data.investment for data in etf_data.filter(stock_ticker__stock_category="DIVERSIFIED"))
+        stocks_total_reits = sum(data.investment for data in etf_data.filter(stock_ticker__stock_category="REITS"))
+        stocks_total_other = sum(data.investment for data in etf_data.filter(stock_ticker__stock_category="OTHERS"))
+    if financial_plan_data:
+        if financial_plan_data[0]["stocks"] != 0 and financial_plan_data[0]["stocks"] is not None:
+            etf_progress = (etf_total_amount / financial_plan_data[0]["stocks"]) * 100
+    context = {
+        "etf_qs": etf_data,
+        "etf_total_amount": etf_total_amount,
+        "etf_progress": etf_progress,
+        "stocks_total_equities": stocks_total_equities,
+        "stocks_total_bonds": stocks_total_bonds,
+        "stocks_total_cce": stocks_total_cce,
+        "stocks_total_diversified": stocks_total_diversified,
+        "stocks_total_reits": stocks_total_reits,
+        "stocks_total_other": stocks_total_other,
+    }
+    return context
 
 
 def crypto_summary(request, year):
