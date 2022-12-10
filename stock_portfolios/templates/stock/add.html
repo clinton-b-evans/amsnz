@@ -12,10 +12,11 @@
       <div class="invalid-feedback">{{ form.name.errors|first }}</div>
     </div>
     <div class="mb-3">
-      <label for="{{ form.ticker.id_for_label }}" class="form-label">Stock Ticker</label>
-      {% render_field form.ticker class="form-control" placeholder="Stock Ticker" %}
+      <label for="{{ form.ticker.id_for_label }}" class="form-label">Ticker</label>
+      {% render_field form.ticker class="form-control" placeholder="Ticker" %}
       <div class="invalid-feedback">{{ form.ticker.errors|first }}</div>
     </div>
+
     <div class="mb-3">
       <label for="{{ form.stock_type.id_for_label }}" class="form-label">Stock type</label>
       {% render_field form.stock_type class="form-control" placeholder="Stock type" %}

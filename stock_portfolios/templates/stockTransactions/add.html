@@ -17,14 +17,14 @@
       <div class="invalid-feedback">{{ form.transaction_type.errors|first }}</div>
     </div>
     <div class="mb-3">
-      <label for="{{ form.quantity.id_for_label }}" class="form-label">Quantity</label>
-      {% render_field form.quantity class="form-control" placeholder="Quantity" %}
-      <div class="invalid-feedback">{{ form.quantity.errors|first }}</div>
-    </div>
-    <div class="mb-3">
       <label for="{{ form.spot_price.id_for_label }}" class="form-label">Spot Price</label>
       {% render_field form.spot_price class="form-control" placeholder="Spot Price" %}
       <div class="invalid-feedback">{{ form.spot_price.errors|first }}</div>
+    </div>
+    <div class="mb-3">
+      <label for="{{ form.quantity.id_for_label }}" class="form-label">Quantity</label>
+      {% render_field form.quantity class="form-control" placeholder="Quantity" %}
+      <div class="invalid-feedback">{{ form.quantity.errors|first }}</div>
     </div>
     <div class="mb-3">
       <label for="{{ form.date.id_for_label }}" class="form-label">Date</label>

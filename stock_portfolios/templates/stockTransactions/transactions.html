@@ -24,7 +24,7 @@
 <script src="{% static 'apexcharts/apexcharts.min.js' %}"></script>
 <div class="d-flex justify-content-between" >
     <div>
-    <button type="button" class="btn btn-dashboard mb-3" hx-get="{% url 'stock_portfolios:add-sufi-transaction' %}" hx-target="#dialog">
+    <button type="button" class="btn btn-dashboard mb-3" hx-get="{% url 'stock_portfolios:add-transaction' %}" hx-target="#dialog">
         <svg class="bi bi-calendar-plus me-1" fill="currentColor" height="16" viewBox="0 0 16 16"
                  width="16" xmlns="http://www.w3.org/2000/svg">
                 <path d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>
@@ -191,55 +191,6 @@
     })
     function closeAlert(){
         $('#quantity_alert').hide();
-    }
-    function addTransaction() {
-        var stock = document.getElementById('stock').value;
-        var transaction_type = document.getElementById(`transaction_type`).value;
-        var quantity = document.getElementById('quantity').value;
-        var spot_price = document.getElementById('spot_price').value;
-        var date = document.getElementById('date').value;
-        if (stock && transaction_type && quantity && spot_price && date) {
-            // Create Ajax Call
-            $(document).ready(function () {
-            let body={
-                'stock': stock,
-                'transaction_type': transaction_type,
-                'quantity': quantity,
-                'spot_price': spot_price,
-                'date': date,
-            }
-            $.ajax({
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                type: 'POST',
-                url: '{% url "stock_portfolios:addTransaction" %}',
-                headers: {//<==
-                    "X-CSRFTOKEN": "{{ csrf_token }}"//<==
-                },
-                data: JSON.stringify(body),
-                success: function(data) {
-                //Success code
-                    console.log(data,'data')
-                    if (data.user) {
-                        appendToTransactionTable(data.user);
-                        $(`#exampleModal`).modal('hide');
-                    }
-                    if(data.quantity=="error"){
-                        console.log("agya j");
-                        $('#quantity_alert').show();
-                    }
-                },
-                failure: function (response) {
-                    $('#result').html(response);
-                }
-            });
-        });
-        } else
-        {
-            alert("All fields must have a valid value.");
-        }
-<!--        $('form#addTransaction').trigger("reset");-->
-        return false;
     }
     function appendToTransactionTable(user) {
             console.log("spot_price",user.id,user.spot_price)

@@ -103,7 +103,7 @@ def stock_list_view(request, year):
 
 def add_stock(request):
     if request.method == "POST":
-        form = StockTickerForm(request.POST)
+        form = StockTickerForm(request.user, request.POST)
         if form.is_valid():
             stock = form.save(commit=False)
             stock.user = request.user
@@ -116,13 +116,13 @@ def add_stock(request):
                     })
                 })
     else:
-        form = StockTickerForm()
+        form = StockTickerForm(request.user)
     return render(request, "stock/add.html", {"form": form})
 
 
-def add_sufi_transaction(request):
+def add_transaction(request):
     if request.method == "POST":
-        form = TransactionForm(request.POST)
+        form = TransactionForm(request.user, request.POST)
         if form.is_valid():
             stock_transaction = form.save(commit=False)
             stock_transaction.user = request.user
@@ -135,14 +135,14 @@ def add_sufi_transaction(request):
                     })
                 })
     else:
-        form = TransactionForm()
+        form = TransactionForm(request.user)
     return render(request, "stockTransactions/add.html", {"form": form})
 
 
 def edit_sufi_transaction(request, pk):
     stock_transaction = get_object_or_404(StockTransaction, pk=pk)
     if request.method == "POST":
-        form = TransactionForm(request.POST, instance=stock_transaction)
+        form = TransactionForm(request.user, request.POST, instance=stock_transaction)
         if form.is_valid():
             stock_transaction = form.save(commit=False)
             stock_transaction.user = request.user
@@ -157,7 +157,7 @@ def edit_sufi_transaction(request, pk):
                 }
             )
     else:
-        form = TransactionForm(instance=stock_transaction)
+        form = TransactionForm(request.user, instance=stock_transaction)
     return render(request, 'stockTransactions/add.html', {
         'form': form,
         'stock_transactions': stock_transactions,
@@ -199,55 +199,6 @@ def stock_transactions(request, year):
         "years_list": years_list,
     }
     return render(request, "stockTransactions/transactions.html", context)
-
-
-def add_transaction(request):
-    if request.method == "POST":
-        # getting body data from request
-        transactionData = json.loads(request.body)
-        # getting models
-        stock = Stock.objects.get(name=transactionData['stock'], user=request.user)
-        # saving data to crypto model
-        # when transactions_type is buy
-        if transactionData["transaction_type"] == 'Buy':
-            stock.quantity += float(transactionData["quantity"])
-            stock.investment += float(transactionData["quantity"]) * float(transactionData["spot_price"])
-            stock.save()
-        # when transactions_type is sell
-        else:
-            if stock.quantity - float(transactionData["quantity"]) > -1:
-                stock.quantity -= float(transactionData["quantity"])
-                if stock.investment - float(transactionData["quantity"]) * float(transactionData["spot_price"]) < 0:
-                    stock.investment = float(0.0)
-                else:
-                    stock.investment -= float(transactionData["quantity"]) * float(transactionData["spot_price"])
-                stock.save()
-            else:
-                data = {
-                    "quantity": "error"
-                }
-                return JsonResponse(data)
-        obj = StockTransaction.objects.create(
-            stock=Stock.objects.get(name=transactionData["stock"], user=request.user),
-            transaction_type=transactionData['transaction_type'],
-            quantity=transactionData['quantity'],
-            spot_price=transactionData['spot_price'],
-            date=transactionData['date'],
-            user=request.user
-        )
-        user = {
-            'id': obj.id,
-            'stock': transactionData['stock'],
-            'spot_price': obj.spot_price,
-            'transaction_type': obj.transaction_type,
-            'quantity': obj.quantity,
-            'date': obj.date
-        }
-        data = {
-            'user': user
-        }
-        print(data, 'data')
-        return JsonResponse(data)
 
 
 def edit_transaction(request):

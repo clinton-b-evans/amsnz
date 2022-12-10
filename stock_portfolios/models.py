@@ -210,10 +210,10 @@ class StockTicker(models.Model):
         ("OTHERS", "Others"),
     )
     name = models.CharField(
-        max_length=50, unique=True
+        max_length=50,
     )
     ticker = models.CharField(
-        max_length=50, unique=True
+        max_length=50,
     )
     stock_type = models.CharField(
         choices=STOCK_TYPE_CHOICES, max_length=100, null=False, blank=False
@@ -227,7 +227,7 @@ class StockTicker(models.Model):
         return f"{self.name} ({self.ticker})"
 
     class Meta:
-        unique_together = (('name', 'ticker', 'user'),)
+        unique_together = (('ticker', 'user'),)
 
 
 class Stock(models.Model):
@@ -261,10 +261,10 @@ class StockTransaction(models.Model):
         blank=False, default=0.0,
     )
     spot_price = models.FloatField(
-        blank=True, default=0.0
+        blank=False, null=False, default=0.0
     )
     date = models.DateField(null=True, blank=True, default=now)
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
 
     def __str__(self):
-        return f"{self.stock} - {self.transaction_type}"
+        return f"{self.stock_ticker} - {self.transaction_type}"
