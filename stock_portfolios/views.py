@@ -15,9 +15,9 @@ from datetime import date, timedelta
 def compute_pie_chart_transaction_types(stocks, totalMarketValue, stock_prices):
     pie_chart_data = []
     for stock in stocks:
-        percentage = ((float(stock.quantity) * float(stock_prices[stock.ticker])) / totalMarketValue) * 100
+        percentage = ((float(stock.quantity) * float(stock_prices[stock.stock_ticker.ticker])) / totalMarketValue) * 100
         pie_chart_data.append({
-            "name": stock.name,
+            "name": stock.stock_ticker.name,
             "percentage": percentage
         })
     return pie_chart_data
@@ -27,7 +27,7 @@ def generate_bar_graph_series_data(stocks, stock_prices):
     investments = []
     assetsGains = []
     for stock in stocks:
-        spotPrice = stock_prices[stock.ticker]
+        spotPrice = stock_prices[stock.stock_ticker.ticker]
         currentMarketValue = float(stock.quantity) * spotPrice
         assetsGains.append(
             0 if float(currentMarketValue) < float(stock.investment) else float(currentMarketValue) - float(
@@ -50,7 +50,7 @@ def get_stock_price_data(tickers):
 @login_required(login_url='/login/')
 def stock_list_view(request, year):
     stocks = Stock.objects.filter(user=request.user).exclude(quantity=0)
-    used_stocks_ticker = stocks.values_list('stock_ticker', flat=True).distinct()
+    used_stocks_ticker = stocks.values_list('stock_ticker__ticker', flat=True).distinct()
     stock_prices = get_stock_price_data(used_stocks_ticker)
     investments, assetsGains = generate_bar_graph_series_data(stocks, stock_prices)
 
@@ -59,7 +59,7 @@ def stock_list_view(request, year):
     totalMarketValue = 0
 
     for stock in stocks:
-        spotPrice = stock_prices[stock.ticker]
+        spotPrice = stock_prices[stock.stock_ticker.ticker]
         totalInvestment += stock.investment
         currentMarketValue = float(stock.quantity) * spotPrice
         totalMarketValue += currentMarketValue
@@ -69,8 +69,8 @@ def stock_list_view(request, year):
         elif (float(currentMarketValue) - float(stock.investment)) < 0:
             status = 'loss'
         transactions_table.append({
-            "name": stock.name,
-            "ticker": stock.ticker,
+            "name": stock.stock_ticker.name,
+            "ticker": stock.stock_ticker.ticker,
             "quantity": stock.quantity,
             "totalInvestment": stock.investment,
             "spotPrice": spotPrice,
