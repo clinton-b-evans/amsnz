@@ -388,6 +388,7 @@ def property_summary_view(request, year, *args, **kwargs):
         "stocks_total_diversified": etf_summary["stocks_total_diversified"],
         "stocks_total_reits": etf_summary["stocks_total_reits"],
         "stocks_total_other": etf_summary["stocks_total_other"],
+        "stock_total_amount": etf_summary["stock_total_amount"],
     }
     return render(request, "properties/summary.html", context)
 
@@ -419,7 +420,8 @@ def overall_summary(request, year):
 
 
 def index_funds_summary(request, year):
-    etf_data = Stock.objects.filter(user=request.user, year=year)
+    stock_data = Stock.objects.filter(user=request.user, year=year, stock_ticker__stock_type='INDIVIDUAL')
+    etf_data = Stock.objects.filter(user=request.user, year=year, stock_ticker__stock_type='INDEX_FUND/EFT')
     financial_plan_data = RetirementGoal.objects.filter(user=request.user, start_date__year=year).values()
     print(etf_data, 'etf_data')
     etf_total_amount = 0
@@ -430,7 +432,10 @@ def index_funds_summary(request, year):
     stocks_total_diversified = 0
     stocks_total_reits = 0
     stocks_total_other = 0
+    stock_total_amount = 0
     print(etf_data[0].stock_ticker.stock_category, "category")
+    if stock_data:
+        stock_total_amount = sum(data.investment for data in stock_data)
     if etf_data:
         etf_total_amount = sum(data.investment for data in etf_data)
         stocks_total_equities = sum(
@@ -455,6 +460,7 @@ def index_funds_summary(request, year):
         "stocks_total_diversified": stocks_total_diversified,
         "stocks_total_reits": stocks_total_reits,
         "stocks_total_other": stocks_total_other,
+        "stock_total_amount": stock_total_amount
     }
     return context
 

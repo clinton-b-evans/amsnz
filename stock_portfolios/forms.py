@@ -145,6 +145,12 @@ class TransactionForm(ModelForm):
             raise ValidationError(f"Spot price cannot be 0 or negative")
         return spot_price
 
+    def clean_transaction_type(self):
+        transaction_type = self.cleaned_data['transaction_type']
+        if "transaction_type" in self.changed_data and self.instance.id:
+            raise ValidationError(f"Transaction type cannot be changed")
+        return transaction_type
+
     def clean_date(self):
         date = self.cleaned_data['date']
         if self.is_edit:

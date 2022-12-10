@@ -1,0 +1,111 @@
+{% load mathfilters %}
+{% load humanize %}
+{% for obj in transactions %}
+<tr id="user-{{obj.id}}">
+    <td class="name userData" name="name" style="text-align:left">{{ obj.stock_name }}</td>
+    <td class="transaction_type userData" name="transaction_type" style="text-align:left">{{ obj.transaction_type}}</td>
+    <td class="quantity userData" name="quantity" style="text-align:right">{{ obj.quantity }}</td>
+    <td class="purchased_value userData" name="purchased_value" style="text-align:right">${{obj.purchasedValue|floatformat:2 }}
+    </td>
+    <td class="investment userData" name="investment" style="text-align:right">${{ obj.totalInvestment}}
+    </td>
+    <td class="date userData" name="date" style="text-align:right">{{ obj.date }}</td>
+    <td style="text-align:right">
+        <button class="btn btn-success btn-sm rounded-0"
+                hx-get="{% url 'stock:edit-sufi-transaction' pk=obj.id %}" hx-target="#dialog">
+            <svg class="bi bi-pencil-square" fill="currentColor" height="16" viewBox="0 0 16 16"
+                 width="16" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                <path d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"
+                      fill-rule="evenodd"/>
+            </svg>
+        </button>
+        <div class="modal fade" id=basicModal{{obj.id}} tabindex="-1">
+            <div class="modal-dialog">
+                <form action="" method=POST>
+                    <div class="modal-content" style="text-align:left">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Edit Transaction</h5>
+                            <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"
+                                    type="button"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="mb-3">
+                                    <label class="form-label" for="stock{{obj.id}}">Stock</label>
+                                    <input aria-describedby="emailHelp" class="form-control" disabled
+                                           id="stock{{obj.id}}" type="text" value="{{obj.stock_name}}">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label"
+                                           for="transaction_type{{obj.id}}">Transaction Type</label>
+                                    <input class="form-control" disabled
+                                           id="transaction_type{{obj.id}}" type="text" value="{{ obj.transaction_type}}">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label"
+                                           for="quantity{{obj.id}}">Quantity</label>
+                                    <input class="form-control" id="quantity{{obj.id}}"
+                                           type="number" value="{{ obj.quantity }}">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label"
+                                           for="spot_price{{obj.id}}">Spot Price</label>
+                                    <input class="form-control" id="spot_price{{obj.id}}"
+                                           type="number" value="{{ obj.purchasedValue|floatformat:2 }}">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Date</label>
+                                    <input class="form-control" disabled id="date" name="date" type="text"
+                                           value="{{obj.date}}">
+                                </div>
+                                <button class="btn btn-primary" onclick="EditTransaction({{obj.id}})" type="button">
+                                    Submit
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <button class="btn btn-danger-1 btn-sm rounded-0" data-bs-target="#deleteModal{{obj.id}}" data-bs-toggle="modal"
+                type="button">
+            <svg class="bi bi-trash" fill="currentColor" height="16" viewBox="0 0 16 16"
+                 width="16" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
+                      fill-rule="evenodd"/>
+            </svg>
+        </button>
+
+        <!-- Modal -->
+        <div aria-hidden="true" aria-labelledby="deleteModalLabel" class="modal fade" id="deleteModal{{obj.id}}"
+             tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel">Modal title</h5>
+                        <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+                    </div>
+                    <div class="modal-body deleteForm">
+                        <h2 class="">You are about to delete this Transaction</h2>
+                        <p>Are you sure you want to delete {{ obj.stock_name }}?</p>
+                        <p>This action cannot be undone.</p>
+                        <p>All transctions for this fund will be lost</p>
+                        <button class="btn btn-danger form-control" onclick="deleteTransaction({{obj.id}})"
+                                type="button">Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </td>
+</tr>
+{% endfor %}
+
+<script>
+    $(document).ready( function () {
+        $('#transactions-list').DataTable();
+      });
+
+</script>

@@ -49,7 +49,7 @@ def get_stock_price_data(tickers):
 
 @login_required(login_url='/login/')
 def stock_list_view(request, year):
-    stocks = Stock.objects.filter(user=request.user).exclude(quantity=0)
+    stocks = Stock.objects.filter(user=request.user, year=year).exclude(quantity=0)
     used_stocks_ticker = stocks.values_list('stock_ticker__ticker', flat=True).distinct()
     stock_prices = get_stock_price_data(used_stocks_ticker)
     investments, assetsGains = generate_bar_graph_series_data(stocks, stock_prices)
@@ -92,7 +92,7 @@ def stock_list_view(request, year):
         "stock_prices": stock_prices,
         "totalInvestment": totalInvestment,
         "totalMarketValue": totalMarketValue,
-        "usedStock": stocks.values_list('stock_ticker', flat=True).distinct(),
+        "usedStock": list(stocks.values_list('stock_ticker__name', flat=True).distinct()),
         "investments": list(map(float, my_investments_list)),
         "assetsGains": list(map(float, my_assetsGains_list)),
         "pie_chart_date": compute_pie_chart_transaction_types(stocks, totalMarketValue, stock_prices),
@@ -112,6 +112,7 @@ def add_stock(request):
                 status=204,
                 headers={
                     'HX-Trigger': json.dumps({
+                        "transactionListChanged": None,
                         "showMessage": f"{stock.name} added."
                     })
                 })
@@ -131,6 +132,7 @@ def add_transaction(request):
                 status=204,
                 headers={
                     'HX-Trigger': json.dumps({
+                        "transactionListChanged": None,
                         "showMessage": f"Transaction for {stock_transaction.stock_ticker} is added."
                     })
                 })
@@ -199,6 +201,42 @@ def stock_transactions(request, year):
         "years_list": years_list,
     }
     return render(request, "stockTransactions/transactions.html", context)
+
+
+def transaction_list(request, year=''):
+    if year == '':
+        stock = Stock.objects.filter(user=request.user).values()
+        transactions = StockTransaction.objects.filter(user=request.user).order_by('date')
+    else:
+        stock = Stock.objects.filter(user=request.user, year=year).values()
+        transactions = StockTransaction.objects.filter(date__year=year, user=request.user).order_by('date')
+
+    transactions_table = []
+    for transaction in transactions:
+        totalInvestment = float(transaction.quantity) * float(transaction.spot_price)
+        transactions_table.append({
+            "id": transaction.id,
+            "stock_name": transaction.stock_ticker,
+            "transaction_type": transaction.transaction_type,
+            "quantity": transaction.quantity,
+            "purchasedValue": transaction.spot_price,
+            "date": transaction.date,
+            "totalInvestment": totalInvestment,
+        })
+    years = StockTransaction.objects.values_list("date__year").distinct()
+    years_list = []
+    for data in years:
+        for item in data:
+            years_list.append(item)
+    years_list = sort_years_list(years_list)
+    print(years_list, 'years_list')
+    context = {
+        "year": year,
+        "transactions": transactions_table,
+        "stock": stock,
+        "years_list": years_list,
+    }
+    return render(request, 'stockTransactions/transaction_list.html', context=context)
 
 
 def edit_transaction(request):
@@ -287,15 +325,16 @@ def edit_transaction(request):
 def delete_transaction(request):
     id1 = request.GET.get('id', None)
     transaction = StockTransaction.objects.get(id=id1, user=request.user)
+    stock = Stock.objects.get(stock_ticker=transaction.stock_ticker,user=request.user,year=transaction.date.year)
     if transaction.transaction_type == 'Buy':
-        transaction.stock_ticker.quantity -= transaction.quantity
-        transaction.stock_ticker.investment -= float(transaction.quantity) * float(transaction.spot_price)
-        transaction.stock_ticker.save()
+        stock.quantity -= transaction.quantity
+        stock.investment -= float(transaction.quantity) * float(transaction.spot_price)
+        stock.save()
         print('buy')
     else:
-        transaction.stock_ticker.quantity += transaction.quantity
-        transaction.stock_ticker.investment += float(transaction.quantity) * float(transaction.spot_price)
-        transaction.stock_ticker.save()
+        stock.quantity += transaction.quantity
+        stock.investment += float(transaction.quantity) * float(transaction.spot_price)
+        stock.save()
         print('sell')
     StockTransaction.objects.get(id=id1, user=request.user).delete()
     data = {

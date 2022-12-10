@@ -6,5 +6,6 @@
   htmx.on("showMessage", (e) => {
     toastBody.innerText = e.detail.value
     toast.show()
+    windows.location.reload()
   })
 })()

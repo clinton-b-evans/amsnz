@@ -167,7 +167,7 @@ console.log({{investments}},{{assetsGains}},"39")
         xaxis: {
           categories: [
               {% for value in usedStock %}
-                "{{value|floatformat:2}}",
+                "{{value}}",
               {% endfor %}
           ],
         },

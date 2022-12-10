@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     stock_list_view,
     stock_transactions,
-    delete_transaction, add_stock, edit_transaction, edit_sufi_transaction, add_transaction,
+    delete_transaction, add_stock, edit_transaction, edit_sufi_transaction, add_transaction, transaction_list,
 )
 
 app_name = "stock"
@@ -13,6 +13,7 @@ urlpatterns = [
     path("stock/transaction/add/", add_transaction, name="add-transaction"),
     path('stock/deleteTransaction',  delete_transaction, name='deleteTransaction'),
     path('stock/addStock', add_stock, name="addStock"),
+    path("transaction_list/", transaction_list, name="transaction_list"),
     path('stock/edit_sufi_transaction/<pk>/', edit_sufi_transaction, name="edit-sufi-transaction"),
     path(
         "stock/edit",
