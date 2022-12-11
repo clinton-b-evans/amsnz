@@ -122,11 +122,6 @@
       <div class="invalid-feedback">{{ form.bodycorp_fee.errors|first }}</div>
     </div>
     <div class="mb-3">
-      <label for="{{ form.management_fee.id_for_label }}" class="form-label">Management fee</label>
-      {% render_field form.management_fee class="form-control" placeholder="Management fee" %}
-      <div class="invalid-feedback">{{ form.management_fee.errors|first }}</div>
-    </div>
-    <div class="mb-3">
       <label for="{{ form.insurance.id_for_label }}" class="form-label">Insurance (yearly)</label>
       {% render_field form.insurance class="form-control" placeholder="Insurance" %}
       <div class="invalid-feedback">{{ form.insurance.errors|first }}</div>
