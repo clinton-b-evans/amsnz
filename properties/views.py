@@ -433,7 +433,6 @@ def index_funds_summary(request, year):
     stocks_total_reits = 0
     stocks_total_other = 0
     stock_total_amount = 0
-    print(etf_data[0].stock_ticker.stock_category, "category")
     if stock_data:
         stock_total_amount = sum(data.investment for data in stock_data)
     if etf_data:
