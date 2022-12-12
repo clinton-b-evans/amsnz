@@ -1,7 +1,7 @@
 import json
 import datetime
 from decimal import Decimal
-
+from yahooquery import Ticker
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -419,10 +419,24 @@ def overall_summary(request, year):
     return context
 
 
+def get_stock_price_data(tickers):
+    all_symbols = " ".join(tickers)
+    myInfo = Ticker(all_symbols)
+    data = myInfo.price
+    result = dict.fromkeys(data.keys())
+    for key, value in data.items():
+        result[key] = value['regularMarketPrice']
+    return result
+
+
 def index_funds_summary(request, year):
     stock_data = Stock.objects.filter(user=request.user, year=year, stock_ticker__stock_type='INDIVIDUAL')
     etf_data = Stock.objects.filter(user=request.user, year=year, stock_ticker__stock_type='INDEX_FUND/EFT')
     financial_plan_data = RetirementGoal.objects.filter(user=request.user, start_date__year=year).values()
+    used_stocks_ticker = stock_data.values_list('stock_ticker__ticker', flat=True).distinct()
+    stock_prices = get_stock_price_data(used_stocks_ticker)
+    used_stocks_ticker_etf = etf_data.values_list('stock_ticker__ticker', flat=True).distinct()
+    stock_prices_etf = get_stock_price_data(used_stocks_ticker_etf)
     print(etf_data, 'etf_data')
     etf_total_amount = 0
     etf_progress = 0
@@ -435,18 +449,26 @@ def index_funds_summary(request, year):
     stock_total_amount = 0
     print(etf_data[0].stock_ticker.stock_category, "category")
     if stock_data:
-        stock_total_amount = sum(data.investment for data in stock_data)
+        stock_total_amount = sum(data.quantity * stock_prices[data.stock_ticker.ticker] for data in stock_data)
     if etf_data:
-        etf_total_amount = sum(data.investment for data in etf_data)
+        etf_total_amount = sum(data.quantity * stock_prices_etf[data.stock_ticker.ticker] for data in etf_data)
         stocks_total_equities = sum(
-            data.investment for data in etf_data.filter(stock_ticker__stock_category="EQUITIES"))
-        stocks_total_bonds = sum(data.investment for data in etf_data.filter(stock_ticker__stock_category="BONDS"))
+            data.quantity * stock_prices_etf[data.stock_ticker.ticker] for data in
+            etf_data.filter(stock_ticker__stock_category="EQUITIES"))
+        stocks_total_bonds = sum(
+            data.quantity * stock_prices_etf[data.stock_ticker.ticker] for data in
+            etf_data.filter(stock_ticker__stock_category="BONDS"))
         stocks_total_cce = sum(
-            data.investment for data in etf_data.filter(stock_ticker__stock_category="CASH_AND_CASH_EQUIVALENT"))
+            data.quantity * stock_prices_etf[data.stock_ticker.ticker] for data in
+            etf_data.filter(stock_ticker__stock_category="CASH_AND_CASH_EQUIVALENT"))
         stocks_total_diversified = sum(
-            data.investment for data in etf_data.filter(stock_ticker__stock_category="DIVERSIFIED"))
-        stocks_total_reits = sum(data.investment for data in etf_data.filter(stock_ticker__stock_category="REITS"))
-        stocks_total_other = sum(data.investment for data in etf_data.filter(stock_ticker__stock_category="OTHERS"))
+            data.quantity * stock_prices_etf[data.stock_ticker.ticker] for data in
+            etf_data.filter(stock_ticker__stock_category="DIVERSIFIED"))
+        stocks_total_reits = sum(
+            data.quantity * stock_prices_etf[data.stock_ticker.ticker] for data in
+            etf_data.filter(stock_ticker__stock_category="REITS"))
+        stocks_total_other = sum(data.quantity * stock_prices_etf[data.stock_ticker.ticker] for data in
+                                 etf_data.filter(stock_ticker__stock_category="OTHERS"))
     if financial_plan_data:
         if financial_plan_data[0]["stocks"] != 0 and financial_plan_data[0]["stocks"] is not None:
             etf_progress = (etf_total_amount / financial_plan_data[0]["stocks"]) * 100
@@ -465,20 +487,53 @@ def index_funds_summary(request, year):
     return context
 
 
+def get_crypto_price_data(tickers):
+    all_symbols = " ".join(tickers)
+    myInfo = Ticker(all_symbols)
+    data = myInfo.price
+    result = dict.fromkeys(data.keys())
+    print(data, 'data')
+    for key, value in data.items():
+        result[key] = value['regularMarketPrice']
+        print(result, 'result')
+    return result
+
+
 def crypto_summary(request, year):
     crypto_data = Crypto.objects.filter(user=request.user, year=year)
     financial_plan_data = RetirementGoal.objects.filter(user=request.user, start_date__year=year).values()
     print(crypto_data, 'crypto_data')
+    used_cryptos_ticker = crypto_data.values_list('ticker', flat=True).distinct()
+    crypto_prices = get_crypto_price_data(used_cryptos_ticker)
     crypto_total_amount = 0
     crypto_progress = 0
     if crypto_data:
-        crypto_total_amount = sum(data.investment for data in crypto_data)
+        crypto_total_amount = sum(data.quantity * crypto_prices[data.ticker] for data in crypto_data)
+        for crypto in crypto_data:
+            crypto.investment = crypto.quantity * crypto_prices[crypto.ticker]
     if financial_plan_data:
         if financial_plan_data[0]["crypto"] != 0 and financial_plan_data[0]["crypto"] is not None:
             crypto_progress = (crypto_total_amount / financial_plan_data[0]["crypto"]) * 100
 
+    print(crypto_data, 'crypto_data')
     context = {"crypto_qs": crypto_data, "crypto_total_amount": crypto_total_amount, "crypto_progress": crypto_progress}
     return context
+
+
+def get_commodities():
+    commodities_list = [
+        'GC=F',
+        'SI=F',
+        'PL=F',
+        "PA=F"
+    ]
+    all_symbols = " ".join(commodities_list)
+    myInfo = Ticker(all_symbols)
+    data = myInfo.price
+    result = dict.fromkeys(data.keys())
+    for key, value in data.items():
+        result[key] = value['regularMarketPrice']
+    return result
 
 
 def commodity_summary(request, year):
@@ -488,11 +543,16 @@ def commodity_summary(request, year):
     commodities = {
         1: "Gold", 2: "Silver", 3: "Platinum", 4: "Palladium",
     }
+    commodity_prices = get_commodities()
+    commodities_total_value = 0
+    if commodity_data:
+        commodities_total_value = sum(data.weight * commodity_prices[data.commodity_class] for data in commodity_data)
     arr = []
     for i in range(1, 5):
         com = {
             "commodity_class": commodities[i],
-            "total": sum(data.investment for data in commodity_data.filter(name=commodities[i]))
+            "total": sum(data.weight * commodity_prices[data.commodity_class] for data in
+                         commodity_data.filter(name=commodities[i]))
         }
         arr.append(com)
     commodities_prog = 0
@@ -571,10 +631,10 @@ def property_summary(request, year):
         if financial_plan_data[0]['networth_goal'] is not None and financial_plan_data[0]['networth_goal'] != 0:
             progress_bar = (property_networth / financial_plan_data[0]['networth_goal']) * 100
         if income is not None and income != 0:
-            loan_to_debt_ratio = (repayments / income) * 100
+            loan_to_debt_ratio = (repayments / income)
             break_even_point = (expense / income) * 100
         if income is not None and operating_expenses is not None and income - operating_expenses != 0:
-            debt_service_coverage_ratio = (repayments / (income - operating_expenses)) * 100
+            debt_service_coverage_ratio = (repayments / (income - operating_expenses))
         networth = assets - liabilities
     # end of property_summary
 
