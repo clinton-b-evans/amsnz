@@ -25,7 +25,7 @@ urlpatterns = [
     # path("commodities/<pk>/", commodity_detail_view, name="detail"),
     path("commodities/addTransaction/", addTransaction, name="addTransaction"),
     path("commodities/<str:pk>/edit", update_commodity, name="update"),
-    path("transaction_list/", commodity_transaction_list, name="commodity_transaction_list"),
+    path("transaction_list/commodity", commodity_transaction_list, name="commodity_transaction_list"),
     path('commodities/edit_sufi_transaction/<pk>/', edit_sufi_transaction, name="edit-sufi-transaction"),
     path("commodities/transaction/add/", add_sufi_transaction, name="add-sufi-transaction"),
     path(
