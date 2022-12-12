@@ -97,6 +97,8 @@ function popitup(url) {
                 <input class="form-control" type="text" value="" name="add_coin" id="add_coin">
                 <label class="form-label">Ticker</label>
                 <input class="form-control" type="text" value="" name="add_ticker" id="add_ticker">
+                <label class="form-label">Year</label>
+                <input class="form-control" type="text" value="" name="year" id="year">
             </div>
             <button class="btn btn-primary form-control" type="button" onclick="addCrypto()">ADD</button>
         </form>
@@ -303,12 +305,14 @@ function popitup(url) {
     function addCrypto() {
         var coin = document.getElementById('add_coin').value;
         var ticker = document.getElementById(`add_ticker`).value;
-        if (coin && ticker) {
+        var year = document.getElementById('year').value;
+        if (coin && ticker && year) {
             // Create Ajax Call
             $(document).ready(function () {
             let body={
                 'coin': coin,
                 'ticker': ticker,
+                'year': year
             }
             $.ajax({
                 contentType: 'application/json; charset=utf-8',

@@ -86,7 +86,7 @@ def commodity_list_view(request, year):
         elif (float(currentMarketValue) - float(commodity.investment)) < 0:
             status = 'loss'
         transactions_table.append({
-            "commodity": commodity,
+            "commodity": commodity.name,
             "weight": commodity.weight,
             "totalInvestment": commodity.investment,
             "spotPrice": spotPrice,
@@ -112,7 +112,8 @@ def commodity_list_view(request, year):
         "investments": list(map(float, my_investments_list)),
         "assetsGains": list(map(float, my_assetsGains_list)),
         "pie_chart_date": compute_pie_chart_transaction_types(commodities, totalMarketValue, commodity_prices),
-        "years_list": years_list
+        "years_list": years_list,
+        "year": year,
     }
     return render(request, "commodities/main.html", context)
 

@@ -264,6 +264,7 @@ def add_crypto(request):
         obj = Crypto.objects.create(
             name=cryptoData['coin'],
             ticker=cryptoData['ticker'],
+            year=cryptoData['year'],
             user=request.user
         )
 
