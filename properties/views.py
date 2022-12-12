@@ -591,7 +591,7 @@ def personal_summary(request, year):
         "savings": savings,
         "retirement": retirement,
         "liabilities": liabilities,
-        "networth": assets + savings + retirement + liabilities,
+        "networth": (assets + savings + retirement) - liabilities,
     }
     return context
 
