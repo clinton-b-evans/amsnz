@@ -72,7 +72,7 @@ TEMPLATES = [
 ]
 
 CRONJOBS = [
-    ('* * * * *', 'reminders.cron.my_cron_job', '>> /path/file.log')
+    ('* * * * *', 'django.core.management.call_command', ['generate_notification'])
 ]
 CRONTAB_COMMAND_SUFFIX = '2>&1'
 WSGI_APPLICATION = "pam_proj.wsgi.application"
