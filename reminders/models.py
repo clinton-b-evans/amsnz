@@ -30,5 +30,7 @@ class Notification(models.Model):
     reminder = models.ForeignKey(
         Reminder, on_delete=models.CASCADE
     )
+    mark_read = models.BooleanField(default=False)
+    date = models.DateField(auto_now_add=True)
     created_at = models.DateTimeField(auto_now_add=True)
 

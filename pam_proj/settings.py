@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     "stock_portfolios",
     "user.apps.UserConfig",
     'django.contrib.humanize',
-    "widget_tweaks"
+    "widget_tweaks",
+    "django_crontab",
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -70,6 +71,10 @@ TEMPLATES = [
     },
 ]
 
+CRONJOBS = [
+    ('* * * * *', 'reminders.cron.my_cron_job', '>> /path/file.log')
+]
+CRONTAB_COMMAND_SUFFIX = '2>&1'
 WSGI_APPLICATION = "pam_proj.wsgi.application"
 
 
