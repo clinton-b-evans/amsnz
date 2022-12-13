@@ -108,7 +108,8 @@ def expense_budget_total(request, year):
         },
     }
     for i in range(1, 13):
-        data = PropertyCategory.objects.filter(transaction_type="Expense", user=request.user, year=year).values_list(month_total[i]["name"])
+        data = PropertyCategory.objects.filter(transaction_type="Expense", user=request.user, year=year).values_list(
+            month_total[i]["name"])
         total = 0
         for j in data:
             total += j[0]
@@ -124,6 +125,19 @@ def addcategory_incomestatements(request):
         obj = PropertyCategory.objects.create(
             name=categoryData['name'],
             transaction_type=categoryData["Transaction"],
+            january_budget=categoryData["january_budget"],
+            february_budget=categoryData['february_budget'],
+            march_budget=categoryData['march_budget'],
+            april_budget=categoryData['april_budget'],
+            may_budget=categoryData['may_budget'],
+            june_budget=categoryData['june_budget'],
+            july_budget=categoryData['july_budget'],
+            august_budget=categoryData['august_budget'],
+            september_budget=categoryData['september_budget'],
+            october_budget=categoryData['october_budget'],
+            november_budget=categoryData['november_budget'],
+            december_budget=categoryData['december_budget'],
+            year=categoryData['year'],
             user=request.user
         )
         user = {
@@ -226,7 +240,8 @@ def income_budget_total(request, year):
     }
     yearly_income_budget = 0
     for i in range(1, 13):
-        data = PropertyCategory.objects.filter(transaction_type="Income", user=request.user, year=year).values_list(month_total[i]["name"])
+        data = PropertyCategory.objects.filter(transaction_type="Income", user=request.user, year=year).values_list(
+            month_total[i]["name"])
         total = 0
         for j in data:
             total += j[0]
@@ -237,6 +252,7 @@ def income_budget_total(request, year):
 def category_list(request, year):
     category_data = PropertyCategory.objects.filter(user=request.user, year=year)
     years = PropertyCategory.objects.filter(user=request.user).values_list("year").distinct()
+    print(years, 'years')
     years_list = []
     for data in years:
         for item in data:
@@ -262,7 +278,6 @@ def category_list(request, year):
     return render(
         request, "incomestatements/category_property.html", context
     )
-
 
 
 def addproperty_incomestatements(request):
@@ -294,7 +309,8 @@ def editproperty_incomestatements(request):
         property = PropertyIncomeStatement.objects.filter(user=request.user).get(id=propertyData['id'])
         property.name = propertyData['name']
         property.property = Property.objects.filter(user=request.user).get(name=propertyData["property"])
-        property.propcategory = PropertyCategory.objects.filter(user=request.user).get(name=propertyData["propcategory"])
+        property.propcategory = PropertyCategory.objects.filter(user=request.user).get(
+            name=propertyData["propcategory"])
         property.amount = propertyData['amount']
         property.save()
         data = {
@@ -313,44 +329,6 @@ def deleteproperty_incomestatement(request):
     return JsonResponse(data)
 
 
-def add_property_incomestatements(request):
-    submitted = False
-    if request.method == "POST":
-        form = PropertyIncomeStatementForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponse(
-                '<script type="text/javascript">window.close()</script>'
-            )
-    else:
-        form = PropertyIncomeStatementForm
-        if "submitted" in request.GET:
-            submitted = True
-    form = PropertyIncomeStatementForm
-    return render(
-        request,
-        "propertyincomestatements/add.html",
-        {"form": form, "submitted": submitted},
-    )
-
-
-def update_property_incomestatements(request, pk):
-    propertyincomestatement = PropertyIncomeStatement.objects.filter(user=request.user).get(id=pk)
-    form = PropertyIncomeStatementForm(instance=propertyincomestatement)
-
-    if request.method == "POST":
-        form = PropertyIncomeStatementForm(
-            request.POST, instance=propertyincomestatement
-        )
-        if form.is_valid():
-            form.save()
-            return HttpResponse(
-                '<script type="text/javascript">window.close()</script>'
-            )
-    context = {"form": form}
-    return render(request, "incomestatements/add.html", context)
-
-
 def delete_property_incomestatement(request, pk):
     propertyincomestatement = PropertyIncomeStatement.objects.filter(user=request.user).get(id=pk)
     qs = PropertyIncomeStatement.objects.filter(user=request.user).get(id=pk)
@@ -363,42 +341,6 @@ def delete_property_incomestatement(request, pk):
         return HttpResponse('<script type="text/javascript">window.close()</script>')
 
     return render(request, "propertyincomestatements/delete.html", context)
-
-
-def add_property_category(request):
-    submitted = False
-    if request.method == "POST":
-        form = PropertyCategoryForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponse(
-                '<script type="text/javascript">window.close()</script>'
-            )
-    else:
-        form = PropertyCategoryForm
-        if "submitted" in request.GET:
-            submitted = True
-    form = PropertyCategoryForm
-    return render(
-        request,
-        "propertyincomestatements/add.html",
-        {"form": form, "submitted": submitted},
-    )
-
-
-def update_category(request, pk):
-    category = Category.objects.filter(user=request.user).get(id=pk)
-    form = CategoryForm(instance=category)
-
-    if request.method == "POST":
-        form = CategoryForm(request.POST, instance=category)
-        if form.is_valid():
-            form.save()
-            return HttpResponse(
-                '<script type="text/javascript">window.close()</script>'
-            )
-    context = {"form": form}
-    return render(request, "incomestatements/add.html", context)
 
 
 def sort_years_list(myList):
@@ -611,7 +553,7 @@ def year_to_date(request, year):
     net_income = []
     for key, value in month_expenses.items():
         net_income.append(month_income[key] - month_expenses[key])
-    print(net_income,'ki bnaya a')
+    print(net_income, 'ki bnaya a')
     context = {
         "object_list": qs,
         "year": year,
