@@ -26,6 +26,7 @@ class Reminder(models.Model):
     def __str__(self):
         return f"{self.property.name} - {self.detail} - Due: {self.due_date}"
 
+
 class Notification(models.Model):
     reminder = models.ForeignKey(
         Reminder, on_delete=models.CASCADE
@@ -33,4 +34,5 @@ class Notification(models.Model):
     mark_read = models.BooleanField(default=False)
     date = models.DateField(auto_now_add=True)
     created_at = models.DateTimeField(auto_now_add=True)
-
+    def __str__(self):
+        return f"{self.reminder.property.name}"

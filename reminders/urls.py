@@ -5,7 +5,7 @@ from .views import (
     add_reminder,
     update_reminder,
     delete_reminder,
-    addreminder, editreminder, deletereminder,
+    addreminder, editreminder, deletereminder, notifications_view,
 )
 
 app_name = "reminders"
@@ -18,4 +18,5 @@ urlpatterns = [
     path("addreminder/", addreminder, name="addreminder"),
     path("editreminder/", editreminder, name="editreminder"),
     path("deletereminder/", deletereminder, name="deletereminder"),
+    path("notifications/", notifications_view, name="notifications-view"),
 ]
