@@ -3,7 +3,7 @@ from decimal import Decimal
 
 import requests
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from yahooquery import Ticker
 from yfinance import ticker
@@ -86,7 +86,7 @@ def commodity_list_view(request, year):
         elif (float(currentMarketValue) - float(commodity.investment)) < 0:
             status = 'loss'
         transactions_table.append({
-            "commodity": commodity,
+            "commodity": commodity.name,
             "weight": commodity.weight,
             "totalInvestment": commodity.investment,
             "spotPrice": spotPrice,
@@ -112,7 +112,8 @@ def commodity_list_view(request, year):
         "investments": list(map(float, my_investments_list)),
         "assetsGains": list(map(float, my_assetsGains_list)),
         "pie_chart_date": compute_pie_chart_transaction_types(commodities, totalMarketValue, commodity_prices),
-        "years_list": years_list
+        "years_list": years_list,
+        "year": year,
     }
     return render(request, "commodities/main.html", context)
 
@@ -153,6 +154,87 @@ def commodity_transactions(request, year):
         "years_list": years_list,
     }
     return render(request, "commodities/commodity_classes.html", context)
+
+
+def commodity_transaction_list(request, year=''):
+    if year == '':
+        commodity = Commodity.objects.filter(user=request.user).values()
+        transactions = Transaction.objects.filter(user=request.user).order_by('date')
+    else:
+        commodity = Commodity.objects.filter(user=request.user, year=year).values()
+        transactions = Transaction.objects.filter(date__year=year, user=request.user).order_by('date')
+
+    transactions_table = []
+    for transaction in transactions:
+        totalInvestment = float(transaction.weight) * float(transaction.value)
+        transactions_table.append({
+            "id": transaction.id,
+            "commodity": transaction.commodity.name,
+            "transaction_type": transaction.transaction_type,
+            "weight": transaction.weight,
+            "value": transaction.value,
+            "date": transaction.date,
+            "totalInvestment": totalInvestment,
+        })
+    years = Transaction.objects.values_list("date__year").distinct()
+    years_list = []
+    for data in years:
+        for item in data:
+            years_list.append(item)
+    years_list = sort_years_list(years_list)
+    print(years_list, 'years_list')
+    context = {
+        "year": year,
+        "transactions": transactions_table,
+        "commodity": commodity,
+        "years_list": years_list,
+    }
+    return render(request, 'transactions/transaction_list.html', context=context)
+
+
+def add_sufi_transaction(request):
+    if request.method == "POST":
+        form = TransactionForm(request.user, request.POST)
+        if form.is_valid():
+            commodity_transaction = form.save(commit=False)
+            commodity_transaction.user = request.user
+            commodity_transaction.save()
+            return HttpResponse(
+                status=204,
+                headers={
+                    'HX-Trigger': json.dumps({
+                        "transactionListChanged": None,
+                        "showMessage": f"Transaction for {commodity_transaction.commodity} is added."
+                    })
+                })
+    else:
+        form = TransactionForm(request.user)
+    return render(request, "transactions/add.html", {"form": form})
+
+
+def edit_sufi_transaction(request, pk):
+    commodity_transaction = get_object_or_404(Transaction, pk=pk)
+    if request.method == "POST":
+        form = TransactionForm(request.user, request.POST, instance=commodity_transaction)
+        if form.is_valid():
+            commodity_transaction = form.save(commit=False)
+            commodity_transaction.user = request.user
+            commodity_transaction.save()
+            return HttpResponse(
+                status=204,
+                headers={
+                    'HX-Trigger': json.dumps({
+                        "transactionListChanged": None,
+                        "showMessage": f"{commodity_transaction.commodity} updated."
+                    })
+                }
+            )
+    else:
+        form = TransactionForm(request.user, instance=commodity_transaction)
+    return render(request, 'transactions/add.html', {
+        'form': form,
+        'commodity_transaction': commodity_transaction,
+    })
 
 
 def addTransaction(request):
@@ -213,7 +295,6 @@ def edit_transaction(request):
         # getting models
         transaction = Transaction.objects.get(id=pk, user=request.user)
         commodity = Commodity.objects.get(name=data['commodity'], user=request.user)
-        print(commodity.investment, 'crypto')
         # setting values to variables
         value = data['value']
         weight = data['weight']

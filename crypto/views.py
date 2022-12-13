@@ -2,7 +2,7 @@ import json
 from decimal import Decimal
 
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from django.views.generic import ListView
 from yahooquery import Ticker
@@ -148,7 +148,7 @@ def crypto_list_view(request, year):
         "investments": list(map(float, my_investments_list)),
         "assetsGains": list(map(float, my_assetsGains_list)),
         "pie_chart_date": compute_pie_chart_transaction_types(cryptos, totalMarketValue, crypto_prices),
-        "years_list":years_list
+        "years_list": years_list
     }
     return render(request, "crypto/main.html", context)
 
@@ -257,6 +257,87 @@ def delete_crypto(request, pk):
     return render(request, "crypto/delete.html", context)
 
 
+def crypto_transaction_list(request, year=''):
+    if year == '':
+        crypto = Crypto.objects.filter(user=request.user).values()
+        transactions = CryptoTransaction.objects.filter(user=request.user).order_by('date')
+    else:
+        crypto = Crypto.objects.filter(user=request.user, year=year).values()
+        transactions = CryptoTransaction.objects.filter(date__year=year, user=request.user).order_by('date')
+
+    transactions_table = []
+    for transaction in transactions:
+        totalInvestment = float(transaction.quantity) * float(transaction.spot_price)
+        transactions_table.append({
+            "id": transaction.id,
+            "coin": transaction.coin,
+            "transaction_type": transaction.transaction_type,
+            "quantity": transaction.quantity,
+            "purchasedValue": transaction.spot_price,
+            "date": transaction.date,
+            "totalInvestment": totalInvestment,
+        })
+    years = CryptoTransaction.objects.values_list("date__year").distinct()
+    years_list = []
+    for data in years:
+        for item in data:
+            years_list.append(item)
+    years_list = sort_years_list(years_list)
+    print(years_list, 'years_list')
+    context = {
+        "year": year,
+        "transactions": transactions_table,
+        "crypto": crypto,
+        "years_list": years_list,
+    }
+    return render(request, 'cryptoTransactions/transaction_list.html', context=context)
+
+
+def add_sufi_transaction(request):
+    if request.method == "POST":
+        form = TransactionForm(request.user, request.POST)
+        if form.is_valid():
+            crypto_transaction = form.save(commit=False)
+            crypto_transaction.user = request.user
+            crypto_transaction.save()
+            return HttpResponse(
+                status=204,
+                headers={
+                    'HX-Trigger': json.dumps({
+                        "transactionListChanged": None,
+                        "showMessage": f"Transaction for {crypto_transaction.coin} is added."
+                    })
+                })
+    else:
+        form = TransactionForm(request.user)
+    return render(request, "cryptoTransactions/add.html", {"form": form})
+
+
+def edit_sufi_transaction(request, pk):
+    crypto_transaction = get_object_or_404(CryptoTransaction, pk=pk)
+    if request.method == "POST":
+        form = TransactionForm(request.user, request.POST, instance=crypto_transaction)
+        if form.is_valid():
+            crypto_transaction = form.save(commit=False)
+            crypto_transaction.user = request.user
+            crypto_transaction.save()
+            return HttpResponse(
+                status=204,
+                headers={
+                    'HX-Trigger': json.dumps({
+                        "transactionListChanged": None,
+                        "showMessage": f"{crypto_transaction.coin} updated."
+                    })
+                }
+            )
+    else:
+        form = TransactionForm(request.user, instance=crypto_transaction)
+    return render(request, 'cryptoTransactions/add.html', {
+        'form': form,
+        'crypto_transactions': crypto_transactions,
+    })
+
+
 def add_crypto(request):
     if request.method == "POST":
         # getting body data from request
@@ -264,6 +345,7 @@ def add_crypto(request):
         obj = Crypto.objects.create(
             name=cryptoData['coin'],
             ticker=cryptoData['ticker'],
+            year=cryptoData['year'],
             user=request.user
         )
 
@@ -305,7 +387,7 @@ def add_transaction(request):
                 }
                 return JsonResponse(data)
         obj = CryptoTransaction.objects.create(
-            coin=Crypto.objects.get(name=transactionData["coin"],user=request.user),
+            coin=Crypto.objects.get(name=transactionData["coin"], user=request.user),
             transaction_type=transactionData['transaction_type'],
             quantity=transactionData['quantity'],
             spot_price=transactionData['spot_price'],
