@@ -104,98 +104,16 @@ function popitup(url) {
           <th style="text-align: left;" scope="col">Reminder</th>
           <th style="text-align: right;" scope="col">Details</th>
           <th style="text-align: right;" scope="col">Due Date</th>
+            <th style="text-align: right;" scope="col">Action</th>
         </tr>
       </thead>
-      <tbody>
-        {% for obj in notifications %}
-        <tr>
-          <td style="text-align: left;">{{ obj.reminder.property.name }}</td>
-          <td style="text-align: right;">{{ obj.reminder.detail }}</td>
-          <td style="text-align: right;">{{ obj.reminder.due_date }} </td>
-          <td style="text-align: right;" style="text-align:right">
-<!--            <a href="popupex.html" onclick="return popitup('/reminders/add_reminder/{{ obj.id }}')" style="text-decoration: none;">-->
-<!--              <button class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit">-->
-<!--                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">-->
-<!--                  <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>-->
-<!--                  <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>-->
-<!--                </svg>-->
-<!--              </button>-->
-<!--            </a>-->
-<!--            <a href="popupex.html" onclick="return popitup('/reminders/{{ obj.pk }}/delete')" style="text-decoration: none;">-->
-<!--              <button class="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete">-->
-<!--                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">-->
-<!--                  <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>-->
-<!--                  <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>-->
-<!--                </svg>-->
-<!--              </button>-->
-<!--            </a>-->
-
-                  <!--                            </a>-->
-                  <div class="modal fade" id=basicModal{{obj.id}} tabindex="-1">
-                      <div class="modal-dialog">
-                          <form action="" method=POST>
-                              <div class="modal-content">
-                                  <div class="modal-header">
-                                      <h5 class="modal-title">Edit Transaction</h5>
-                                      <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"
-                                              type="button"></button>
-                                  </div>
-                                  <div class="modal-body">
-                                      <form>
-                                          <div class="mb-3">
-                                               <label class="form-label">Property</label>
-                                            <select class="form-select" name="property_edit{{obj.id}}" id="property_edit{{obj.id}}" aria-label="Default select example" required>
-                                                <option value="{{ obj.property.name }}" selected>{{ obj.property.name }}</option>
-                                                {% for property in property %}
-                                                <option value="{{property}} ">{{property}}</option>
-                                                {% endfor %}
-                                                </select>
-                                               <label for="detail_edit{{obj.id}}" class="form-label">Detail</label>
-                                                <textarea class="form-control" id="detail_edit{{obj.id}}" rows="3">{{obj.detail}}</textarea>
-                                              <label class="form-label">Due Date</label>
-                                                <input class="form-control" name="date_edit{{obj.id}}" id="date_edit{{obj.id}}" type="text" value="{{obj.due_date}}" disabled>
-                                              <label class="form-label">Reminder type</label>
-                                                <select class="form-select" name="type_edit{{obj.id}}" id="type_edit{{obj.id}}" aria-label="Default select example" required>
-                                                <option value="{{obj.reminder_type}}" selected>{{obj.reminder_type}}</option>
-                                                <option value="oneoff">One Off</option>
-                                                <option value="weekly">Weekly</option>
-                                                <option value="bi-weekly">Bi-Weekly</option>
-                                                <option value="monthly">Monthly</option>
-                                                <option value="yearly">Yearly</option>
-                                                <option value="quarterly">Quarterly</option>
-                                            </select>
-                                          </div>
-                                          <button class="btn btn-primary" type="button" onclick="EditReminder({{obj.id}})">Submit</button>
-                                      </form>
-                                  </div>
-                              </div>
-                          </form>
-                      </div>
-                  </div>
-
-                      <!-- Modal -->
-                      <div class="modal fade" id="deleteModal{{obj.id}}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h5 class="modal-title" id="deleteModalLabelAssets">Delete Property</h5>
-                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                                <div class="modal-body deleteForm">
-                                  <h2 class="">You are about to delete this Property</h2>
-                                  <p>Are you sure you want to delete<strong> {{ obj.detail  }}</strong>?</p>
-                                  <p>This action cannot be undone.</p>
-                                  <p>All transctions for this fund will be lost</p>
-                                    <button class="btn btn-danger form-control" type="button" onclick="deleteReminder({{obj.id}})">Delete</button>
-                                </div>
-                          </div>
-                        </div>
-                      </div>
-          </td>
-        </tr>
-        {% endfor %}
-
-      </tbody>
+      <tbody hx-trigger="load,transactionListChanged" hx-get="{% url 'reminders:table-list' %}" hx-target="this">
+          <tr>
+            <td class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </td>
+          </tr>
+        </tbody>
     </table>
   </div>
 

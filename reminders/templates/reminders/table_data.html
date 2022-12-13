@@ -1,0 +1,22 @@
+{% for obj in notifications %}
+<tr>
+    <td style="text-align: left;">
+        {% if obj.mark_read == False %}
+        <b>{{obj.reminder.property.name}}</b>
+        {% else %}
+        {{obj.reminder.property.name}}
+        {% endif %}
+    </td>
+    <td style="text-align: right;">{{ obj.reminder.detail }}</td>
+    <td style="text-align: right;">{{ obj.reminder.due_date }}</td>
+    <td style="text-align: right;">
+        {% if obj.mark_read == False %}
+        <i class="bi bi-envelope" hx-get="{% url 'reminders:update-notifications' obj.id %}" data-bs-placement="bottom" data-bs-toggle="tooltip" style="cursor:pointer;"
+           title="mark as read"></i>
+        {% else %}
+        <i class="bi bi-envelope-open" hx-get="{% url 'reminders:update-notifications' obj.id %}" data-bs-placement="bottom" data-bs-toggle="tooltip" style="cursor:pointer;"
+           title="mark as unread"></i>
+        {% endif %}
+    </td>
+</tr>
+{% endfor %}

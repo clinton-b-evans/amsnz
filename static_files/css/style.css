@@ -451,7 +451,6 @@ h1, h2, h3, h4, h5, h6 {
   padding: 3px 6px;
 }
 .header-nav .notifications .notification-item {
-  display: flex;
   align-items: center;
   padding: 15px 10px;
   transition: 0.3s;

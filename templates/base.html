@@ -82,7 +82,7 @@
 
         <li class="nav-item dropdown">
 
-          <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+          <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown" data-bs-auto-close="false">
 
             <i class="bi bi-bell"></i>
             <span class="badge bg-primary badge-number">{{length}}</span>
@@ -96,20 +96,8 @@
             <li>
               <hr class="dropdown-divider">
             </li>
-            {% for data in unread %}
-            <li class="notification-item">
-              <i class="bi bi-exclamation-circle text-warning"></i>
-              <div>
-                <h4>{{data.reminder.property.name}}</h4>
-                <p>{{data.reminder.detail}}</p>
-                <p>{{data.reminder.due_date}}</p>
-              </div>
+            <li hx-trigger="load,transactionListChanged" hx-get="{% url 'reminders:list' %}" hx-target="this">
             </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            {% endfor %}
-
 
 
 
@@ -427,6 +415,13 @@
         event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
       })
     </script>
+  <script>
+    function Kuch(){
+        console.log('kuch');
+    }
+</script>
+    <script src="https://unpkg.com/htmx.org@1.6.1/dist/htmx.min.js"></script>
+
 </body>
 
 </html>

@@ -6,7 +6,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 
 from incomestatements_property.views import sort_years_list
 from properties.models import Property
-from reminders.models import Reminder
+from reminders.models import Reminder, Notification
 from django.db.models import Sum
 from datetime import date, datetime
 from .forms import ReminderForm
@@ -23,6 +23,66 @@ def home_view(request):
 
 def notifications_view(request):
     return render(request, "reminders/notifications.html")
+
+
+def update_notifications(request, id):
+    print(request, 'id=>', id)
+    notification = Notification.objects.get(id=id)
+    if notification.mark_read:
+        notification.mark_read = False
+    else:
+        notification.mark_read = True
+    notification.save()
+    print(notification.mark_read, 'mark')
+    return HttpResponse(
+        status=204,
+        headers={
+            'HX-Trigger': json.dumps({
+                "transactionListChanged": None,
+                "showMessage": f"{notification} updated."
+            })
+        }
+    )
+
+
+def notifications_list(request):
+    unread_notifications = Notification.objects.filter(reminder__user=request.user, mark_read=False)
+    read_notifications = Notification.objects.filter(reminder__user=request.user, mark_read=True)
+    notifications = []
+    for i in range(0, len(unread_notifications)):
+        notifications.append(unread_notifications[i])
+    for i in range(0, len(read_notifications)):
+        notifications.append(read_notifications[i])
+    notifications_to_show = []
+    loop = 0
+    for i in range(0, len(notifications)):
+        if loop < 5:
+            notifications_to_show.append(notifications[i])
+        loop += 1
+        print('index', i)
+    context = {
+        "unread": notifications,
+        "notifications": notifications,
+        "length": len(notifications),
+        "notifications_to_show": notifications_to_show
+    }
+    return render(request, 'reminders/notifications_list.html', context=context)
+
+
+def notifications_table_list(request):
+    unread_notifications = Notification.objects.filter(reminder__user=request.user, mark_read=False)
+    read_notifications = Notification.objects.filter(reminder__user=request.user, mark_read=True)
+    notifications = []
+    for i in range(0, len(unread_notifications)):
+        notifications.append(unread_notifications[i])
+    for i in range(0, len(read_notifications)):
+        notifications.append(read_notifications[i])
+    context = {
+        "unread": notifications,
+        "notifications": notifications,
+        "length": len(notifications)
+    }
+    return render(request, 'reminders/table_data.html', context=context)
 
 
 def reminder_list_view(request, year):

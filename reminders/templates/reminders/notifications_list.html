@@ -1,0 +1,31 @@
+{% for data in notifications_to_show %}
+<li class="notification-item">
+    <div class="d-flex justify-content-between">
+        <div>
+            <h4>
+                {% if data.mark_read == False %}
+                <b>{{data.reminder.property.name}}</b>
+                {% else %}
+                {{data.reminder.property.name}}
+                {% endif %}
+            </h4>
+            <p>{{data.reminder.detail}}</p>
+            <p>{{data.reminder.due_date}}</p>
+        </div>
+        <div>
+            {% if data.mark_read == False %}
+            <i class="bi bi-envelope" hx-get="{% url 'reminders:update-notifications' data.id %}" data-bs-placement="bottom" data-bs-toggle="tooltip" style="cursor:pointer;"
+               title="mark as read"></i>
+            {% else %}
+            <i class="bi bi-envelope-open" hx-get="{% url 'reminders:update-notifications' data.id %}" data-bs-placement="bottom" data-bs-toggle="tooltip" style="cursor:pointer;"
+               title="mark as unread"></i>
+            {% endif %}
+        </div>
+    </div>
+
+</li>
+<li>
+    <hr class="dropdown-divider">
+</li>
+
+{% endfor %}
