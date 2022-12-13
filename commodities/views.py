@@ -10,7 +10,7 @@ from yfinance import ticker
 
 from incomestatements_property.views import sort_years_list
 from .models import Commodity, Transaction
-from .forms import CommodityForm, TransactionForm
+from .forms import TransactionForm, CommodityClassForm
 from datetime import date
 import yfinance as yf
 from concurrent.futures import ThreadPoolExecutor
@@ -43,9 +43,9 @@ def compute_pie_chart_transaction_types(commodities, totalMarketValue, commodity
     pie_chart_data = []
     for commodity in commodities:
         percentage = ((float(commodity.weight) * float(
-            commodity_prices[commodity.commodity_class])) / totalMarketValue) * 100
+            commodity_prices[commodity.commodity_class.commodity_class])) / totalMarketValue) * 100
         pie_chart_data.append({
-            "commodity": commodity.name,
+            "commodity": commodity.commodity_class.name,
             "percentage": percentage
         })
     return pie_chart_data
@@ -55,7 +55,7 @@ def generate_bar_graph_series_data(commodities, commodity_prices):
     investments = []
     assetsGains = []
     for commodity in commodities:
-        spotPrice = commodity_prices[commodity.commodity_class]
+        spotPrice = commodity_prices[commodity.commodity_class.commodity_class]
         currentMarketValue = float(commodity.weight) * spotPrice
         assetsGains.append(
             0 if float(currentMarketValue) < float(commodity.investment) else float(currentMarketValue) - float(
@@ -76,7 +76,7 @@ def commodity_list_view(request, year):
     totalMarketValue = 0
 
     for commodity in commodities:
-        spotPrice = commodity_prices[commodity.commodity_class]
+        spotPrice = commodity_prices[commodity.commodity_class.commodity_class]
         totalInvestment += commodity.investment
         currentMarketValue = float(commodity.weight) * spotPrice
         totalMarketValue += currentMarketValue
@@ -86,7 +86,7 @@ def commodity_list_view(request, year):
         elif (float(currentMarketValue) - float(commodity.investment)) < 0:
             status = 'loss'
         transactions_table.append({
-            "commodity": commodity.name,
+            "commodity": commodity.commodity_class.name,
             "weight": commodity.weight,
             "totalInvestment": commodity.investment,
             "spotPrice": spotPrice,
@@ -108,7 +108,7 @@ def commodity_list_view(request, year):
         "commodities_list": commodity_prices,
         "totalInvestmentSum": totalInvestment,
         "currentMarketValueSum": totalMarketValue,
-        "usedCommodities": commodities.values_list('name', flat=True).distinct(),
+        "usedCommodities": commodities.values_list('commodity_class__name', flat=True).distinct(),
         "investments": list(map(float, my_investments_list)),
         "assetsGains": list(map(float, my_assetsGains_list)),
         "pie_chart_date": compute_pie_chart_transaction_types(commodities, totalMarketValue, commodity_prices),
@@ -116,6 +116,26 @@ def commodity_list_view(request, year):
         "year": year,
     }
     return render(request, "commodities/main.html", context)
+
+
+def add_commodity(request):
+    if request.method == "POST":
+        form = CommodityClassForm(request.user, request.POST)
+        if form.is_valid():
+            commodity = form.save(commit=False)
+            commodity.user = request.user
+            commodity.save()
+            return HttpResponse(
+                status=204,
+                headers={
+                    'HX-Trigger': json.dumps({
+                        "transactionListChanged": None,
+                        "showMessage": f"{commodity.name} added."
+                    })
+                })
+    else:
+        form = CommodityClassForm(request.user)
+    return render(request, "commodities/add.html", {"form": form})
 
 
 @login_required(login_url='/login/')
@@ -381,41 +401,6 @@ def commodity_detail_view(request, **kwargs):
         "commodity": pk,
     }
     return render(request, "commodities/detail.html", context)
-
-
-def add_commodity(request):
-    submitted = False
-    if request.method == "POST":
-        commodity_class = request.POST.get("commodity_class")
-        url = f"https://commodities-api.com/api/latest?access_key=rhk8fw6wof9m507vu59ja24d1cxq56340g3nnt7u81zz0njwzujpj11c93p1&base=USD&symbols={commodity_class}"
-        response = requests.request("GET", url)
-        result = response.json()
-        spot_price = 0
-        if result["data"]["success"]:
-            last_price = 1 / result["data"]["rates"][commodity_class]
-            string_price = "{:.4f}".format(last_price)
-            spot_price += float(string_price)
-        else:
-            return HttpResponse(
-                "No ticker data or an invalid value has been specified, Data not found "
-            )
-
-        form = CommodityForm(request.POST)
-        if form.is_valid():
-            form = form.save(commit=False)
-            form.spot_price = spot_price
-            form.save()
-            return HttpResponse(
-                '<script type="text/javascript">window.close()</script>'
-            )
-    else:
-        form = CommodityForm
-        if "submitted" in request.GET:
-            submitted = True
-    form = CommodityForm
-    return render(
-        request, "commodities/add.html", {"form": form, "submitted": submitted}
-    )
 
 
 def update_commodity(request, pk):

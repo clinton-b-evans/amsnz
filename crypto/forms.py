@@ -3,7 +3,7 @@ from decimal import Decimal
 
 from django.core.exceptions import ValidationError
 from django.forms import ModelForm
-from .models import Crypto, CryptoTransaction
+from .models import Crypto, CryptoTransaction, CryptoTicker
 from django import forms
 
 
@@ -14,13 +14,33 @@ class DateInput(forms.DateInput):
 class CryptoForm(ModelForm):
     class Meta:
         model = Crypto
-        fields = ("name", "ticker", "quantity")
+        fields = ("crypto_ticker", "quantity")
 
+
+class CryptoTickerForm(ModelForm):
+    class Meta:
+        model = CryptoTicker
+        fields = ("name", "ticker")
+
+    def __init__(self, user, *args, **kwargs):
+        super(CryptoTickerForm, self).__init__(*args, **kwargs)
+        self.user = user
+
+    def clean_ticker(self):
+        ticker = self.cleaned_data["ticker"]
+        try:
+            CryptoTicker.objects.get(ticker=ticker, user=self.user)
+        except CryptoTicker.DoesNotExist:
+            pass
+        else:
+            raise ValidationError('Ticker with this Name already exists.')
+        # Always return cleaned_data
+        return ticker
 
 class TransactionForm(ModelForm):
     class Meta:
         model = CryptoTransaction
-        fields = ("coin",
+        fields = ("crypto_ticker",
                   "transaction_type",
                   "spot_price",
                   "quantity",
@@ -46,12 +66,12 @@ class TransactionForm(ModelForm):
         else:
             self.is_edit = False
         transaction_type = self.data['transaction_type']
-        coin = self.cleaned_data['coin']
+        crypto_ticker = self.cleaned_data['crypto_ticker']
         quantity = self.cleaned_data['quantity']
         spot_price = float(self.data['spot_price'])
         date = self.data['date']
         date = datetime.datetime.strptime(date, '%Y-%m-%d').date()
-        crypto, created = Crypto.objects.get_or_create(name=coin,
+        crypto, created = Crypto.objects.get_or_create(crypto_ticker=crypto_ticker,
                                                       user=self.user,
                                                       year=str(date.year))
         if self.is_edit is False:

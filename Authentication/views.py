@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 
-from commodities.models import Commodity
+from commodities.models import Commodity, CommodityClass
 from retirement_goals.models import RetirementGoal
 from .forms import RegisterUserForm
 from django.contrib.auth import login, authenticate, logout
@@ -34,28 +34,24 @@ def register_user_view(request):
                 stocks_swr=3.00,
                 user=User.objects.get(username=form.cleaned_data['username'])
             )
-            Commodity.objects.create(
+            CommodityClass.objects.create(
                 name='Gold',
                 commodity_class='GC=F',
-                year=year,
                 user=User.objects.get(username=form.cleaned_data['username'])
             )
-            Commodity.objects.create(
+            CommodityClass.objects.create(
                 name='Silver',
                 commodity_class='SI=F',
-                year=year,
                 user=User.objects.get(username=form.cleaned_data['username'])
             )
-            Commodity.objects.create(
+            CommodityClass.objects.create(
                 name='Platinum',
                 commodity_class='PL=F',
-                year=year,
                 user=User.objects.get(username=form.cleaned_data['username'])
             )
-            Commodity.objects.create(
+            CommodityClass.objects.create(
                 name='Palladium',
                 commodity_class='PA=F',
-                year=year,
                 user=User.objects.get(username=form.cleaned_data['username'])
             )
             # user = form.cleaned_data.get("username")

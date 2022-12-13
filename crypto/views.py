@@ -9,7 +9,7 @@ from yahooquery import Ticker
 
 from incomestatements_property.views import sort_years_list
 from .models import Crypto, CryptoTransaction, CrudUser
-from .forms import CryptoForm, TransactionForm
+from .forms import CryptoForm, TransactionForm, CryptoTickerForm
 import yfinance as yf
 from datetime import date, timedelta
 
@@ -63,11 +63,11 @@ def compute_pie_chart_transaction_types(cryptos, totalMarketValue, crypto_prices
     pie_chart_data = []
     for crypto in cryptos:
         if crypto.quantity > 0:
-            percentage = ((float(crypto.quantity) * float(crypto_prices[crypto.ticker])) / totalMarketValue) * 100
+            percentage = ((float(crypto.quantity) * float(crypto_prices[crypto.crypto_ticker.ticker])) / totalMarketValue) * 100
         else:
             percentage = 0
         pie_chart_data.append({
-            "name": crypto.name,
+            "name": crypto.crypto_ticker.name,
             "percentage": percentage
         })
     return pie_chart_data
@@ -77,7 +77,7 @@ def generate_bar_graph_series_data(cryptos, crypto_prices):
     investments = []
     assetsGains = []
     for crypto in cryptos:
-        spotPrice = crypto_prices[crypto.ticker]
+        spotPrice = crypto_prices[crypto.crypto_ticker.ticker]
         currentMarketValue = float(crypto.quantity) * float(spotPrice)
         assetsGains.append(
             0 if float(currentMarketValue) < float(crypto.investment) else float(currentMarketValue) - float(
@@ -102,7 +102,7 @@ def get_crypto_price_data(tickers):
 @login_required(login_url='/login/')
 def crypto_list_view(request, year):
     cryptos = Crypto.objects.filter(user=request.user).exclude(quantity=0)
-    used_cryptos_ticker = cryptos.values_list('ticker', flat=True).distinct()
+    used_cryptos_ticker = cryptos.values_list('crypto_ticker__ticker', flat=True).distinct()
     crypto_prices = get_crypto_price_data(used_cryptos_ticker)
     investments, assetsGains = generate_bar_graph_series_data(cryptos, crypto_prices)
 
@@ -111,7 +111,7 @@ def crypto_list_view(request, year):
     totalMarketValue = 0
 
     for crypto in cryptos:
-        spotPrice = crypto_prices[crypto.ticker]
+        spotPrice = crypto_prices[crypto.crypto_ticker.ticker]
         totalInvestment += crypto.investment
         currentMarketValue = float(crypto.quantity) * spotPrice
         totalMarketValue += currentMarketValue
@@ -121,8 +121,8 @@ def crypto_list_view(request, year):
         elif (float(currentMarketValue) - float(crypto.investment)) < 0:
             status = 'loss'
         transactions_table.append({
-            "name": crypto.name,
-            "ticker": crypto.ticker,
+            "name": crypto.crypto_ticker.name,
+            "ticker": crypto.crypto_ticker.ticker,
             "quantity": crypto.quantity,
             "totalInvestment": crypto.investment,
             "spotPrice": spotPrice,
@@ -144,7 +144,7 @@ def crypto_list_view(request, year):
         "crypto_prices": crypto_prices,
         "totalInvestment": totalInvestment,
         "totalMarketValue": totalMarketValue,
-        "usedCrypto": cryptos.values_list('name', flat=True).distinct(),
+        "usedCrypto": cryptos.values_list('crypto_ticker__name', flat=True).distinct(),
         "investments": list(map(float, my_investments_list)),
         "assetsGains": list(map(float, my_assetsGains_list)),
         "pie_chart_date": compute_pie_chart_transaction_types(cryptos, totalMarketValue, crypto_prices),
@@ -166,7 +166,7 @@ def crypto_transactions(request, year):
         totalInvestment = float(transaction.quantity) * float(transaction.spot_price)
         transactions_table.append({
             "id": transaction.id,
-            "crypto_name": transaction.coin,
+            "crypto_name": transaction.crypto_ticker.name,
             "transaction_type": transaction.transaction_type,
             "quantity": transaction.quantity,
             "purchasedValue": transaction.spot_price,
@@ -189,44 +189,24 @@ def crypto_transactions(request, year):
     return render(request, "cryptoTransactions/transactions.html", context)
 
 
-# def add_crypto(request):
-#     today = date.today().isoformat()
-#
-#     submitted = False
-#     if request.method == "POST":
-#         ticker_input = request.POST.get("ticker")
-#         ticker = ticker_input + "-USD"
-#
-#         yf_data = yf.Ticker(ticker)
-#         yf_data = yf_data.history(today, interval="60m")
-#         spot_price = 0.0
-#
-#         if yf_data["Close"].empty:
-#             return HttpResponse(
-#                 f"-{ticker_input} No data found, symbol/Ticker may be de-listed!. Kindly try again with correct Ticker."
-#             )
-#         else:
-#             last_price = yf_data["Close"][0]
-#             string_price = "{:.4f}".format(last_price)
-#             spot_price += float(string_price)
-#
-#         form = CryptoForm(request.POST)
-#         if form.is_valid():
-#             form = form.save(commit=False)
-#             form.spot_price = spot_price
-#             form.save()
-#             return HttpResponse(
-#                 '<script type="text/javascript">window.close()</script>'
-#             )
-#         else:
-#             form = CryptoForm
-#             if "submitted" in request.GET:
-#                 submitted = True
-#         # else:
-#         #     messages.error(request, "This Ticker Spot price is not available!")
-#         #     return redirect("crypto:crypto-add")
-#     form = CryptoForm
-#     return render(request, "crypto/add.html", {"form": form, "submitted": submitted})
+def add_crypto(request):
+    if request.method == "POST":
+        form = CryptoTickerForm(request.user, request.POST)
+        if form.is_valid():
+            crypto = form.save(commit=False)
+            crypto.user = request.user
+            crypto.save()
+            return HttpResponse(
+                status=204,
+                headers={
+                    'HX-Trigger': json.dumps({
+                        "transactionListChanged": None,
+                        "showMessage": f"{crypto.name} added."
+                    })
+                })
+    else:
+        form = CryptoTickerForm(request.user)
+    return render(request, "crypto/add.html", {"form": form})
 
 
 def update_crypto(request, pk):
@@ -270,7 +250,7 @@ def crypto_transaction_list(request, year=''):
         totalInvestment = float(transaction.quantity) * float(transaction.spot_price)
         transactions_table.append({
             "id": transaction.id,
-            "coin": transaction.coin,
+            "coin": transaction.crypto_ticker.name,
             "transaction_type": transaction.transaction_type,
             "quantity": transaction.quantity,
             "purchasedValue": transaction.spot_price,
@@ -305,7 +285,7 @@ def add_sufi_transaction(request):
                 headers={
                     'HX-Trigger': json.dumps({
                         "transactionListChanged": None,
-                        "showMessage": f"Transaction for {crypto_transaction.coin} is added."
+                        "showMessage": f"Transaction for {crypto_transaction.crypto_ticker.name} is added."
                     })
                 })
     else:
@@ -336,25 +316,6 @@ def edit_sufi_transaction(request, pk):
         'form': form,
         'crypto_transactions': crypto_transactions,
     })
-
-
-def add_crypto(request):
-    if request.method == "POST":
-        # getting body data from request
-        cryptoData = json.loads(request.body)
-        obj = Crypto.objects.create(
-            name=cryptoData['coin'],
-            ticker=cryptoData['ticker'],
-            year=cryptoData['year'],
-            user=request.user
-        )
-
-        user = {'id': obj.id, 'ticker': obj.ticker, 'name': obj.name}
-
-        data = {
-            'user': user
-        }
-        return JsonResponse(data)
 
 
 def add_transaction(request):

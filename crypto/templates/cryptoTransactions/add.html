@@ -7,9 +7,9 @@
   </div>
   <div class="modal-body">
     <div class="mb-3">
-      <label for="{{ form.coin.id_for_label }}" class="form-label">Coin</label>
-      {% render_field form.coin class="form-control" placeholder="Coin" %}
-      <div class="invalid-feedback">{{ form.coin.errors|first }}</div>
+      <label for="{{ form.crypto_ticker.id_for_label }}" class="form-label">Crypto Ticker</label>
+      {% render_field form.crypto_ticker class="form-control" placeholder="crypto_ticker" %}
+      <div class="invalid-feedback">{{ form.crypto_ticker.errors|first }}</div>
     </div>
     <div class="mb-3">
       <label for="{{ form.transaction_type.id_for_label }}" class="form-label">Transaction type</label>

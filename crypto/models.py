@@ -11,13 +11,24 @@ class CrudUser(models.Model):
     age = models.IntegerField(blank=True, null=True)
 
 
-class Crypto(models.Model):
+class CryptoTicker(models.Model):
     name = models.CharField(
         max_length=50,
     )
     ticker = models.CharField(
         max_length=50,
     )
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
+
+    def __str__(self):
+        return f"{self.name} ({self.ticker})"
+
+    class Meta:
+        unique_together = (('ticker', 'user'),)
+
+
+class Crypto(models.Model):
+    crypto_ticker = models.ForeignKey(CryptoTicker, on_delete=models.CASCADE, blank=False, null=False)
     quantity = models.FloatField(
         null=False, blank=False, default=0.0,
     )
@@ -27,12 +38,11 @@ class Crypto(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
     year = models.CharField(choices=YEAR_CHOICES, null=False, blank=False, max_length=4)
 
-
     class Meta:
-        unique_together = ('user', 'ticker', 'name')
+        unique_together = ('user', 'crypto_ticker')
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.crypto_ticker}"
 
 
 class CryptoTransaction(models.Model):
@@ -40,7 +50,7 @@ class CryptoTransaction(models.Model):
         ("Buy", "Buy"),
         ("Sell", "Sell"),
     )
-    coin = models.ForeignKey(Crypto, on_delete=models.CASCADE, null=True, blank=True)
+    crypto_ticker = models.ForeignKey(CryptoTicker, on_delete=models.CASCADE, blank=False, null=False)
     transaction_type = models.CharField(
         choices=TRANSACTION_TYPE_SOURCES, max_length=100, null=True, blank=True
     )

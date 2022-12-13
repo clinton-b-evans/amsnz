@@ -3,7 +3,7 @@ from decimal import Decimal
 
 from django.core.exceptions import ValidationError
 from django.forms import ModelForm
-from .models import Commodity, Transaction
+from .models import Commodity, Transaction, CommodityClass
 from django import forms
 
 
@@ -11,10 +11,25 @@ class DateInput(forms.DateInput):
     input_type = "date"
 
 
-class CommodityForm(ModelForm):
+class CommodityClassForm(ModelForm):
     class Meta:
-        model = Commodity
-        fields = ("commodity_class", "weight")
+        model = CommodityClass
+        fields = ("name", "commodity_class")
+
+    def __init__(self, user, *args, **kwargs):
+        super(CommodityClassForm, self).__init__(*args, **kwargs)
+        self.user = user
+
+    def clean_ticker(self):
+        commodity_class = self.cleaned_data["commodity_class"]
+        try:
+            CommodityClass.objects.get(commodity_class=commodity_class, user=self.user)
+        except CommodityClass.DoesNotExist:
+            pass
+        else:
+            raise ValidationError('Commodity Class with this Name already exists.')
+        # Always return cleaned_data
+        return commodity_class
 
 
 class TransactionForm(ModelForm):
@@ -51,7 +66,7 @@ class TransactionForm(ModelForm):
         value = float(self.data['value'])
         date = self.data['date']
         date = datetime.datetime.strptime(date, '%Y-%m-%d').date()
-        commodity, created = Commodity.objects.get_or_create(name=commodity.name,
+        commodity, created = Commodity.objects.get_or_create(commodity_class=commodity,
                                                              user=self.user,
                                                              year=str(date.year))
         if self.is_edit is False:

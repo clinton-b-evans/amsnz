@@ -470,7 +470,9 @@ def index_funds_summary(request, year):
                                  etf_data.filter(stock_ticker__stock_category="OTHERS"))
     if financial_plan_data:
         if financial_plan_data[0]["stocks"] != 0 and financial_plan_data[0]["stocks"] is not None:
-            etf_progress = (etf_total_amount / financial_plan_data[0]["stocks"]) * 100
+            financial_data = float(financial_plan_data[0]["stocks"] / 100) * float(
+                financial_plan_data[0]["networth_goal"])
+            etf_progress = (etf_total_amount / financial_data) * 100
     context = {
         "etf_qs": etf_data,
         "etf_total_amount": etf_total_amount,
@@ -501,18 +503,19 @@ def get_crypto_price_data(tickers):
 def crypto_summary(request, year):
     crypto_data = Crypto.objects.filter(user=request.user, year=year)
     financial_plan_data = RetirementGoal.objects.filter(user=request.user, start_date__year=year).values()
-    print(crypto_data, 'crypto_data')
-    used_cryptos_ticker = crypto_data.values_list('ticker', flat=True).distinct()
+    used_cryptos_ticker = crypto_data.values_list('crypto_ticker__ticker', flat=True).distinct()
     crypto_prices = get_crypto_price_data(used_cryptos_ticker)
     crypto_total_amount = 0
     crypto_progress = 0
     if crypto_data:
-        crypto_total_amount = sum(data.quantity * crypto_prices[data.ticker] for data in crypto_data)
+        crypto_total_amount = sum(data.quantity * crypto_prices[data.crypto_ticker.ticker] for data in crypto_data)
         for crypto in crypto_data:
-            crypto.investment = crypto.quantity * crypto_prices[crypto.ticker]
+            crypto.investment = crypto.quantity * crypto_prices[crypto.crypto_ticker.ticker]
     if financial_plan_data:
         if financial_plan_data[0]["crypto"] != 0 and financial_plan_data[0]["crypto"] is not None:
-            crypto_progress = (crypto_total_amount / financial_plan_data[0]["crypto"]) * 100
+            financial_data = float(financial_plan_data[0]["crypto"] / 100) * float(
+                financial_plan_data[0]["networth_goal"])
+            crypto_progress = (crypto_total_amount / financial_data) * 100
 
     print(crypto_data, 'crypto_data')
     context = {"crypto_qs": crypto_data, "crypto_total_amount": crypto_total_amount, "crypto_progress": crypto_progress}
@@ -545,19 +548,21 @@ def commodity_summary(request, year):
     commodity_prices = get_commodities()
     commodities_total_value = 0
     if commodity_data:
-        commodities_total_value = sum(data.weight * commodity_prices[data.commodity_class] for data in commodity_data)
+        commodities_total_value = sum(data.weight * commodity_prices[data.commodity_class.commodity_class] for data in commodity_data)
     arr = []
     for i in range(1, 5):
         com = {
             "commodity_class": commodities[i],
-            "total": sum(data.weight * commodity_prices[data.commodity_class] for data in
-                         commodity_data.filter(name=commodities[i]))
+            "total": sum(data.weight * commodity_prices[data.commodity_class.commodity_class] for data in
+                         commodity_data.filter(commodity_class__name=commodities[i]))
         }
         arr.append(com)
     commodities_prog = 0
     if financial_plan_data:
         if financial_plan_data[0]["commodities"] != 0 and financial_plan_data[0]["commodities"] is not None:
-            commodities_prog = (commodities_total_value / financial_plan_data[0]["commodities"]) * 100
+            financial_data = float(financial_plan_data[0]["commodities"] / 100) * float(
+                financial_plan_data[0]["networth_goal"])
+            commodities_prog = (commodities_total_value / financial_data) * 100
     context = {
         "commodities_total_value": commodities_total_value,
         "commodities": arr,

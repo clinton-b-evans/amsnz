@@ -49,16 +49,6 @@ function popitup(url) {
 
 
 </script>
-<!--<a href="popupex.html" onclick="return popitup('/commodities/transaction/add')">-->
-<!--    <button class="btn btn-dashboard mb-3" type="button">-->
-<!--        <svg class="bi bi-calendar-plus me-1" fill="currentColor" height="16" viewBox="0 0 16 16"-->
-<!--             width="16" xmlns="http://www.w3.org/2000/svg">-->
-<!--            <path d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>-->
-<!--            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>-->
-<!--        </svg>-->
-<!--        New Transaction-->
-<!--    </button>-->
-<!--</a>-->
 <button type="button" class="btn btn-dashboard mb-3" hx-get="{% url 'commodities:add-sufi-transaction' %}" hx-target="#dialog">
     <svg class="bi bi-calendar-plus me-1" fill="currentColor" height="16" viewBox="0 0 16 16"
              width="16" xmlns="http://www.w3.org/2000/svg">
@@ -67,54 +57,6 @@ function popitup(url) {
         </svg>
   New Transaction
 </button>
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form id="addTransaction">
-            <div class="alert alert-warning alert-dismissible fade show" style="display:none" role="alert" id="quantity_alert">
-                    You don't have sufficient weight for this commodity.
-                  <button type="button" class="btn-close"  onclick="closeAlert()" aria-label="Close"></button>
-                </div>
-            <div class="mb-3">
-                <label class="form-label">Commodity</label>
-                <select class="form-select" name="commodity" id="commodity" aria-label="Default select example">
-                    <option selected>------</option>
-                    {% for commodities in commodity %}
-                    <option value="{{commodities.name}}">{{commodities.name}}</option>
-                    {% endfor %}
-                </select>
-                <label class="form-label">Transaction Type</label>
-                <select class="form-select" name="transaction_type" id="transaction_type" aria-label="Default select example">
-                    <option selected>------</option>
-                    <option value="Buy">Buy</option>
-                    <option value="Sell">Sell</option>
-                </select>
-                <label class="form-label">Weight</label>
-                <input class="form-control" name="weight" min="0" step="any" value=0.0 id="weight" type="number" oninput="validity.valid||
-    (value='');">
-                <div class="alert alert-warning alert-dismissible fade show" style="padding-top: 5px;margin-top: 5px;padding-bottom: 5px;display:none" role="alert" id="quantity_alert">
-                    You don't have sufficient weight for this commodity.
-                  <button type="button" class="btn-close" data-bs-dismiss="alert" style="padding-top: 5px;margin-top: 5px;padding-bottom: 5px;" aria-label="Close"></button>
-                </div>
-                <label class="form-label">Value</label>
-                <input class="form-control" name="value" min="0" step="any" id="value" type="number" oninput="validity.valid||
-    (value='');">
-                <label class="form-label">Date</label>
-                <input class="form-control" name="date" id="date" type="date" value="{% now "Y-m-j" %}">
-            </div>
-            <button class="btn btn-primary form-control" type="button" onclick="addTransaction()">ADD</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
 <div class="row">
     <div class="col-lg-12">
         <div class="card">
