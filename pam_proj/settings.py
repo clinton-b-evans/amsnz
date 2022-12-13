@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     "widget_tweaks",
     "django_crontab",
+    "django_cron"
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -71,10 +72,14 @@ TEMPLATES = [
     },
 ]
 
-CRONJOBS = [
-    ('* * * * *', 'django.core.management.call_command', ['generate_notification'])
+# CRONJOBS = [
+#     ('* * * * *', 'django.core.management.call_command', ['generate_notification'])
+# ]
+# CRONTAB_COMMAND_SUFFIX = '2>&1'
+CRON_CLASSES = [
+    "pam_proj.cron.MyCronJob",
+    # ...
 ]
-CRONTAB_COMMAND_SUFFIX = '2>&1'
 WSGI_APPLICATION = "pam_proj.wsgi.application"
 
 # Database
