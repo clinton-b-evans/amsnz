@@ -13,6 +13,7 @@ from .forms import ReminderForm
 
 from datetime import datetime
 
+
 # Create your views here.
 
 
@@ -20,8 +21,12 @@ def home_view(request):
     return render(request, "reminders/home.html", {})
 
 
+def notifications_view(request):
+    return render(request, "reminders/notifications.html")
+
+
 def reminder_list_view(request, year):
-    property=Property.objects.filter(user=request.user)
+    property = Property.objects.filter(user=request.user)
     reminders = Reminder.objects.filter(user=request.user).order_by("due_date")
     years = Reminder.objects.filter(user=request.user).values_list("due_date__year").distinct()
     years_list = []
@@ -85,7 +90,6 @@ def deletereminder(request):
     return JsonResponse(data)
 
 
-
 def add_reminder(request):
     submitted = False
     if request.method == "POST":
@@ -131,4 +135,3 @@ def delete_reminder(request, pk):
         reminder.delete()
         return HttpResponse('<script type="text/javascript">window.close()</script>')
     return render(request, "reminders/delete.html", context)
-
