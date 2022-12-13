@@ -20,7 +20,7 @@ urlpatterns = [
     path("editreminder/", editreminder, name="editreminder"),
     path("deletereminder/", deletereminder, name="deletereminder"),
     path("notifications/", notifications_view, name="notifications-view"),
-    path("list/", notifications_list, name="list"),
+    path("list/", notifications_list, name="notification-list"),
     path("table_list/", notifications_table_list, name="table-list"),
     path("reminders/update_notifications/<str:id>/", update_notifications, name="update-notifications"),
 ]
