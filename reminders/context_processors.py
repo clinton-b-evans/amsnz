@@ -2,7 +2,7 @@ from reminders.models import Notification
 
 
 def user_notifications(request):
-    if request.user.is_anonymous():
+    if request.user.is_anonymous:
         notifications = Notification.objects.filter(reminder__user_id=request.user)
         unread_notifications = Notification.objects.filter(reminder__user=request.user, mark_read=False)
         unread = []
