@@ -16,7 +16,7 @@ from django.db.models import Count, Sum, FloatField
 
 @login_required(login_url='/login/')
 def incomestatements_list_view(request, year):
-    prop_cat = Category.objects.filter(user=request.user)
+    prop_cat = Category.objects.filter(user=request.user, year=year)
     if request.method == "POST":
         form = IncomeStatementForm(request.POST)
         if form.is_valid():
