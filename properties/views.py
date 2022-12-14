@@ -602,7 +602,7 @@ def personal_summary(request, year):
 
 
 def property_summary(request, year):
-    property_data = Property.objects.filter(user=request.user, purchase_date__year=year)
+    property_data = Property.objects.filter(user=request.user)
     financial_plan_data = RetirementGoal.objects.filter(user=request.user, start_date__year=year).values()
     print(property_data)
     # property_summary
