@@ -1,7 +1,7 @@
 import json
 
 from django.core import serializers
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 
 from incomestatements_property.views import sort_years_list
@@ -102,42 +102,49 @@ def reminder_list_view(request, year):
     return render(request, "reminders/main.html", context)
 
 
-def addreminder(request):
+def add_reminder(request):
     if request.method == "POST":
-        print(request.body, "property")
-        propertyData = json.loads(request.body)
-        obj = Reminder.objects.create(
-            property=Property.objects.filter(user=request.user).get(name=propertyData["property"]),
-            # property=propertyData["property"],
-            detail=propertyData["detail"],
-            due_date=propertyData["date"],
-            reminder_type=propertyData["type"],
-            user=request.user
-        )
-        user = {
-            'id': obj.id
-        }
-        data = {
-            'user': user
-        }
-        print(data, 'data')
-        return JsonResponse(data)
+        form = ReminderForm(request.user, request.POST)
+        if form.is_valid():
+            reminder = form.save(commit=False)
+            reminder.user = request.user
+            reminder.save()
+            return HttpResponse(
+                status=204,
+                headers={
+                    'HX-Trigger': json.dumps({
+                        "transactionListChanged": None,
+                        "showMessage": f"{reminder.detail} added."
+                    })
+                })
+    else:
+        form = ReminderForm(request.user)
+    return render(request, "reminders/add_reminders.html", {"form": form})
 
 
-def editreminder(request):
+def edit_reminder(request, pk):
+    reminder = get_object_or_404(Reminder, pk=pk)
     if request.method == "POST":
-        print(request.body, "property")
-        propertyData = json.loads(request.body)
-        property = Reminder.objects.filter(user=request.user).get(id=propertyData['id'])
-        property.property = Property.objects.filter(user=request.user).get(name=propertyData["property"])
-        property.detail = propertyData['detail']
-        property.reminder_type = propertyData['type']
-        property.user = request.user
-        property.save()
-        data = {
-            'user': "data is updated"
-        }
-        return JsonResponse(data)
+        form = ReminderForm(request.user, request.POST, instance=reminder)
+        if form.is_valid():
+            reminder = form.save(commit=False)
+            reminder.user = request.user
+            reminder.save()
+            return HttpResponse(
+                status=204,
+                headers={
+                    'HX-Trigger': json.dumps({
+                        "transactionListChanged": None,
+                        "showMessage": f"{reminder.name} updated."
+                    })
+                }
+            )
+    else:
+        form = ReminderForm(request.user, instance=reminder)
+    return render(request, 'reminders/add_reminders.html', {
+        'form': form,
+        'incomestatement': reminder,
+    })
 
 
 def deletereminder(request):
@@ -148,25 +155,6 @@ def deletereminder(request):
         'deleted': True
     }
     return JsonResponse(data)
-
-
-def add_reminder(request):
-    submitted = False
-    if request.method == "POST":
-        form = ReminderForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponse(
-                '<script type="text/javascript">window.close()</script>'
-            )
-    else:
-        form = ReminderForm
-        if "submitted" in request.GET:
-            submitted = True
-    form = ReminderForm
-    return render(
-        request, "reminders/add_reminders.html", {"form": form, "submitted": submitted}
-    )
 
 
 def update_reminder(request, pk):
@@ -195,3 +183,23 @@ def delete_reminder(request, pk):
         reminder.delete()
         return HttpResponse('<script type="text/javascript">window.close()</script>')
     return render(request, "reminders/delete.html", context)
+
+
+def data_list(request, year=''):
+    if year == '':
+        reminders = Reminder.objects.filter(user=request.user)
+    else:
+        reminders = Reminder.objects.filter(user=request.user, due_date__year=year)
+    property = Property.objects.filter(user=request.user)
+    years = Reminder.objects.filter(user=request.user).values_list("due_date__year").distinct()
+    years_list = []
+    for data in years:
+        for item in data:
+            years_list.append(item)
+    years_list = sort_years_list(years_list)
+    context = {
+        "object_list": reminders,
+        "property": property,
+        "years_list": years_list
+    }
+    return render(request, "reminders/data_list.html", context)

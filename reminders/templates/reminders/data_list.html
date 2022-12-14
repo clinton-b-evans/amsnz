@@ -1,14 +1,9 @@
 {% for obj in object_list %}
 <tr>
-    <td style="text-align: left;">{{ obj.property.name }}</td>
-    <td style="text-align: right;">{{ obj.name }}</td>
-    <td style="text-align: right;">{{ obj.propcategory }}</td>
-    {% if obj.propcategory.transaction_type == "Expense" %}
-    <td style="text-align: right; color:#FF2D00">${{ obj.amount }}</td>
-    {% else %}
-    <td style="text-align: right;">${{ obj.amount }}</td>
-    {% endif %}
-    <td style="text-align: right;">{{ obj.date }}</td>
+    <td style="text-align: left;">{{ obj.detail }}</td>
+    <td style="text-align: right;">{{ obj.property.name }}</td>
+    <td style="text-align: right;">{{ obj.reminder_type }}</td>
+    <td style="text-align: right;">{{ obj.due_date }}</td>
     <td style="text-align:right">
         <button class="btn btn-success btn-sm rounded-0"
                 hx-get="{% url 'incomestatements_property:update-incomestatement-property' pk=obj.id %}"

@@ -476,7 +476,7 @@ def data_list(request, year=''):
         total_expense = 0
         total = 0
         for item in qs:
-            cat_qs = Category.objects.filter(user=request.user,year=year).get(name=item.category)
+            cat_qs = Category.objects.filter(user=request.user).get(name=item.category)
             if cat_qs.transaction_type == "Income":
                 total_income += item.amount
             else:

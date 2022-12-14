@@ -7,29 +7,24 @@
   </div>
   <div class="modal-body">
     <div class="mb-3">
-      <label for="{{ form.name.id_for_label }}" class="form-label">Name</label>
-      {% render_field form.name class="form-control" placeholder="name" %}
-      <div class="invalid-feedback">{{ form.name.errors|first }}</div>
-    </div>
-    <div class="mb-3">
-      <label for="{{ form.propcategory.id_for_label }}" class="form-label">Category</label>
-      {% render_field form.propcategory class="form-control" placeholder="Category" %}
-      <div class="invalid-feedback">{{ form.propcategory.errors|first }}</div>
-    </div>
-    <div class="mb-3">
       <label for="{{ form.property.id_for_label }}" class="form-label">Property</label>
-      {% render_field form.property class="form-control" placeholder="Property" %}
+      {% render_field form.property class="form-control" placeholder="property" %}
       <div class="invalid-feedback">{{ form.property.errors|first }}</div>
     </div>
     <div class="mb-3">
-      <label for="{{ form.amount.id_for_label }}" class="form-label">Amount</label>
-      {% render_field form.amount class="form-control" placeholder="amount" %}
-      <div class="invalid-feedback">{{ form.amount.errors|first }}</div>
+      <label for="{{ form.detail.id_for_label }}" class="form-label">Detail</label>
+      {% render_field form.detail class="form-control" placeholder="detail" %}
+      <div class="invalid-feedback">{{ form.detail.errors|first }}</div>
     </div>
     <div class="mb-3">
-      <label for="{{ form.date.id_for_label }}" class="form-label">Date</label>
-      {% render_field form.date class="form-control" placeholder="Date" %}
-      <div class="invalid-feedback">{{ form.date.errors|first }}</div>
+      <label for="{{ form.due_date.id_for_label }}" class="form-label">Due_date</label>
+      {% render_field form.due_date class="form-control" placeholder="due_date" %}
+      <div class="invalid-feedback">{{ form.due_date.errors|first }}</div>
+    </div>
+    <div class="mb-3">
+      <label for="{{ form.reminder_type.id_for_label }}" class="form-label">Reminder Type</label>
+      {% render_field form.reminder_type class="form-control" placeholder="reminder_type" %}
+      <div class="invalid-feedback">{{ form.reminder_type.errors|first }}</div>
     </div>
   </div>
   <div class="modal-footer">
