@@ -51,6 +51,7 @@ class TransactionForm(ModelForm):
             self.is_edit = True
         else:
             self.is_edit = False
+        self.fields['commodity'].queryset = Commodity.objects.filter(user=self.user)
 
     def clean_weight(self):
         if self.is_edit is True:
