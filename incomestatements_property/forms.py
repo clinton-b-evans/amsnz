@@ -1,5 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.forms import ModelForm
+
+from properties.models import Property
 from .models import PropertyIncomeStatement, PropertyCategory
 from django import forms
 from django.forms import TextInput
@@ -29,6 +31,8 @@ class PropertyIncomeStatementForm(ModelForm):
             self.is_edit = True
         else:
             self.is_edit = False
+        self.fields['property'].queryset = Property.objects.filter(user=self.user)
+        self.fields['propcategory'].queryset = PropertyCategory.objects.filter(user=self.user)
 
     def clean_amount(self):
         amount = self.cleaned_data['amount']

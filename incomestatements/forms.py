@@ -28,6 +28,7 @@ class IncomeStatementForm(ModelForm):
             self.is_edit = True
         else:
             self.is_edit = False
+        self.fields['category'].queryset = Category.objects.filter(user=self.user)
 
     def clean_amount(self):
         amount = self.cleaned_data['amount']

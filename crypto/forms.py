@@ -57,6 +57,7 @@ class TransactionForm(ModelForm):
             self.is_edit = True
         else:
             self.is_edit = False
+        self.fields['crypto_ticker'].queryset = CryptoTicker.objects.filter(user=self.user)
 
     def clean_quantity(self):
         if self.is_edit is True:
