@@ -3,7 +3,7 @@ import json
 from copy import deepcopy
 
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.template import loader
 
@@ -35,8 +35,6 @@ def incomestatements_list_view(request, year):
                 total_expense += item.amount
 
         total = total_income - total_expense
-
-        form = IncomeStatementForm()
         years = IncomeStatement.objects.filter(user=request.user).values_list("date__year").distinct()
         years_list = []
         for data in years:
@@ -46,7 +44,6 @@ def incomestatements_list_view(request, year):
         context = {
             "object_list": qs,
             "total": total,
-            "form": form,
             "prop_cat": prop_cat,
             "years_list": years_list,
         }
@@ -443,37 +440,88 @@ def deleteproperty_incomestatement(request):
 
 
 def add_incomestatements(request):
-    submitted = False
+    if request.method == "POST":
+        form = IncomeStatementForm(request.user, request.POST)
+        if form.is_valid():
+            incomestatement = form.save(commit=False)
+            incomestatement.user = request.user
+            incomestatement.save()
+            return HttpResponse(
+                status=204,
+                headers={
+                    'HX-Trigger': json.dumps({
+                        "transactionListChanged": None,
+                        "showMessage": f"{incomestatement.name} added."
+                    })
+                })
+    else:
+        form = IncomeStatementForm(request.user)
+    return render(request, "incomestatements/add.html", {"form": form})
+
+
+
+def data_list(request, year=''):
+    print('araha hai')
+    if year == '':
+        prop_cat = Category.objects.filter(user=request.user)
+    else:
+        prop_cat = Category.objects.filter(user=request.user, date__year=year)
     if request.method == "POST":
         form = IncomeStatementForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponse(
-                '<script type="text/javascript">window.close()</script>'
-            )
+            return render(request, "incomestatements/main.html")
     else:
-        form = IncomeStatementForm
-        if "submitted" in request.GET:
-            submitted = True
-    form = IncomeStatementForm
-    return render(
-        request, "incomestatements/add.html", {"form": form, "submitted": submitted}
-    )
+        qs = IncomeStatement.objects.filter(user=request.user)
+        total_income = 0
+        total_expense = 0
+        total = 0
+        for item in qs:
+            cat_qs = Category.objects.filter(user=request.user).get(name=item.category)
+            if cat_qs.transaction_type == "Income":
+                total_income += item.amount
+            else:
+                total_expense += item.amount
+
+        total = total_income - total_expense
+        years = IncomeStatement.objects.filter(user=request.user).values_list("date__year").distinct()
+        years_list = []
+        for data in years:
+            for item in data:
+                years_list.append(item)
+        years_list = sort_years_list(years_list)
+        context = {
+            "object_list": qs,
+            "total": total,
+            "prop_cat": prop_cat,
+            "years_list": years_list,
+        }
+        return render(request, "incomestatements/data_list.html", context)
 
 
 def update_incomestatements(request, pk):
-    incomestatement = IncomeStatement.objects.filter(user=request.user).get(id=pk)
-    form = IncomeStatementForm(instance=incomestatement)
-
+    incomestatement = get_object_or_404(IncomeStatement, pk=pk)
     if request.method == "POST":
-        form = IncomeStatementForm(request.POST, instance=incomestatement)
+        form = IncomeStatementForm(request.user, request.POST, instance=incomestatement)
         if form.is_valid():
-            form.save()
+            incomestatement = form.save(commit=False)
+            incomestatement.user = request.user
+            incomestatement.save()
             return HttpResponse(
-                '<script type="text/javascript">window.close()</script>'
+                status=204,
+                headers={
+                    'HX-Trigger': json.dumps({
+                        "transactionListChanged": None,
+                        "showMessage": f"{incomestatement.name} updated."
+                    })
+                }
             )
-    context = {"form": form}
-    return render(request, "incomestatements/add.html", context)
+    else:
+        form = IncomeStatementForm(request.user, instance=incomestatement)
+    return render(request, 'incomestatements/add.html', {
+        'form': form,
+        'incomestatement': incomestatement,
+    })
 
 
 def delete_incomestatement(request, pk):
@@ -639,7 +687,7 @@ def expense_result(request, year, category):
         expenses_result[f"{list(category_expense.values())[0]}"]["Budget"] = budget_category.compute_budget()
         total_expense_budget += Category.objects.filter(user=request.user, year=year).get(
             name=category_expense['category__name']
-            ).compute_budget()
+        ).compute_budget()
         category_total = expenses_result[f"{list(category_expense.values())[0]}"]["total"]
         category_budget = expenses_result[f"{list(category_expense.values())[0]}"]["Budget"]
         percentage = float(category_total) / float(category_budget) * 100

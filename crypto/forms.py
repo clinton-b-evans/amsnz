@@ -37,6 +37,7 @@ class CryptoTickerForm(ModelForm):
         # Always return cleaned_data
         return ticker
 
+
 class TransactionForm(ModelForm):
     class Meta:
         model = CryptoTransaction
@@ -72,8 +73,8 @@ class TransactionForm(ModelForm):
         date = self.data['date']
         date = datetime.datetime.strptime(date, '%Y-%m-%d').date()
         crypto, created = Crypto.objects.get_or_create(crypto_ticker=crypto_ticker,
-                                                      user=self.user,
-                                                      year=str(date.year))
+                                                       user=self.user,
+                                                       year=str(date.year))
         if self.is_edit is False:
             if quantity <= 0:
                 raise ValidationError(f"Quantity cannot be 0 or negative")

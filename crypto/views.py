@@ -314,7 +314,7 @@ def edit_sufi_transaction(request, pk):
         form = TransactionForm(request.user, instance=crypto_transaction)
     return render(request, 'cryptoTransactions/add.html', {
         'form': form,
-        'crypto_transactions': crypto_transactions,
+        'crypto_transactions': crypto_transaction,
     })
 
 

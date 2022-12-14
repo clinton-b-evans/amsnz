@@ -2,7 +2,7 @@ import datetime
 import json
 
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.db.models.functions import TruncMonth, ExtractMonth
 
@@ -450,7 +450,8 @@ def incomes_result(request, year, category):
         for month in monthly_income_data.keys():
             current_month_total_income = 0
             month_int = datetime.datetime.strptime(month, "%B").month
-            current_month_income = income_qs.filter(date__month=month_int, propcategory__name=category['propcategory__name'])
+            current_month_income = income_qs.filter(date__month=month_int,
+                                                    propcategory__name=category['propcategory__name'])
             # print(month, current_month_income)
             for income_in_current_month in current_month_income:
                 current_month_total_income += income_in_current_month.amount
@@ -465,7 +466,8 @@ def incomes_result(request, year, category):
         income_result[f"{list(category.values())[0]}"]["total"] = sum(
             income_result[f"{list(category.values())[0]}"]["months"].values()
         )
-        budget_category = PropertyCategory.objects.filter(user=request.user, year=year).get(name=category['propcategory__name'])
+        budget_category = PropertyCategory.objects.filter(user=request.user, year=year).get(
+            name=category['propcategory__name'])
         income_result[f"{list(category.values())[0]}"]["Budget"] = budget_category.compute_budget()
         total_income_budget += budget_category.compute_budget()
         category_total = income_result[f"{list(category.values())[0]}"]["total"]
@@ -562,6 +564,89 @@ def deleteproperty_incomestatement(request):
         'deleted': True
     }
     return JsonResponse(data)
+
+
+def add_incomestatements(request):
+    if request.method == "POST":
+        form = PropertyIncomeStatementForm(request.user, request.POST)
+        if form.is_valid():
+            incomestatement = form.save(commit=False)
+            incomestatement.user = request.user
+            incomestatement.save()
+            return HttpResponse(
+                status=204,
+                headers={
+                    'HX-Trigger': json.dumps({
+                        "transactionListChanged": None,
+                        "showMessage": f"{incomestatement.name} added."
+                    })
+                })
+    else:
+        form = PropertyIncomeStatementForm(request.user)
+    return render(request, "propertyincomestatements/add.html", {"form": form})
+
+
+def data_list(request, year=''):
+    if year == '':
+        prop_cat = PropertyCategory.objects.filter(user=request.user)
+    else:
+        prop_cat = PropertyCategory.objects.filter(user=request.user, date__year=year)
+    if request.method == "POST":
+        form = PropertyIncomeStatementForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return render(request, "propertyincomestatements/main.html")
+    else:
+        qs = PropertyIncomeStatement.objects.filter(user=request.user)
+        total_income = 0
+        total_expense = 0
+        total = 0
+        for item in qs:
+            cat_qs = PropertyCategory.objects.filter(user=request.user).get(name=item.propcategory)
+            if cat_qs.transaction_type == "Income":
+                total_income += item.amount
+            else:
+                total_expense += item.amount
+
+        total = total_income - total_expense
+        years = PropertyIncomeStatement.objects.filter(user=request.user).values_list("date__year").distinct()
+        years_list = []
+        for data in years:
+            for item in data:
+                years_list.append(item)
+        years_list = sort_years_list(years_list)
+        context = {
+            "object_list": qs,
+            "total": total,
+            "prop_cat": prop_cat,
+            "years_list": years_list,
+        }
+        return render(request, "propertyincomestatements/data_list.html", context)
+
+
+def update_incomestatements(request, pk):
+    incomestatement = get_object_or_404(PropertyIncomeStatement, pk=pk)
+    if request.method == "POST":
+        form = PropertyIncomeStatementForm(request.user, request.POST, instance=incomestatement)
+        if form.is_valid():
+            incomestatement = form.save(commit=False)
+            incomestatement.user = request.user
+            incomestatement.save()
+            return HttpResponse(
+                status=204,
+                headers={
+                    'HX-Trigger': json.dumps({
+                        "transactionListChanged": None,
+                        "showMessage": f"{incomestatement.name} updated."
+                    })
+                }
+            )
+    else:
+        form = PropertyIncomeStatementForm(request.user, instance=incomestatement)
+    return render(request, 'propertyincomestatements/add.html', {
+        'form': form,
+        'incomestatement': incomestatement,
+    })
 
 
 def delete_property_incomestatement(request, pk):
@@ -725,7 +810,8 @@ def year_to_date(request, year):
         for month in monthly_income_data.keys():
             current_month_total_income = 0
             month_int = datetime.datetime.strptime(month, "%B").month
-            current_month_income = income_qs.filter(date__month=month_int, propcategory__name=category['propcategory__name'])
+            current_month_income = income_qs.filter(date__month=month_int,
+                                                    propcategory__name=category['propcategory__name'])
             # print(month, current_month_income)
             for income_in_current_month in current_month_income:
                 current_month_total_income += income_in_current_month.amount
@@ -741,7 +827,8 @@ def year_to_date(request, year):
             income_result[f"{list(category.values())[0]}"]["total"] = sum(
                 income_result[f"{list(category.values())[0]}"]["months"].values()
             )
-            budget_category = PropertyCategory.objects.filter(user=request.user, year=year).get(name=category['propcategory__name'])
+            budget_category = PropertyCategory.objects.filter(user=request.user, year=year).get(
+                name=category['propcategory__name'])
             income_result[f"{list(category.values())[0]}"]["Budget"] = budget_category.compute_budget()
             total_income_budget += budget_category.compute_budget()
             category_total = income_result[f"{list(category.values())[0]}"]["total"]

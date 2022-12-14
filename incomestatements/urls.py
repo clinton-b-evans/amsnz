@@ -7,7 +7,7 @@ from .views import (
     add_category,
     update_category,
     year_to_date, addcategory_incomestatements, addproperty_incomestatements, editproperty_incomestatements,
-    deleteproperty_incomestatement, show_report, category_list, delete_category, edit_category,
+    deleteproperty_incomestatement, show_report, category_list, delete_category, edit_category, data_list,
 )
 
 app_name = "incomestatements"
@@ -25,6 +25,11 @@ urlpatterns = [
         "report/<str:category>/<str:year>/",
         show_report,
         name="report",
+    ),
+    path(
+        "data_list/",
+        data_list,
+        name="data_list",
     ),
     path(
         "addcategory_incomestatements",

@@ -1,10 +1,37 @@
-{% extends "popup.html" %}
-{% load bootstrap %}
-{% block content %}
-<h2>Record Property Income / Expense</h2>
-<form action="" method=POST> 
-    {% csrf_token %}
-    {{ form|bootstrap }}
-    <input type="submit" value="Save"></button>
+{% load widget_tweaks %}
+{% with WIDGET_ERROR_CLASS='is-invalid' %}
+<form hx-post="{{ request.path }}" hx-headers='{"X-CSRFToken":"{{ csrf_token }}"}' class="modal-content">
+  <div class="modal-header">
+    <h5 class="modal-title">Add Entry</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <div class="mb-3">
+      <label for="{{ form.name.id_for_label }}" class="form-label">Name</label>
+      {% render_field form.name class="form-control" placeholder="name" %}
+      <div class="invalid-feedback">{{ form.name.errors|first }}</div>
+    </div>
+    <div class="mb-3">
+      <label for="{{ form.category.id_for_label }}" class="form-label">Category</label>
+      {% render_field form.category class="form-control" placeholder="Category" %}
+      <div class="invalid-feedback">{{ form.category.errors|first }}</div>
+    </div>
+    <div class="mb-3">
+      <label for="{{ form.amount.id_for_label }}" class="form-label">Amount</label>
+      {% render_field form.amount class="form-control" placeholder="amount" %}
+      <div class="invalid-feedback">{{ form.amount.errors|first }}</div>
+    </div>
+    <div class="mb-3">
+      <label for="{{ form.date.id_for_label }}" class="form-label">Date</label>
+      {% render_field form.date class="form-control" placeholder="Date" %}
+      <div class="invalid-feedback">{{ form.date.errors|first }}</div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+      Cancel
+    </button>
+    <button type="submit" class="btn btn-primary">Save</button>
+  </div>
 </form>
-{% endblock content %}
+{% endwith %}

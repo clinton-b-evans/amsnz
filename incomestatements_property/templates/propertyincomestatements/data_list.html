@@ -1,18 +1,18 @@
-{% load mathfilters %}
-{% load humanize %}
-{% for obj in transactions %}
-<tr id="user-{{obj.id}}">
-    <td class="name userData" name="name" style="text-align:left">{{ obj.coin }}</td>
-    <td class="transaction_type userData" name="transaction_type" style="text-align:left">{{ obj.transaction_type}}</td>
-    <td class="quantity userData" name="quantity" style="text-align:right">{{ obj.quantity }}</td>
-    <td class="purchased_value userData" name="purchased_value" style="text-align:right">${{ obj.purchasedValue|floatformat:2 }}
-    </td>
-    <td class="investment userData" name="investment" style="text-align:right">${{ obj.totalInvestment|floatformat:2}}
-    </td>
-    <td class="date userData" name="date" style="text-align:right">{{ obj.date }}</td>
+{% for obj in object_list %}
+<tr>
+    <td style="text-align: left;">{{ obj.property.name }}</td>
+    <td style="text-align: right;">{{ obj.name }}</td>
+    <td style="text-align: right;">{{ obj.propcategory }}</td>
+    {% if obj.propcategory.transaction_type == "Expense" %}
+    <td style="text-align: right; color:#FF2D00">${{ obj.amount }}</td>
+    {% else %}
+    <td style="text-align: right;">${{ obj.amount }}</td>
+    {% endif %}
+    <td style="text-align: right;">{{ obj.date }}</td>
     <td style="text-align:right">
         <button class="btn btn-success btn-sm rounded-0"
-                hx-get="{% url 'crypto:edit-sufi-transaction' pk=obj.id %}" hx-target="#dialog">
+                hx-get="{% url 'incomestatements_property:update-incomestatement-property' pk=obj.id %}"
+                hx-target="#dialog">
             <svg class="bi bi-pencil-square" fill="currentColor" height="16" viewBox="0 0 16 16"
                  width="16" xmlns="http://www.w3.org/2000/svg">
                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
@@ -20,7 +20,6 @@
                       fill-rule="evenodd"/>
             </svg>
         </button>
-
         <button class="btn btn-danger-1 btn-sm rounded-0" data-bs-target="#deleteModal{{obj.id}}" data-bs-toggle="modal"
                 type="button">
             <svg class="bi bi-trash" fill="currentColor" height="16" viewBox="0 0 16 16"
@@ -37,16 +36,16 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="deleteModalLabel">Modal title</h5>
+                        <h5 class="modal-title" id="deleteModalLabel">Delete Property</h5>
                         <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
                     </div>
                     <div class="modal-body deleteForm">
-                        <h2 class="">You are about to delete this Transaction</h2>
-                        <p>Are you sure you want to delete {{ obj.crypto_name }}?</p>
+                        <h2 class="">You are about to delete this Property</h2>
+                        <p>Are you sure you want to delete<strong> {{ obj.name }}</strong>?</p>
                         <p>This action cannot be undone.</p>
                         <p>All transctions for this fund will be lost</p>
-                        <button class="btn btn-danger form-control" onclick="deleteTransaction({{obj.id}})"
-                                type="button">Delete
+                        <button class="btn btn-danger form-control" onclick="deleteProperty({{obj.id}})" type="button">
+                            Delete
                         </button>
                     </div>
                 </div>
@@ -55,11 +54,3 @@
     </td>
 </tr>
 {% endfor %}
-
-<script>
-    $(document).ready( function () {
-        $('#transactions-list').DataTable();
-      });
-
-
-</script>
