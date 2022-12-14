@@ -331,7 +331,8 @@ def expense_budget_total(request, year):
         },
     }
     for i in range(1, 13):
-        data = Category.objects.filter(transaction_type="Expense", user=request.user, year=year).values_list(month_total[i]["name"])
+        data = Category.objects.filter(transaction_type="Expense", user=request.user, year=year).values_list(
+            month_total[i]["name"])
         total = 0
         for j in data:
             total += j[0]
@@ -392,7 +393,8 @@ def income_budget_total(request, year):
     }
     yearly_income_budget = 0
     for i in range(1, 13):
-        data = Category.objects.filter(transaction_type="Income", user=request.user, year=year).values_list(month_total[i]["name"])
+        data = Category.objects.filter(transaction_type="Income", user=request.user, year=year).values_list(
+            month_total[i]["name"])
         total = 0
         for j in data:
             total += j[0]
@@ -563,7 +565,7 @@ def incomes_result(request, year, category):
             # print(month, current_month_income)
             for income_in_current_month in current_month_income:
                 current_month_total_income += income_in_current_month.amount
-                category_of_income = Category.objects.filter(user=request.user).get(
+                category_of_income = Category.objects.filter(user=request.user, year=year).get(
                     name=income_in_current_month.category
                 )
                 income_result[f"{category_of_income}"]["months"][f"{month}"] = float(
@@ -574,7 +576,7 @@ def incomes_result(request, year, category):
         income_result[f"{list(category.values())[0]}"]["total"] = sum(
             income_result[f"{list(category.values())[0]}"]["months"].values()
         )
-        budget_category = Category.objects.filter(user=request.user).get(name=category['category__name'], year=year)
+        budget_category = Category.objects.filter(user=request.user, year=year).get(name=category['category__name'])
         income_result[f"{list(category.values())[0]}"]["Budget"] = budget_category.compute_budget()
         total_income_budget += budget_category.compute_budget()
         category_total = income_result[f"{list(category.values())[0]}"]["total"]
@@ -632,10 +634,12 @@ def expense_result(request, year, category):
         expenses_result[f"{list(category_expense.values())[0]}"]["total"] = sum(
             expenses_result[f"{list(category_expense.values())[0]}"]["months"].values()
         )
-        budget_category = Category.objects.filter(user=request.user).get(name=category_expense['category__name'], year=year)
+        budget_category = Category.objects.filter(user=request.user, year=year).get(
+            name=category_expense['category__name'])
         expenses_result[f"{list(category_expense.values())[0]}"]["Budget"] = budget_category.compute_budget()
-        total_expense_budget += Category.objects.filter(user=request.user).get(name=category_expense['category__name'],
-                                                     year=year).compute_budget()
+        total_expense_budget += Category.objects.filter(user=request.user, year=year).get(
+            name=category_expense['category__name']
+            ).compute_budget()
         category_total = expenses_result[f"{list(category_expense.values())[0]}"]["total"]
         category_budget = expenses_result[f"{list(category_expense.values())[0]}"]["Budget"]
         percentage = float(category_total) / float(category_budget) * 100
@@ -790,7 +794,7 @@ def year_to_date(request, year):
             # print(month, current_month_income)
             for income_in_current_month in current_month_income:
                 current_month_total_income += income_in_current_month.amount
-                category_of_income = Category.objects.filter(user=request.user,year=year).get(
+                category_of_income = Category.objects.filter(user=request.user, year=year).get(
                     name=income_in_current_month.category
                 )
                 income_result[f"{category_of_income}"]["months"][f"{month}"] = float(
@@ -844,7 +848,7 @@ def year_to_date(request, year):
             # print(month, current_month_expenses)
             for expense_in_current_month in current_month_expenses:
                 current_month_total_expense += expense_in_current_month.amount
-                category_of_expense = Category.objects.filter(user=request.user,year=year).get(
+                category_of_expense = Category.objects.filter(user=request.user, year=year).get(
                     name=expense_in_current_month.category
                 )
                 expenses_result[f"{category_of_expense}"]["months"][f"{month}"] = float(
@@ -855,10 +859,12 @@ def year_to_date(request, year):
         expenses_result[f"{list(category_expense.values())[0]}"]["total"] = sum(
             expenses_result[f"{list(category_expense.values())[0]}"]["months"].values()
         )
-        budget_category = Category.objects.filter(user=request.user,year=year).get(name=category_expense['category__name'], year=year)
+        budget_category = Category.objects.filter(user=request.user, year=year).get(
+            name=category_expense['category__name'], year=year)
         expenses_result[f"{list(category_expense.values())[0]}"]["Budget"] = budget_category.compute_budget()
-        total_expense_budget += Category.objects.filter(user=request.user,year=year).get(name=category_expense['category__name'],
-                                                     year=year).compute_budget()
+        total_expense_budget += Category.objects.filter(user=request.user, year=year).get(
+            name=category_expense['category__name'],
+            year=year).compute_budget()
         category_total = expenses_result[f"{list(category_expense.values())[0]}"]["total"]
         category_budget = expenses_result[f"{list(category_expense.values())[0]}"]["Budget"]
         percentage = float(category_total) / float(category_budget) * 100
