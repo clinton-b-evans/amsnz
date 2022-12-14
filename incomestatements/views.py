@@ -677,7 +677,7 @@ def year_to_date(request, year):
     total_income = 0
     total_expense = 0
     for item in qs:
-        cat_qs = Category.objects.filter(user=request.user,year=year).get(name=item.category)
+        cat_qs = Category.objects.filter(user=request.user, year=year).get(name=item.category)
         if cat_qs.transaction_type == "Income":
             total_income += item.amount
         else:
@@ -866,7 +866,7 @@ def year_to_date(request, year):
         print(percentage, 'percentage')
     #  #### END OF CATEGORIES EACH MONTH TOTAL EXPENSES ####
 
-    years = list(IncomeStatement.objects.filter(user=request.user,year=year).values_list("date__year").distinct())
+    years = list(IncomeStatement.objects.filter(user=request.user).values_list("date__year").distinct())
     years_list = []
     for each in years:
         for item in each:
