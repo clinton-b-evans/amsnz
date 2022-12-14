@@ -1,5 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.forms import ModelForm
+
+from properties.models import Property
 from .models import Reminder
 from django import forms
 
@@ -26,6 +28,7 @@ class ReminderForm(ModelForm):
             self.is_edit = True
         else:
             self.is_edit = False
+        self.fields['property'].queryset = Property.objects.filter(user=self.user)
 
     def clean_date(self):
         date = self.cleaned_data['due_date']
