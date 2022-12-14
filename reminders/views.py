@@ -135,7 +135,7 @@ def edit_reminder(request, pk):
                 headers={
                     'HX-Trigger': json.dumps({
                         "transactionListChanged": None,
-                        "showMessage": f"{reminder.name} updated."
+                        "showMessage": f"{reminder.detail} updated."
                     })
                 }
             )
