@@ -6,7 +6,7 @@
     <td style="text-align: right;">{{ obj.due_date }}</td>
     <td style="text-align:right">
         <button class="btn btn-success btn-sm rounded-0"
-                hx-get="{% url 'incomestatements_property:update-incomestatement-property' pk=obj.id %}"
+                hx-get="{% url 'reminders:update-reminder' pk=obj.id %}"
                 hx-target="#dialog">
             <svg class="bi bi-pencil-square" fill="currentColor" height="16" viewBox="0 0 16 16"
                  width="16" xmlns="http://www.w3.org/2000/svg">
