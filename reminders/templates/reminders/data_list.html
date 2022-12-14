@@ -36,10 +36,10 @@
                     </div>
                     <div class="modal-body deleteForm">
                         <h2 class="">You are about to delete this Property</h2>
-                        <p>Are you sure you want to delete<strong> {{ obj.name }}</strong>?</p>
+                        <p>Are you sure you want to delete<strong> {{ obj.detail }}</strong>?</p>
                         <p>This action cannot be undone.</p>
                         <p>All transctions for this fund will be lost</p>
-                        <button class="btn btn-danger form-control" onclick="deleteProperty({{obj.id}})" type="button">
+                        <button class="btn btn-danger form-control" onclick="deleteReminder({{obj.id}})" type="button">
                             Delete
                         </button>
                     </div>
