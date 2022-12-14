@@ -646,14 +646,14 @@ def expense_result(request, year, category):
 
 def year_to_date(request, year):
     qs = IncomeStatement.objects.filter(date__year=year, user=request.user)
-    cat_dict = Category.objects.filter(user=request.user)
+    cat_dict = Category.objects.filter(user=request.user, year=year)
     expense_qs = qs.filter(category__transaction_type="Expense")
     income_qs = qs.filter(category__transaction_type="Income")
     categories_income_yearly = {}
     for item in cat_dict:
         categories_income_yearly[item.name] = 0
     for item in income_qs:
-        cat_qs = Category.objects.filter(user=request.user).get(name=item.category)
+        cat_qs = Category.objects.filter(user=request.user, year=year).get(name=item.category)
         if cat_qs.name in categories_income_yearly:
             categories_income_yearly[cat_qs.name] += item.amount
         else:
@@ -665,7 +665,7 @@ def year_to_date(request, year):
     for item in cat_dict:
         categories_expense_yearly[item.name] = 0
     for item in expense_qs:
-        cat_qs = Category.objects.filter(user=request.user).get(name=item.category)
+        cat_qs = Category.objects.filter(user=request.user, year=year).get(name=item.category)
         if cat_qs.name in categories_expense_yearly:
             categories_expense_yearly[cat_qs.name] += item.amount
         else:
@@ -677,7 +677,7 @@ def year_to_date(request, year):
     total_income = 0
     total_expense = 0
     for item in qs:
-        cat_qs = Category.objects.filter(user=request.user).get(name=item.category)
+        cat_qs = Category.objects.filter(user=request.user,year=year).get(name=item.category)
         if cat_qs.transaction_type == "Income":
             total_income += item.amount
         else:
@@ -790,7 +790,7 @@ def year_to_date(request, year):
             # print(month, current_month_income)
             for income_in_current_month in current_month_income:
                 current_month_total_income += income_in_current_month.amount
-                category_of_income = Category.objects.filter(user=request.user).get(
+                category_of_income = Category.objects.filter(user=request.user,year=year).get(
                     name=income_in_current_month.category
                 )
                 income_result[f"{category_of_income}"]["months"][f"{month}"] = float(
@@ -844,7 +844,7 @@ def year_to_date(request, year):
             # print(month, current_month_expenses)
             for expense_in_current_month in current_month_expenses:
                 current_month_total_expense += expense_in_current_month.amount
-                category_of_expense = Category.objects.filter(user=request.user).get(
+                category_of_expense = Category.objects.filter(user=request.user,year=year).get(
                     name=expense_in_current_month.category
                 )
                 expenses_result[f"{category_of_expense}"]["months"][f"{month}"] = float(
@@ -855,9 +855,9 @@ def year_to_date(request, year):
         expenses_result[f"{list(category_expense.values())[0]}"]["total"] = sum(
             expenses_result[f"{list(category_expense.values())[0]}"]["months"].values()
         )
-        budget_category = Category.objects.filter(user=request.user).get(name=category_expense['category__name'], year=year)
+        budget_category = Category.objects.filter(user=request.user,year=year).get(name=category_expense['category__name'], year=year)
         expenses_result[f"{list(category_expense.values())[0]}"]["Budget"] = budget_category.compute_budget()
-        total_expense_budget += Category.objects.filter(user=request.user).get(name=category_expense['category__name'],
+        total_expense_budget += Category.objects.filter(user=request.user,year=year).get(name=category_expense['category__name'],
                                                      year=year).compute_budget()
         category_total = expenses_result[f"{list(category_expense.values())[0]}"]["total"]
         category_budget = expenses_result[f"{list(category_expense.values())[0]}"]["Budget"]
@@ -866,7 +866,7 @@ def year_to_date(request, year):
         print(percentage, 'percentage')
     #  #### END OF CATEGORIES EACH MONTH TOTAL EXPENSES ####
 
-    years = list(IncomeStatement.objects.filter(user=request.user).values_list("date__year").distinct())
+    years = list(IncomeStatement.objects.filter(user=request.user,year=year).values_list("date__year").distinct())
     years_list = []
     for each in years:
         for item in each:
