@@ -11,7 +11,7 @@
             <h6>Filter</h6>
         </li>
         {% for year in years_list%}
-        <li><a class="dropdown-item" href="{% url 'incomestatements_property:property_year-to-date' year %}">{{year|stringformat:"i"}}</a></li>
+        <li><a class="dropdown-item" href="{% url 'incomestatements:incomestatement_year_to_date' year %}">{{year|stringformat:"i"}}</a></li>
         {%endfor%}
     </ul>
 </span>
@@ -19,160 +19,193 @@
 {% endblock title %}
 
 {% block content %}
+<script src="{% static 'apexcharts/apexcharts.min.js' %}"></script>
 <script language="javascript" type="text/javascript">
 
-  function popitup(url) {
-    newwindow = window.open(url, '{{title}}', 'height=510,width=384');
-    if (window.focus) { newwindow.focus() }
+<!--
+function popitup(url) {
+    newwindow=window.open(url,'{{title}}','height=510,width=384');
+    if (window.focus) {newwindow.focus()}
     return false;
-  }
-
-
-
+}
+// -->
 </script>
 
-<!-- Google Chart -->
-<!-- <script src="{% static 'GoogleChart/Gchart.js' %}"></script> -->
-<script src="{% static 'apexcharts/apexcharts.min.js' %}"></script>
-
-<div class="col-lg-4 mb-3">
-    <form class="form-group" action="/propertyincomestatements/yeartodate/{{year}}/" method="get">
-        <div class="row">
-            <div class="col-10 select2-purple mb-2">
-                <select name="properties" id="properties" class="select2" multiple="multiple"
-                        data-placeholder="Select properties" data-dropdown-css-class="select2-purple"
-                        style="width: 100%;">
-                    {% for obj in prop_qs %}
-                    <option value="{{ obj.pk }} ">{{ obj.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="col-2">
-                <button class="btn btn-dashboard" type="submit" value="Submit">Filter</button>
-            </div>
-        </div>
-    </form>
-</div>
-
+<script src="{% static 'GoogleChart/Gchart.js' %}"></script>
 
 <div class="dashboard">
-    <div class="chart-container" style="position: relative;">
-        <div class="row justify-content-around">
+  <div class="chart-container" style="position: relative;">
+     <div class="row justify-content-around">
+          <div class="col-lg-6">
+          <div class="card">
+            <div class="card-body pb-0">
+              <h5 class="card-title">Incomes <span>| {{year}}</span></h5>
+              <div id="chart" style="width: auto ; height: 20rem;"></div>
+            </div>
+          </div>
+            </div>
+          <div class="col-lg-6">
+          <div class="card">
+              <div class="card-body pb-0">
+                <h5 class="card-title">Expenses <span>| {{year}}</span></h5>
+                <div id="chart1" style="width: auto ; height: 20rem;"></div>
+           </div>
+          </div>
+            </div>
+        </div>
+        </div>
 
-            <div class="col-lg-9">
-                <div class="card">
-                    <div class="filter">
-                        <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                            <li class="dropdown-header text-start">
-                                <h6>Filter</h6>
-                            </li>
-                            {% for year in years_list%}
-                            <li><a class="dropdown-item" href="../{{year|stringformat:"
-                                   i"}}">{{year|stringformat:"i"}}</a></li>
-                            {%endfor%}
 
-                        </ul>
-                    </div>
-                    <div class="card-body" style="overflow-x:auto;">
-                        <h5 class="card-title">Property Profit and Loss <span>| {{year}}</span></h5>
-                        <table class="table table-hover" style="font-size:small">
-                            <thead>
-                            <tr>
-                                <th>YEAR - {{year}}</th>
-                                <th scope="col">Jan</th>
-                                <th scope="col">Feb</th>
-                                <th scope="col">Mar</th>
-                                <th scope="col">Apr</th>
-                                <th scope="col">May</th>
-                                <th scope="col">Jun</th>
-                                <th scope="col">Jul</th>
-                                <th scope="col">Aug</th>
-                                <th scope="col">Sep</th>
-                                <th scope="col">Oct</th>
-                                <th scope="col">Nov</th>
-                                <th scope="col">Dec</th>
-                                <th scope="col">Total</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <th scope="col">INCOME</th>
-                            </tr>
-                            <!--                <td scope="row">Maintenance</td>-->
-                            {% for category_name, data in income_result.items %}
-                            <tr>
-                                <th scope="row">{{category_name}}</th>
-                                {% for months, months_data in data.items %}
+    <div class="row justify-content-around">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="filter">
+            <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+              <li class="dropdown-header text-start">
+                <h6>Filter</h6>
+              </li>
+              {% for year in years_list%}
+              <li><a class="dropdown-item" href="../{{year|stringformat:"i"}}">{{year|stringformat:"i"}}</a></li>
+              {%endfor%}
 
-                                {% for month_name, month_expense in months_data.items %}
-                                <td>${{month_expense}}</td>
-                                {% endfor %}
+            </ul>
+          </div>
+          <div class="card-body" style="overflow-x:auto;">
+            <h5 class="card-title">Personal Profit and Loss <span>| {{year}}</span></h5>
+            <table class="table table-hover" style="font-size:small">
+              <thead>
+                <tr>
+                  <th>YEAR - {{year}}</th>
+                  <th scope="col">Jan</th>
+                  <th scope="col">Feb</th>
+                  <th scope="col">Mar</th>
+                  <th scope="col">Apr</th>
+                  <th scope="col">May</th>
+                  <th scope="col">Jun</th>
+                  <th scope="col">Jul</th>
+                  <th scope="col">Aug</th>
+                  <th scope="col">Sep</th>
+                  <th scope="col">Oct</th>
+                  <th scope="col">Nov</th>
+                  <th scope="col">Dec</th>
+                  <th scope="col">Total</th>
+                  <th scope="col">Budget</th>
+                  <th scope="col">% of Budget</th>
+                    <th scope="col">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="col">INCOME</th>
+                </tr>
+                  <!-- <td scope="row">Maintenance</td>-->
+                  {% for category_name, data in income_result.items %}
+                  <tr>
+                    <th scope="row">{{category_name}}</th>
+                    {% for months,  months_data in data.items %}
+                      {% for month_name, month_expense in months_data.items %}
+                        <td>${{month_expense}}</td>
+                      {% endfor %}
+                    {% endfor %}
+                    <td>${{data.total}}</td>
+                    <td>${{data.Budget}}</td>
+                    <td>
+                      <div class="progress">
+                          <div class="progress-bar bg-info" role="progressbar" style="width: {{data.percentage|stringformat:"i"}}%" aria-valuenow="{{data.percentage|stringformat:"i"}}" aria-valuemin="0" aria-valuemax="100">{{data.percentage|stringformat:"i"}}%</div>
+                        </div>
+                    </td>
+                    <td>
+                    <a type="button" class="btn btn-primary btn-sm" href="{% url 'incomestatements_property:report-forecast' category_name year %}">
+                      Monthly Report
+                    </a>
+                    </td>
+                    <!-- Modal -->
 
-                                {% endfor %}
-                                <td>${{data.total}}</td>
+                  </tr>
+                  {% endfor %}
 
-                            </tr>
-                            {% endfor %}
+                <tr>
+                  <thead>
+                    <tr style="background-color: #ededed">
+                        <th scope="row">
+                            <i>Total</i>
+                        </th>
+                        {% for amount in month_income.values %}
+                        <th>${{amount}}</th>
+                        {% endfor %}
+                        <th>
+                            <div class="progress">
+                              <div class="progress-bar bg-success" role="progressbar" style="width: {{income_budget_percentage|stringformat:"i"}}%" aria-valuenow="{{income_budget_percentage|stringformat:"i"}}" aria-valuemin="0" aria-valuemax="100">
+                                    {{income_budget_percentage|stringformat:"i"}}%
+                                </div>
+                            </div>
+                        </th>
+                    </tr>
+                  </thead>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <th scope="col">EXPENSES</th>
+                </tr>
+                  <!-- Loop 1-->
+                  {% for category_name, data in expenses_result.items %}
+                    <tr>
+                    <th scope="row">{{category_name}}</th>
+                      <!-- Loop 2-->
+                      {% for months,  months_data in data.items %}
+                        <!--Loop 3-->
+                        {% for month_name, month_expense in months_data.items %}
+                          <td>${{month_expense}}</td>
+                        {% endfor %}
 
-                            <tr>
-                            <thead>
-                            <tr style="background-color: #ededed">
-                                <th scope="row"><i>Total</i></th>
-                                {% for key, value in month_income.items %}
-                                <th>${{value}}</th>
-                                {% endfor %}
-                                <th></th>
-                            </tr>
+                      {% endfor %}
 
-                            </thead>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <th scope="col">EXPENSES</th>
-                            </tr>
-                            <!--                <td scope="row">Maintenance</td>-->
-                            <!--                    Loop 1-->
-                            {% for category_name, data in expenses_result.items %}
-                            <tr>
-                                <th scope="row">{{category_name}}</th>
-                                <!--                    Loop 2-->
-                                {% for months, months_data in data.items %}
-                                <!--                    Loop 3-->
-                                {% for month_name, month_expense in months_data.items %}
-                                <td>${{month_expense}}</td>
-                                {% endfor %}
+                      <td>${{data.total}}</td>
+                      <td>${{data.Budget}}</td>
+                      <td>
+                      <div class="progress">
+                          <div class="progress-bar bg-warning" role="progressbar" style="width: {{data.percentage|stringformat:"i"}}%" aria-valuenow="{{data.percentage|stringformat:"i"}}%" aria-valuemin="0" aria-valuemax="100">{{data.percentage|stringformat:"i"}}%</div>
+                        </div>
+                    </td>
+                    <td>
+                    <a type="button" class="btn btn-primary btn-sm" href="{% url 'incomestatements_property:report-forecast' category_name year %}">
+                      Monthly Report
+                    </a>
+                    </td>
+                    <!-- Modal -->
 
-                                {% endfor %}
-
-                                <td>${{data.total}}</td>
-                            </tr>
-                            {% endfor %}
-
-                            <thead>
-                            <tr style="background-color: #ededed">
-                                <th scope="row"><i>Total</i></th>
-                                {% for k, v in month_expenses.items %}
-                                <th>${{v}}</th>
-                                {% endfor %}
-                                <th></th>
-                            </tr>
-                            </thead>
-                            <tr>
+                    </tr>
+                  {% endfor %}
+                <thead>
+                  <tr style="background-color: #ededed">
+                    <th scope="row"><i>Total</i></th>
+                    {% for amount in month_expenses.values %}
+                    <th>${{amount}}</th>
+                    {% endfor %}
+                    <th>
+                      <div class="progress">
+  <div class="progress-bar bg-success" role="progressbar" style="width: {{expense_budget_percentage|stringformat:"i"}}%" aria-valuenow="{{expense_budget_percentage|stringformat:"i"}}" aria-valuemin="0" aria-valuemax="100">{{expense_budget_percentage|stringformat:"i"}}%</div>
+</div>
+                    </th>
+                  </tr>
+                </thead>
+                <tr>
                   <td></td>
                   <td></td>
                   <td></td>
@@ -207,104 +240,148 @@
                     <th></th>
                   </tr>
                 </thead>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-            </div>
-
-
-            <div class="col-lg-3">
-
-                <div class="card">
-                    <div class="card-body pb-0">
-                        <h5 class="card-title">All Expenses <span>| {{year}}</span></h5>
-                        <!-- <div id="donutchart" style="width: auto; height: 20rem;"></div> -->
-                        <div id="donutChart" style="width: auto; height: 20rem;"></div>
-                    </div>
-                </div>
-
-                <!-- <div id="donutchart" class="mb-3 shadow" style="width: 100%; height:400px"></div> -->
-
-                <div class="card">
-                    <div class="card-body pb-0">
-                        <h5 class="card-title">Income vs Expense <span>| {{year}}</span></h5>
-                        <!-- <div id="piechart" style="width: auto; height: 20rem;"></div> -->
-                        <div id="pieChart" style="width: auto; height: 20rem;"></div>
-                    </div>
-                </div>
-            </div>
-
+              </tbody>
+            </table>
+          </div>
         </div>
+<div class="row">
+        <div class="col-lg-4">
+          <div class="card">
+            <div class="card-body pb-0">
+              <h5 class="card-title">All Expenses <span>| {{year}}</span></h5>
+              <div id="donutchart" style="width: auto; height: 20rem;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="card">
+            <div class="card-body pb-0">
+              <h5 class="card-title">All Incomes<span>| {{year}}</span></h5>
+              <div id="donutchart1" style="width: auto; height: 20rem;"></div>
+            </div>
+          </div>
+        </div>
+      <div class="col-lg-4">
+        <div class="card">
+            <div class="card-body pb-0">
+              <h5 class="card-title">Income vs Expense <span>| {{year}}</span></h5>
+              <div id="piechart" style="width: auto; height: 20rem;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
     </div>
+  </div>
 </div>
 
 <script>
-    $(function () {
-      //Initialize Select2 Elements
-      $('.select2').select2()
-    })
+  $(function () {
+    //Initialize Select2 Elements
+    $('.select2').select2()
+  })
 </script>
 
-<!-- <script type="text/javascript">
-    google.charts.load('current', { 'packages': ['corechart'] });
-    google.charts.setOnLoadCallback(drawChart);
+<script type="text/javascript">
+  google.charts.load('current', { 'packages': ['corechart'] });
+  google.charts.setOnLoadCallback(drawChart);
 
-    function drawChart() {
-      var data = google.visualization.arrayToDataTable([
+  function drawChart() {
+
+    var data = google.visualization.arrayToDataTable([
       ['Task', 'Hours per Day'],
-      {% for key, value in categories_yearly.items %}
+      {% for key, value in categories_expense_yearly.items %}
       ['{{key}}', {{value}}],
       {% endfor %}
-      ]);
+    ]);
 
-      var options = {
-        pieHole: 0.4,
-        legend: { position: 'top', alignment: 'start' }
-      };
+    var options = {
+      pieHole: 0.4,
+      legend: { position: 'top', alignment: 'start' },
+    };
 
-      var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
+    var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
 
-      chart.draw(data, options);
-    }
-</script> -->
+    chart.draw(data, options);
+  }
+</script>
+<script type="text/javascript">
+  google.charts.load('current', { 'packages': ['corechart'] });
+  google.charts.setOnLoadCallback(drawChart);
 
+  function drawChart() {
+
+    var data = google.visualization.arrayToDataTable([
+      ['Task', 'Hours per Day'],
+      {% for key, value in categories_income_yearly.items %}
+      ['{{key}}', {{value}}],
+      {% endfor %}
+    ]);
+
+    var options = {
+      pieHole: 0.4,
+      legend: { position: 'top', alignment: 'start' },
+    };
+
+    var chart = new google.visualization.PieChart(document.getElementById('donutchart1'));
+
+    chart.draw(data, options);
+  }
+</script>
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
-  
-    new ApexCharts(document.querySelector("#donutChart"), {
-  
-        series: [
-            {% for key, value in categories_yearly.items %}
-            ['{{key}}', {{value}}],
-            {% endfor %}
-        ],
-        chart: {
-        type: 'donut',
-        toolbar: {
-            show: true
-            }
-        },
-        colors: ['#2E93fA', '#00E396', '#FEB019', '#FF4560', '#775DD0', '#A300D6', '#66DA26', '#546E7A', '#E91E63', '#FF9800'],
-        legend: {
-        position: 'bottom'
-        },
-        // labels: ['Income', 'Expense']
-    }).render();
-    });
-  </script>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load("current", {packages:["corechart"]});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Task', 'Hours per Day'],
+          ['Actual',     {{ total_income|stringformat:"i"}}],
+          ['Budget',      {{ income_budget|stringformat:"i"}}],
+        ]);
 
-<!-- <script type="text/javascript">
-    google.charts.load('current', { 'packages': ['corechart'] });
-    google.charts.setOnLoadCallback(drawChart);
+        var options = {
+          title: 'Income percentage of Budget',
+          pieHole: 0.4,
+          legend: { position: 'top', alignment: 'start' },
+        };
 
-    function drawChart() {
+        var chart = new google.visualization.PieChart(document.getElementById('chart'));
+        chart.draw(data, options);
+      }
+</script>
+<script>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load("current", {packages:["corechart"]});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Task', 'Hours per Day'],
+          ['Actual',     {{ total_expense|stringformat:"i"}}],
+          ['Budget',     {{ expense_budget|stringformat:"i"}}],
+        ]);
 
-      var data = google.visualization.arrayToDataTable([
-        ['Task', 'Hours per Day'],
-        ['Income', {{ income|stringformat:"i"}}],
-        ['Expense', {{ expense|stringformat:"i"}}]
+        var options = {
+          title: 'Expanse percentage of Budget',
+          pieHole: 0.4,
+          legend: { position: 'top', alignment: 'start' },
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('chart1'));
+        chart.draw(data, options);
+      }
+</script>
+<script type="text/javascript">
+  google.charts.load('current', { 'packages': ['corechart'] });
+  google.charts.setOnLoadCallback(drawChart);
+
+  function drawChart() {
+
+    var data = google.visualization.arrayToDataTable([
+      ['Task', 'Hours per Day'],
+      ['Expense', {{ total_expense|stringformat:"i"}}],
+      ['Income', {{ total_income|stringformat:"i"}}],
     ]);
 
     var options = {
@@ -316,33 +393,10 @@
 
     chart.draw(data, options);
   }
-</script> -->
 
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-  
-    new ApexCharts(document.querySelector("#pieChart"), {
-  
-        series: [{{ income|stringformat:"i"}}, {{ expense|stringformat:"i"}}],
-        chart: {
-        // height: 380,
-        type: 'pie',
-        toolbar: {
-            show: true
-            }
-        },
-        title: {
-        align: 'center',
-        },
-        legend: {
-        position: 'bottom'
-        // horizontalAlign: 'center',
-        // offsetX: 40
-        },
-        colors: ['#2E93fA', '#00E396', '#FEB019', '#FF4560', '#775DD0', '#A300D6', '#66DA26', '#546E7A', '#E91E63', '#FF9800'],
-        labels: ['Income', 'Expense']
-    }).render();
-    });
-  </script>
+</script>
+
+<br>
+
 
 {% endblock content %}
