@@ -144,7 +144,7 @@
                     <script>
                         document.addEventListener("DOMContentLoaded", () => {
                         new ApexCharts(document.querySelector("#pieChart"), {
-                            series: [{{total_assets}}, {{total_liabilities}}, {{total_networth}}],
+                            series: [{{stocks_total_progress}},{{commodities_prog}},{{crypto_progress}},{{total_assets}}],
                             chart: {
                             height: 380,
                             type: 'pie',
@@ -162,7 +162,7 @@
                             // horizontalAlign: 'center',
                             // offsetX: 40
                             },
-                            labels: ['Assets', 'Liabilities', 'Networth']
+                            labels: ['stocks','commodities','crypto','property value']
                         }).render();
                         });
                     </script>

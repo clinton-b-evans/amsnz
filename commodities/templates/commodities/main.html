@@ -75,7 +75,7 @@ function popitup(url) {
                       <!-- <span>| {{year}}</span> -->
                     </h5>
                     <!-- <div id="piechart_3d" style="width: auto; min-height: 350px;"></div> -->
-                    <div id="pieChart" style="width: 100%;"></div>
+                    <div id="pieChart" style="width: 100%;width: auto; min-height: 380px;""></div>
                 </div>
             </div>
         </div>
@@ -226,33 +226,26 @@ var options = {
 </script>
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
+        google.charts.load("current", {packages:["corechart"]});
+        google.charts.setOnLoadCallback(drawChart);
+        function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Task', 'Hours per Day'],
+          {% for obj in pie_chart_date %}
+          ['{{ obj.commodity }}', {{obj.percentage|stringformat:".2f"}}],
+          {% endfor %}
+        ]);
 
-  new ApexCharts(document.querySelector("#pieChart"), {
+        var options = {
+          // is3D: true,
+          legend: {position: 'top', alignment: 'center'},
+          colors: ['Gold', 'Silver', 'Green', 'Red']
+        };
 
-      series: [
-      {% for obj in pie_chart_date %}
-      {{obj.percentage|stringformat:".2f"}},
-      {% endfor %}
-      ],
-      chart: {
-        height: 380,
-        type: 'pie',
-        toolbar: {
-          show: true
+        var chart = new google.visualization.PieChart(document.getElementById('pieChart'));
+        chart.draw(data, options);
         }
-      },
-      colors: ['#2E93fA', '#00E396', '#FEB019', '#FF4560', '#775DD0', '#A300D6', '#66DA26', '#546E7A', '#E91E63', '#FF9800'],
-      title: {
-        text: '{{year}}',
-      align: 'center',
-      },
-      legend: {
-      position: 'top'
-      },
-      // labels: ['Income', 'Expense']
-  }).render();
-  });
+
 </script>
 
 <script>
