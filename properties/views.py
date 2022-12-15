@@ -342,7 +342,7 @@ def property_summary_view(request, year, *args, **kwargs):
         "all_assets": all_summary["all_assets"],
         "all_liabilities": all_summary["all_liabilities"],
         "all_networth": all_summary["all_networth"],
-        "years_list": all_summary["years_list"],
+        "years_list": all_summary["year_list"],
         # property summary
         "property_progress": prop_summary['progress_bar'],
         "total_properties": prop_summary['no_of_properties'],
@@ -394,27 +394,24 @@ def property_summary_view(request, year, *args, **kwargs):
 
 
 def overall_summary(request, year):
-    all_summary = Property.objects.filter(user=request.user)
-    years = Property.objects.filter(user=request.user).values_list('purchase_date__year').distinct()
-    years_list = []
-    for data in years:
-        for item in data:
-            years_list.append(item)
-    years_list = sort(years_list)
-    all_assets = []
-    all_liabilities = []
-    all_networth = []
-    for year in years_list:
-        asset = sum(data.market_value for data in all_summary.filter(purchase_date__year=year))
-        liability = sum(data.loan_amount for data in all_summary.filter(purchase_date__year=year))
-        all_assets.append(asset)
-        all_liabilities.append(liability)
-        all_networth.append(asset - liability)
+    etf_summary = index_funds_summary(request, year)
+    comm_summary = commodity_summary(request, year)
+    cryp_summary = crypto_summary(request, year)
+    property = sum(data.market_value for data in Property.objects.filter(user=request.user))
+    liability = sum(data.loan_amount for data in Property.objects.filter(user=request.user))
+
+    all_assets = round(property + cryp_summary['crypto_total_amount'] + etf_summary['stock_total_amount'] + etf_summary[
+        'etf_total_amount'] + comm_summary['commodities_total_value'], 2)
+    all_liabilities = [round(liability, 2)]
+    networth = all_assets - liability
+    assets = [all_assets]
+    all_networth = [networth]
+    year_list = [int(year)]
     context = {
-        "all_assets": all_assets,
+        "all_assets": assets,
         "all_liabilities": all_liabilities,
         "all_networth": all_networth,
-        "years_list": years_list,
+        "year_list": year_list,
     }
     return context
 
@@ -548,7 +545,8 @@ def commodity_summary(request, year):
     commodity_prices = get_commodities()
     commodities_total_value = 0
     if commodity_data:
-        commodities_total_value = sum(data.weight * commodity_prices[data.commodity_class.commodity_class] for data in commodity_data)
+        commodities_total_value = sum(
+            data.weight * commodity_prices[data.commodity_class.commodity_class] for data in commodity_data)
     arr = []
     for i in range(1, 5):
         com = {
