@@ -846,8 +846,9 @@ def edit_property(request, pk):
     })
 
 
-@require_POST
 def remove_property(request, pk):
+    if request.method == 'GET':
+        print('asf')
     property = get_object_or_404(Property, pk=pk)
     property.delete()
     return HttpResponse(
