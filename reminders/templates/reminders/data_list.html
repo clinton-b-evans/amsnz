@@ -15,7 +15,7 @@
                       fill-rule="evenodd"/>
             </svg>
         </button>
-        <button class="btn btn-danger-1 btn-sm rounded-0" data-bs-target="#deleteModal{{obj.id}}" data-bs-toggle="modal"
+        <button class="btn btn-danger-1-1 btn-sm rounded-0" data-bs-target="#deleteModal{{obj.id}}" data-bs-toggle="modal"
                 type="button">
             <svg class="bi bi-trash" fill="currentColor" height="16" viewBox="0 0 16 16"
                  width="16" xmlns="http://www.w3.org/2000/svg">
@@ -39,7 +39,7 @@
                         <p>Are you sure you want to delete<strong> {{ obj.detail }}</strong>?</p>
                         <p>This action cannot be undone.</p>
                         <p>All transctions for this fund will be lost</p>
-                        <button class="btn btn-danger form-control" onclick="deleteReminder({{obj.id}})" type="button">
+                        <button class="btn btn-danger-1 form-control" onclick="deleteReminder({{obj.id}})" type="button">
                             Delete
                         </button>
                     </div>

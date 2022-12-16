@@ -337,12 +337,28 @@ def property_summary_view(request, year, *args, **kwargs):
     cash_summary = cashflow_summary(request, year)
     comm_summary = commodity_summary(request, year)
     cryp_summary = crypto_summary(request, year)
+    crypto = cryp_summary["crypto_total_amount"]
+    stock = etf_summary["stock_total_amount"]
+    etf = etf_summary["etf_total_amount"]
+    commodity = comm_summary["commodities_total_value"]
+    asset = prop_summary["assets"]
+    total = crypto + stock + asset + commodity + etf
+    asset_pie = (asset / total) * 100
+    crypto_pie = (crypto / total) * 100
+    stock_pie = (stock / total) * 100
+    etf_pie = (etf / total) * 100
+    commodity_pie = (commodity / total) * 100
     context = {
         # overall summary
         "all_assets": all_summary["all_assets"],
         "all_liabilities": all_summary["all_liabilities"],
         "all_networth": all_summary["all_networth"],
         "years_list": all_summary["year_list"],
+        "asset_pie": round(asset_pie, 2),
+        "crypto_pie": round(crypto_pie, 2),
+        "stock_pie": round(stock_pie, 2),
+        "commodity_pie": round(commodity_pie, 2),
+        "etf_pie": round(etf_pie, 2),
         # property summary
         "property_progress": prop_summary['progress_bar'],
         "total_properties": prop_summary['no_of_properties'],

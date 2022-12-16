@@ -144,7 +144,7 @@
                     <script>
                         document.addEventListener("DOMContentLoaded", () => {
                         new ApexCharts(document.querySelector("#pieChart"), {
-                            series: [{{stocks_total_progress}},{{commodities_prog}},{{crypto_progress}},{{property_progress}}],
+                            series: [{{stock_pie}},{{commodity_pie}},{{crypto_pie}},{{asset_pie}},{{etf_pie}}],
                             chart: {
                             height: 360,
                             type: 'pie',
@@ -153,7 +153,7 @@
                             }
                             },
                             title: {
-                            text: 'Networth Tracker {{year}}',
+                            text: 'Investment Allocation {{year}}',
                             align: 'center',
                             // offsetX: 110
                             },
@@ -162,7 +162,7 @@
                             // horizontalAlign: 'center',
                             // offsetX: 40
                             },
-                            labels: ['stocks','commodities','crypto','property value']
+                            labels: ['stocks','commodities','crypto','property value','etf']
                         }).render();
                         });
                     </script>
