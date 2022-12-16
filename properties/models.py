@@ -4,6 +4,8 @@ from django.shortcuts import reverse
 from datetime import datetime
 from django.utils.timezone import now
 
+from stock_portfolios.models import YEAR_CHOICES
+
 
 class Property(models.Model):
     name = models.CharField(max_length=120)
@@ -119,3 +121,16 @@ class Transactions(models.Model):
 
     def __str__(self):
         return f"{self.property_id.name} {self.transaction_type}: ${self.amount} for {self.category}"
+
+
+class AnnualReport(models.Model):
+    assets = models.DecimalField(max_digits=12, decimal_places=2)
+    liabilities = models.DecimalField(max_digits=12, decimal_places=2)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=False)
+    year = models.CharField(choices=YEAR_CHOICES, null=False, blank=False, max_length=4)
+
+    class Meta:
+        verbose_name_plural = "AnnualReport"
+
+    def __str__(self):
+        return f"{self.year}"

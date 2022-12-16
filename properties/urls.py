@@ -26,5 +26,5 @@ urlpatterns = [
     path("properties/<pk>/", property_detail_view, name="detail"),
     path("properties/add", add_property, name="add-property"),
     path("properties/edit/<pk>/", edit_property, name="edit-property"),
-    path("properties/delete", remove_property, name="delete-property"),
+    path("properties/delete/<str:pk>/", remove_property, name="delete-property"),
 ]

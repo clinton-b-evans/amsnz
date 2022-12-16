@@ -47,7 +47,7 @@
                                     data-bs-toggle="modal" onClick="editUser({{user.id}})">EDIT</button>
                     </td>
                     <td align="center">
-                        <button class="btn btn-danger-1 form-control" onClick="deleteUser({{user.id}})">DELETE</button>
+                        <button class="btn btn-danger-1-1 form-control" onClick="deleteUser({{user.id}})">DELETE</button>
                     </td>
                 </tr>
                 {% endfor %}
@@ -121,7 +121,7 @@ function appendToUsrTable(user) {
                 <button class="btn btn-success form-control" onClick="editUser(${user.id})" data-toggle="modal" data-target="#myModal")">EDIT</button>
             </td>
             <td align="center">
-                <button class="btn btn-danger-1 form-control" onClick="deleteUser(${user.id})">DELETE</button>
+                <button class="btn btn-danger-1-1 form-control" onClick="deleteUser(${user.id})">DELETE</button>
             </td>
         </tr>
     `);
