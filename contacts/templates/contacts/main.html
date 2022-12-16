@@ -139,7 +139,11 @@ function popitup(url) {
             <p class="text-muted"><small><b>Company: </b> {{ obj.company_name }}</small> </p>
             <ul class="ms-4 mb-0 fa-ul text-muted text-start">
               <li class="small text-start"><small><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> <b>Properties:</b> {% for property in obj.properties.all %} {{property}} {% if not forloop.last %} / {% endif %}{% endfor %} </small></li>
-              <li class="small text-start"><small><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> <b>Phone #:</b> <a href="tel:{{ obj.contact_number }}">{{ obj.contact_number }}</a></small></li>
+              <li class="small text-start"><small><span class="fa-li"><i class="fas fa-suitcase"></i></span> <b>Occupation:</b> {{ obj.occupation }}</small></li>
+                <li class="small text-start"><small><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> <b>Phone #:</b> <a href="tel:{{ obj.contact_number }}">{{ obj.contact_number }}</a></small></li>
+                <li class="small text-start"><small><span class="fa-li"><i class="fas fa-search-location"></i></span> <b>Service Area:</b> {{ obj.service_area }}</small></li>
+                <li class="small text-start"><small><span class="fa-li"><i class="fas fa-globe"></i></span> <b>Website Url:</b> {{ obj.website_url }}</small></li>
+                <li class="small text-start"><small><span class="fa-li"><i class="fas fa-sticky-note"></i></span> <b>Notes:</b> {{ obj.notes }}</small></li>
             </ul>
           </div>
           <div class="col-5 text-center">
@@ -193,7 +197,6 @@ function popitup(url) {
                                               <label for="notes" class="form-label">Notes</label>
                                                 <textarea class="form-control" id="notes{{obj.id}}" rows="3">{{obj.notes}}</textarea>
                                               <select class="form-select" multiple aria-label="multiple select example" id="properties{{obj.id}}">
-                                                  <option selected>{% for property in obj.properties.all %} {{property}} {% if not forloop.last %} / {% endif %}{% endfor %}</option>
                                                     {% for property in property %}
                                                      <option value="{{property}}">{{property}}</option>
                                                     {% endfor %}
