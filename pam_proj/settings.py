@@ -132,13 +132,13 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 USE_THOUSAND_SEPARATOR = True
 
 JAZZMIN_SETTINGS = {
-    "site_title": "ABC Company",
-    "site_header": "ABC Company",
-    "site_brand": "NexQuery",
+    "site_title": "AMS",
+    "site_header": "AMS",
+    "site_brand": "AMS",
     # "site_icon": "images/favicon.png",
     "site_logo": None,
-    "welcome_sign": "Welcome to the NexQuery Django Admin",
-    "copyright": "NexQuery Private Limited",
+    "welcome_sign": "Welcome to the AMS Admin",
+    "copyright": "",
     "user_avatar": None,
     "show_sidebar": True,
     "navigation_expanded": True,
