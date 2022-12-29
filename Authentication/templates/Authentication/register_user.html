@@ -46,9 +46,10 @@
                     <p class="text-center small">Enter your personal details to create account</p>
                   </div>
                     {% if form.errors%}
-                  <div class="alert">
-                    <strong> {{form.errors}}</strong>
-                  </div>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                      <strong> {{form.errors}}</strong>
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
                     {% endif %}
                   <form method="POST" action="" class="row g-3 needs-validation" novalidate>
                         {% csrf_token %}

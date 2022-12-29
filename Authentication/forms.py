@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.core.validators import RegexValidator
+
 from Authentication.models import ContactUs
 
 
@@ -14,6 +16,13 @@ class RegisterUserForm(UserCreationForm):
         if "@" in data:
             raise forms.ValidationError("Contains @")
         return data
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        validator = RegexValidator(
+            "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
+        validator(email)
+        return email
 
 
 class ContactUsForm(forms.ModelForm):
