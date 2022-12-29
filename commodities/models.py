@@ -47,7 +47,7 @@ class Commodity(models.Model):
         verbose_name_plural = "commodities"
 
     def __str__(self):
-        return f"{self.name} ({self.year})"
+        return f"{self.commodity_class} ({self.year})"
 
 
 class Transaction(models.Model):

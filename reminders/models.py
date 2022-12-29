@@ -24,7 +24,7 @@ class Reminder(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.property.name} - {self.detail} - Due: {self.due_date}"
+        return f"{self.detail} - Due: {self.due_date}"
 
 
 class Notification(models.Model):
@@ -36,4 +36,4 @@ class Notification(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.reminder.property.name}"
+        return f"{self.reminder}"

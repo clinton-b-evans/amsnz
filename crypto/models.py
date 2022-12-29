@@ -64,4 +64,4 @@ class CryptoTransaction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
 
     def __str__(self):
-        return f"{self.coin} - {self.transaction_type}"
+        return f"{self.crypto_ticker} - {self.transaction_type}"
