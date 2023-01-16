@@ -551,15 +551,16 @@ def update_transaction(request, pk):
 def delete_transaction(request):
     id1 = request.GET.get('id', None)
     transaction = CryptoTransaction.objects.get(id=id1, user=request.user)
+    crypto = Crypto.objects.get(crypto_ticker=transaction.crypto_ticker, user=request.user, year=transaction.date.year)
     if transaction.transaction_type == 'Buy':
-        transaction.coin.quantity -= transaction.quantity
-        transaction.coin.investment -= float(transaction.quantity) * float(transaction.spot_price)
-        transaction.coin.save()
+        crypto.quantity -= transaction.quantity
+        crypto.investment -= float(transaction.quantity) * float(transaction.spot_price)
+        crypto.save()
         print('buy')
     else:
-        transaction.coin.quantity += transaction.quantity
-        transaction.coin.investment += float(transaction.quantity) * float(transaction.spot_price)
-        transaction.coin.save()
+        crypto.quantity += transaction.quantity
+        crypto.investment += float(transaction.quantity) * float(transaction.spot_price)
+        crypto.save()
         print('sell')
     CryptoTransaction.objects.get(id=id1, user=request.user).delete()
     data = {

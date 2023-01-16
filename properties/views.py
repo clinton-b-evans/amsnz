@@ -343,11 +343,18 @@ def property_summary_view(request, year, *args, **kwargs):
     commodity = comm_summary["commodities_total_value"]
     asset = prop_summary["assets"]
     total = crypto + stock + asset + commodity + etf
-    asset_pie = (asset / total) * 100
-    crypto_pie = (crypto / total) * 100
-    stock_pie = (stock / total) * 100
-    etf_pie = (etf / total) * 100
-    commodity_pie = (commodity / total) * 100
+    asset_pie = 0
+    crypto_pie = 0
+    stock_pie = 0
+    etf_pie = 0
+    commodity_pie = 0
+    print(total,'total')
+    if total != 0:
+        asset_pie = (asset / total) * 100
+        crypto_pie = (crypto / total) * 100
+        stock_pie = (stock / total) * 100
+        etf_pie = (etf / total) * 100
+        commodity_pie = (commodity / total) * 100
     context = {
         # overall summary
         "all_assets": all_summary["all_assets"],

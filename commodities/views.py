@@ -403,19 +403,19 @@ def commodity_detail_view(request, **kwargs):
     return render(request, "commodities/detail.html", context)
 
 
-def update_commodity(request, pk):
-    commodity = Commodity.objects.get(id=pk, user=request.user)
-    form = CommodityForm(instance=commodity)
-
-    if request.method == "POST":
-        form = CommodityForm(request.POST, instance=commodity)
-        if form.is_valid():
-            form.save()
-            return HttpResponse(
-                '<script type="text/javascript">window.close()</script>'
-            )
-    context = {"form": form}
-    return render(request, "commodities/add.html", context)
+# def update_commodity(request, pk):
+#     commodity = Commodity.objects.get(id=pk, user=request.user)
+#     form = CommodityForm(instance=commodity)
+#
+#     if request.method == "POST":
+#         form = CommodityForm(request.POST, instance=commodity)
+#         if form.is_valid():
+#             form.save()
+#             return HttpResponse(
+#                 '<script type="text/javascript">window.close()</script>'
+#             )
+#     context = {"form": form}
+#     return render(request, "commodities/add.html", context)
 
 
 def delete_commodity(request, pk):
@@ -531,46 +531,24 @@ def update_transaction(request, pk):
     return render(request, "transactions/add.html", context)
 
 
-def deleteTransaction(request):
+def delete_transaction(request):
     id1 = request.GET.get('id', None)
     transaction = Transaction.objects.get(id=id1, user=request.user)
+    commodity = Commodity.objects.get(commodity_class=transaction.commodity, user=request.user, year=transaction.date.year)
     if transaction.transaction_type == 'Buy':
-        transaction.commodity.weight -= transaction.weight
-        transaction.commodity.investment -= float(transaction.weight) * float(transaction.value)
-        transaction.commodity.save()
+        commodity.weight -= transaction.weight
+        commodity.investment -= float(transaction.weight) * float(transaction.value)
+        commodity.save()
         print('buy')
     else:
-        transaction.commodity.weight += transaction.weight
-        transaction.commodity.investment += float(transaction.weight) * float(transaction.value)
-        transaction.commodity.save()
+        commodity.weight += transaction.weight
+        commodity.investment += float(transaction.weight) * float(transaction.value)
+        commodity.save()
         print('sell')
-    Transaction.objects.get(id=id1).delete()
+    Transaction.objects.get(id=id1, user=request.user).delete()
     data = {
         'deleted': True
     }
     return JsonResponse(data)
 
 
-def delete_transaction(request, pk):
-    transaction = Transaction.objects.get(id=pk, user=request.user)
-    qs = Transaction.objects.get(id=pk, user=request.user)
-    context = {
-        "object": qs,
-    }
-
-    if request.method == "POST":
-        # delete object
-        if transaction.transaction_type == 'Buy':
-            transaction.commodity.weight -= transaction.weight
-            transaction.commodity.investment -= float(transaction.weight) * float(transaction.value)
-            transaction.commodity.save()
-        else:
-            transaction.commodity.weight += transaction.weight
-            transaction.commodity.investment += float(transaction.weight) * float(transaction.value)
-            transaction.commodity.save()
-        transaction.delete()
-        # after deleting redirect to
-        # home page
-        return HttpResponse('<script type="text/javascript">window.close()</script>')
-
-    return render(request, "transactions/delete.html", context)

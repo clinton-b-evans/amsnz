@@ -304,7 +304,7 @@ function popitup(url) {
     }
     function deleteTransaction(id) {
         $.ajax({
-            url: '{% url "commodities:deleteTransaction" %}',
+            url: '{% url "commodities:delete-transaction" %}',
             data: {
                 'id': id,
             },
