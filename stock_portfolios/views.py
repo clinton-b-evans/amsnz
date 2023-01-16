@@ -204,6 +204,7 @@ def stock_transactions(request, year):
 
 
 def transaction_list(request, year=''):
+    print(year, "year")
     if year == '':
         stock = Stock.objects.filter(user=request.user).values()
         transactions = StockTransaction.objects.filter(user=request.user).order_by('date')
@@ -229,7 +230,7 @@ def transaction_list(request, year=''):
         for item in data:
             years_list.append(item)
     years_list = sort_years_list(years_list)
-    print(years_list, 'years_list')
+    # print(years_list, 'years_list')
     context = {
         "year": year,
         "transactions": transactions_table,
