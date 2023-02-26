@@ -49,7 +49,7 @@ def get_stock_price_data(tickers):
 
 @login_required(login_url='/login/')
 def stock_list_view(request, year):
-    stocks = Stock.objects.filter(user=request.user, year=year).exclude(quantity=0)
+    stocks = Stock.objects.filter(user=request.user).exclude(quantity=0)
     used_stocks_ticker = stocks.values_list('stock_ticker__ticker', flat=True).distinct()
     stock_prices = get_stock_price_data(used_stocks_ticker)
     investments, assetsGains = generate_bar_graph_series_data(stocks, stock_prices)
@@ -172,8 +172,8 @@ def stock_transactions(request, year):
         stock = Stock.objects.filter(user=request.user).values()
         transactions = StockTransaction.objects.filter(user=request.user).order_by('date')
     else:
-        stock = Stock.objects.filter(user=request.user, year=year).values()
-        transactions = StockTransaction.objects.filter(date__year=year, user=request.user).order_by('date')
+        stock = Stock.objects.filter(user=request.user).values()
+        transactions = StockTransaction.objects.filter(user=request.user).order_by('date')
 
     transactions_table = []
     for transaction in transactions:
@@ -207,10 +207,10 @@ def transaction_list(request, year=''):
     print(year, "year")
     if year == '':
         stock = Stock.objects.filter(user=request.user).values()
-        transactions = StockTransaction.objects.filter(user=request.user).order_by('date')
+        transactions = StockTransaction.objects.filter(user=request.user).order_by('-date')
     else:
-        stock = Stock.objects.filter(user=request.user, year=year).values()
-        transactions = StockTransaction.objects.filter(date__year=year, user=request.user).order_by('date')
+        stock = Stock.objects.filter(user=request.user).values()
+        transactions = StockTransaction.objects.filter(user=request.user).order_by('-date')
 
     transactions_table = []
     for transaction in transactions:
@@ -326,7 +326,7 @@ def edit_transaction(request):
 def delete_transaction(request):
     id1 = request.GET.get('id', None)
     transaction = StockTransaction.objects.get(id=id1, user=request.user)
-    stock = Stock.objects.get(stock_ticker=transaction.stock_ticker,user=request.user,year=transaction.date.year)
+    stock = Stock.objects.get(stock_ticker=transaction.stock_ticker,user=request.user)
     if transaction.transaction_type == 'Buy':
         stock.quantity -= transaction.quantity
         stock.investment -= float(transaction.quantity) * float(transaction.spot_price)

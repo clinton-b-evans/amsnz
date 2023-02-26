@@ -3,7 +3,7 @@
 {% load mathfilters %}
 
 {% block title %}
-<div class="title">Commodities<span>| Year: {{ year }} </span>
+<div class="title">Commodities<!--    <span>| Year: {{ year }} </span>-->
   <span class="filter position-absolute" style="right: 2rem;">
       <a class="icon btn btn-dashboard" data-bs-toggle="dropdown" href="#" type="button">View By <i class="bi bi-grid"></i></a>
       <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
@@ -102,9 +102,9 @@ function popitup(url) {
                     <tr>
                         <!--              <td style="text-align:left"><a href='{{obj.pk}}/'>{{ obj.commodity_class }}</a></td>-->
                         <td style="text-align:left">{{ obj.commodity }}</td>
-                        <td style="text-align:right">{{ obj.weight }}</td>
-                        <td style="text-align:right">${{ obj.totalInvestment|floatformat:2 }}</td>
-                        <td style="text-align:right">${{ obj.spotPrice }}</td>
+                        <td style="text-align:right">{{ obj.weight|floatformat:2 }}</td>
+                        <td style="text-align:right">{% if obj.totalInvestment >= 0 %}${{ obj.totalInvestment|floatformat:2 }}{% else %} $0 {% endif %}</td>
+                        <td style="text-align:right">${{ obj.spotPrice|floatformat:2 }}</td>
                         <td style="text-align:right">${{ obj.currentMarketValue|floatformat:2 }}</td>
                         <td style="text-align:right"><small class="text-{% if obj.status == 'profit' %}success{% else %}danger{% endif %} me-2"> &nbsp;<i class="fas fa-{% if obj.status == 'profit' %}arrow-up{% else %}arrow-down{% endif %} me-1"></i>{{ obj.profit_loss_percentage|floatformat:2 }}% </small></td>
                     </tr>
@@ -186,7 +186,7 @@ var options = {
           ],
         },
         title: {
-          text: '{{year}}',
+          text: '',
           align: 'center',
         },
         legend: {

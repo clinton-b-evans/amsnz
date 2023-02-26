@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load humanize %}
 {% block title %}
     {{ object.name }}
     <h6><a href="/summary">back</a></h6>
@@ -193,7 +193,7 @@
             <tr>
                 <td colspan="2">Equity:</td>
                 <td></td>
-                <td>${{ equity }}<br></td>
+                <td>${{ equity|intcomma }}<br></td>
             </tr>
             <tr>
                 <td></td>

@@ -441,7 +441,7 @@
                 <tbody>
                 {% for obj in crypto_qs %}
                 <tr>
-                    <td>{{ obj.name }}</td>
+                    <td>{{ obj.crypto_ticker.name }}</td>
                     <td style="text-align:right"> ${{ obj.investment|floatformat:2 }}</td>
                 </tr>
                 {% endfor %}

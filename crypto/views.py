@@ -63,7 +63,8 @@ def compute_pie_chart_transaction_types(cryptos, totalMarketValue, crypto_prices
     pie_chart_data = []
     for crypto in cryptos:
         if crypto.quantity > 0:
-            percentage = ((float(crypto.quantity) * float(crypto_prices[crypto.crypto_ticker.ticker])) / totalMarketValue) * 100
+            percentage = ((float(crypto.quantity) * float(
+                crypto_prices[crypto.crypto_ticker.ticker])) / totalMarketValue) * 100
         else:
             percentage = 0
         pie_chart_data.append({
@@ -159,11 +160,11 @@ def crypto_transactions(request, year):
     if year == '':
         transactions = CryptoTransaction.objects.filter(user=request.user).order_by('date')
     else:
-        transactions = CryptoTransaction.objects.filter(date__year=year, user=request.user).order_by('date')
-
+        transactions = CryptoTransaction.objects.filter(user=request.user).order_by('date')
     transactions_table = []
     for transaction in transactions:
         totalInvestment = float(transaction.quantity) * float(transaction.spot_price)
+        print(transaction.date,"date")
         transactions_table.append({
             "id": transaction.id,
             "crypto_name": transaction.crypto_ticker.name,
@@ -240,10 +241,10 @@ def delete_crypto(request, pk):
 def crypto_transaction_list(request, year=''):
     if year == '':
         crypto = Crypto.objects.filter(user=request.user).values()
-        transactions = CryptoTransaction.objects.filter(user=request.user).order_by('date')
+        transactions = CryptoTransaction.objects.filter(user=request.user).order_by('-date')
     else:
-        crypto = Crypto.objects.filter(user=request.user, year=year).values()
-        transactions = CryptoTransaction.objects.filter(date__year=year, user=request.user).order_by('date')
+        crypto = Crypto.objects.filter(user=request.user).values()
+        transactions = CryptoTransaction.objects.filter(user=request.user).order_by('-date')
 
     transactions_table = []
     for transaction in transactions:
@@ -306,7 +307,7 @@ def edit_sufi_transaction(request, pk):
                 headers={
                     'HX-Trigger': json.dumps({
                         "transactionListChanged": None,
-                        "showMessage": f"{crypto_transaction.coin} updated."
+                        "showMessage": f"{crypto_transaction.crypto_ticker.name} updated."
                     })
                 }
             )
@@ -551,7 +552,7 @@ def update_transaction(request, pk):
 def delete_transaction(request):
     id1 = request.GET.get('id', None)
     transaction = CryptoTransaction.objects.get(id=id1, user=request.user)
-    crypto = Crypto.objects.get(crypto_ticker=transaction.crypto_ticker, user=request.user, year=transaction.date.year)
+    crypto = Crypto.objects.get(crypto_ticker=transaction.crypto_ticker, user=request.user)
     if transaction.transaction_type == 'Buy':
         crypto.quantity -= transaction.quantity
         crypto.investment -= float(transaction.quantity) * float(transaction.spot_price)

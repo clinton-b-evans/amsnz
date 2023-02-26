@@ -77,7 +77,8 @@ def commodity_list_view(request, year):
 
     for commodity in commodities:
         spotPrice = commodity_prices[commodity.commodity_class.commodity_class]
-        totalInvestment += commodity.investment
+        if commodity.investment >= 0:
+            totalInvestment += commodity.investment
         currentMarketValue = float(commodity.weight) * spotPrice
         totalMarketValue += currentMarketValue
         status = 'no-gain'
@@ -143,11 +144,11 @@ def commodity_transactions(request, year):
     if year == '':
         commodity = Commodity.objects.filter(user=request.user).values()
     else:
-        commodity = Commodity.objects.filter(user=request.user, year=year).values()
+        commodity = Commodity.objects.filter(user=request.user).values()
     if year == '':
         transactions = Transaction.objects.filter(user=request.user).order_by('date')
     else:
-        transactions = Transaction.objects.filter(date__year=year, user=request.user).order_by('date')
+        transactions = Transaction.objects.filter(user=request.user).order_by('date')
     years = Transaction.objects.values_list("date__year").distinct()
     transactions_table = []
     for transaction in transactions:
@@ -179,10 +180,11 @@ def commodity_transactions(request, year):
 def commodity_transaction_list(request, year=''):
     if year == '':
         commodity = Commodity.objects.filter(user=request.user).values()
-        transactions = Transaction.objects.filter(user=request.user).order_by('date')
+        transactions = Transaction.objects.filter(user=request.user).order_by('-date','id')
     else:
         commodity = Commodity.objects.filter(user=request.user, year=year).values()
-        transactions = Transaction.objects.filter(date__year=year, user=request.user).order_by('date')
+        transactions = Transaction.objects.filter(date__year=year, user=request.user).order_by('-date','id')
+        transactions = Transaction.objects.filter(date__year=year, user=request.user).order_by('-date','id')
 
     transactions_table = []
     for transaction in transactions:
@@ -534,7 +536,7 @@ def update_transaction(request, pk):
 def delete_transaction(request):
     id1 = request.GET.get('id', None)
     transaction = Transaction.objects.get(id=id1, user=request.user)
-    commodity = Commodity.objects.get(commodity_class=transaction.commodity, user=request.user, year=transaction.date.year)
+    commodity = Commodity.objects.get(commodity_class=transaction.commodity, user=request.user)
     if transaction.transaction_type == 'Buy':
         commodity.weight -= transaction.weight
         commodity.investment -= float(transaction.weight) * float(transaction.value)

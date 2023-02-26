@@ -13,10 +13,10 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 def personal_balance_list_view(request, year):
     selected = "Yearly"
 
-    qs_asset = PersonalBalance.objects.filter(entry_type="Asset", user=request.user, date__year=year)
-    qs_lib = PersonalBalance.objects.filter(entry_type="Liability", user=request.user, date__year=year)
-    qs_save = PersonalBalance.objects.filter(entry_type="Savings", user=request.user, date__year=year)
-    qs_retirement = PersonalBalance.objects.filter(entry_type="Retirement Acc", user=request.user, date__year=year)
+    qs_asset = PersonalBalance.objects.filter(entry_type="Asset", user=request.user)
+    qs_lib = PersonalBalance.objects.filter(entry_type="Liability", user=request.user)
+    qs_save = PersonalBalance.objects.filter(entry_type="Savings", user=request.user)
+    qs_retirement = PersonalBalance.objects.filter(entry_type="Retirement Acc", user=request.user)
     total_asset = 0
     total_liability = 0
     total_savings = 0
@@ -38,13 +38,6 @@ def personal_balance_list_view(request, year):
         networth_class = "black"
     else:
         networth_class = "red"
-    years = PersonalBalance.objects.filter(user=request.user).values_list("date__year").distinct()
-    years_list = []
-    for data in years:
-        for item in data:
-            years_list.append(item)
-    years_list = sort_years_list(years_list)
-    print(years_list, 'years')
     context = {
         "assets": qs_asset,
         "liability": qs_lib,
@@ -57,7 +50,6 @@ def personal_balance_list_view(request, year):
         "networth": networth,
         "networth_class": networth_class,
         "selected": selected,
-        "years_list": years_list,
     }
     return render(request, "personal_balances/main.html", context)
 
@@ -170,7 +162,6 @@ def addpersonal_balance(request):
             description=categoryData['description'],
             entry_type=categoryData["entry"],
             amount=categoryData["amount"],
-            date=categoryData["date"],
             user=request.user
         )
         user = {

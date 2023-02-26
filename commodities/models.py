@@ -26,6 +26,7 @@ class CommodityClass(models.Model):
         max_length=50, choices=COMMODITY_CLASS_CHOICES,
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
+
     def __str__(self):
         return f"{self.name}"
 
@@ -40,14 +41,14 @@ class Commodity(models.Model):
         null=False, blank=False, default=0.0,
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
-    year = models.CharField(choices=YEAR_CHOICES, null=False, blank=False, max_length=4)
+    # year = models.CharField(choices=YEAR_CHOICES, null=False, blank=False, max_length=4)
 
     class Meta:
-        unique_together = ('user', 'commodity_class', 'year')
+        unique_together = ('user', 'commodity_class')
         verbose_name_plural = "commodities"
 
     def __str__(self):
-        return f"{self.commodity_class} ({self.year})"
+        return f"{self.commodity_class}"
 
 
 class Transaction(models.Model):

@@ -41,7 +41,7 @@
 <!--      New Entry-->
 <!--    </button>-->
 <!--  </a>-->
-<button type="button" class="btn btn-dashboard mb-3" hx-get="{% url 'incomestatements_property:incomestatement-add-property' %}" hx-target="#dialog">
+<button type="button" class="btn btn-dashboard mb-3" hx-get="{% url 'incomestatements_property:incomestatement-add-property' year %}" hx-target="#dialog">
     <svg class="bi bi-calendar-plus me-1" fill="currentColor" height="16" viewBox="0 0 16 16"
              width="16" xmlns="http://www.w3.org/2000/svg">
             <path d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>
@@ -154,7 +154,7 @@
           <th style="text-align: right;">Action</th>
         </tr>
       </thead>
-      <tbody hx-trigger="load, transactionListChanged from:body" hx-get="{% url 'incomestatements_property:data_list_property' %}" hx-target="this">
+      <tbody hx-trigger="load, transactionListChanged from:body" hx-get="{% url 'incomestatements_property:data_list_property' year %}" hx-target="this">
           <tr>
             <td class="spinner-border" role="status">
               <span class="visually-hidden">Loading...</span>

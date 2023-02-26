@@ -68,8 +68,7 @@ class TransactionForm(ModelForm):
         date = self.data['date']
         date = datetime.datetime.strptime(date, '%Y-%m-%d').date()
         commodity, created = Commodity.objects.get_or_create(commodity_class=commodity,
-                                                             user=self.user,
-                                                             year=str(date.year))
+                                                             user=self.user)
         if self.is_edit is False:
             if weight <= 0:
                 raise ValidationError(f"Quantity cannot be 0 or negative")
@@ -93,6 +92,11 @@ class TransactionForm(ModelForm):
                     raise ValidationError("You don't have sufficient weight")
             return weight
         else:
+            if weight <= 0:
+                raise ValidationError(f"Quantity cannot be 0 or negative")
+            if transaction_type == 'Sell':
+                if (commodity.weight + initial_weight) - float(weight) < 0:
+                    raise ValidationError(f"You cannot sell more than {commodity.weight + initial_weight}")
             if transaction_type == 'Buy':
                 # if value changed
                 if "value" in self.changed_data:
@@ -121,18 +125,30 @@ class TransactionForm(ModelForm):
                     if initial_weight != weight:
                         commodity.weight -= initial_weight
                         commodity.weight += weight
-                        commodity.investment += initial_weight * value
-                        commodity.investment -= weight * value
+                        commodity.investment += initial_weight * initial_value
+                        # commodity.investment -= weight * value
+                        if commodity.investment - weight * value < 0:
+                            commodity.investment = float(0.0)
+                        else:
+                            commodity.investment -= weight * value
                     else:
-                        commodity.investment += initial_weight * value
-                        commodity.investment -= weight * value
+                        commodity.investment += initial_weight * initial_value
+                        # commodity.investment -= weight * value
+                        if commodity.investment - weight * value < 0:
+                            commodity.investment = float(0.0)
+                        else:
+                            commodity.investment -= weight * value
                     commodity.save()
                 # if weight changed and spotPrice didn't change
                 if initial_weight != weight and initial_value == value:
                     commodity.weight -= weight
                     commodity.weight += initial_weight
                     commodity.investment += weight * value
-                    commodity.investment -= initial_weight * value
+                    # commodity.investment -= initial_weight * value
+                    if commodity.investment - weight * value < 0:
+                        commodity.investment = float(0.0)
+                    else:
+                        commodity.investment -= weight * value
                     commodity.save()
             return weight
 
@@ -148,10 +164,10 @@ class TransactionForm(ModelForm):
             raise ValidationError(f"Transaction type cannot be changed")
         return transaction_type
 
-    def clean_date(self):
-        date = self.cleaned_data['date']
-        if self.is_edit:
-            initial_date = self.initial['date']
-            if date.year != initial_date.year:
-                raise ValidationError(f"Year cannot be changed")
-        return date
+    # def clean_date(self):
+    #     date = self.cleaned_data['date']
+    #     if self.is_edit:
+    #         initial_date = self.initial['date']
+    #         if date.year != initial_date.year:
+    #             raise ValidationError(f"Year cannot be changed")
+    #     return date

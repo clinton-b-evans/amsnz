@@ -330,6 +330,7 @@ def sort(myList):
 
 @login_required(login_url='/login/')
 def property_summary_view(request, year, *args, **kwargs):
+    print(year, "year")
     etf_summary = index_funds_summary(request, year)
     all_summary = overall_summary(request, year)
     prop_summary = property_summary(request, year)
@@ -348,7 +349,7 @@ def property_summary_view(request, year, *args, **kwargs):
     stock_pie = 0
     etf_pie = 0
     commodity_pie = 0
-    print(total,'total')
+    print(total, 'total')
     if total != 0:
         asset_pie = (asset / total) * 100
         crypto_pie = (crypto / total) * 100
@@ -423,9 +424,10 @@ def overall_summary(request, year):
     property = sum(data.market_value for data in Property.objects.filter(user=request.user))
     liability = sum(data.loan_amount for data in Property.objects.filter(user=request.user))
 
-    all_assets = round(property + cryp_summary['crypto_total_amount'] + etf_summary['stock_total_amount'] + etf_summary[
-        'etf_total_amount'] + comm_summary['commodities_total_value'], 2)
-    all_liabilities = [round(liability, 2)]
+    all_assets = float("{:.2f}".format(
+        round(property + cryp_summary['crypto_total_amount'] + etf_summary['stock_total_amount'] + etf_summary[
+            'etf_total_amount'] + comm_summary['commodities_total_value'], 2)))
+    all_liabilities = [float("{:.2f}".format(round(liability, 2)))]
     networth = all_assets - liability
     assets = [all_assets]
     all_networth = [networth]
@@ -450,9 +452,9 @@ def get_stock_price_data(tickers):
 
 
 def index_funds_summary(request, year):
-    stock_data = Stock.objects.filter(user=request.user, year=year, stock_ticker__stock_type='INDIVIDUAL')
-    etf_data = Stock.objects.filter(user=request.user, year=year, stock_ticker__stock_type='INDEX_FUND/EFT')
-    financial_plan_data = RetirementGoal.objects.filter(user=request.user, start_date__year=year).values()
+    stock_data = Stock.objects.filter(user=request.user, stock_ticker__stock_type='INDIVIDUAL')
+    etf_data = Stock.objects.filter(user=request.user, stock_ticker__stock_type='INDEX_FUND/EFT')
+    financial_plan_data = RetirementGoal.objects.filter(user=request.user).values()
     used_stocks_ticker = stock_data.values_list('stock_ticker__ticker', flat=True).distinct()
     stock_prices = get_stock_price_data(used_stocks_ticker)
     used_stocks_ticker_etf = etf_data.values_list('stock_ticker__ticker', flat=True).distinct()
@@ -490,8 +492,9 @@ def index_funds_summary(request, year):
                                  etf_data.filter(stock_ticker__stock_category="OTHERS"))
     if financial_plan_data:
         if financial_plan_data[0]["stocks"] != 0 and financial_plan_data[0]["stocks"] is not None:
-            financial_data = float(financial_plan_data[0]["stocks"] / 100) * float(
-                financial_plan_data[0]["networth_goal"])
+            adjusted_goal = int(FutureValue(CurrentYearGoal(financial_plan_data[0]['start_date'].year),
+                                            financial_plan_data[0]["networth_goal"], financial_plan_data[0]['cpi']))
+            financial_data = float(financial_plan_data[0]["stocks"] / 100) * adjusted_goal
             etf_progress = (etf_total_amount / financial_data) * 100
     context = {
         "etf_qs": etf_data,
@@ -520,9 +523,17 @@ def get_crypto_price_data(tickers):
     return result
 
 
+def CurrentYearGoal(year):
+    return date.today().year - year
+
+
+def FutureValue(x, PV, r):
+    return PV * (1 + r / 100) ** x
+
+
 def crypto_summary(request, year):
-    crypto_data = Crypto.objects.filter(user=request.user, year=year)
-    financial_plan_data = RetirementGoal.objects.filter(user=request.user, start_date__year=year).values()
+    crypto_data = Crypto.objects.filter(user=request.user)
+    financial_plan_data = RetirementGoal.objects.filter(user=request.user).values()
     used_cryptos_ticker = crypto_data.values_list('crypto_ticker__ticker', flat=True).distinct()
     crypto_prices = get_crypto_price_data(used_cryptos_ticker)
     crypto_total_amount = 0
@@ -532,13 +543,18 @@ def crypto_summary(request, year):
         for crypto in crypto_data:
             crypto.investment = crypto.quantity * crypto_prices[crypto.crypto_ticker.ticker]
     if financial_plan_data:
+        adjusted_goal = int(FutureValue(CurrentYearGoal(financial_plan_data[0]['start_date'].year),
+            financial_plan_data[0]["networth_goal"], financial_plan_data[0]['cpi']))
         if financial_plan_data[0]["crypto"] != 0 and financial_plan_data[0]["crypto"] is not None:
-            financial_data = float(financial_plan_data[0]["crypto"] / 100) * float(
-                financial_plan_data[0]["networth_goal"])
+            financial_data = float(financial_plan_data[0]["crypto"] / 100) * adjusted_goal
             crypto_progress = (crypto_total_amount / financial_data) * 100
 
     print(crypto_data, 'crypto_data')
-    context = {"crypto_qs": crypto_data, "crypto_total_amount": crypto_total_amount, "crypto_progress": crypto_progress}
+    context = {
+        "crypto_qs": crypto_data,
+        "crypto_total_amount": crypto_total_amount,
+        "crypto_progress": crypto_progress,
+    }
     return context
 
 
@@ -559,8 +575,8 @@ def get_commodities():
 
 
 def commodity_summary(request, year):
-    commodity_data = Commodity.objects.filter(user=request.user, year=year)
-    financial_plan_data = RetirementGoal.objects.filter(user=request.user, start_date__year=year).values()
+    commodity_data = Commodity.objects.filter(user=request.user)
+    financial_plan_data = RetirementGoal.objects.filter(user=request.user).values()
     commodities_total_value = sum(data.investment for data in commodity_data)
     commodities = {
         1: "Gold", 2: "Silver", 3: "Platinum", 4: "Palladium",
@@ -581,9 +597,11 @@ def commodity_summary(request, year):
     commodities_prog = 0
     if financial_plan_data:
         if financial_plan_data[0]["commodities"] != 0 and financial_plan_data[0]["commodities"] is not None:
-            financial_data = float(financial_plan_data[0]["commodities"] / 100) * float(
-                financial_plan_data[0]["networth_goal"])
+            adjusted_goal = int(FutureValue(CurrentYearGoal(financial_plan_data[0]['start_date'].year),
+                                            financial_plan_data[0]["networth_goal"], financial_plan_data[0]['cpi']))
+            financial_data = float(financial_plan_data[0]["commodities"] / 100) * adjusted_goal
             commodities_prog = (commodities_total_value / financial_data) * 100
+    print(commodities_prog, "prog")
     context = {
         "commodities_total_value": commodities_total_value,
         "commodities": arr,
@@ -606,8 +624,7 @@ def cashflow_summary(request, year):
 
 
 def personal_summary(request, year):
-    personal_data = PersonalBalance.objects.filter(user=request.user, date__year=year)
-    print(personal_data)
+    personal_data = PersonalBalance.objects.filter(user=request.user)
     assets = sum(data.amount for data in personal_data.filter(entry_type="Asset"))
     savings = sum(data.amount for data in personal_data.filter(entry_type="Savings"))
     retirement = sum(data.amount for data in personal_data.filter(entry_type="Retirement Acc"))
@@ -624,8 +641,9 @@ def personal_summary(request, year):
 
 def property_summary(request, year):
     property_data = Property.objects.filter(user=request.user)
-    financial_plan_data = RetirementGoal.objects.filter(user=request.user, start_date__year=year).values()
-    print(property_data)
+    financial_plan_data = RetirementGoal.objects.filter(user=request.user).values()
+    print(financial_plan_data, "financial plan")
+    (property_data)
     # property_summary
     progress_bar = 0
     assets = 0
@@ -640,7 +658,7 @@ def property_summary(request, year):
     loan_to_debt_ratio = 0
     debt_service_coverage_ratio = 0
     break_even_point = 0
-    if property_data and financial_plan_data:
+    if property_data:
         property_networth = 0
         for data in property_data:
             property_networth += data.purchase_price
@@ -653,14 +671,19 @@ def property_summary(request, year):
             operating_expenses += data.insurance + data.management_fee + data.maintenance + data.rates
             repayments += data.repayments
             expense += data.repayments + data.insurance + data.management_fee + data.maintenance + data.rates
-        if financial_plan_data[0]['networth_goal'] is not None and financial_plan_data[0]['networth_goal'] != 0:
-            progress_bar = (property_networth / financial_plan_data[0]['networth_goal']) * 100
+        networth = assets - liabilities
+        if financial_plan_data:
+            if financial_plan_data[0]['networth_goal'] is not None and financial_plan_data[0]['networth_goal'] != 0:
+                adjusted_goal = int(FutureValue(CurrentYearGoal(financial_plan_data[0]['start_date'].year),
+                                                financial_plan_data[0]["networth_goal"], financial_plan_data[0]['cpi']))
+                real_estate_p=((financial_plan_data[0]['real_estate']*adjusted_goal)/100)
+                progress_bar = ( networth/ real_estate_p) * 100
         if income is not None and income != 0:
             loan_to_debt_ratio = (repayments / income)
             break_even_point = (expense / income) * 100
         if income is not None and operating_expenses is not None and income - operating_expenses != 0:
             debt_service_coverage_ratio = (repayments / (income - operating_expenses))
-        networth = assets - liabilities
+
     # end of property_summary
 
     context = {

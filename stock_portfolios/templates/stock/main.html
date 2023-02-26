@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% load mathfilters %}
-
+{% load humanize %}
 {% block title %}
 <div class="title">Stock Portfolio 
   <!-- <span> | {{year}}</span> -->
@@ -85,10 +85,10 @@
             <tr>
               <td>{{ stock.name }}</td>
               <td>{{ stock.ticker }}</td>
-              <td>{{ stock.quantity }} </td>
-              <td>{{ stock.totalInvestment|floatformat:2 }} </td>
-              <td>${{ stock.spotPrice }}</td>
-              <td>${{ stock.currentMarketValue|floatformat:2 }}</td>
+              <td>{{ stock.quantity|floatformat:2|intcomma }} </td>
+              <td>${{ stock.totalInvestment|floatformat:2|intcomma }} </td>
+              <td>${{ stock.spotPrice|floatformat:2|intcomma }}</td>
+              <td>${{ stock.currentMarketValue|floatformat:2|intcomma }}</td>
               <td><small class="text-{% if stock.status == 'profit' %}success{% else %}danger{% endif %} me-2"> &nbsp;<i class="fas fa-{% if stock.status == 'profit' %}arrow-up{% else %}arrow-down{% endif %} me-1"></i>{{ stock.profit_loss_percentage|floatformat:2 }}% </small></td>
             </tr>
             {% endfor %}

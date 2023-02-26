@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% load mathfilters %}
-
+{% load humanize %}
 {% block title %}
 <div class="title">Profit and Loss
 <span class="filter position-absolute" style="right: 2rem;">
@@ -11,7 +11,7 @@
             <h6>Filter</h6>
         </li>
         {% for year in years_list%}
-        <li><a class="dropdown-item" href="{% url 'incomestatements:incomestatement_year_to_date' year %}">{{year|stringformat:"i"}}</a></li>
+        <li><a class="dropdown-item" href="{% url 'incomestatements_property:property_year-to-date' year %}">{{year|stringformat:"i"}}</a></li>
         {%endfor%}
     </ul>
 </span>
@@ -105,11 +105,11 @@ function popitup(url) {
                     <th scope="row">{{category_name}}</th>
                     {% for months,  months_data in data.items %}
                       {% for month_name, month_expense in months_data.items %}
-                        <td>${{month_expense}}</td>
+                        <td>${{month_expense|intcomma}}</td>
                       {% endfor %}
                     {% endfor %}
-                    <td>${{data.total}}</td>
-                    <td>${{data.Budget}}</td>
+                    <td>${{data.total|intcomma}}</td>
+                    <td>${{data.Budget|intcomma}}</td>
                     <td>
                       <div class="progress">
                           <div class="progress-bar bg-info" role="progressbar" style="width: {{data.percentage|stringformat:"i"}}%" aria-valuenow="{{data.percentage|stringformat:"i"}}" aria-valuemin="0" aria-valuemax="100">{{data.percentage|stringformat:"i"}}%</div>
@@ -132,7 +132,7 @@ function popitup(url) {
                             <i>Total</i>
                         </th>
                         {% for amount in month_income.values %}
-                        <th>${{amount}}</th>
+                        <th>${{amount|intcomma}}</th>
                         {% endfor %}
                         <th>
                             <div class="progress">
@@ -171,13 +171,13 @@ function popitup(url) {
                       {% for months,  months_data in data.items %}
                         <!--Loop 3-->
                         {% for month_name, month_expense in months_data.items %}
-                          <td>${{month_expense}}</td>
+                          <td>${{month_expense|intcomma}}</td>
                         {% endfor %}
 
                       {% endfor %}
 
-                      <td>${{data.total}}</td>
-                      <td>${{data.Budget}}</td>
+                      <td>${{data.total|intcomma}}</td>
+                      <td>${{data.Budget|intcomma}}</td>
                       <td>
                       <div class="progress">
                           <div class="progress-bar bg-warning" role="progressbar" style="width: {{data.percentage|stringformat:"i"}}%" aria-valuenow="{{data.percentage|stringformat:"i"}}%" aria-valuemin="0" aria-valuemax="100">{{data.percentage|stringformat:"i"}}%</div>
@@ -196,7 +196,7 @@ function popitup(url) {
                   <tr style="background-color: #ededed">
                     <th scope="row"><i>Total</i></th>
                     {% for amount in month_expenses.values %}
-                    <th>${{amount}}</th>
+                    <th>${{amount|intcomma}}</th>
                     {% endfor %}
                     <th>
                       <div class="progress">
@@ -230,7 +230,7 @@ function popitup(url) {
                   <tr style="background-color: #ededed">
                     <th scope="row"><i>Total</i></th>
                     {% for amount in net_income %}
-                    <th>${{amount}}</th>
+                    <th>${{amount|intcomma}}</th>
                     {% endfor %}
                     <th>
                       <div class="progress">

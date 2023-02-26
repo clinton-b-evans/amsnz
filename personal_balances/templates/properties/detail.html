@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load humanize %}
 {% block title %}
     {{ object.name }} - <span style="font-size:14px"><a href="popupex.html" onclick="return popitup('/properties/{{ object.id }}/edit')">Edit</a></span>
      
@@ -16,7 +16,7 @@
         var data = google.visualization.arrayToDataTable([
           ['Task', 'Hours per Day'],
           ['Loan', {{object.loan_amount|stringformat:".2f"}}],
-          ['Equity', {{ equity|stringformat:".2f"}} ],
+          ['Equity', {{ equity|stringformat:".2f"|intcomma}} ],
 
         ]);
 
@@ -195,11 +195,11 @@
             </tr>
             <tr>
                 <td>Deposit</td>
-                <td>${{ object.deposit }}</td>
+                <td>${{ object.deposit|intcomma }}</td>
             </tr>
             <tr>
                 <td>Equity</td>
-                <td>${{ equity }}</td>
+                <td>${{ equity|intcomma }}</td>
             </tr>
         <thead>
             <tr>

@@ -8,7 +8,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.template import loader
 
 from incomestatements_property.views import sort_years_list
-from .models import IncomeStatement, Category
+from .models import IncomeStatement, Category, CategoryName
 from .forms import IncomeStatementForm, CategoryForm
 from django.db.models.functions import TruncMonth, ExtractMonth
 from django.db.models import Count, Sum, FloatField
@@ -23,7 +23,7 @@ def incomestatements_list_view(request, year):
             form.save()
             return render(request, "incomestatements/main.html")
     else:
-        qs = IncomeStatement.objects.filter(user=request.user)
+        qs = IncomeStatement.objects.filter(user=request.user, date__year=year)
         total_income = 0
         total_expense = 0
         total = 0
@@ -42,6 +42,7 @@ def incomestatements_list_view(request, year):
                 years_list.append(item)
         years_list = sort_years_list(years_list)
         context = {
+            "year": year,
             "object_list": qs,
             "total": total,
             "prop_cat": prop_cat,
@@ -156,7 +157,7 @@ def delete_category(request):
 
 
 def show_report(request, category, year):
-    category_data = Category.objects.filter(user=request.user).get(name=category, year=year)
+    category_data = Category.objects.filter(user=request.user).get(name=category)
     monthly = category_data.months_data()
     if category_data.transaction_type == 'Income':
         report_data = incomes_result(request, year, category)
@@ -401,6 +402,7 @@ def income_budget_total(request, year):
 
 def category_list(request, year):
     category_data = Category.objects.filter(user=request.user, year=year)
+    category_name = CategoryName.objects.filter(user=request.user)
     years = Category.objects.filter(user=request.user).values_list("year").distinct()
     years_list = []
     for data in years:
@@ -416,6 +418,7 @@ def category_list(request, year):
     for i in expense_budget.values():
         yearly_expense_budget += i["total"]
     context = {
+        "category_name": category_name,
         'category_list': category_data,
         "years_list": years_list,
         "income": income_budget_total(request, year),
@@ -439,9 +442,9 @@ def deleteproperty_incomestatement(request):
     return JsonResponse(data)
 
 
-def add_incomestatements(request):
+def add_incomestatements(request, year):
     if request.method == "POST":
-        form = IncomeStatementForm(request.user, request.POST)
+        form = IncomeStatementForm(request.user, year, request.POST)
         if form.is_valid():
             incomestatement = form.save(commit=False)
             incomestatement.user = request.user
@@ -455,28 +458,27 @@ def add_incomestatements(request):
                     })
                 })
     else:
-        form = IncomeStatementForm(request.user)
+        form = IncomeStatementForm(request.user, year)
     return render(request, "incomestatements/add.html", {"form": form})
-
 
 
 def data_list(request, year=''):
     if year == '':
         prop_cat = Category.objects.filter(user=request.user)
     else:
-        prop_cat = Category.objects.filter(user=request.user, date__year=year)
+        prop_cat = Category.objects.filter(user=request.user, year=year)
     if request.method == "POST":
         form = IncomeStatementForm(request.POST)
         if form.is_valid():
             form.save()
             return render(request, "incomestatements/main.html")
     else:
-        qs = IncomeStatement.objects.filter(user=request.user)
+        qs = IncomeStatement.objects.filter(user=request.user, date__year=year)
         total_income = 0
         total_expense = 0
         total = 0
         for item in qs:
-            cat_qs = Category.objects.filter(user=request.user).get(name=item.category)
+            cat_qs = Category.objects.filter(user=request.user, year=year).get(name=item.category.name)
             if cat_qs.transaction_type == "Income":
                 total_income += item.amount
             else:
@@ -490,6 +492,7 @@ def data_list(request, year=''):
                 years_list.append(item)
         years_list = sort_years_list(years_list)
         context = {
+            "year": year,
             "object_list": qs,
             "total": total,
             "prop_cat": prop_cat,
@@ -498,10 +501,10 @@ def data_list(request, year=''):
         return render(request, "incomestatements/data_list.html", context)
 
 
-def update_incomestatements(request, pk):
+def update_incomestatements(request, pk, year):
     incomestatement = get_object_or_404(IncomeStatement, pk=pk)
     if request.method == "POST":
-        form = IncomeStatementForm(request.user, request.POST, instance=incomestatement)
+        form = IncomeStatementForm(request.user, year, request.POST, instance=incomestatement)
         if form.is_valid():
             incomestatement = form.save(commit=False)
             incomestatement.user = request.user
@@ -516,7 +519,7 @@ def update_incomestatements(request, pk):
                 }
             )
     else:
-        form = IncomeStatementForm(request.user, instance=incomestatement)
+        form = IncomeStatementForm(request.user, year, instance=incomestatement)
     return render(request, 'incomestatements/add.html', {
         'form': form,
         'incomestatement': incomestatement,

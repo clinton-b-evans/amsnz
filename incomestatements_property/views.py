@@ -16,21 +16,23 @@ from copy import deepcopy
 
 @login_required(login_url='/login/')
 def incomestatement_property_list_view(request, year):
+    print(year, "year")
     property_list = request.GET.getlist("properties")
     prop_qs = Property.objects.filter(user=request.user)
     prop_cat = PropertyCategory.objects.filter(user=request.user)
     if not property_list:
-        qs = PropertyIncomeStatement.objects.filter(user=request.user)
+        qs = PropertyIncomeStatement.objects.filter(user=request.user, date__year=year)
     else:
         qs = PropertyIncomeStatement.objects.filter(
-            property__in=property_list, user=request.user
+            property__in=property_list, user=request.user, date__year=year
         ).order_by("-date")
     income_statement_list = PropertyIncomeStatement.objects.filter(user=request.user).order_by("-date")
     total_income = 0
     total_expense = 0
     total = 0
     for item in qs:
-        cat_qs = PropertyCategory.objects.filter(user=request.user).get(name=item.propcategory)
+        print(item.propcategory, "ki shy e")
+        cat_qs = PropertyCategory.objects.filter(user=request.user, year=year).get(name=item.propcategory)
         if cat_qs.transaction_type == "Income":
             total_income += item.amount
         else:
@@ -44,6 +46,7 @@ def incomestatement_property_list_view(request, year):
             years_list.append(item)
     years_list = sort_years_list(years_list)
     context = {
+        "year": year,
         "object_list": qs,
         "prop_qs": prop_qs,
         "income_statement_list": income_statement_list,
@@ -566,9 +569,10 @@ def deleteproperty_incomestatement(request):
     return JsonResponse(data)
 
 
-def add_incomestatements(request):
+def add_incomestatements(request, year):
+    print(year, 'request')
     if request.method == "POST":
-        form = PropertyIncomeStatementForm(request.user, request.POST)
+        form = PropertyIncomeStatementForm(request.user, year, request.POST)
         if form.is_valid():
             incomestatement = form.save(commit=False)
             incomestatement.user = request.user
@@ -582,27 +586,28 @@ def add_incomestatements(request):
                     })
                 })
     else:
-        form = PropertyIncomeStatementForm(request.user)
+        form = PropertyIncomeStatementForm(request.user, year)
     return render(request, "propertyincomestatements/add.html", {"form": form})
 
 
 def data_list(request, year=''):
+    print(year, "year")
     if year == '':
         prop_cat = PropertyCategory.objects.filter(user=request.user)
     else:
-        prop_cat = PropertyCategory.objects.filter(user=request.user, date__year=year)
+        prop_cat = PropertyCategory.objects.filter(user=request.user, year=year)
     if request.method == "POST":
         form = PropertyIncomeStatementForm(request.POST)
         if form.is_valid():
             form.save()
             return render(request, "propertyincomestatements/main.html")
     else:
-        qs = PropertyIncomeStatement.objects.filter(user=request.user)
+        qs = PropertyIncomeStatement.objects.filter(user=request.user, date__year=year)
         total_income = 0
         total_expense = 0
         total = 0
         for item in qs:
-            cat_qs = PropertyCategory.objects.filter(user=request.user).get(name=item.propcategory)
+            cat_qs = PropertyCategory.objects.filter(user=request.user, year=year).get(name=item.propcategory)
             if cat_qs.transaction_type == "Income":
                 total_income += item.amount
             else:
@@ -616,6 +621,7 @@ def data_list(request, year=''):
                 years_list.append(item)
         years_list = sort_years_list(years_list)
         context = {
+            "year": year,
             "object_list": qs,
             "total": total,
             "prop_cat": prop_cat,
@@ -624,10 +630,10 @@ def data_list(request, year=''):
         return render(request, "propertyincomestatements/data_list.html", context)
 
 
-def update_incomestatements(request, pk):
+def update_incomestatements(request, pk, year):
     incomestatement = get_object_or_404(PropertyIncomeStatement, pk=pk)
     if request.method == "POST":
-        form = PropertyIncomeStatementForm(request.user, request.POST, instance=incomestatement)
+        form = PropertyIncomeStatementForm(request.user, year, request.POST, instance=incomestatement)
         if form.is_valid():
             incomestatement = form.save(commit=False)
             incomestatement.user = request.user
@@ -642,7 +648,7 @@ def update_incomestatements(request, pk):
                 }
             )
     else:
-        form = PropertyIncomeStatementForm(request.user, instance=incomestatement)
+        form = PropertyIncomeStatementForm(request.user, year, instance=incomestatement)
     return render(request, 'propertyincomestatements/add.html', {
         'form': form,
         'incomestatement': incomestatement,

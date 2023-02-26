@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load humanize %}
 {% block title %}
 
 {% endblock title %}
@@ -35,8 +35,8 @@
             <tr>
               <td>{{ obj.date }}</td>
               <td>{{ obj.transaction_type }} </td>
-              <td>{{ obj.weight }}</td>
-              <td>${{ obj.value }}</td>
+              <td>{{ obj.weight|intcomma }}</td>
+              <td>${{ obj.value|intcomma }}</td>
               <td>
                 <a href="popupex.html" onclick="return popitup('/commodities/transaction/{{ obj.id }}/edit')">
                   <button class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit">

@@ -4,10 +4,10 @@
 <tr id="user-{{obj.id}}">
     <td class="name userData" name="name" style="text-align:left">{{ obj.commodity }}</td>
     <td class="transaction_type userData" name="transaction_type" style="text-align:left">{{ obj.transaction_type}}</td>
-    <td class="weight userData" name="weight" style="text-align:right">{{ obj.weight }}</td>
-    <td class="purchased_value userData" name="purchased_value" style="text-align:right">${{ obj.value|floatformat:2 }}
+    <td class="weight userData" name="weight" style="text-align:right">{{ obj.weight|intcomma }}</td>
+    <td class="purchased_value userData" name="purchased_value" style="text-align:right">${{ obj.value|floatformat:2 |intcomma}}
     </td>
-    <td class="investment userData" name="investment" style="text-align:right">${{ obj.totalInvestment|floatformat:2 }}
+    <td class="investment userData" name="investment" style="text-align:right">${{ obj.totalInvestment|floatformat:2|intcomma }}
     </td>
     <td class="date userData" name="date" style="text-align:right">{{ obj.date }}</td>
     <td style="text-align:right">

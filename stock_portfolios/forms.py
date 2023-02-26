@@ -14,7 +14,7 @@ class DateInput(forms.DateInput):
 class StockForm(ModelForm):
     class Meta:
         model = Stock
-        fields = ("stock_ticker", "year", "quantity")
+        fields = ("stock_ticker", "quantity")
 
 
 class StockTickerForm(ModelForm):
@@ -36,6 +36,7 @@ class StockTickerForm(ModelForm):
             raise ValidationError('Ticker with this Name already exists.')
         # Always return cleaned_data
         return ticker
+
 
 class TransactionForm(ModelForm):
     class Meta:
@@ -73,10 +74,9 @@ class TransactionForm(ModelForm):
         date = self.data['date']
         date = datetime.datetime.strptime(date, '%Y-%m-%d').date()
         stock, created = Stock.objects.get_or_create(stock_ticker=stock_ticker,
-                                                     user=self.user,
-                                                     year=str(date.year))
+                                                     user=self.user)
         if self.is_edit is False:
-            if quantity <= 0 :
+            if quantity <= 0:
                 raise ValidationError(f"Quantity cannot be 0 or negative")
             if transaction_type == 'Sell':
                 if stock.quantity - float(quantity) < 0:
@@ -98,6 +98,11 @@ class TransactionForm(ModelForm):
                     raise ValidationError("You don't have sufficient quantity")
             return quantity
         else:
+            if quantity <= 0:
+                raise ValidationError(f"Quantity cannot be 0 or negative")
+            if transaction_type == 'Sell':
+                if (stock.quantity + initial_quantity) - float(quantity) < 0:
+                    raise ValidationError(f"You cannot sell more than {stock.quantity+initial_quantity}")
             if transaction_type == 'Buy':
                 # if spot_price changed
                 if "spot_price" in self.changed_data:
@@ -126,23 +131,33 @@ class TransactionForm(ModelForm):
                     if initial_quantity != quantity:
                         stock.quantity -= initial_quantity
                         stock.quantity += quantity
-                        stock.investment += initial_quantity * spot_price
-                        stock.investment -= quantity * spot_price
+                        stock.investment += initial_quantity * initial_spot_price
+                        if stock.investment - quantity * spot_price < 0:
+                            stock.investment = float(0.0)
+                        else:
+                            stock.investment -= quantity * spot_price
                     else:
-                        stock.investment += initial_quantity * spot_price
-                        stock.investment -= quantity * spot_price
+                        stock.investment += initial_quantity * initial_spot_price
+                        if stock.investment - quantity * spot_price < 0:
+                            stock.investment = float(0.0)
+                        else:
+                            stock.investment -= quantity * spot_price
                     stock.save()
                 # if quantity changed and spotPrice didn't change
                 if initial_quantity != quantity and initial_spot_price == spot_price:
                     stock.quantity -= quantity
                     stock.quantity += initial_quantity
                     stock.investment += quantity * spot_price
-                    stock.investment -= initial_quantity * spot_price
+                    if stock.investment - quantity * spot_price < 0:
+                        stock.investment = float(0.0)
+                    else:
+                        stock.investment -= quantity * spot_price
                     stock.save()
             return quantity
+
     def clean_spot_price(self):
         spot_price = self.cleaned_data['spot_price']
-        if spot_price <= 0 :
+        if spot_price <= 0:
             raise ValidationError(f"Spot price cannot be 0 or negative")
         return spot_price
 
@@ -152,10 +167,10 @@ class TransactionForm(ModelForm):
             raise ValidationError(f"Transaction type cannot be changed")
         return transaction_type
 
-    def clean_date(self):
-        date = self.cleaned_data['date']
-        if self.is_edit:
-            initial_date = self.initial['date']
-            if date.year != initial_date.year :
-                raise ValidationError(f"Year cannot be changed")
-        return date
+    # def clean_date(self):
+    #     date = self.cleaned_data['date']
+    #     if self.is_edit:
+    #         initial_date = self.initial['date']
+    #         if date.year != initial_date.year:
+    #             raise ValidationError(f"Year cannot be changed")
+    #     return date

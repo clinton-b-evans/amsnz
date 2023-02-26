@@ -5,17 +5,6 @@
 
 {% block title %}
 <div class="title">Personal Balance Sheet <span>| Networth: ${{ networth|intcomma }} </span>
-<span class="filter position-absolute" style="right: 2rem;">
-        <a class="icon btn btn-dashboard" data-bs-toggle="dropdown" href="#" type="button">View By <i class="bi bi-grid"></i></a>
-        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-            <li class="dropdown-header text-start">
-                <h6>Filter</h6>
-            </li>
-            {% for year in years_list%}
-            <li><a class="dropdown-item" href="{% url 'personal_balances:personal_balances_list' year %}">{{year|stringformat:"i"}}</a></li>
-            {%endfor%}
-        </ul>
-    </span>
 </div>
 {% endblock title %}
 
@@ -91,9 +80,7 @@ function popitup(url) {
               <label class="form-label">Amount</label>
                 <input class="form-control" value="" name="amount" min=0 step="any" id="amount" type="number" oninput="validity.valid||
     (value='');">
-              <label class="form-label">Date</label>
-                <input class="form-control" name="date" id="date" type="date" value="{% now "Y-m-j" %}">
-            </div>
+              </div>
             <button class="btn btn-primary form-control" type="button" onclick="addEntry()">ADD</button>
         </form>
       </div>
@@ -225,8 +212,6 @@ function popitup(url) {
                                   <div class="modal-body">
                                       <form>
                                           <div class="mb-3">
-                                              <label class="form-label">Date</label>
-                                              <input class="form-control" value="{{ obj.date }}" name="date_edit{{obj.id}}" id="date_edit{{obj.id}}" type="text" value="{% now "Y-m-j" %}" disabled>
                                               <label class="form-label">Description</label>
                                               <input class="form-control" value="{{ obj.description }}" type="text" name="description_edit{{obj.id}}" id="description_edit{{obj.id}}">
                                               <label class="form-label">Entry type</label>
@@ -343,8 +328,6 @@ function popitup(url) {
                                   <div class="modal-body">
                                       <form>
                                           <div class="mb-3">
-                                              <label class="form-label">Date</label>
-                                              <input class="form-control" value="{{ obj.date }}" name="date_edit{{obj.id}}" id="date_edit{{obj.id}}" type="text" value="{% now "Y-m-j" %}" disabled>
                                               <label class="form-label">Description</label>
                                               <input class="form-control" value="{{ obj.description }}" type="text" name="description_edit{{obj.id}}" id="description_edit{{obj.id}}">
                                               <label class="form-label">Entry type</label>
@@ -469,8 +452,6 @@ function popitup(url) {
                                   <div class="modal-body">
                                       <form>
                                           <div class="mb-3">
-                                              <label class="form-label">Date</label>
-                                              <input class="form-control" value="{{ obj.date }}" name="date_edit{{obj.id}}" id="date_edit{{obj.id}}" type="text" value="{% now "Y-m-j" %}" disabled>
                                               <label class="form-label">Description</label>
                                               <input class="form-control" value="{{ obj.description }}" type="text" name="description_edit{{obj.id}}" id="description_edit{{obj.id}}">
                                               <label class="form-label">Entry type</label>
@@ -585,8 +566,6 @@ function popitup(url) {
                                   <div class="modal-body">
                                       <form>
                                           <div class="mb-3">
-                                              <label class="form-label">Date</label>
-                                              <input class="form-control" value="{{ obj.date }}" name="date_edit{{obj.id}}" id="date_edit{{obj.id}}" type="text" value="{% now "Y-m-j" %}" disabled>
                                               <label class="form-label">Description</label>
                                               <input class="form-control" value="{{ obj.description }}" type="text" name="description_edit{{obj.id}}" id="description_edit{{obj.id}}">
                                               <label class="form-label">Entry type</label>
@@ -905,13 +884,11 @@ function popitup(url) {
   function addEntry() {
         var description = document.getElementById('description').value;
         var entry = document.getElementById('entry').value;
-        var date = document.getElementById('date').value;
         var amount = document.getElementById('amount').value;
-        if (description && date && entry && amount) {
+        if (description && entry && amount) {
             // Create Ajax Call
             $(document).ready(function () {
             let body={
-                'date': date,
                 'description': description,
                 'entry': entry,
                 'amount': amount,

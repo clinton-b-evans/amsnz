@@ -14,10 +14,10 @@ app_name = "incomestatements"
 
 urlpatterns = [
     path("incomestatements/<str:year>/", incomestatements_list_view, name="incomestatements"),
-    path("incomestatements/add", add_incomestatements, name="incomestatement-add"),
+    path("incomestatements/add/<str:year>/", add_incomestatements, name="incomestatement-add"),
     path("incomestatements/add_category", add_category, name="category-add"),
     path(
-        "incomestatements/<str:pk>/edit",
+        "incomestatements/<str:pk>/edit/<str:year>/",
         update_incomestatements,
         name="update-incomestatement",
     ),
@@ -27,7 +27,7 @@ urlpatterns = [
         name="report",
     ),
     path(
-        "data_list/",
+        "data_list/<str:year>/",
         data_list,
         name="data_list",
     ),

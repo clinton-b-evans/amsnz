@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% load mathfilters %}
+{% load humanize %}
 
 {% block title %}
 <div class="title">{{category_name}}</div>
@@ -67,9 +68,9 @@ function popitup(url) {
                 {% for key, value in summary.items %}
                     <tr>
                   <th scope="col">{{value.name}}</th>
-                    <td>{{value.budget}}</td>
-                    <td>{{value.actual}}</td>
-                    <td>{{value.difference}}</td>
+                    <td>${{value.budget|intcomma}}</td>
+                    <td>${{value.actual|intcomma}}</td>
+                    <td>${{value.difference|intcomma}}</td>
                     <td>
                         <div class="progress">
                           <div {% if value.percentage > 100 %} class="progress-bar bg-danger" {% else %} class="progress-bar bg-warning" {% endif %} role="progressbar" style="width: {{value.percentage}}%" aria-valuenow="{{value.percentage}}%" aria-valuemin="0" aria-valuemax="100">{{value.percentage}}%</div>
@@ -80,9 +81,9 @@ function popitup(url) {
                 <thead>
                 <tr style="background-color: #ededed">
                     <th scope="col">Total</th>
-                    <td>{{budget.compute_budget}}</td>
-                    <td>{{report_data.total}}</td>
-                    <td>{{budget.compute_budget|sub:report_data.total}}</td>
+                    <td>${{budget.compute_budget|intcomma}}</td>
+                    <td>${{report_data.total|intcomma}}</td>
+                    <td>${{budget.compute_budget|sub:report_data.total|intcomma}}</td>
                     <td>
                         {% if budget.compute_budget == 0 or report_data.total == 0 %}
                         <div class="progress">

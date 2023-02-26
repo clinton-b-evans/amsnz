@@ -12,14 +12,14 @@ from .views import (
 app_name = "incomestatements_property"
 
 urlpatterns = [
-    path("incomestatements/add/property", add_incomestatements, name="incomestatement-add-property"),
+    path("incomestatements/add/property/<str:year>/", add_incomestatements, name="incomestatement-add-property"),
     path(
         "propertyincomestatements/<str:year>/",
         incomestatement_property_list_view,
         name="property-incomestatement-list",
     ),
     path(
-        "data_list/property",
+        "data_list/property/<str:year>/",
         data_list,
         name="data_list_property",
     ),
@@ -34,7 +34,7 @@ urlpatterns = [
         name="propert_forecast",
     ),
     path(
-        "incomestatements/<str:pk>/edit/property/",
+        "incomestatements/<str:pk>/edit/property/<str:year>/",
         update_incomestatements,
         name="update-incomestatement-property",
     ),

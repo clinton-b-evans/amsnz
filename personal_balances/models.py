@@ -19,7 +19,6 @@ class PersonalBalance(models.Model):
         choices=ENTRY_TYPE_SOURCE, max_length=100, null=False, blank=False
     )
     amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    date = models.DateField(null=True, blank=True, default=now)
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
 
     def __str__(self):

@@ -30,6 +30,9 @@ class PropertyCategory(models.Model):
     december_budget = models.FloatField(null=True, blank=True, default=0)
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
 
+    class Meta:
+        unique_together = ('name', 'year')
+
     def __str__(self):
         return f"{self.name}"
 

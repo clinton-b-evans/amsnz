@@ -5,6 +5,13 @@ import datetime
 from stock_portfolios.models import YEAR_CHOICES
 
 
+class CategoryName(models.Model):
+    name = models.CharField(max_length=120)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
+    def __str__(self):
+        return f"{self.name}"
+
+
 class Category(models.Model):
     name = models.CharField(max_length=120)
     TRANSACTION_TYPE_SOURCES = (
@@ -29,6 +36,9 @@ class Category(models.Model):
     december_budget = models.FloatField(null=True, blank=True, default=0)
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
 
+    class Meta:
+        unique_together = ('name', 'year')
+
     def months_data(self):
         data = {
             "January": self.january_budget,
@@ -45,6 +55,7 @@ class Category(models.Model):
             "December": self.december_budget,
         }
         return data
+
     def compute_budget(self):
         return self.january_budget + self.february_budget + self.march_budget + self.april_budget + self.may_budget + self.june_budget + self.july_budget + self.august_budget + self.september_budget + self.october_budget + self.november_budget + self.december_budget
 

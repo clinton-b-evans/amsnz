@@ -74,8 +74,7 @@ class TransactionForm(ModelForm):
         date = self.data['date']
         date = datetime.datetime.strptime(date, '%Y-%m-%d').date()
         crypto, created = Crypto.objects.get_or_create(crypto_ticker=crypto_ticker,
-                                                       user=self.user,
-                                                       year=str(date.year))
+                                                       user=self.user)
         if self.is_edit is False:
             if quantity <= 0:
                 raise ValidationError(f"Quantity cannot be 0 or negative")
@@ -99,6 +98,11 @@ class TransactionForm(ModelForm):
                     raise ValidationError("You don't have sufficient quantity")
             return quantity
         else:
+            if quantity <= 0:
+                raise ValidationError(f"Quantity cannot be 0 or negative")
+            if transaction_type == 'Sell':
+                if (crypto.quantity + initial_quantity) - float(quantity) < 0:
+                    raise ValidationError(f"You cannot sell more than {crypto.quantity + initial_quantity}")
             if transaction_type == 'Buy':
                 # if spot_price changed
                 if "spot_price" in self.changed_data:
@@ -127,18 +131,27 @@ class TransactionForm(ModelForm):
                     if initial_quantity != quantity:
                         crypto.quantity -= initial_quantity
                         crypto.quantity += quantity
-                        crypto.investment += initial_quantity * spot_price
-                        crypto.investment -= quantity * spot_price
+                        crypto.investment += initial_quantity * initial_spot_price
+                        if crypto.investment - quantity * spot_price < 0:
+                            crypto.investment = float(0.0)
+                        else:
+                            crypto.investment -= quantity * spot_price
                     else:
-                        crypto.investment += initial_quantity * spot_price
-                        crypto.investment -= quantity * spot_price
+                        crypto.investment += initial_quantity * initial_spot_price
+                        if crypto.investment - quantity * spot_price < 0:
+                            crypto.investment = float(0.0)
+                        else:
+                            crypto.investment -= quantity * spot_price
                     crypto.save()
                 # if quantity changed and spotPrice didn't change
                 if initial_quantity != quantity and initial_spot_price == spot_price:
                     crypto.quantity -= quantity
                     crypto.quantity += initial_quantity
                     crypto.investment += quantity * spot_price
-                    crypto.investment -= initial_quantity * spot_price
+                    if crypto.investment - quantity * spot_price < 0:
+                        crypto.investment = float(0.0)
+                    else:
+                        crypto.investment -= quantity * spot_price
                     crypto.save()
             return quantity
 
@@ -154,10 +167,10 @@ class TransactionForm(ModelForm):
             raise ValidationError(f"Transaction type cannot be changed")
         return transaction_type
 
-    def clean_date(self):
-        date = self.cleaned_data['date']
-        if self.is_edit:
-            initial_date = self.initial['date']
-            if date.year != initial_date.year:
-                raise ValidationError(f"Year cannot be changed")
-        return date
+    # def clean_date(self):
+    #     date = self.cleaned_data['date']
+    #     if self.is_edit:
+    #         initial_date = self.initial['date']
+    #         if date.year != initial_date.year:
+    #             raise ValidationError(f"Year cannot be changed")
+    #     return date

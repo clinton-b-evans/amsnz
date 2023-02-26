@@ -1,17 +1,18 @@
+{% load humanize %}
 {% for obj in object_list %}
 <tr>
     <td style="text-align: left;">{{ obj.property.name }}</td>
     <td style="text-align: right;">{{ obj.name }}</td>
     <td style="text-align: right;">{{ obj.propcategory }}</td>
     {% if obj.propcategory.transaction_type == "Expense" %}
-    <td style="text-align: right; color:#FF2D00">${{ obj.amount }}</td>
+    <td style="text-align: right; color:#FF2D00">${{ obj.amount|intcomma }}</td>
     {% else %}
-    <td style="text-align: right;">${{ obj.amount }}</td>
+    <td style="text-align: right;">${{ obj.amount|intcomma }}</td>
     {% endif %}
     <td style="text-align: right;">{{ obj.date }}</td>
     <td style="text-align:right">
         <button class="btn btn-success btn-sm rounded-0"
-                hx-get="{% url 'incomestatements_property:update-incomestatement-property' pk=obj.id %}"
+                hx-get="{% url 'incomestatements_property:update-incomestatement-property' pk=obj.id year=year %}"
                 hx-target="#dialog">
             <svg class="bi bi-pencil-square" fill="currentColor" height="16" viewBox="0 0 16 16"
                  width="16" xmlns="http://www.w3.org/2000/svg">
