@@ -677,6 +677,7 @@ def property_summary(request, year):
                 adjusted_goal = int(FutureValue(CurrentYearGoal(financial_plan_data[0]['start_date'].year),
                                                 financial_plan_data[0]["networth_goal"], financial_plan_data[0]['cpi']))
                 real_estate_p=((financial_plan_data[0]['real_estate']*adjusted_goal)/100)
+                #DIVIDE BY ZERO FIX 
                 if real_estate_p == 0:
                     real_estate_p = 1
                 progress_bar = ( networth/ real_estate_p) * 100
