@@ -61,103 +61,9 @@ function popitup(url) {
         </svg>
   New Entry
 </button>
-<button type="button" class="btn btn-dashboard mb-3"    >
-    <svg class="bi bi-calendar-plus me-1" fill="currentColor" height="16" viewBox="0 0 16 16"
-             width="16" xmlns="http://www.w3.org/2000/svg">
-            <path d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>
-            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
-        </svg>
-  New Category
-</button>
+
 <div>
-    <form id="addStock">
-        <div class="mb-3">
-            <label class="form-label">Category</label>
-            <select class="form-select" name="name" id="name" aria-label="Default select example" required>
-                <option selected>------</option>
-                <optgroup label="Income">
-                <option value="Salary">Salary</option>
-                <option value="Disability">Disability</option>
-                <option value="Allowances">Allowances</option>
-                <option value="Benefits">Benefits</option>
-                <option value="Bonuses">Bonuses</option>
-                <option value="Business Income">Business Income</option>
-                <option value="Child Support">Child Support</option>
-                <option value="Commision">Commision</option>
-                <option value="Rental Income">Rental Income</option>
-                <option value="Superannuation">Superannuation</option>
-                <option value="Working for Families">Working for Families</option>
-                <option value="Other">Other</option>
-                <optgroup label="Expenses">
-                <option value="Rent/Mortgage">Rent/Mortgage</option>
-                <option value="Child Support">Child Support</option>
-                <option value="Rates">Rates</option>
-                <option value="Water Rates">Water Rates</option>
-                <option value="Body Corp Fees">Body Corp Fees</option>
-                <option value="Childcare & Daycare">Childcare & Daycare</option>
-                <option value="School Fees">School Fees</option>
-                <option value="Food(Groceries)">Food(Groceries)</option>
-                <option value="Food(Dining Out/Takeaways)">Food(Dining Out/Takeaways)</option>
-                <option value="Transport">Transport</option>
-                <option value="Personal Expenses">Personal Expenses</option>
-                <option value="Medical Expenses">Medical Expenses</option>
-                <option value="Telecommunication">Telecommunication</option>
-                <option value="Pets">Pets</option>
-                <option value="Other">Other</option>
-                <optgroup label="Insurance">
-                <option value="Insurance Other">Insurance Other</option>
-                <option value="House Contents">House&Contents</option>
-                <option value="Vechiles">Vechiles</option>
-                <option value="Health/Life">Health/Life</option>
-                <option value="Health/Life">House</option>
-                <optgroup label="Loans">
-                <option value="Mortgage">Mortgage</option>
-                <option value="Personal Loans">Personal Loans</option>
-                <option value="Student Loans">Student Loans</option>
-                <option value="Hire Purchases">Hire Purchases</option>
-                <option value="Other Loan Payments">Other Loan</option>
-                <option value="Other Loan Payments">Credit Cards</option>
-                <option value="Buy Now Pay Later Payments">Buy Now Pay Later</option>
-            </select>
-            <label class="form-label">Transaction Type</label>
-            <select class="form-select" name="Transaction" id="Transaction" aria-label="Default select example" required>
-                <option selected>------</option>
-                <option value="Income">Income</option>
-                <option value="Expense">Expense</option>
-            </select>
-            <label class="form-label">Year</label>
-              <input class="form-control" value="" name="year" min=0 step="any" id="year" type="number" oninput="validity.valid||
-  (value='');">
-            <input class="form-control" value="0" name="january_budget" min=0 step="any" id="january_budget" type="hidden" oninput="validity.valid||
-(value='');">
-            <input class="form-control" value="0" name="february_budget" min=0 step="any" id="february_budget" type="hidden" oninput="validity.valid||
-(value='');">
-            <input class="form-control" value="0" name="march_budget" min=0 step="any" id="march_budget" type="hidden" oninput="validity.valid||
-(value='');">
-            <input class="form-control" value="0" name="april_budget" min=0 step="any" id="april_budget" type="hidden" oninput="validity.valid||
-(value='');">
-            <input class="form-control" value="0" name="may_budget" min=0 step="any" id="may_budget" type="hidden" oninput="validity.valid||
-(value='');">
-            <input class="form-control" value="0" name="june_budget" min=0 step="any" id="june_budget" type="hidden" oninput="validity.valid||
-(value='');">
-            <input class="form-control" value="0" name="july_budget" min=0 step="any" id="july_budget" type="hidden" oninput="validity.valid||
-(value='');">
-            <input class="form-control" value="0" name="august_budget" min=0 step="any" id="august_budget" type="hidden" oninput="validity.valid||
-(value='');">
-            
-            <input class="form-control" value="0" name="september_budget" min=0 step="any" id="september_budget" type="hidden" oninput="validity.valid||
-(value='');">
-            
-            <input class="form-control" value="0" name="october_budget" min=0 step="any" id="october_budget" type="hidden" oninput="validity.valid||
-(value='');">
-        
-            <input class="form-control" value="0" hidden="true" name="november_budget" min=0 step="any" id="november_budget" type="hidden" oninput="validity.valid||
-(value='');">
-            <input class="form-control" value="0" name="december_budget" min=0 step="any" id="december_budget" type="hidden" oninput="validity.valid||
-(value='');">
-        </div>
-        <button class="btn btn-primary form-control" type="button" onclick="addCategory()">ADD</button>
-    </form>
+
 </div>
 <!--<button type="button" class="btn btn-dashboard mb-3" data-bs-toggle="modal" data-bs-target="#exampleModal">-->
 <!--    <svg class="bi bi-calendar-plus me-1" fill="currentColor" height="16" viewBox="0 0 16 16"-->
@@ -317,7 +223,18 @@ function popitup(url) {
         var name = document.getElementById('name').value;
         var Transaction = document.getElementById(`Transaction`).value;
         var year = document.getElementById('year').value;
-
+        var january_budget = document.getElementById(`january_budget`).value;
+        var february_budget = document.getElementById(`february_budget`).value;
+        var march_budget = document.getElementById(`march_budget`).value;
+        var april_budget = document.getElementById(`april_budget`).value;
+        var may_budget = document.getElementById(`may_budget`).value;
+        var june_budget = document.getElementById(`june_budget`).value;
+        var july_budget = document.getElementById(`july_budget`).value;
+        var august_budget = document.getElementById(`august_budget`).value;
+        var september_budget = document.getElementById(`september_budget`).value;
+        var october_budget = document.getElementById(`october_budget`).value;
+        var november_budget = document.getElementById(`november_budget`).value;
+        var december_budget = document.getElementById(`december_budget`).value;
         if (name && Transaction && year) {
             // Create Ajax Call
             $(document).ready(function () {
@@ -325,12 +242,24 @@ function popitup(url) {
                 'name': name,
                 'Transaction': Transaction,
                 'year': year,
+                'january_budget': january_budget,
+                'february_budget': february_budget,
+                'may_budget': may_budget,
+                'march_budget': march_budget,
+                'april_budget': april_budget,
+                'june_budget': june_budget,
+                'july_budget': july_budget,
+                'august_budget': august_budget,
+                'september_budget': september_budget,
+                'october_budget': october_budget,
+                'november_budget': november_budget,
+                'december_budget':december_budget,
             }
             $.ajax({
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
                 type: 'POST',
-                url: '{% url "incomestatements:addcategory2_incomestatements" %}',
+                url: '{% url "incomestatements:addcategory_incomestatements" %}',
                 headers: {//<==
                     "X-CSRFTOKEN": "{{ csrf_token }}"//<==
                 },
