@@ -91,9 +91,9 @@ def commodity_list_view(request, year):
         currentMarketValue = float(commodity.weight) * spotPrice
         totalMarketValue += currentMarketValue
         status = 'no-gain'
-        if (float(currentMarketValue) - float(commodity.investment)) > 0:
+        if (float(currentMarketValue) - float(clint_total)) > 0:
             status = 'profit'
-        elif (float(currentMarketValue) - float(commodity.investment)) < 0:
+        elif (float(currentMarketValue) - float(clint_total)) < 0:
             status = 'loss'
         transactions_table.append({
             "commodity": commodity.commodity_class.name,
@@ -101,8 +101,8 @@ def commodity_list_view(request, year):
             "totalInvestment": clint_total,
             "spotPrice": spotPrice,
             "currentMarketValue": currentMarketValue,
-            "profit_loss_percentage": ((float(currentMarketValue) - float(commodity.investment)) / float(
-                commodity.investment)) * 100 if commodity.investment > 0 else 'N/A',
+            "profit_loss_percentage": ((float(currentMarketValue) - float(clint_total)) / float(
+                clint_total)) * 100 if clint_total > 0 else 'N/A',
             "status": status
         })
     my_investments_list = ['%.2f' % elem for elem in investments]
