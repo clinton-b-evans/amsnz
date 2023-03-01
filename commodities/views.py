@@ -70,7 +70,16 @@ def commodity_list_view(request, year):
     commodities = Commodity.objects.filter(user=request.user).exclude(weight=0)
     commodity_prices = get_commodities()
     investments, assetsGains = generate_bar_graph_series_data(commodities, commodity_prices)
-
+    transactions = Transaction.objects.filter(date__year=year, user=request.user).order_by('-date','id')
+    clint_total = 0
+    for x in transactions:
+        if x.transaction_type == 'Buy':
+            clint_total += (x.value * x.weight)
+        else:
+            clint_total -= x.value
+    if clint_total < 0:
+        clint_total = 0
+    print(clint_total)
     transactions_table = []
     totalInvestment = 0
     totalMarketValue = 0
@@ -89,7 +98,7 @@ def commodity_list_view(request, year):
         transactions_table.append({
             "commodity": commodity.commodity_class.name,
             "weight": commodity.weight,
-            "totalInvestment": commodity.investment,
+            "totalInvestment": clint_total,
             "spotPrice": spotPrice,
             "currentMarketValue": currentMarketValue,
             "profit_loss_percentage": ((float(currentMarketValue) - float(commodity.investment)) / float(
