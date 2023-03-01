@@ -6,7 +6,7 @@ from .views import (
     delete_incomestatement,
     add_category,
     update_category,
-    year_to_date, addcategory_incomestatements, addproperty_incomestatements, editproperty_incomestatements,
+    year_to_date, addcategory_incomestatements,addcategory2_incomestatements, addproperty_incomestatements, editproperty_incomestatements,
     deleteproperty_incomestatement, show_report, category_list, delete_category, edit_category, data_list,
 )
 
@@ -35,6 +35,11 @@ urlpatterns = [
         "addcategory_incomestatements",
         addcategory_incomestatements,
         name="addcategory_incomestatements",
+    ),
+        path(
+        "addcategory2_incomestatements",
+        addcategory2_incomestatements,
+        name="addcategory2_incomestatements",
     ),
     path(
         "category_list/<str:year>/",

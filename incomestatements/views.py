@@ -82,6 +82,24 @@ def addcategory_incomestatements(request):
         print(data, 'data')
         return JsonResponse(data)
 
+def addcategory2_incomestatements(request):
+    if request.method == "POST":
+        print(request.body, "property")
+        categoryData = json.loads(request.body)
+        obj = Category.objects.create(
+            name=categoryData['name'],
+            transaction_type=categoryData["Transaction"],
+            year=categoryData["year"],
+            user=request.user
+        )
+        user = {
+            'name': obj.name,
+        }
+        data = {
+            'user': user
+        }
+        print(data, 'data')
+        return JsonResponse(data)
 
 def addproperty_incomestatements(request):
     if request.method == "POST":

@@ -1,5 +1,6 @@
 {% load widget_tweaks %}
 {% with WIDGET_ERROR_CLASS='is-invalid' %}
+
 <form hx-post="{{ request.path }}" hx-headers='{"X-CSRFToken":"{{ csrf_token }}"}' class="modal-content">
   <div class="modal-header">
     <h5 class="modal-title">Add Entry</h5>
@@ -15,7 +16,101 @@
       <label for="{{ form.category.id_for_label }}" class="form-label">Category</label>
       {% render_field form.category class="form-control" placeholder="Category" %}
       <div class="invalid-feedback">{{ form.category.errors|first }}</div>
+
+
     </div>
+    <div class="mb-3">
+
+        <form id="addStock">
+            <div class="mb-3">
+                <label class="form-label">Category</label>
+                <select class="form-select" name="name" id="name" aria-label="Default select example" required>
+                    <option selected>------</option>
+                    <optgroup label="Income">
+                    <option value="Salary">Salary</option>
+                    <option value="Disability">Disability</option>
+                    <option value="Allowances">Allowances</option>
+                    <option value="Benefits">Benefits</option>
+                    <option value="Bonuses">Bonuses</option>
+                    <option value="Business Income">Business Income</option>
+                    <option value="Child Support">Child Support</option>
+                    <option value="Commision">Commision</option>
+                    <option value="Rental Income">Rental Income</option>
+                    <option value="Superannuation">Superannuation</option>
+                    <option value="Working for Families">Working for Families</option>
+                    <option value="Other">Other</option>
+                    <optgroup label="Expenses">
+                    <option value="Rent/Mortgage">Rent/Mortgage</option>
+                    <option value="Child Support">Child Support</option>
+                    <option value="Rates">Rates</option>
+                    <option value="Water Rates">Water Rates</option>
+                    <option value="Body Corp Fees">Body Corp Fees</option>
+                    <option value="Childcare & Daycare">Childcare & Daycare</option>
+                    <option value="School Fees">School Fees</option>
+                    <option value="Food(Groceries)">Food(Groceries)</option>
+                    <option value="Food(Dining Out/Takeaways)">Food(Dining Out/Takeaways)</option>
+                    <option value="Transport">Transport</option>
+                    <option value="Personal Expenses">Personal Expenses</option>
+                    <option value="Medical Expenses">Medical Expenses</option>
+                    <option value="Telecommunication">Telecommunication</option>
+                    <option value="Pets">Pets</option>
+                    <option value="Other">Other</option>
+                    <optgroup label="Insurance">
+                    <option value="Insurance Other">Insurance Other</option>
+                    <option value="House Contents">House&Contents</option>
+                    <option value="Vechiles">Vechiles</option>
+                    <option value="Health/Life">Health/Life</option>
+                    <option value="Health/Life">House</option>
+                    <optgroup label="Loans">
+                    <option value="Mortgage">Mortgage</option>
+                    <option value="Personal Loans">Personal Loans</option>
+                    <option value="Student Loans">Student Loans</option>
+                    <option value="Hire Purchases">Hire Purchases</option>
+                    <option value="Other Loan Payments">Other Loan</option>
+                    <option value="Other Loan Payments">Credit Cards</option>
+                    <option value="Buy Now Pay Later Payments">Buy Now Pay Later</option>
+                </select>
+                <label class="form-label">Transaction Type</label>
+                <select class="form-select" name="Transaction" id="Transaction" aria-label="Default select example" required>
+                    <option selected>------</option>
+                    <option value="Income">Income</option>
+                    <option value="Expense">Expense</option>
+                </select>
+                <label class="form-label">Year</label>
+                  <input class="form-control" value="" name="year" min=0 step="any" id="year" type="number" oninput="validity.valid||
+      (value='');">
+                <input class="form-control" value="0" name="january_budget" min=0 step="any" id="january_budget" type="hidden" oninput="validity.valid||
+    (value='');">
+                <input class="form-control" value="0" name="february_budget" min=0 step="any" id="february_budget" type="hidden" oninput="validity.valid||
+    (value='');">
+                <input class="form-control" value="0" name="march_budget" min=0 step="any" id="march_budget" type="hidden" oninput="validity.valid||
+    (value='');">
+                <input class="form-control" value="0" name="april_budget" min=0 step="any" id="april_budget" type="hidden" oninput="validity.valid||
+    (value='');">
+                <input class="form-control" value="0" name="may_budget" min=0 step="any" id="may_budget" type="hidden" oninput="validity.valid||
+    (value='');">
+                <input class="form-control" value="0" name="june_budget" min=0 step="any" id="june_budget" type="hidden" oninput="validity.valid||
+    (value='');">
+                <input class="form-control" value="0" name="july_budget" min=0 step="any" id="july_budget" type="hidden" oninput="validity.valid||
+    (value='');">
+                <input class="form-control" value="0" name="august_budget" min=0 step="any" id="august_budget" type="hidden" oninput="validity.valid||
+    (value='');">
+                
+                <input class="form-control" value="0" name="september_budget" min=0 step="any" id="september_budget" type="hidden" oninput="validity.valid||
+    (value='');">
+                
+                <input class="form-control" value="0" name="october_budget" min=0 step="any" id="october_budget" type="hidden" oninput="validity.valid||
+    (value='');">
+            
+                <input class="form-control" value="0" hidden="true" name="november_budget" min=0 step="any" id="november_budget" type="hidden" oninput="validity.valid||
+    (value='');">
+                <input class="form-control" value="0" name="december_budget" min=0 step="any" id="december_budget" type="hidden" oninput="validity.valid||
+    (value='');">
+            </div>
+            <button class="btn btn-primary form-control" type="button" onclick="addCategory()">ADD</button>
+        </form>
+  
+      </div>
     <div class="mb-3">
       <label for="{{ form.amount.id_for_label }}" class="form-label">Amount</label>
       {% render_field form.amount class="form-control" placeholder="amount" %}
@@ -34,4 +129,5 @@
     <button type="submit" class="btn btn-primary">Save</button>
   </div>
 </form>
+
 {% endwith %}
