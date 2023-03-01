@@ -70,7 +70,7 @@ def commodity_list_view(request, year):
     commodities = Commodity.objects.filter(user=request.user).exclude(weight=0)
     commodity_prices = get_commodities()
     investments, assetsGains = generate_bar_graph_series_data(commodities, commodity_prices)
-    transactions = Transaction.objects.filter(date__year=year, user=request.user).order_by('-date','id')
+    transactions = Transaction.objects.filter(user=request.user).order_by('-date','id')
     clint_total = 0
     for x in transactions:
         if x.transaction_type == 'Buy':
